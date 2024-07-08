@@ -1,0 +1,48 @@
+#profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.profile-title {
+  font-size: 2rem;
+}
+
+.box {
+  border: 1px solid black;
+}
+
+.profile-description .ant-descriptions-view {
+  border: none !important;
+}
+
+.profile-description .ant-descriptions-item-label {
+  width: 25%;
+  border-inline-end: none !important;
+  font-weight: bold;
+  background: none !important;
+}
+.profile-description .ant-descriptions-item-content ::before {
+  content: ": ";
+  width: 75%;
+}
+
+@media only screen and (max-width: 768px) {
+  #profile-picture {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-title {
+    font-size: 1.1rem;
+  }
+
+  .profile-description .ant-descriptions-item-label {
+    width: 40%;
+  }
+
+  .profile-description .ant-descriptions-item-content {
+    width: 60%;
+  }
+}

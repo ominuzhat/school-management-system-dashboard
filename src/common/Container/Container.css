@@ -1,0 +1,11 @@
+.container-header-title {
+  font-weight: 600;
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+@media only screen and (max-width: 768px) {
+  .container-header-title {
+    font-size: 16px;
+  }
+}
