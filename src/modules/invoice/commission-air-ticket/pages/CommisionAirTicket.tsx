@@ -1,14 +1,15 @@
 import { Card, Col, Row } from "antd";
-import CreateBasicNonCommision from "../components/CreateNonCommision";
-import NonCommissionRightSide from "../components/NonCommissionRightSide";
 
-const NonCommision = () => {
+import CreateCommisionAirTicket from "../components/CreateCommisionAitTicket";
+import NonCommissionRightSide from "../../non-commission/components/NonCommissionRightSide";
+
+const CommisionAirTicket = () => {
   return (
     <div>
       <Card>
         <Row gutter={[16, 16]}>
           <Col lg={17}>
-            <CreateBasicNonCommision />
+            <CreateCommisionAirTicket />
 
             {/* <BasicAirCommission /> */}
           </Col>
@@ -21,4 +22,4 @@ const NonCommision = () => {
   );
 };
 
-export default NonCommision;
+export default CommisionAirTicket;

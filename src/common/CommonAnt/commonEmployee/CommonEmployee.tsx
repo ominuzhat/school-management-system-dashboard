@@ -1,4 +1,4 @@
-import { Button, Divider, Select } from "antd";
+import { Button, Select } from "antd";
 import {
   HarmonyOSOutlined,
   ManOutlined,

@@ -21,6 +21,8 @@ import CreatePassportManagement from "../modules/PassportMangement/components/Cr
 import ViewPassportManagement from "../modules/PassportMangement/components/ViewPassportManagement";
 import Invoice from "../modules/invoice/invoice/pages/Invoice";
 import NonCommision from "../modules/invoice/non-commission/pages/NonCommision";
+import ClientPage from "../modules/Client/pages/ClientPage";
+import CommisionAirTicket from "../modules/invoice/commission-air-ticket/pages/CommisionAirTicket";
 
 const router = createBrowserRouter([
   {
@@ -33,7 +35,6 @@ const router = createBrowserRouter([
         path: "/",
         element: <Dashboard />,
       },
-
       {
         path: "/passport",
         element: <Accounts />,
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "commission-air-ticket",
-            element: <p>aaa</p>,
+            element: <CommisionAirTicket />,
           },
           {
             path: "non-commission-air-ticket",
@@ -74,7 +75,10 @@ const router = createBrowserRouter([
           },
         ],
       },
-
+      {
+        path: "/client",
+        element: <ClientPage />,
+      },
       {
         path: "/accounts",
         element: <Accounts />,
@@ -105,7 +109,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-
       {
         path: "restaurants",
         element: <Restaurants />,
@@ -116,7 +119,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-
       {
         path: "profile",
         element: <Profile />,

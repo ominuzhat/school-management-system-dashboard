@@ -77,6 +77,12 @@ const MenuData: React.FC = () => {
       ],
     },
 
+    {
+      key: "/client",
+      label: <Link to="/client">Client</Link>,
+      icon: <Iconify name="mdi:person" style={iconStyle} />,
+    },
+
     // {
     //   key: "/accounts",
     //   label: "Accounts",

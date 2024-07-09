@@ -1,9 +1,10 @@
-import { Button, DatePicker, Input } from "antd";
+/* eslint-disable no-unused-vars */
+import { Button, DatePicker, Input, TimePicker } from "antd";
 import { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 const { RangePicker } = DatePicker;
 
@@ -77,7 +78,7 @@ export const DatePickerWithOptionalToday: React.FC<
 > = ({ showToday, onChange }) => {
   return (
     <DatePicker
-      onChange={(date, dateString) => {
+      onChange={(date, dateString: any) => {
         console.log("Selected date:", date, "Date string:", dateString);
         if (onChange) {
           onChange(date, dateString);
@@ -86,6 +87,26 @@ export const DatePickerWithOptionalToday: React.FC<
       className="w-full"
       format="DD-MM-YYYY"
       defaultValue={showToday ? dayjs().startOf("day") : undefined}
+    />
+  );
+};
+
+interface CustomTimePickerProps {
+  useDefaultTime: boolean;
+  onChangeTime: (time: Dayjs | null, timeString: any) => void;
+}
+
+export const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
+  useDefaultTime,
+  onChangeTime,
+}) => {
+  const defaultTime = useDefaultTime ? dayjs() : undefined;
+
+  return (
+    <TimePicker
+      className="w-full"
+      onChange={onChangeTime}
+      defaultValue={defaultTime}
     />
   );
 };

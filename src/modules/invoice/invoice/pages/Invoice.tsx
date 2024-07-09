@@ -1,7 +1,8 @@
 import { Card, Tabs, TabsProps } from "antd";
 import React from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NonCommision from "../../non-commission/pages/NonCommision";
+import CommisionAirTicket from "../../commission-air-ticket/pages/CommisionAirTicket";
 
 const Invoice: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Invoice: React.FC = () => {
     {
       key: "commission-air-ticket",
       label: "Commision Air Ticket",
-      children: "Content of Tab Pane 1",
+      children: <CommisionAirTicket />,
     },
     {
       key: "non-commission-air-ticket",
