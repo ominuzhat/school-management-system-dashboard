@@ -23,6 +23,9 @@ import Invoice from "../modules/invoice/invoice/pages/Invoice";
 import NonCommision from "../modules/invoice/non-commission/pages/NonCommision";
 import ClientPage from "../modules/Client/pages/ClientPage";
 import CommisionAirTicket from "../modules/invoice/commission-air-ticket/pages/CommisionAirTicket";
+import EmployeePages from "../modules/Employee/pages/EmployeePages";
+import AgentPage from "../modules/Agent/pages/AgentPages";
+import InvoicePages from "../modules/invoice/invoice/pages/InvoicePages";
 
 const router = createBrowserRouter([
   {
@@ -76,8 +79,38 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "/view-invoice",
+        element: <InvoicePages />,
+        children: [
+          {
+            path: "commission-air-ticket",
+            element: <CommisionAirTicket />,
+          },
+          {
+            path: "non-commission-air-ticket",
+            element: <NonCommision />,
+          },
+          {
+            path: "passport-list",
+            element: <PassportManagement />,
+          },
+          {
+            path: "passport-view/1",
+            element: <ViewPassportManagement />,
+          },
+        ],
+      },
+      {
         path: "/client",
         element: <ClientPage />,
+      },
+      {
+        path: "/employee",
+        element: <EmployeePages />,
+      },
+      {
+        path: "/agent",
+        element: <AgentPage />,
       },
       {
         path: "/accounts",

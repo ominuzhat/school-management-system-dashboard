@@ -2,7 +2,7 @@ import { Card, Col, Input, Row, Typography } from "antd";
 import React from "react";
 import { ErrorType, LoginTypes } from "../types/authTypes";
 import "../styles/Login.css";
-import { login_image } from "../../../utilities/images";
+import { airplane, login_image } from "../../../utilities/images";
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import { Form } from "../../../common/CommonAnt";
 import { useLoginMutation } from "../api/loginEndpoint";
@@ -128,7 +128,7 @@ const Login: React.FC = () => {
             </Col>
             <Col span={24} md={12} className="login-right-side">
               <img
-                src={login_image}
+                src={airplane}
                 alt="login image"
                 style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />

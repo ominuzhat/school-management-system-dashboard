@@ -15,7 +15,7 @@ import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { loggedOut } from "../../../app/features/authSlice";
 import { TOKEN_NAME } from "../../../utilities/baseQuery";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { greeting } from "../../../utilities/helper";
 import { RootState } from "../../../app/store";
 import { toggleThemes } from "../../../app/features/themeSlice";
@@ -138,16 +138,16 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                   omihasan.nuzhat@gmail.com
                 </Typography.Text>
                 <Space>
-                  {/* <Link to="/profile"> */}
-                  <Button
-                    block
-                    type="link"
-                    ghost
-                    icon={<Iconify name="uil:user" />}
-                  >
-                    Profile
-                  </Button>
-                  {/* </Link> */}
+                  <Link to="/profile">
+                    <Button
+                      block
+                      type="link"
+                      ghost
+                      icon={<Iconify name="uil:user" />}
+                    >
+                      Profile
+                    </Button>
+                  </Link>
 
                   <Button
                     block

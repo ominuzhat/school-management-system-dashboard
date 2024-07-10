@@ -39,17 +39,46 @@ const MenuData: React.FC = () => {
           key: "/invoice/commission-air-ticket",
         },
         {
-          label: <Link to="/passport/passport-list">Passport List</Link>,
+          label: (
+            <Link to="/view-invoice/commission-air-ticket">Invoice List</Link>
+          ),
           icon: (
             <Iconify
               name="akar-icons:three-line-horizontal"
               style={subIconStyle}
             />
           ),
-          key: "/passport/passport-list",
+          key: "/view-invoice/commission-air-ticket",
         },
       ],
     },
+
+    // {
+    //   key: "/view-invoice",
+    //   label: "invoice",
+    //   icon: (
+    //     <Iconify name="ic:outline-account-balance-wallet" style={iconStyle} />
+    //   ),
+    //   children: [
+    //     {
+    //       label: <Link to="/invoice/commission-air-ticket">Add a invoice</Link>,
+    //       icon: (
+    //         <Iconify name="ant-design:plus-outlined" style={subIconStyle} />
+    //       ),
+    //       key: "/invoice/commission-air-ticket",
+    //     },
+    //     {
+    //       label: <Link to="/passport/passport-list">Passport List</Link>,
+    //       icon: (
+    //         <Iconify
+    //           name="akar-icons:three-line-horizontal"
+    //           style={subIconStyle}
+    //         />
+    //       ),
+    //       key: "/passport/passport-list",
+    //     },
+    //   ],
+    // },
     {
       key: "/passport",
       label: "passport",
@@ -81,6 +110,16 @@ const MenuData: React.FC = () => {
       key: "/client",
       label: <Link to="/client">Client</Link>,
       icon: <Iconify name="mdi:person" style={iconStyle} />,
+    },
+    {
+      key: "/employee",
+      label: <Link to="/employee">Employee</Link>,
+      icon: <Iconify name="mdi:work" style={iconStyle} />,
+    },
+    {
+      key: "/agent",
+      label: <Link to="/agent">Agent</Link>,
+      icon: <Iconify name="mdi:work" style={iconStyle} />,
     },
 
     // {
