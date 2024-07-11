@@ -1,8 +1,8 @@
 import { Card, Tabs, TabsProps } from "antd";
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import NonCommision from "../../non-commission/pages/NonCommision";
-import CommisionAirTicket from "../../commission-air-ticket/pages/CommisionAirTicket";
+import NonCommissionPage from "../../non-commission/pages/NonCommissionPages";
+import CommissionAirTicketPage from "../../commission-air-ticket/pages/ComssionAirTicketPage";
 
 const InvoicePages: React.FC = () => {
   const navigate = useNavigate();
@@ -16,12 +16,12 @@ const InvoicePages: React.FC = () => {
     {
       key: "commission-air-ticket",
       label: "Commision Air Ticket",
-      children: <CommisionAirTicket />,
+      children: <CommissionAirTicketPage />,
     },
     {
       key: "non-commission-air-ticket",
       label: <p>Non Commission Air Ticket</p>,
-      children: <NonCommision />,
+      children: <NonCommissionPage />,
     },
     {
       key: "reissue",

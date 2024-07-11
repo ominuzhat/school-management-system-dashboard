@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button, Card, Col, Row } from "antd";
-import { columns, data } from "../utils/passportUtils";
 import { Table } from "../../../common/CommonAnt";
 import {
   RangePickerComponent,
@@ -14,6 +13,7 @@ import {
   PlusOutlined,
   WomanOutlined,
 } from "@ant-design/icons";
+import { columns, data } from "../../PassportMangement/utils/passportUtils";
 
 export interface DataType {
   key: string;
@@ -22,7 +22,7 @@ export interface DataType {
   address: string;
   tags: string[];
 }
-const PassportManagement = () => {
+const ExpenseListPage = () => {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
     null,
     null,
@@ -51,7 +51,7 @@ const PassportManagement = () => {
           </Col> */}
           <Link to="/passport/create-passport">
             <Button type="primary" icon={<PlusOutlined />}>
-              Create Passport
+              Create Expense
             </Button>
           </Link>
           <Col>
@@ -65,7 +65,7 @@ const PassportManagement = () => {
               <Col lg={12} md={12} sm={24}>
                 <SearchComponent
                   onSearch={handleSearch}
-                  placeholder="Enter Your Invoice"
+                  placeholder="Enter Your Expense List"
                 />
               </Col>
             </Row>
@@ -78,4 +78,4 @@ const PassportManagement = () => {
     </div>
   );
 };
-export default PassportManagement;
+export default ExpenseListPage;

@@ -1,19 +1,16 @@
 import { Button, Card, Col, Row, Space, TableProps, Tag } from "antd";
-import { SearchComponent } from "../../../common/CommonAnt/CommonSearch/CommonSearch";
-import { showModal } from "../../../app/features/modalSlice";
 import {
   HarmonyOSOutlined,
   ManOutlined,
   PlusOutlined,
   WomanOutlined,
 } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import CreateClientModalForm from "../../../common/commonCLient/CreateClientModalForm";
-import { Table } from "../../../common/CommonAnt";
-import EditButton from "../../../common/CommonAnt/Button/EditButton";
-import DeleteButton from "../../../common/CommonAnt/Button/DeleteButton";
-import ViewButton from "../../../common/CommonAnt/Button/ViewButton";
-import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
+import EditButton from "../../../../common/CommonAnt/Button/EditButton";
+import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
+import { Table } from "../../../../common/CommonAnt";
+import { Link } from "react-router-dom";
 
 interface DataType {
   key: string;
@@ -97,39 +94,43 @@ const data: DataType[] = [
   },
 ];
 
-const ClientPage = () => {
+const NonCommissionPage = () => {
   const handleSearch = (value: string) => {
     console.log("Search Value:", value);
   };
-  const dispatch = useDispatch();
+  //   const dispatch = useDispatch();
   return (
     <div className="space-y-5">
-      <div className="my-5">
-        <BreadCrumb />
-      </div>
       <Card>
         <Row justify="space-between">
           <Col lg={4}>
-            <Button
+            <Link to="/invoice/non-commission-air-ticket">
+              <Button type="primary" icon={<PlusOutlined />}>
+                {" "}
+                Create Non Commission Air Ticket
+              </Button>
+            </Link>
+
+            {/* <Button
               type="primary"
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Create Client",
-                    content: <CreateClientModalForm />,
+                    title: "Create Non Commission Air Ticket",
+                    content: <CreateNonCommision />,
                   })
                 )
               }
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Create Client
-            </Button>
+              Create Non Commission Air Ticket
+            </Button> */}
           </Col>
           <Col lg={6}>
             <SearchComponent
               onSearch={handleSearch}
-              placeholder="Enter Your Client"
+              placeholder="Enter Your Non Commission Air Ticket"
             />
           </Col>
         </Row>
@@ -140,4 +141,4 @@ const ClientPage = () => {
   );
 };
 
-export default ClientPage;
+export default NonCommissionPage;

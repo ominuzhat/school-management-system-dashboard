@@ -1,25 +1,26 @@
-import { Button, Card, Descriptions } from "antd";
+import { Button, Descriptions } from "antd";
 import type { DescriptionsProps } from "antd";
+import "../../../index.css";
 
 const borderedItems: DescriptionsProps["items"] = [
   {
     key: "1",
-    label: <div className="custom-label">Passport Number</div>,
+    label: <div className="custom-label font-bold">Passport Number</div>,
     children: <div>000012</div>,
   },
   {
     key: "2",
-    label: <div className="custom-label">Date Of Birth</div>,
+    label: <div className="custom-label font-bold ">Date Of Birth</div>,
     children: "13-02-2020",
   },
   {
     key: "2",
-    label: <div className="custom-label">Passport Issue Date </div>,
+    label: <div className="custom-label font-bold ">Passport Issue Date </div>,
     children: "13-02-2020",
   },
   {
     key: "2",
-    label: <div className="custom-label">Passport Expiry Date </div>,
+    label: <div className="custom-label font-bold ">Passport Expiry Date </div>,
     children: "13-02-2020",
   },
   {
@@ -144,15 +145,35 @@ const payment: DescriptionsProps["items"] = [
     key: "4",
     label: "Payment History",
     children: (
-      <div className="space-y-2">
-        MR 0201115 BDT 50000{" "}
-        <Button className="ms-5"> View Money Receipt </Button> <br />
-        MR 0201115 BDT 50000{" "}
-        <Button className="ms-5"> View Money Receipt </Button> <br />
-        MR 0201115 BDT 100000{" "}
-        <Button className="ms-5"> View Money Receipt </Button> <br />
-        MR 0201115 BDT 100000{" "}
-        <Button className="ms-5"> View Money Receipt </Button>
+      <div className="space-y-2 ">
+        <div className="flex items-center justify-between border-b-2 pb-3">
+          <p>13-july-2024</p>
+          <p>MR 0201115</p>
+          <p>Cash</p>
+          <p>BDT 50000</p>
+          <Button className="ms-5"> View Money Receipt </Button>
+        </div>
+        <div className="flex items-center justify-between border-b-2 pb-3">
+          <p>13-july-2024</p>
+          <p>MR 0201115</p>
+          <p>Cash</p>
+          <p>BDT 50000</p>
+          <Button className="ms-5"> View Money Receipt </Button>
+        </div>
+        <div className="flex items-center justify-between border-b-2 pb-3">
+          <p>13-july-2024</p>
+          <p>MR 0201115</p>
+          <p>Cash</p>
+          <p>BDT 50000</p>
+          <Button className="ms-5"> View Money Receipt </Button>
+        </div>
+        <div className="flex items-center justify-between pb-3">
+          <p>13-july-2024</p>
+          <p>MR 0201115</p>
+          <p>Cash</p>
+          <p>BDT 50000</p>
+          <Button className="ms-5"> View Money Receipt </Button>
+        </div>
       </div>
     ),
   },

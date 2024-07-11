@@ -26,6 +26,9 @@ import CommisionAirTicket from "../modules/invoice/commission-air-ticket/pages/C
 import EmployeePages from "../modules/Employee/pages/EmployeePages";
 import AgentPage from "../modules/Agent/pages/AgentPages";
 import InvoicePages from "../modules/invoice/invoice/pages/InvoicePages";
+import ExpenseHeadPage from "../modules/Expense/pages/ExpenseHeadPage";
+import ExpenseListPage from "../modules/Expense/pages/ExpenseList";
+import CreateExpense from "../modules/Expense/components/CreateExpense";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +56,24 @@ const router = createBrowserRouter([
           {
             path: "passport-view/1",
             element: <ViewPassportManagement />,
+          },
+        ],
+      },
+      {
+        path: "/expense",
+        element: <Accounts />,
+        children: [
+          {
+            path: "head",
+            element: <ExpenseHeadPage />,
+          },
+          {
+            path: "list",
+            element: <ExpenseListPage />,
+          },
+          {
+            path: "create-expense",
+            element: <CreateExpense />,
           },
         ],
       },

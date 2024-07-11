@@ -13,6 +13,7 @@ import EditButton from "../../../common/CommonAnt/Button/EditButton";
 import DeleteButton from "../../../common/CommonAnt/Button/DeleteButton";
 import ViewButton from "../../../common/CommonAnt/Button/ViewButton";
 import CreateEmployeeModalForm from "../../../common/CommonAnt/commonEmployee/CreateEmployeeModalForm";
+import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
 
 interface DataType {
   key: string;
@@ -103,6 +104,9 @@ const AgentPage = () => {
   const dispatch = useDispatch();
   return (
     <div className="space-y-5">
+      <div className="my-5">
+        <BreadCrumb />
+      </div>
       <Card>
         <Row justify="space-between">
           <Col lg={4}>

@@ -1,11 +1,17 @@
 /* eslint-disable no-unused-vars */
-import { Button, DatePicker, Input, TimePicker } from "antd";
+import { Button, DatePicker, Input, Select, TimePicker } from "antd";
 import { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import dayjs, { Dayjs } from "dayjs";
-
+import {
+  BankOutlined,
+  MobileOutlined,
+  CreditCardOutlined,
+  WalletOutlined,
+  DollarOutlined,
+} from "@ant-design/icons";
 const { RangePicker } = DatePicker;
 
 interface SearchComponentProps {
@@ -107,6 +113,61 @@ export const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
       className="w-full"
       onChange={onChangeTime}
       defaultValue={defaultTime}
+    />
+  );
+};
+
+export const CommonPaymentMethod = () => {
+  return (
+    <Select
+      showSearch
+      placeholder="Search Payment"
+      filterOption={(input, option: any) =>
+        (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+      }
+      options={[
+        {
+          value: "cash",
+          label: (
+            <p>
+              <DollarOutlined className="me-2" /> Cash{" "}
+            </p>
+          ),
+        },
+        {
+          value: "bank",
+          label: (
+            <p>
+              <BankOutlined className="me-2" /> bank{" "}
+            </p>
+          ),
+        },
+        {
+          value: "mobile_banking",
+          label: (
+            <p>
+              <MobileOutlined className="me-2" />
+              Mobile Banking
+            </p>
+          ),
+        },
+        {
+          value: "credit_card",
+          label: (
+            <p>
+              <CreditCardOutlined className="me-2" /> Credit Card
+            </p>
+          ),
+        },
+        {
+          value: "credit_card",
+          label: (
+            <p>
+              <WalletOutlined className="me-2" /> Cheque
+            </p>
+          ),
+        },
+      ]}
     />
   );
 };

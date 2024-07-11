@@ -208,43 +208,48 @@ const MenuData: React.FC = () => {
     //   ],
     // },
 
-    // {
-    //   key: "/expense",
-    //   label: "Expense",
-    //   icon: <Iconify name="icon-park-outline:expenses" style={iconStyle} />,
-    //   children: [
-    //     {
-    //       label: <Link to="expense-list">Expense List</Link>,
-    //       icon: (
-    //         <Iconify
-    //           name="akar-icons:three-line-horizontal"
-    //           style={subIconStyle}
-    //         />
-    //       ),
-    //       key: "expense-list",
-    //     },
-    //     {
-    //       label: <Link to="expense-head">Expense Head</Link>,
-    //       icon: (
-    //         <Iconify
-    //           name="akar-icons:three-line-horizontal"
-    //           style={subIconStyle}
-    //         />
-    //       ),
-    //       key: "expense-head",
-    //     },
-    //     {
-    //       label: <Link to="expense-sub-head">Expense Sub Head</Link>,
-    //       icon: (
-    //         <Iconify
-    //           name="akar-icons:three-line-horizontal"
-    //           style={subIconStyle}
-    //         />
-    //       ),
-    //       key: "expense-sub-head",
-    //     },
-    //   ],
-    // },
+    {
+      key: "/expense",
+      label: "Expense",
+      icon: <Iconify name="icon-park-outline:expenses" style={iconStyle} />,
+      children: [
+        {
+          label: <Link to="/expense/create-expense">Add Expense</Link>,
+          icon: <Iconify name="ant-design:plus-outline" style={subIconStyle} />,
+          key: "/expense/create-expense",
+        },
+        {
+          label: <Link to="/expense/list">Expense List</Link>,
+          icon: (
+            <Iconify
+              name="akar-icons:three-line-horizontal"
+              style={subIconStyle}
+            />
+          ),
+          key: "/expense/list",
+        },
+        {
+          label: <Link to="/expense/head">Expense Head</Link>,
+          icon: (
+            <Iconify
+              name="akar-icons:three-line-horizontal"
+              style={subIconStyle}
+            />
+          ),
+          key: "/expense/head",
+        },
+        // {
+        //   label: <Link to="expense-sub-head">Expense Sub Head</Link>,
+        //   icon: (
+        //     <Iconify
+        //       name="akar-icons:three-line-horizontal"
+        //       style={subIconStyle}
+        //     />
+        //   ),
+        //   key: "expense-sub-head",
+        // },
+      ],
+    },
 
     // {
     //   key: "/payroll",

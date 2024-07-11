@@ -1,19 +1,18 @@
-import { Button, Card, Col, Row, Space, TableProps, Tag } from "antd";
-import { SearchComponent } from "../../../common/CommonAnt/CommonSearch/CommonSearch";
-import { showModal } from "../../../app/features/modalSlice";
+import { Button, Card, Space, TableProps, Tag } from "antd";
+import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
 import {
   HarmonyOSOutlined,
   ManOutlined,
   PlusOutlined,
   WomanOutlined,
 } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import CreateClientModalForm from "../../../common/commonCLient/CreateClientModalForm";
 import { Table } from "../../../common/CommonAnt";
 import EditButton from "../../../common/CommonAnt/Button/EditButton";
-import DeleteButton from "../../../common/CommonAnt/Button/DeleteButton";
 import ViewButton from "../../../common/CommonAnt/Button/ViewButton";
-import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
+import DeleteButton from "../../../common/CommonAnt/Button/DeleteButton";
+import { showModal } from "../../../app/features/modalSlice";
+import CreateExpenseHead from "../components/CreateExpenseHead";
+import { useDispatch } from "react-redux";
 
 interface DataType {
   key: string;
@@ -97,47 +96,39 @@ const data: DataType[] = [
   },
 ];
 
-const ClientPage = () => {
-  const handleSearch = (value: string) => {
-    console.log("Search Value:", value);
-  };
+const ExpenseHeadPage = () => {
   const dispatch = useDispatch();
+
   return (
-    <div className="space-y-5">
+    <div>
       <div className="my-5">
         <BreadCrumb />
       </div>
-      <Card>
-        <Row justify="space-between">
-          <Col lg={4}>
+      <Card
+        title="Expense Head"
+        extra={
+          <>
             <Button
               type="primary"
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Create Client",
-                    content: <CreateClientModalForm />,
+                    title: "Create Employee",
+                    content: <CreateExpenseHead />,
                   })
                 )
               }
               icon={<PlusOutlined />}
-              className="w-full"
             >
-              Create Client
+              Create Expense Head
             </Button>
-          </Col>
-          <Col lg={6}>
-            <SearchComponent
-              onSearch={handleSearch}
-              placeholder="Enter Your Client"
-            />
-          </Col>
-        </Row>
+          </>
+        }
+      >
+        <Table total={50} columns={columns} dataSource={data} />
       </Card>
-
-      <Table total={50} columns={columns} dataSource={data} />
     </div>
   );
 };
 
-export default ClientPage;
+export default ExpenseHeadPage;

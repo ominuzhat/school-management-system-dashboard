@@ -2,7 +2,7 @@ import { Card, Col, Input, Row, Typography } from "antd";
 import React from "react";
 import { ErrorType, LoginTypes } from "../types/authTypes";
 import "../styles/Login.css";
-import { airplane, login_image } from "../../../utilities/images";
+import { airplane } from "../../../utilities/images";
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import { Form } from "../../../common/CommonAnt";
 import { useLoginMutation } from "../api/loginEndpoint";
@@ -74,7 +74,7 @@ const Login: React.FC = () => {
                   style={{ width: "50%", height: "100%", objectFit: "contain" }}
                 /> */}
                 <Typography.Text className="login-header-title">
-                  Nuzhat
+                  BTS Travel Express
                 </Typography.Text>
                 <Typography.Text type="secondary" style={{ display: "block" }}>
                   Login to you account below.

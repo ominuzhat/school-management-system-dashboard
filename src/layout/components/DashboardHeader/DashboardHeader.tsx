@@ -61,7 +61,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
               strong
               style={{ display: "block", fontSize: "1.2rem" }}
             >
-              Hello, {data?.data?.name || "Nuzhat"}
+              Hello, {data?.data?.name || "BTS Travel Express"}
             </Typography.Text>
             <Typography.Text
               type="secondary"
@@ -133,9 +133,9 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                     pointerEvents: "none",
                   }}
                 />
-                <Typography.Text strong>Omi Hasan</Typography.Text>
+                <Typography.Text strong>BTS Travel Express</Typography.Text>
                 <Typography.Text type="secondary" style={{ fontSize: "11px" }}>
-                  omihasan.nuzhat@gmail.com
+                  btstravelExpress@gmail.com
                 </Typography.Text>
                 <Space>
                   <Link to="/profile">

@@ -29,3 +29,11 @@ body::-webkit-scrollbar-corner {
   background-color: #f1f1f1;
   border-radius: 10px;
 }
+
+.ant-descriptions-item-label {
+  background-color: #aee5fe3e !important;
+}
+
+.ant-descriptions-view .ant-descriptions-item-label {
+  font-weight: bold;
+}

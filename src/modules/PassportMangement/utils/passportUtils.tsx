@@ -1,7 +1,9 @@
-import { Button, Space, Tag } from "antd";
+import { Space, Tag } from "antd";
 import type { TableProps } from "antd";
 import { Link } from "react-router-dom";
 import { DataType } from "../page/PassportManagement";
+import ViewButton from "../../../common/CommonAnt/Button/ViewButton";
+import EditButton from "../../../common/CommonAnt/Button/EditButton";
 
 export const columns: TableProps<DataType>["columns"] = [
   {
@@ -46,9 +48,9 @@ export const columns: TableProps<DataType>["columns"] = [
     render: (_, record) => (
       <Space size="middle">
         <Link to="/passport/passport-view/1">
-          <Button>View</Button>
+          <ViewButton to="/passport/passport-view/1">View</ViewButton>
         </Link>
-        <Button>Edit</Button>
+        <EditButton>Edit</EditButton>
       </Space>
     ),
   },
