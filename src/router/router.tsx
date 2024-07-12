@@ -23,12 +23,18 @@ import Invoice from "../modules/invoice/invoice/pages/Invoice";
 import NonCommision from "../modules/invoice/non-commission/pages/NonCommision";
 import ClientPage from "../modules/Client/pages/ClientPage";
 import CommisionAirTicket from "../modules/invoice/commission-air-ticket/pages/CommisionAirTicket";
-import EmployeePages from "../modules/Employee/pages/EmployeePages";
 import AgentPage from "../modules/Agent/pages/AgentPages";
 import InvoicePages from "../modules/invoice/invoice/pages/InvoicePages";
 import ExpenseHeadPage from "../modules/Expense/pages/ExpenseHeadPage";
 import ExpenseListPage from "../modules/Expense/pages/ExpenseList";
 import CreateExpense from "../modules/Expense/components/CreateExpense";
+import EmployeePage from "../modules/Configuration/Employee/pages/EmployeePages";
+import DepartmentPage from "../modules/Configuration/Departments/pages/DepartmentsPage";
+import DesignationPage from "../modules/Configuration/Designation/pages/DesignationPage";
+import GroupPage from "../modules/Configuration/Group/pages/GroupPage";
+import ClientCategoryPage from "../modules/Configuration/ClientCategory/pages/ClientCategoryPages";
+import UserPage from "../modules/Configuration/User/Users/pages/UserPages";
+import UserRoles from "../modules/Configuration/User/Roles/pages/UserRoles";
 
 const router = createBrowserRouter([
   {
@@ -121,13 +127,38 @@ const router = createBrowserRouter([
           },
         ],
       },
+
       {
         path: "/client",
         element: <ClientPage />,
       },
       {
         path: "/employee",
-        element: <EmployeePages />,
+        element: <EmployeePage />,
+      },
+      {
+        path: "/department",
+        element: <DepartmentPage />,
+      },
+      {
+        path: "/designation",
+        element: <DesignationPage />,
+      },
+      {
+        path: "/group",
+        element: <GroupPage />,
+      },
+      {
+        path: "/client-category",
+        element: <ClientCategoryPage />,
+      },
+      {
+        path: "/user/view",
+        element: <UserPage />,
+      },
+      {
+        path: "/role/view",
+        element: <UserRoles />,
       },
       {
         path: "/agent",

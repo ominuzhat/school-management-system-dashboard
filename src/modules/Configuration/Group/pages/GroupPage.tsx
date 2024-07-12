@@ -1,6 +1,5 @@
 import { Button, Card, Col, Row, Space, TableProps, Tag } from "antd";
-import { SearchComponent } from "../../../common/CommonAnt/CommonSearch/CommonSearch";
-import { showModal } from "../../../app/features/modalSlice";
+
 import {
   HarmonyOSOutlined,
   ManOutlined,
@@ -8,12 +7,15 @@ import {
   WomanOutlined,
 } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { Table } from "../../../common/CommonAnt";
-import EditButton from "../../../common/CommonAnt/Button/EditButton";
-import DeleteButton from "../../../common/CommonAnt/Button/DeleteButton";
-import ViewButton from "../../../common/CommonAnt/Button/ViewButton";
-import CreateEmployeeModalForm from "../../../common/CommonAnt/commonEmployee/CreateEmployeeModalForm";
-import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
+import EditButton from "../../../../common/CommonAnt/Button/EditButton";
+import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
+import { showModal } from "../../../../app/features/modalSlice";
+import CreateEmployeeModalForm from "../../../../common/CommonAnt/commonEmployee/CreateEmployeeModalForm";
+import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
+import { Table } from "../../../../common/CommonAnt";
+import CreateGroupModal from "../components/CreateGroupModal";
 
 interface DataType {
   key: string;
@@ -97,7 +99,7 @@ const data: DataType[] = [
   },
 ];
 
-const EmployeePage = () => {
+const GroupPage = () => {
   const handleSearch = (value: string) => {
     console.log("Search Value:", value);
   };
@@ -115,21 +117,21 @@ const EmployeePage = () => {
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Create Employee",
-                    content: <CreateEmployeeModalForm />,
+                    title: "Create Group",
+                    content: <CreateGroupModal />,
                   })
                 )
               }
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Create Employee
+              Create Group
             </Button>
           </Col>
           <Col lg={6}>
             <SearchComponent
               onSearch={handleSearch}
-              placeholder="Enter Your Employee"
+              placeholder="Enter Your Group"
             />
           </Col>
         </Row>
@@ -140,4 +142,4 @@ const EmployeePage = () => {
   );
 };
 
-export default EmployeePage;
+export default GroupPage;

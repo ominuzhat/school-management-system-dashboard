@@ -76,7 +76,7 @@ const CreateExpense = () => {
           </Card>
           <Card>
             <Row gutter={[16, 16]}>
-              <Col lg={6}>
+              <Col lg={4}>
                 <Form.Item<any>
                   label="Search Payment"
                   name="dueDate"
@@ -87,7 +87,7 @@ const CreateExpense = () => {
                   <CommonPaymentMethod />
                 </Form.Item>
               </Col>
-              <Col lg={6}>
+              <Col lg={4}>
                 <Form.Item<any>
                   label="Account"
                   name="dueDate"
@@ -128,7 +128,7 @@ const CreateExpense = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col lg={6}>
+              <Col lg={4}>
                 <Form.Item<any>
                   label="Available Balance"
                   name=""
@@ -142,7 +142,7 @@ const CreateExpense = () => {
                   <Input placeholder="Available Balance" />
                 </Form.Item>
               </Col>
-              <Col lg={6}>
+              <Col lg={4}>
                 <Form.Item<any>
                   label="Total Amount"
                   name=""
@@ -156,7 +156,7 @@ const CreateExpense = () => {
                   <Input placeholder="Total Amount" />
                 </Form.Item>
               </Col>
-              <Col lg={6}>
+              <Col lg={4}>
                 <Form.Item<any>
                   label="Date"
                   name=""
@@ -179,12 +179,12 @@ const CreateExpense = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col lg={6}>
+              <Col lg={4}>
                 <Form.Item<any> label="Notes" name="">
                   <TextArea placeholder="Note Something" />
                 </Form.Item>
               </Col>
-              <Col lg={6}>
+              <Col lg={4}>
                 <Form.Item<any> label="Voucher" name="">
                   <Upload {...props}>
                     <Button icon={<UploadOutlined />}>Click to Upload</Button>

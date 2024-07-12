@@ -111,11 +111,7 @@ const MenuData: React.FC = () => {
       label: <Link to="/client">Client</Link>,
       icon: <Iconify name="mdi:person" style={iconStyle} />,
     },
-    {
-      key: "/employee",
-      label: <Link to="/employee">Employee</Link>,
-      icon: <Iconify name="mdi:work" style={iconStyle} />,
-    },
+
     {
       key: "/agent",
       label: <Link to="/agent">Agent</Link>,
@@ -269,33 +265,55 @@ const MenuData: React.FC = () => {
     //   ],
     // },
 
-    // {
-    //   key: "/configuration",
-    //   label: "Configuration",
-    //   icon: <Iconify name="hugeicons:configuration-01" style={iconStyle} />,
-    //   children: [
-    //     {
-    //       label: <Link to="employee">Employee</Link>,
-    //       icon: <Iconify name="raphael:employee" style={subIconStyle} />,
-    //       key: "employee",
-    //     },
-    //     {
-    //       label: <Link to="department">Department</Link>,
-    //       icon: <Iconify name="ph:building-fill" style={subIconStyle} />,
-    //       key: "department",
-    //     },
-    //     {
-    //       label: <Link to="course">Course</Link>,
-    //       icon: <Iconify name="tdesign:course" style={subIconStyle} />,
-    //       key: "course",
-    //     },
-    //     {
-    //       label: <Link to="source">Source</Link>,
-    //       icon: <Iconify name="ic:outline-source" style={subIconStyle} />,
-    //       key: "source",
-    //     },
-    //   ],
-    // },
+    {
+      key: "/",
+      label: "Configuration",
+      icon: <Iconify name="hugeicons:configuration-01" style={iconStyle} />,
+      children: [
+        {
+          label: <Link to="/employee">Employee</Link>,
+          icon: <Iconify name="raphael:employee" style={subIconStyle} />,
+          key: "/employee",
+        },
+        {
+          label: <Link to="/department">Department</Link>,
+          icon: <Iconify name="ph:building-fill" style={subIconStyle} />,
+          key: "/department",
+        },
+        {
+          label: <Link to="/designation">Designation</Link>,
+          icon: <Iconify name="tdesign:course" style={subIconStyle} />,
+          key: "/designation",
+        },
+        {
+          label: <Link to="/group">Group</Link>,
+          icon: <Iconify name="ic:outline-group" style={subIconStyle} />,
+          key: "/group",
+        },
+        {
+          label: <Link to="/client-category">Client Category</Link>,
+          icon: <Iconify name="ic:outline-category" style={subIconStyle} />,
+          key: "/client-category",
+        },
+        {
+          label: <Link to="/">Users</Link>,
+          icon: <Iconify name="ic:outline-person" style={subIconStyle} />,
+          key: "/",
+          children: [
+            {
+              label: <Link to="/user/view">View Users</Link>,
+              icon: <Iconify name="raphael:employee" style={subIconStyle} />,
+              key: "/user/view",
+            },
+            {
+              label: <Link to="/role/view">View Roles</Link>,
+              icon: <Iconify name="raphael:users" style={subIconStyle} />,
+              key: "/role/view",
+            },
+          ],
+        },
+      ],
+    },
 
     // {
     //   key: "/administration",
