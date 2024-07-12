@@ -117,6 +117,27 @@ export const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   );
 };
 
+interface CustomMonthPickerProps {
+  useDefaultMonth: boolean;
+  onChangeMonth: (date: Dayjs | null, dateString: any) => void;
+}
+
+export const CustomMonthPicker: React.FC<CustomMonthPickerProps> = ({
+  useDefaultMonth,
+  onChangeMonth,
+}) => {
+  const defaultMonth = useDefaultMonth ? dayjs() : undefined;
+
+  return (
+    <DatePicker
+      className="w-full"
+      picker="month"
+      onChange={onChangeMonth}
+      defaultValue={defaultMonth}
+    />
+  );
+};
+
 export const CommonPaymentMethod = () => {
   return (
     <Select

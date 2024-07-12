@@ -34,7 +34,8 @@ import DesignationPage from "../modules/Configuration/Designation/pages/Designat
 import GroupPage from "../modules/Configuration/Group/pages/GroupPage";
 import ClientCategoryPage from "../modules/Configuration/ClientCategory/pages/ClientCategoryPages";
 import UserPage from "../modules/Configuration/User/Users/pages/UserPages";
-import UserRoles from "../modules/Configuration/User/Roles/pages/UserRoles";
+import UserRoles from "../modules/Configuration/User/Roles/pages/UserRolePage";
+import PayrollPages from "../modules/Payroll/pages/PayrollPages";
 
 const router = createBrowserRouter([
   {
@@ -147,6 +148,10 @@ const router = createBrowserRouter([
       {
         path: "/group",
         element: <GroupPage />,
+      },
+      {
+        path: "/payroll",
+        element: <PayrollPages />,
       },
       {
         path: "/client-category",

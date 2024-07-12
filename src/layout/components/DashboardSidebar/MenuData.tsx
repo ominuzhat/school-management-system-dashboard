@@ -186,24 +186,6 @@ const MenuData: React.FC = () => {
     //   ],
     // },
 
-    // {
-    //   key: "/client",
-    //   label: "Client",
-    //   icon: <Iconify name="uil:user" style={iconStyle} />,
-    //   children: [
-    //     {
-    //       label: <Link to="client-list">Client List</Link>,
-    //       icon: (
-    //         <Iconify
-    //           name="akar-icons:three-line-horizontal"
-    //           style={subIconStyle}
-    //         />
-    //       ),
-    //       key: "client-list",
-    //     },
-    //   ],
-    // },
-
     {
       key: "/expense",
       label: "Expense",
@@ -266,6 +248,12 @@ const MenuData: React.FC = () => {
     // },
 
     {
+      key: "/payroll",
+      label: <Link to="/payroll">Payroll</Link>,
+      icon: <Iconify name="mage:money-exchange" style={iconStyle} />,
+    },
+
+    {
       key: "/",
       label: "Configuration",
       icon: <Iconify name="hugeicons:configuration-01" style={iconStyle} />,
@@ -296,9 +284,9 @@ const MenuData: React.FC = () => {
           key: "/client-category",
         },
         {
-          label: <Link to="/">Users</Link>,
+          label: <Link to="">Users</Link>,
           icon: <Iconify name="ic:outline-person" style={subIconStyle} />,
-          key: "/",
+          key: "",
           children: [
             {
               label: <Link to="/user/view">View Users</Link>,
