@@ -5,10 +5,9 @@ import RestaurantWiseSalesGraph from "../components/RestaurantWiseSalesGraph";
 const Dashboard: React.FC = () => {
   return (
     <React.Fragment>
-      <h1>aaaaaaaaaaa</h1>
-      {/* <OverallStatistic />
+      <OverallStatistic />
       <br />
-      <RestaurantWiseSalesGraph /> */}
+      <RestaurantWiseSalesGraph />
     </React.Fragment>
   );
 };

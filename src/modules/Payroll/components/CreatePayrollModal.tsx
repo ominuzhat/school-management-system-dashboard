@@ -3,10 +3,32 @@ import { Form } from "../../../common/CommonAnt";
 import { useCreateRestaurantMutation } from "../../Restaurants/api/restaurantsEndpoint";
 import {
   CommonPaymentMethod,
-  CustomMonthPicker,
   DatePickerWithOptionalToday,
 } from "../../../common/CommonAnt/CommonSearch/CommonSearch";
-import { Dayjs } from "dayjs";
+
+import { UploadOutlined } from "@ant-design/icons";
+import type { UploadProps } from "antd";
+import { Button, message, Upload } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import PayrollDeduction from "./PayrollDeduction";
+
+const props: UploadProps = {
+  name: "file",
+  action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+  headers: {
+    authorization: "authorization-text",
+  },
+  onChange(info) {
+    if (info.file.status !== "uploading") {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === "done") {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === "error") {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 
 const CreatePayrollModal = () => {
   const [create, { isLoading, isSuccess }] = useCreateRestaurantMutation();
@@ -34,7 +56,7 @@ const CreatePayrollModal = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={[]}
+        initialValues={{ users: [{}] }}
       >
         <Card>
           <Row gutter={[16, 16]}>
@@ -130,6 +152,21 @@ const CreatePayrollModal = () => {
             </Col>
           </Row>
           <Divider plain>Deductions</Divider>
+          <Row gutter={[16, 16]}>
+            <Col lg={12}>
+              <PayrollDeduction />
+            </Col>
+            <Col lg={6}>
+              <Form.Item<any> label="Advance Salary" name="dueDate">
+                <Input placeholder="Advance Salary" type="number" />
+              </Form.Item>
+            </Col>
+            <Col lg={6}>
+              <Form.Item<any> label="Provident Fund" name="dueDate">
+                <Input placeholder="Provident Fund" type="number" />
+              </Form.Item>
+            </Col>
+          </Row>
           <Divider plain>Additional</Divider>
           <Row gutter={[16, 16]}>
             <Col lg={6}>
@@ -202,7 +239,11 @@ const CreatePayrollModal = () => {
           <Divider plain>Net Total and Note</Divider>
           <Row gutter={[16, 16]}>
             <Col lg={6}>
-              <Form.Item<any> label="Available Balance" name="dueDate">
+              <Form.Item<any>
+                label="Salary Date"
+                name="dueDate"
+                rules={[{ required: true, message: "Input your Salary !" }]}
+              >
                 <DatePickerWithOptionalToday
                   showToday={true}
                   onChange={(date, dateString) => {
@@ -216,13 +257,20 @@ const CreatePayrollModal = () => {
               </Form.Item>
             </Col>
             <Col lg={6}>
-              <Form.Item<any> label="Available Balance" name="dueDate">
-                <CustomMonthPicker
-                  useDefaultMonth={true}
-                  onChangeMonth={(_time: Dayjs | null, timeString: string) => {
-                    console.log("Selected Time with Default: ", timeString);
-                  }}
-                />
+              <Form.Item<any> label="Total Salary" name="dueDate">
+                <Input placeholder="Total Salary" />
+              </Form.Item>
+            </Col>
+            <Col lg={6}>
+              <Form.Item<any> label="Upload Docs" name="dueDate">
+                <Upload {...props}>
+                  <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                </Upload>
+              </Form.Item>
+            </Col>
+            <Col lg={24}>
+              <Form.Item<any> label="Notes" name="dueDate">
+                <TextArea placeholder="Notes" />
               </Form.Item>
             </Col>
           </Row>
