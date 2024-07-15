@@ -1,7 +1,7 @@
-import { Card, Col, Input, Row, Select } from "antd";
+import { Card, Col, Input, Row, Select, Form as AntForm } from "antd";
 import { useCreateRestaurantMutation } from "../../modules/Restaurants/api/restaurantsEndpoint";
-import { Form } from "../CommonAnt";
 import React from "react";
+import Form from "../CommonAnt/Form";
 
 type FieldType = {
   paxName: string;
@@ -22,6 +22,12 @@ type FieldType = {
 
 const CreateClientModalForm = () => {
   const [create, { isLoading, isSuccess }] = useCreateRestaurantMutation();
+
+  const [form] = AntForm.useForm();
+
+  const gender = AntForm.useWatch("gender", form);
+
+  console.log("aaa", gender);
 
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
@@ -44,6 +50,7 @@ const CreateClientModalForm = () => {
   return (
     <React.Fragment>
       <Form
+        form={form}
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
@@ -121,7 +128,7 @@ const CreateClientModalForm = () => {
             <Col lg={6}>
               <Form.Item<FieldType>
                 label="Gender"
-                name="dueDate"
+                name="gender"
                 rules={[{ required: true, message: "Please input your Date!" }]}
               >
                 <Select
@@ -151,7 +158,7 @@ const CreateClientModalForm = () => {
                   },
                 ]}
               >
-                <Input placeholder="Mobile" type="number" />
+                <Input addonBefore="+88" placeholder="Mobile" type="number" />
               </Form.Item>
             </Col>
             <Col lg={6}>
@@ -176,6 +183,28 @@ const CreateClientModalForm = () => {
                 rules={[{ required: true, message: "Please input your Date!" }]}
               >
                 <Input placeholder="Source" />
+              </Form.Item>
+            </Col>
+
+            <Col lg={6}>
+              <Form.Item<FieldType>
+                label="Walking Customer"
+                name="dueDate"
+                rules={[{ required: true, message: "Please input your Date!" }]}
+              >
+                <Select
+                  showSearch
+                  placeholder="Walking Customer"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={[
+                    { value: "1", label: "Yes" },
+                    { value: "2", label: "No" },
+                  ]}
+                />
               </Form.Item>
             </Col>
           </Row>

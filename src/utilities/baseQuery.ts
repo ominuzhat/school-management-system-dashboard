@@ -7,4 +7,4 @@ const localUrl: string = "http://192.168.0.193:9004/api/v1"; // A
 
 export const baseUrl: string = isDevelopment ? localUrl : productionUrl;
 
-export const TOKEN_NAME: string = "hb-aviation-admin-client";
+export const TOKEN_NAME: string = "BTS Travel Express";

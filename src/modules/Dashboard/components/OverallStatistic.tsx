@@ -25,7 +25,7 @@ const OverallStatistic: React.FC = () => {
     <React.Fragment>
       <Row gutter={[10, 10]}>
         {statistic.map(({ title, count }) => (
-          <Col span={24} md={12} lg={6}>
+          <Col span={24} md={12} lg={6} key={count}>
             <Card>
               <Flex justify="space-between" align="start">
                 <div>
