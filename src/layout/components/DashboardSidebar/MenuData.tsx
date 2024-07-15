@@ -53,38 +53,10 @@ const MenuData: React.FC = () => {
       ],
     },
 
-    // {
-    //   key: "/view-invoice",
-    //   label: "invoice",
-    //   icon: (
-    //     <Iconify name="ic:outline-account-balance-wallet" style={iconStyle} />
-    //   ),
-    //   children: [
-    //     {
-    //       label: <Link to="/invoice/commission-air-ticket">Add a invoice</Link>,
-    //       icon: (
-    //         <Iconify name="ant-design:plus-outlined" style={subIconStyle} />
-    //       ),
-    //       key: "/invoice/commission-air-ticket",
-    //     },
-    //     {
-    //       label: <Link to="/passport/passport-list">Passport List</Link>,
-    //       icon: (
-    //         <Iconify
-    //           name="akar-icons:three-line-horizontal"
-    //           style={subIconStyle}
-    //         />
-    //       ),
-    //       key: "/passport/passport-list",
-    //     },
-    //   ],
-    // },
     {
       key: "/passport",
-      label: "passport",
-      icon: (
-        <Iconify name="ic:outline-account-balance-wallet" style={iconStyle} />
-      ),
+      label: "Passport",
+      icon: <Iconify name="fontisto:passport" style={iconStyle} />,
       children: [
         {
           label: <Link to="/passport/create-passport">Add a Passport</Link>,
@@ -102,6 +74,31 @@ const MenuData: React.FC = () => {
             />
           ),
           key: "/passport/passport-list",
+        },
+      ],
+    },
+
+    {
+      key: "/moneyreceipt",
+      label: "Money Receipt",
+      icon: <Iconify name="ic:outline-money" style={iconStyle} />,
+      children: [
+        {
+          label: <Link to="/moneyreceipt/add">Add Money Receipt</Link>,
+          icon: (
+            <Iconify name="ant-design:plus-outlined" style={subIconStyle} />
+          ),
+          key: "/moneyreceipt/add",
+        },
+        {
+          label: <Link to="/moneyreceipt">Money Receipt List</Link>,
+          icon: (
+            <Iconify
+              name="akar-icons:three-line-horizontal"
+              style={subIconStyle}
+            />
+          ),
+          key: "/moneyreceipt",
         },
       ],
     },

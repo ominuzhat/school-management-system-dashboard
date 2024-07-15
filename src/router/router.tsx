@@ -36,6 +36,8 @@ import ClientCategoryPage from "../modules/Configuration/ClientCategory/pages/Cl
 import UserPage from "../modules/Configuration/User/Users/pages/UserPages";
 import UserRoles from "../modules/Configuration/User/Roles/pages/UserRolePage";
 import PayrollPages from "../modules/Payroll/pages/PayrollPages";
+import MoneyReceiptPage from "../modules/MoneyReceipt/pages/MoneyReceiptPage";
+import CreateMoneyReceipt from "../modules/MoneyReceipt/components/CreateMoneyReceipt";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,24 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Dashboard />,
+      },
+      {
+        path: "/moneyreceipt",
+        element: <Accounts />,
+        children: [
+          {
+            path: "add",
+            element: <CreateMoneyReceipt />,
+          },
+          {
+            path: "",
+            element: <MoneyReceiptPage />,
+          },
+          {
+            path: "passport-view/1",
+            element: <ViewPassportManagement />,
+          },
+        ],
       },
       {
         path: "/passport",
@@ -128,7 +148,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-
       {
         path: "/client",
         element: <ClientPage />,

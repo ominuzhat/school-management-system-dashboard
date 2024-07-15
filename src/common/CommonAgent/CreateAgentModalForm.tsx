@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Select } from "antd";
+import { Card, Col, Input, Row } from "antd";
 import { useCreateRestaurantMutation } from "../../modules/Restaurants/api/restaurantsEndpoint";
 import { Form } from "../CommonAnt";
 import React from "react";
