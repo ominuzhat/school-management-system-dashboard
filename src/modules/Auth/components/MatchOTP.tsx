@@ -10,11 +10,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { clearMessage } from "../../../app/features/authSlice";
+import { useVerifyOtpMutation } from "../api/loginEndpoint";
 
 const MatchOTP: React.FC = () => {
   const { message } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
 
   const [time, setTime] = useState<number>(3 * 60);
 
@@ -38,7 +40,25 @@ const MatchOTP: React.FC = () => {
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
-  const onFinish = () => {};
+  const onFinish = async (values: { otp: string }) => {
+    const email = localStorage.getItem("send-email-otp");
+
+    const result = await verifyOtp({
+      email: email,
+      otp: parseInt(values.otp),
+    });
+
+    console.log("dada", result.data?.data.accessToken);
+
+    // if (result?.data?.success) {
+    //   localStorage.removeItem("send-email-otp");
+    //   navigate("/forgot-password");
+    // }
+    if (result?.data?.success) {
+      localStorage.removeItem("send-email-otp");
+      navigate(`/forgot-password/?token=${result.data?.data.accessToken}`);
+    }
+  };
 
   const handleOnFocus = (): void => {
     dispatch(clearMessage());
@@ -84,7 +104,11 @@ const MatchOTP: React.FC = () => {
 
               <br />
 
-              <Form onFinish={onFinish} buttonLabel="Verify" isLoading>
+              <Form
+                onFinish={onFinish}
+                buttonLabel="Verify"
+                isLoading={isLoading}
+              >
                 <Form.Item<MatchOTPTypes>
                   label="Enter Verification Code"
                   name="otp"

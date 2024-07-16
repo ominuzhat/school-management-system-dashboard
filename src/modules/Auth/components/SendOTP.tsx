@@ -10,13 +10,22 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { clearMessage } from "../../../app/features/authSlice";
+import { useSendOtpMutation } from "../api/loginEndpoint";
 
 const SendOTP: React.FC = () => {
   const { message } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [sendOtp, { isLoading }] = useSendOtpMutation();
 
-  const onFinish = () => {};
+  const onFinish = async (values: { email: string }) => {
+    const result = await sendOtp(values);
+
+    if (result?.data?.success) {
+      localStorage.setItem("send-email-otp", values.email);
+      navigate("/match-otp");
+    }
+  };
 
   const handleOnFocus = (): void => {
     dispatch(clearMessage());
@@ -48,7 +57,11 @@ const SendOTP: React.FC = () => {
               <br />
               <br />
 
-              <Form onFinish={onFinish} buttonLabel="Get OTP" isLoading>
+              <Form
+                onFinish={onFinish}
+                buttonLabel="Get OTP"
+                isLoading={isLoading}
+              >
                 <Form.Item<SendOTPTypes>
                   label="Email Address"
                   name="email"

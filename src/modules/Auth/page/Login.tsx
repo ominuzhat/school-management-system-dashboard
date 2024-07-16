@@ -33,10 +33,13 @@ const Login: React.FC = () => {
   const onFinish = async (values: LoginTypes): Promise<void> => {
     try {
       const response = await login(values).unwrap();
-      if (response.success) {
-        const { success, token } = response;
-        dispatch(loggedIn({ success, token }));
-        localStorage.setItem(TOKEN_NAME, JSON.stringify({ success, token }));
+      if (response.success === true) {
+        const { success, data } = response;
+        dispatch(loggedIn({ success, access_token: data?.access_token }));
+        localStorage.setItem(
+          TOKEN_NAME,
+          JSON.stringify({ success, access_token: data?.access_token })
+        );
         dispatch(
           openNotification({
             type: "success",
@@ -46,13 +49,11 @@ const Login: React.FC = () => {
         navigate(from);
       }
     } catch (error) {
-      const { data, status } = error as ErrorType;
+      const { status } = error as ErrorType;
       if (status === "FETCH_ERROR") {
         dispatch(
           setMessage("We're sorry, our system is currently unavailable.")
         );
-      } else {
-        dispatch(setMessage(data.message));
       }
     }
   };
@@ -108,20 +109,20 @@ const Login: React.FC = () => {
                     prefix={<Iconify name="ant-design:lock-outlined" />}
                     placeholder="********"
                   />
-                  <Link to="/send-otp">
-                    <Typography.Link
-                      style={{
-                        display: "block",
-                        textAlign: "right",
-                        padding: "5px",
-                      }}
-                    >
-                      Forgot Password?
-                    </Typography.Link>
-                  </Link>
                 </Form.Item>
               </Form>
 
+              <Link to="/send-otp">
+                <Typography.Link
+                  style={{
+                    display: "block",
+                    textAlign: "right",
+                    padding: "5px",
+                  }}
+                >
+                  Forgot Password?
+                </Typography.Link>
+              </Link>
               <Typography.Text type="danger" style={{ display: "block" }}>
                 {message}
               </Typography.Text>

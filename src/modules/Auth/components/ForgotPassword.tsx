@@ -6,17 +6,41 @@ import { Form } from "../../../common/CommonAnt";
 import { ForgotPasswordTypes } from "../types/authTypes";
 import { passwordValidator } from "../../../utilities/validator";
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
-import { clearMessage } from "../../../app/features/authSlice";
+import { clearMessage, loggedIn } from "../../../app/features/authSlice";
+import { useChangePasswordMutation } from "../api/loginEndpoint";
 
 const ForgotPassword: React.FC = () => {
+  const [changePassword, { isLoading }] = useChangePasswordMutation();
   const { message } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get("token");
 
-  const onFinish = () => {};
+  if (token) {
+    dispatch(loggedIn({ success: true, access_token: token }));
+  }
+
+  console.log("pppp", token);
+
+  const onFinish = async (values: ForgotPasswordTypes) => {
+    const result = await changePassword({
+      newPassword: values.newPassword,
+      confirmNewPassword: values.confirmNewPassword,
+    });
+
+    if (values.newPassword === values.confirmNewPassword) {
+      result;
+    }
+
+    if (result?.data?.success) {
+      navigate("/login");
+    }
+  };
 
   const handleOnFocus = (): void => {
     dispatch(clearMessage());
@@ -48,10 +72,25 @@ const ForgotPassword: React.FC = () => {
               <br />
               <br />
 
-              <Form onFinish={onFinish} buttonLabel="Reset Password" isLoading>
+              <Form
+                onFinish={onFinish}
+                buttonLabel="Reset Password"
+                isLoading={isLoading}
+              >
                 <Form.Item<ForgotPasswordTypes>
                   label="New Password"
-                  name="password"
+                  name="newPassword"
+                  rules={[{ required: true }, { validator: passwordValidator }]}
+                >
+                  <Input.Password
+                    onFocus={handleOnFocus}
+                    prefix={<Iconify name="ant-design:lock-outlined" />}
+                    placeholder="********"
+                  />
+                </Form.Item>
+                <Form.Item<ForgotPasswordTypes>
+                  label="Confirm Password"
+                  name="confirmNewPassword"
                   rules={[{ required: true }, { validator: passwordValidator }]}
                 >
                   <Input.Password

@@ -21,10 +21,12 @@ const baseQuery: BaseQueryFn<
 > = fetchBaseQuery({
   baseUrl,
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.token;
+    const token = (getState() as RootState).auth.access_token;
+
     if (token) {
-      headers.set("authorization", `Bearer ${token}`);
+      headers.set("Authorization", `${token}`);
     }
+    return headers;
   },
 });
 

@@ -6,7 +6,7 @@ const profileEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query<ApiResponse<ProfileTypes>, void>({
       query: () => ({
-        url: "/auth/profile",
+        url: "/user/me",
       }),
       providesTags: [{ type: "Profile", id: "PROFILE_ID" }],
     }),

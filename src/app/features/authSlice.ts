@@ -2,13 +2,13 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 type AuthInitialStateTypes = {
   success: boolean;
-  token: string | null | undefined;
+  access_token: string | null | undefined;
   message?: string | undefined;
 };
 
 const initialState: AuthInitialStateTypes = {
   success: false,
-  token: null,
+  access_token: null,
   message: undefined,
 };
 
@@ -18,11 +18,11 @@ const authSlice = createSlice({
   reducers: {
     loggedIn: (state, { payload }: PayloadAction<AuthInitialStateTypes>) => {
       state.success = payload.success;
-      state.token = payload.token;
+      state.access_token = payload.access_token;
     },
     loggedOut: (state) => {
       state.success = false;
-      state.token = null;
+      state.access_token = null;
     },
 
     setMessage: (state, { payload }: PayloadAction<string | undefined>) => {

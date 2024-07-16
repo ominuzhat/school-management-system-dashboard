@@ -8,8 +8,10 @@ const useAuthChecked = () => {
 
   useEffect(() => {
     const getAuth = localStorage.getItem(TOKEN_NAME);
+
     if (getAuth) {
       const parseAuth = JSON.parse(getAuth);
+
       if (parseAuth) {
         dispatch(loggedIn(parseAuth));
       }

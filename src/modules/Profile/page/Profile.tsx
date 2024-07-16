@@ -30,6 +30,9 @@ import { flight } from "../../../utilities/images";
 
 const Profile: React.FC = () => {
   const { data, isFetching } = useGetProfileQuery();
+
+  console.log("first", data);
+
   const [create] = useUpdateProfileMutation();
   const [edit, setEdit] = useState<{ profile?: boolean; password?: boolean }>({
     profile: false,
@@ -38,7 +41,7 @@ const Profile: React.FC = () => {
 
   const [form] = Form.useForm();
 
-  const onFinish: FormProps<ProfileTypes>["onFinish"] = (values) => {
+  const onFinish: FormProps<ProfileTypes>["onFinish"] = async (values) => {
     console.log(values);
     return;
     create(values);
