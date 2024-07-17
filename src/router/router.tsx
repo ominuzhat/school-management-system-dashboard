@@ -39,6 +39,12 @@ import PayrollPages from "../modules/Payroll/pages/PayrollPages";
 import MoneyReceiptPage from "../modules/MoneyReceipt/pages/MoneyReceiptPage";
 import CreateMoneyReceipt from "../modules/MoneyReceipt/components/CreateMoneyReceipt";
 import ClientViewPage from "../modules/Client/pages/ClientViewPage";
+import ClientInvoice from "../modules/Client/component/ClientInvoice";
+import ClientDetails from "../modules/Client/component/ClientDetails";
+import ClientPayment from "../modules/Client/component/ClientPayment";
+import ClientQuotation from "../modules/Client/component/ClientQuotation";
+import ClientRefundProduct from "../modules/Client/component/ClientRefundProduct";
+import ClientListOfUploadPassport from "../modules/Client/component/ClientListOfUploadPassport";
 
 const router = createBrowserRouter([
   {
@@ -158,31 +164,37 @@ const router = createBrowserRouter([
             element: <ClientPage />,
           },
           {
-            path: "client/details",
+            path: "client/1",
             element: <ClientViewPage />,
-          },
-          {
-            path: "non-commission-air-ticket",
-            element: <NonCommision />,
-          },
-          {
-            path: "passport-list",
-            element: <PassportManagement />,
-          },
-          {
-            path: "passport-view/1",
-            element: <ViewPassportManagement />,
+            children: [
+              {
+                path: "details",
+                element: <ClientDetails />,
+              },
+              {
+                path: "invoice",
+                element: <ClientInvoice />,
+              },
+              {
+                path: "payments",
+                element: <ClientPayment />,
+              },
+              {
+                path: "quotation",
+                element: <ClientQuotation />,
+              },
+              {
+                path: "refund-product",
+                element: <ClientRefundProduct />,
+              },
+              {
+                path: "list-of-upload-passports",
+                element: <ClientListOfUploadPassport />,
+              },
+            ],
           },
         ],
       },
-      // {
-      //   path: "/client",
-      //   element: <ClientPage />,
-      // },
-      // {
-      //   path: "/client/1",
-      //   element: <ClientViewPage />,
-      // },
       {
         path: "/employee",
         element: <EmployeePage />,

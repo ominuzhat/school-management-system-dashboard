@@ -61,7 +61,7 @@ const columns: TableProps<DataType>["columns"] = [
     render: (_, _record) => (
       <Space size="middle">
         <EditButton>Edit</EditButton>
-        <ViewButton to="/client/details">View</ViewButton>
+        <ViewButton to="/client/1/details">View</ViewButton>
         <DeleteButton>Delete</DeleteButton>
       </Space>
     ),

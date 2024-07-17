@@ -2,6 +2,11 @@ import { Card, Tabs, TabsProps } from "antd";
 import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
 import { useLocation, useNavigate } from "react-router-dom";
 import ClientDetails from "../component/ClientDetails";
+import ClientInvoice from "../component/ClientInvoice";
+import ClientPayment from "../component/ClientPayment";
+import ClientQuotation from "../component/ClientQuotation";
+import ClientRefundProduct from "../component/ClientRefundProduct";
+import ClientListOfUploadPassport from "../component/ClientListOfUploadPassport";
 
 const ClientViewPage = () => {
   const navigate = useNavigate();
@@ -18,24 +23,29 @@ const ClientViewPage = () => {
       children: <ClientDetails />,
     },
     {
-      key: "Invoice",
+      key: "invoice",
       label: <p>Invoice</p>,
-      children: "ii",
+      children: <ClientInvoice />,
     },
     {
-      key: "Payments",
+      key: "payments",
       label: "Payments",
-      children: "Content of Tab Pane 3",
+      children: <ClientPayment />,
     },
     {
-      key: "Quotation",
+      key: "quotation",
       label: "Quotation",
-      children: "Content of Tab Pane 4",
+      children: <ClientQuotation />,
     },
     {
-      key: "List of Upload Passports",
+      key: "refund-product",
+      label: "Refund Product",
+      children: <ClientRefundProduct />,
+    },
+    {
+      key: "list-of-upload-passports",
       label: "List of Upload Passports",
-      children: "Content of Tab Pane 4",
+      children: <ClientListOfUploadPassport />,
     },
     {
       key: "Clients Ledger",
