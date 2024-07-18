@@ -110,7 +110,7 @@ const ClientPage = () => {
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Create Client",
+                    title: "Add Balance Transfer",
                     content: <CreateClientModalForm />,
                   })
                 )
@@ -118,7 +118,7 @@ const ClientPage = () => {
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Create Client
+              Add Balance Transfer
             </Button>
           </Col>
           <Col lg={6}>

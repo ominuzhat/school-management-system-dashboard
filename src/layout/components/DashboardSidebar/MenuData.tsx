@@ -115,73 +115,76 @@ const MenuData: React.FC = () => {
       icon: <Iconify name="mdi:work" style={iconStyle} />,
     },
 
-    // {
-    //   key: "/accounts",
-    //   label: "Accounts",
-    //   icon: (
-    //     <Iconify name="ic:outline-account-balance-wallet" style={iconStyle} />
-    //   ),
-    //   children: [
-    //     {
-    //       label: <Link to="/accounts/account-list">Add an Account</Link>,
-    //       icon: (
-    //         <Iconify name="ant-design:plus-outlined" style={subIconStyle} />
-    //       ),
-    //       key: "/accounts/account-list",
-    //     },
-    //     {
-    //       label: (
-    //         <Link to="/accounts/transactions-history">
-    //           Transactions History
-    //         </Link>
-    //       ),
-    //       icon: (
-    //         <Iconify
-    //           name="akar-icons:three-line-horizontal"
-    //           style={subIconStyle}
-    //         />
-    //       ),
-    //       key: "/accounts/transactions-history",
-    //     },
-    //     {
-    //       label: (
-    //         <Link to="/accounts/balance-adjustment">Balance Adjustment</Link>
-    //       ),
-    //       icon: (
-    //         <Iconify
-    //           name="akar-icons:three-line-horizontal"
-    //           style={subIconStyle}
-    //         />
-    //       ),
-    //       key: "/accounts/balance-adjustment",
-    //     },
-    //     {
-    //       label: <Link to="/accounts/balance-status">Balance Status</Link>,
-    //       icon: (
-    //         <Iconify
-    //           name="akar-icons:three-line-horizontal"
-    //           style={subIconStyle}
-    //         />
-    //       ),
-    //       key: "/accounts/balance-status",
-    //     },
-    //     {
-    //       label: <Link to="/accounts/balance-transfer">Balance Transfer</Link>,
-    //       icon: (
-    //         <Iconify
-    //           name="akar-icons:three-line-horizontal"
-    //           style={subIconStyle}
-    //         />
-    //       ),
-    //       key: "/accounts/balance-transfer",
-    //     },
-    //     {
-    //       label: <Link to="/accounts/client-account">Client Account</Link>,
-    //       icon: <Iconify name="codicon:account" style={subIconStyle} />,
-    //       key: "/accounts/client-account",
-    //     },
-    //   ],
-    // },
+    {
+      key: "/accounts",
+      label: "Accounts",
+      icon: (
+        <Iconify name="ic:outline-account-balance-wallet" style={iconStyle} />
+      ),
+      children: [
+        {
+          label: <Link to="/accounts/account-list">List of Account</Link>,
+          icon: (
+            <Iconify
+              name="akar-icons:three-line-horizontal"
+              style={subIconStyle}
+            />
+          ),
+          key: "/accounts/account-list",
+        },
+        {
+          label: (
+            <Link to="/accounts/transactions-history">
+              Transactions History
+            </Link>
+          ),
+          icon: (
+            <Iconify
+              name="akar-icons:three-line-horizontal"
+              style={subIconStyle}
+            />
+          ),
+          key: "/accounts/transactions-history",
+        },
+        {
+          label: (
+            <Link to="/accounts/balance-adjustment">Balance Adjustment</Link>
+          ),
+          icon: (
+            <Iconify
+              name="akar-icons:three-line-horizontal"
+              style={subIconStyle}
+            />
+          ),
+          key: "/accounts/balance-adjustment",
+        },
+        {
+          label: <Link to="/accounts/balance-status">Balance Status</Link>,
+          icon: (
+            <Iconify
+              name="akar-icons:three-line-horizontal"
+              style={subIconStyle}
+            />
+          ),
+          key: "/accounts/balance-status",
+        },
+        {
+          label: <Link to="/accounts/balance-transfer">Balance Transfer</Link>,
+          icon: (
+            <Iconify
+              name="akar-icons:three-line-horizontal"
+              style={subIconStyle}
+            />
+          ),
+          key: "/accounts/balance-transfer",
+        },
+        {
+          label: <Link to="/accounts/client-account">Client Account</Link>,
+          icon: <Iconify name="codicon:account" style={subIconStyle} />,
+          key: "/accounts/client-account",
+        },
+      ],
+    },
 
     {
       key: "/expense",
