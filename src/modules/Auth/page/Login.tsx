@@ -1,5 +1,5 @@
 import { Card, Col, Input, Row, Typography } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { ErrorType, LoginTypes } from "../types/authTypes";
 import "../styles/Login.css";
 import { airplane } from "../../../utilities/images";
@@ -20,33 +20,98 @@ import {
   passwordValidator,
 } from "../../../utilities/validator";
 import { RootState } from "../../../app/store";
+import { enqueueSnackbar } from "notistack";
+import axios from "axios";
 
 const Login: React.FC = () => {
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const hash = queryParams.get("hash");
   const { message } = useSelector((state: RootState) => state.auth);
 
   const from: string = location?.state?.from?.pathname || "/";
+
+  useEffect(() => {
+    if (hash) {
+      const verifyEmail = async () => {
+        try {
+          const response = await axios.post(
+            "https://code-canvas-official-app.onrender.com/auth/verify-email",
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${hash}`,
+              },
+            }
+          );
+          console.log("Verification successful:", response.data.data);
+          if (response) {
+            enqueueSnackbar(`Verification SuccessFully `, {
+              variant: "success",
+            });
+
+            const { success }: any = response;
+            dispatch(
+              loggedIn({
+                success,
+                access_token: response?.data?.data?.access_token,
+              })
+            );
+            localStorage.setItem(
+              TOKEN_NAME,
+              response?.data?.data?.access_token
+            );
+            // localStorage.setItem(
+            //   TOKEN_NAME,
+            //   JSON.stringify({
+            //     success,
+            //     access_token: response?.data?.data?.access_token,
+            //   })
+            // );
+            dispatch(
+              openNotification({
+                type: "success",
+                message: "You have successfully logged in.",
+              })
+            );
+            navigate(from);
+          }
+        } catch (error) {
+          console.error("Verification failed:", error);
+          enqueueSnackbar(`Verification Unsuccessful `, {
+            variant: "error",
+          });
+        }
+      };
+
+      verifyEmail();
+    }
+  }, [dispatch, from, hash, navigate]);
 
   const onFinish = async (values: LoginTypes): Promise<void> => {
     try {
       const response = await login(values).unwrap();
       if (response.success === true) {
-        const { success, data } = response;
-        dispatch(loggedIn({ success, access_token: data?.access_token }));
-        localStorage.setItem(
-          TOKEN_NAME,
-          JSON.stringify({ success, access_token: data?.access_token })
-        );
-        dispatch(
-          openNotification({
-            type: "success",
-            message: "You have successfully logged in.",
-          })
-        );
-        navigate(from);
+        enqueueSnackbar(`Check Your mail for confirm the Login`, {
+          variant: "success",
+        });
+
+        // const { success, data } = response;
+        // dispatch(loggedIn({ success, access_token: data?.access_token }));
+        // localStorage.setItem(
+        //   TOKEN_NAME,
+        //   JSON.stringify({ success, access_token: data?.access_token })
+        // );
+        // dispatch(
+        //   openNotification({
+        //     type: "success",
+        //     message: "You have successfully logged in.",
+        //   })
+        // );
+        // navigate(from);
       }
     } catch (error) {
       const { status } = error as ErrorType;
@@ -75,7 +140,7 @@ const Login: React.FC = () => {
                   style={{ width: "50%", height: "100%", objectFit: "contain" }}
                 /> */}
                 <Typography.Text className="login-header-title">
-                  BTS Travel Express
+                  Code Canvas Creation
                 </Typography.Text>
                 <Typography.Text type="secondary" style={{ display: "block" }}>
                   Login to you account below.

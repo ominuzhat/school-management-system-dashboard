@@ -45,6 +45,9 @@ import ClientPayment from "../modules/Client/component/ClientPayment";
 import ClientQuotation from "../modules/Client/component/ClientQuotation";
 import ClientRefundProduct from "../modules/Client/component/ClientRefundProduct";
 import ClientListOfUploadPassport from "../modules/Client/component/ClientListOfUploadPassport";
+import CartPages from "../modules/Cart/pages/CartPages";
+import ProductPages from "../modules/Product/pages/ProductPages";
+import ProductView from "../modules/Product/pages/ProductView";
 
 const router = createBrowserRouter([
   {
@@ -195,6 +198,31 @@ const router = createBrowserRouter([
           },
         ],
       },
+
+      {
+        path: "/product",
+        element: <Accounts />,
+        children: [
+          {
+            path: "create-passport",
+            element: <CreatePassportManagement />,
+          },
+          {
+            path: "/product",
+            element: <ProductPages />,
+          },
+          {
+            path: "product-view/:productId",
+            element: <ProductView />,
+          },
+        ],
+      },
+
+      {
+        path: "/cart",
+        element: <CartPages />,
+      },
+
       {
         path: "/employee",
         element: <EmployeePage />,

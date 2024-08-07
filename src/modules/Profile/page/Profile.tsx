@@ -7,6 +7,7 @@ import {
   Image,
   Input,
   Row,
+  Select,
   Space,
   Tag,
   Typography,
@@ -20,18 +21,18 @@ import {
   useUpdateProfileMutation,
 } from "../api/profileEndpoint";
 import { PasswordTypes, ProfileTypes } from "../types/profileTypes";
-import {
-  emailValidator,
-  nameValidator,
-  passwordValidator,
-} from "../../../utilities/validator";
+import { passwordValidator } from "../../../utilities/validator";
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import { flight } from "../../../utilities/images";
 
 const Profile: React.FC = () => {
-  const { data, isFetching } = useGetProfileQuery();
+  const { data: profileData, isFetching } = useGetProfileQuery();
+  const { Option } = Select;
 
-  console.log("first", data);
+  console.log("first", profileData);
+
+  const { email, firstName, lastName, role, details, phone } =
+    profileData?.data || {};
 
   const [create] = useUpdateProfileMutation();
   const [edit, setEdit] = useState<{ profile?: boolean; password?: boolean }>({
@@ -43,13 +44,13 @@ const Profile: React.FC = () => {
 
   const onFinish: FormProps<ProfileTypes>["onFinish"] = async (values) => {
     console.log(values);
-    return;
     create(values);
+    // return;
   };
 
   useEffect(() => {
-    form.setFieldsValue(data?.data);
-  }, [data?.data, form]);
+    form.setFieldsValue(profileData?.data);
+  }, [profileData?.data, form]);
 
   return (
     <React.Fragment>
@@ -74,11 +75,9 @@ const Profile: React.FC = () => {
                 id="profile-picture"
               />
               <Typography.Text strong style={{ fontSize: "2rem" }}>
-                {data?.data?.name}
+                {firstName}
               </Typography.Text>
-              <Typography.Text type="secondary">
-                {data?.data?.email}
-              </Typography.Text>
+              <Typography.Text type="secondary">{email}</Typography.Text>
               <Tag color="success" bordered>
                 Active
               </Tag>
@@ -141,13 +140,32 @@ const Profile: React.FC = () => {
                 items={[
                   {
                     key: "1",
-                    label: "Full Name",
-                    children: data?.data?.name,
+                    label: "First Name",
+                    children: firstName ? firstName : "N/A",
                   },
                   {
                     key: "2",
+                    label: "Last Name",
+                    children: lastName ? lastName : "N/A",
+                  },
+                  {
+                    key: "3",
                     label: "Email Address",
-                    children: data?.data?.email,
+                    children: email ? email : "N/A",
+                  },
+                  {
+                    key: "3",
+                    label: "Details",
+                    children: details ? details : "N/A",
+                  },
+                  {
+                    key: "4",
+                    label: "Role",
+                    children: role?.name ? (
+                      <Tag color="blue">{role?.name}</Tag>
+                    ) : (
+                      <Tag color="red">N/A</Tag>
+                    ),
                   },
                 ]}
               />
@@ -155,21 +173,32 @@ const Profile: React.FC = () => {
 
             {edit.profile && (
               <Form form={form} onFinish={onFinish} layout="vertical">
-                <Form.Item<ProfileTypes>
-                  label="Username"
-                  name="name"
-                  rules={[{ validator: nameValidator }]}
-                >
-                  <Input size="large" placeholder="User name" />
+                <Form.Item<ProfileTypes> label="First Name" name="firstName">
+                  <Input size="large" placeholder="First name" />
                 </Form.Item>
-
-                <Form.Item<ProfileTypes>
-                  label="Email Address"
-                  name="email"
-                  rules={[{ validator: emailValidator }]}
-                >
-                  <Input readOnly size="large" placeholder="User name" />
+                <Form.Item<ProfileTypes> label="Last Name" name="lastName">
+                  <Input size="large" placeholder="Last name" />
                 </Form.Item>
+                <Form.Item<ProfileTypes> label="Phone" name="phone">
+                  <Input size="large" placeholder="Phone Number" />
+                </Form.Item>
+                <Form.Item<ProfileTypes> label="Address" name="address">
+                  <Input size="large" placeholder="address Number" />
+                </Form.Item>
+                {/* <Form.Item<ProfileTypes> label="Gender" name="gender">
+                  <Select size="large" placeholder="Select Gender">
+                    <Option value="male">Male</Option>
+                    <Option value="female">Female</Option>
+                    <Option value="other">Other</Option>
+                  </Select>
+                </Form.Item> */}
+                {/* <Form.Item<ProfileTypes> label="Role" name="role">
+                  <Select size="large" placeholder="Select Role">
+                    <Option value="admin">Admin</Option>
+                    <Option value="user">User</Option>
+                    <Option value="other">Other</Option>
+                  </Select>
+                </Form.Item> */}
 
                 <Form.Item>
                   <Button type="primary" htmlType="submit">

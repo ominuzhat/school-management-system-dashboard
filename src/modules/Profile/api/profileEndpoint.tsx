@@ -13,7 +13,7 @@ const profileEndpoint = api.injectEndpoints({
 
     updateProfile: builder.mutation<ApiResponse<ProfileTypes>, ProfileTypes>({
       query: (data) => ({
-        url: "/auth/profile",
+        url: "/user/me",
         method: "PATCH",
         body: data,
       }),

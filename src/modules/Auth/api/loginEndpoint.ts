@@ -10,11 +10,11 @@ const loginEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<ApiResponse<LoginResponse>, LoginTypes>({
       query: (data) => ({
-        url: "/auth/login",
+        url: "/auth/login?web=0",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: [{ type: "Profile", id: "PROFILE_ID" }],
+      invalidatesTags: [{ type: "Login", id: "LOGIN_ID" }],
     }),
     sendOtp: builder.mutation<ApiResponse<any>, { email: string }>({
       query: (data) => ({

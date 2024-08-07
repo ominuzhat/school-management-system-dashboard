@@ -5,8 +5,9 @@ import router from "./router/router";
 import { ConfigProvider, theme } from "antd";
 import Notification from "./common/Notification/Notification";
 import { useSelector } from "react-redux";
-import { RootState } from "./app/store";
+import { persistor, RootState } from "./app/store";
 import { Modal } from "./common/CommonAnt";
+import { PersistGate } from "redux-persist/integration/react";
 
 const App: React.FC = () => {
   const { themes, primaryColor } = useSelector(
@@ -25,9 +26,11 @@ const App: React.FC = () => {
           },
         }}
       >
-        <RouterProvider router={router} />
-        <Notification />
-        <Modal />
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+          <Notification />
+          <Modal />
+        </PersistGate>
       </ConfigProvider>
     </React.Fragment>
   );

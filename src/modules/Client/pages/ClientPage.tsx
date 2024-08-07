@@ -9,6 +9,7 @@ import EditButton from "../../../common/CommonAnt/Button/EditButton";
 import DeleteButton from "../../../common/CommonAnt/Button/DeleteButton";
 import ViewButton from "../../../common/CommonAnt/Button/ViewButton";
 import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
+import { useGetClientQuery } from "../EndPoints/ClientEndPoints";
 
 interface DataType {
   key: string;
@@ -97,6 +98,8 @@ const ClientPage = () => {
     console.log("Search Value:", value);
   };
   const dispatch = useDispatch();
+  const { data: c } = useGetClientQuery({});
+  console.log("rrtyuifgh", c);
   return (
     <div className="space-y-5">
       <div className="my-5">

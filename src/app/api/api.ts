@@ -37,7 +37,7 @@ export const api = createApi({
 
     const errorStatus = [
       401,
-      403,
+      // 403,
       "CUSTOM_ERROR",
       "FETCH_ERROR",
       "PARSING_ERROR",
