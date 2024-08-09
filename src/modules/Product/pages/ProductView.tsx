@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useSingleProductItemQuery } from "../api/productEndPoints";
-import { Button, Descriptions, DescriptionsProps } from "antd";
+import { Carousel, Descriptions, DescriptionsProps } from "antd";
+import { GlobalOutlined } from "@ant-design/icons";
 
 const ProductView = () => {
   const { productId } = useParams();
@@ -17,6 +18,7 @@ const ProductView = () => {
     support_for,
     title,
     total_sale,
+    tags,
   } = data?.data || {};
 
   console.log("ttt", data);
@@ -24,83 +26,52 @@ const ProductView = () => {
   const borderedItems: DescriptionsProps["items"] = [
     {
       key: "1",
-      label: <div className="custom-label font-bold">Passport Number</div>,
-      children: <div>000012</div>,
+      label: <div className="custom-label font-bold">category</div>,
+      children: <div>{category?.name}</div>,
     },
     {
       key: "2",
-      label: <div className="custom-label font-bold ">Date Of Birth</div>,
-      children: "13-02-2020",
+      label: <div className="custom-label font-bold ">Sub title</div>,
+      children: <div>{subtitle}</div>,
     },
     {
       key: "2",
-      label: (
-        <div className="custom-label font-bold ">Passport Issue Date </div>
+      label: <div className="custom-label font-bold ">Support </div>,
+      children: <div>{support_for}</div>,
+    },
+    {
+      key: "2",
+      label: <div className="custom-label font-bold ">Live Link</div>,
+      children: (
+        <a href={live_link} target="_blank" rel="noopener noreferrer">
+          <GlobalOutlined />
+        </a>
       ),
-      children: "13-02-2020",
-    },
-    {
-      key: "2",
-      label: (
-        <div className="custom-label font-bold ">Passport Expiry Date </div>
-      ),
-      children: "13-02-2020",
     },
     {
       key: "3",
-      label: "Client",
-      children: "Shakib Khan",
+      label: "Slug",
+      children: <div>{slug || "N/A"}</div>,
     },
     {
       key: "3",
-      label: "Gender",
-      children: "Male",
+      label: "Total Sale",
+      children: <div>{total_sale || "N/A"}</div>,
     },
     {
-      key: "4",
-      label: "Previous Visited Countries",
-      children: "India , Maldives , Bhutan",
+      key: "3",
+      label: "Price",
+      children: <div>{price || "N/A"}</div>,
     },
     {
-      key: "5",
-      label: "Previous Passport Number",
-      children: "000000369",
+      key: "3",
+      label: "tags",
+      children: <div>{tags || "N/A"}</div>,
     },
     {
-      key: "6",
-      label: "Mobile Number",
-      children: "01862404050",
-    },
-    {
-      key: "6",
-      label: "Which Country For",
-      children: "Bangladesh",
-    },
-    {
-      key: "6",
-      label: "Group Name",
-      children: "BR624",
-    },
-    {
-      key: "6",
-      label: "Passport Received",
-      children: "No (Gmail)",
-    },
-
-    {
-      key: "6",
-      label: "Passport Status",
-      children: "Flight Done",
-    },
-    {
-      key: "6",
-      label: "Police Clearance Issue Date",
-      children: "Yes (20-12-2024)",
-    },
-    {
-      key: "22",
-      label: <div className="custom-label">Passport Tracking Number</div>,
-      children: "000012",
+      key: "3",
+      label: "tags",
+      children: <div>{tags || "N/A"}</div>,
     },
 
     {
@@ -110,8 +81,30 @@ const ProductView = () => {
     },
   ];
 
+  const contentStyle: React.CSSProperties = {
+    height: "500px",
+    color: "#fff",
+    lineHeight: "160px",
+    textAlign: "center",
+    background: "#364d79",
+  };
+
   return (
     <div>
+      <Carousel autoplay>
+        {images?.map((image: any) => (
+          <div key={image?.id}>
+            <h3 style={contentStyle}>
+              <img
+                src={image?.image}
+                alt={`slide-${image?.id}`}
+                style={{ width: "100%", height: "100%" }}
+              />
+            </h3>
+          </div>
+        ))}
+      </Carousel>
+
       <Descriptions
         bordered
         title={` Product Name :  ${title}`}

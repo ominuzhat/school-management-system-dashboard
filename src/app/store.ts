@@ -55,10 +55,23 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// const store = configureStore({
+//   reducer: persistedReducer,
+//   middleware: (getDefaultMiddleware) =>
+//     getDefaultMiddleware().concat(api.middleware),
+//   devTools: process.env.NODE_ENV === "development",
+// });
+
 const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore specific paths from the serializable check
+        ignoredActions: [api.util.resetApiState.type],
+        ignoredPaths: ["modal.content"], // Example: if modal content is non-serializable
+      },
+    }).concat(api.middleware),
   devTools: process.env.NODE_ENV === "development",
 });
 

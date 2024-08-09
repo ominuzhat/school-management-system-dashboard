@@ -3,15 +3,16 @@ import { GlobalOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../app/features/modalSlice";
 import EditButton from "../../../common/CommonAnt/Button/EditButton";
-import UpdateRestaurant from "../../Restaurants/components/UpdateRestaurant";
 import type { ColumnsType } from "antd/es/table";
-import type { ProductsTypes } from "../types/CartTypes";
 import DeleteButton from "../../../common/CommonAnt/Button/DeleteButton";
-import { useDeleteCartItemMutation } from "../api/CartEndpoints";
+import ViewButton from "../../../common/CommonAnt/Button/ViewButton";
+import { useDeleteServiceItemMutation } from "../api/serviceEndpoints";
+import UpdateService from "../components/UpdateService";
 
-const useColumns = (): ColumnsType<ProductsTypes> => {
+const useColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
-  const [deleteCartItem] = useDeleteCartItemMutation();
+  const [deleteCartItem] = useDeleteServiceItemMutation();
+
   const handleDelete = async (id: any) => {
     try {
       await deleteCartItem({ id }).unwrap();
@@ -20,67 +21,53 @@ const useColumns = (): ColumnsType<ProductsTypes> => {
       console.error("Failed to delete item:", error);
     }
   };
+
   return [
     {
       key: "0",
       title: "SL",
+      align: "center",
       render: (_text, _record, index) => index + 1,
     },
     {
       key: "1",
       title: "Title",
       dataIndex: "title",
+      align: "center",
+      sorter: (a, b) => a.title.localeCompare(b.title), // Sorting by title
       render: (title) => (title ? title : "N/A"),
     },
 
     {
-      key: "4",
-      title: "Live Website Link",
-      dataIndex: "live_link",
-      render: (live_link) =>
-        live_link ? (
-          <a href={live_link} target="_blank" rel="noopener noreferrer">
-            <GlobalOutlined />
-          </a>
-        ) : (
-          "N/A"
-        ),
-    },
-    {
       key: "6",
-      title: "Support",
-      dataIndex: "support_for",
-      render: (title) => (title ? title : "N/A"),
-    },
-    {
-      key: "5",
-      title: "Price",
-      dataIndex: "price",
+      title: "slug",
+      dataIndex: "slug",
+      align: "center",
       render: (title) => (title ? title : "N/A"),
     },
 
     {
       title: "Actions",
+      align: "center",
       render: (record) => (
         <Space>
           <EditButton
             onClick={() =>
               dispatch(
                 showModal({
-                  title: "Update Restaurant",
-                  content: <UpdateRestaurant record={record} />,
+                  title: "Update Service",
+                  content: <UpdateService record={record} />,
                 })
               )
             }
           />
-          {/* <ViewButton to={`${record.id}`} /> */}
+          <ViewButton to={`product-view/${record.id}`} />
           <DeleteButton onClick={() => handleDelete(record.id)}>
             Delete
           </DeleteButton>
         </Space>
       ),
     },
-    // Add other column definitions here
   ];
 };
 

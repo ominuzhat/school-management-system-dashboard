@@ -14,7 +14,7 @@ const initialState: ThemesTypes = {
   themes: storedTheme || "light",
   primaryColor: "#F93939",
   darkColor: "#141414",
-  color1: "#102136",
+  color1: "#000A4B",
   color2: "#3C3C3E",
 };
 

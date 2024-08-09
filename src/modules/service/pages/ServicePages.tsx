@@ -5,13 +5,13 @@ import { SearchComponent } from "../../../common/CommonAnt/CommonSearch/CommonSe
 import { RootState } from "../../../app/store";
 import { Table } from "../../../common/CommonAnt";
 import { useState } from "react";
-import { useGetProductQuery } from "../api/productEndPoints";
-import useColumns from "../utils/ProductUtils";
 import { showModal } from "../../../app/features/modalSlice";
-import CreateProduct from "../components/CreateProduct";
 import { PlusOutlined } from "@ant-design/icons";
+import { useGetServiceQuery } from "../api/serviceEndpoints";
+import useColumns from "../utils/service.util";
+import CreateService from "../components/CreateService";
 
-const ProductPages = () => {
+const ServicePages = () => {
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const filter = useSelector((state: RootState) => ({
@@ -19,7 +19,7 @@ const ProductPages = () => {
     keyword: search,
   }));
 
-  const { data: productData, isLoading } = useGetProductQuery(filter);
+  const { data: serviceData, isLoading } = useGetServiceQuery(filter);
 
   return (
     <div className="space-y-5">
@@ -34,15 +34,15 @@ const ProductPages = () => {
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Add Product",
-                    content: <CreateProduct />,
+                    title: "Add Service",
+                    content: <CreateService />,
                   })
                 )
               }
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Add Product
+              Add Service
             </Button>
           </Col>
           <Col lg={6}>
@@ -56,12 +56,12 @@ const ProductPages = () => {
 
       <Table
         loading={isLoading}
-        total={productData?.total || 0}
-        dataSource={productData?.data || []}
+        total={serviceData?.total || 0}
+        dataSource={serviceData?.data || []}
         columns={useColumns()}
       />
     </div>
   );
 };
 
-export default ProductPages;
+export default ServicePages;

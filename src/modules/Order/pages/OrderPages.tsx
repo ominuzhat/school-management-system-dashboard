@@ -5,13 +5,12 @@ import { SearchComponent } from "../../../common/CommonAnt/CommonSearch/CommonSe
 import { RootState } from "../../../app/store";
 import { Table } from "../../../common/CommonAnt";
 import { useState } from "react";
-import { useGetProductQuery } from "../api/productEndPoints";
-import useColumns from "../utils/ProductUtils";
 import { showModal } from "../../../app/features/modalSlice";
-import CreateProduct from "../components/CreateProduct";
 import { PlusOutlined } from "@ant-design/icons";
+import { useGetOrderQuery } from "../api/OrderEndPoints";
+import useColumns from "../utils/OrderUtils";
 
-const ProductPages = () => {
+const OrderPages = () => {
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const filter = useSelector((state: RootState) => ({
@@ -19,7 +18,7 @@ const ProductPages = () => {
     keyword: search,
   }));
 
-  const { data: productData, isLoading } = useGetProductQuery(filter);
+  const { data: productData, isLoading } = useGetOrderQuery(filter);
 
   return (
     <div className="space-y-5">
@@ -28,7 +27,7 @@ const ProductPages = () => {
       </div>
       <Card>
         <Row justify="space-between">
-          <Col lg={4}>
+          {/* <Col lg={4}>
             <Button
               type="primary"
               onClick={() =>
@@ -44,7 +43,7 @@ const ProductPages = () => {
             >
               Add Product
             </Button>
-          </Col>
+          </Col> */}
           <Col lg={6}>
             <SearchComponent
               onSearch={(value) => setSearch(value)}
@@ -64,4 +63,4 @@ const ProductPages = () => {
   );
 };
 
-export default ProductPages;
+export default OrderPages;

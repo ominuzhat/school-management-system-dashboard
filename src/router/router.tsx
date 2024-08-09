@@ -48,6 +48,9 @@ import ClientListOfUploadPassport from "../modules/Client/component/ClientListOf
 import CartPages from "../modules/Cart/pages/CartPages";
 import ProductPages from "../modules/Product/pages/ProductPages";
 import ProductView from "../modules/Product/pages/ProductView";
+import CategoryPage from "../modules/Configuration/Category/pages/CategoryPage";
+import OrderPages from "../modules/Order/pages/OrderPages";
+import ServicePages from "../modules/service/pages/ServicePages";
 
 const router = createBrowserRouter([
   {
@@ -204,12 +207,36 @@ const router = createBrowserRouter([
         element: <Accounts />,
         children: [
           {
-            path: "create-passport",
-            element: <CreatePassportManagement />,
-          },
-          {
             path: "/product",
             element: <ProductPages />,
+          },
+          {
+            path: "product-view/:productId",
+            element: <ProductView />,
+          },
+        ],
+      },
+      {
+        path: "/order",
+        element: <Accounts />,
+        children: [
+          {
+            path: "/order",
+            element: <OrderPages />,
+          },
+          {
+            path: "product-view/:productId",
+            element: <ProductView />,
+          },
+        ],
+      },
+      {
+        path: "/service",
+        element: <Accounts />,
+        children: [
+          {
+            path: "/service",
+            element: <ServicePages />,
           },
           {
             path: "product-view/:productId",
@@ -221,6 +248,10 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <CartPages />,
+      },
+      {
+        path: "/category",
+        element: <CategoryPage />,
       },
 
       {

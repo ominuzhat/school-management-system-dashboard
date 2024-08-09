@@ -16,6 +16,19 @@ export type ProductDataTypes = {
   total_sale: null;
 };
 
+export type TCreateProductTypes = {
+  category: number;
+  title: string;
+  subtitle: string;
+  slug: string;
+  description: string;
+  price: number;
+  live_link: string;
+  support_for: string;
+  is_documented: boolean;
+  images: string[];
+};
+
 // export type ProductsTypes = {
 //   id: number;
 //   title: string;
