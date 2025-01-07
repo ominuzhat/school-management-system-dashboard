@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { persistor, RootState } from "./app/store";
 import { Modal } from "./common/CommonAnt";
 import { PersistGate } from "redux-persist/integration/react";
+import "react-calendar/dist/Calendar.css";
 
 const App: React.FC = () => {
   const { themes, primaryColor } = useSelector(

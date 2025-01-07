@@ -24,7 +24,9 @@ const SidebarDrawer: React.FC<Props> = ({ open, setOpen }) => {
       closable={false}
       width={250}
       className="sidebar-drawer"
-      style={{ background: themes === "light" ? color1 : color2 }}
+      style={{
+        background: themes === "light" ? color1 : color2,
+      }}
     >
       <MenuData />
     </Drawer>

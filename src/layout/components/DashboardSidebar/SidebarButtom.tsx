@@ -1,33 +1,33 @@
 import { Typography } from "antd";
 import React from "react";
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
+import { ThemesTypes } from "../../../app/features/themeSlice";
 
 const SidebarButtom: React.FC = () => {
+  const { themes } = useSelector<RootState, ThemesTypes>(
+    (state) => state.themes
+  );
   return (
     <React.Fragment>
-      <div className="need-support-style">
-        <Iconify
-          name="fluent:person-support-28-regular"
-          width={50}
-          color="white"
-        />
-        <Typography.Text
-          strong
-          style={{ color: "white", fontSize: "18px", display: "block" }}
-        >
+      <div
+        className="need-support-style"
+        style={{
+          background:
+            themes === "light" ? "#f0f8ff" : "rgba(85, 131, 215, 0.8)",
+          color: themes === "light" ? "black" : "white",
+        }}
+      >
+        <Iconify name="fluent:person-support-28-regular" width={30} />
+        <Typography.Text strong style={{ fontSize: "18px", display: "block" }}>
           Need Support
         </Typography.Text>
-        <Typography.Text style={{ display: "block", color: "#cccccc" }}>
+        <Typography.Text style={{ textAlign: "center" }}>
           If you need support please contact with us.
         </Typography.Text>
         <br />
-        <Typography.Text
-          style={{
-            color: "white",
-          }}
-        >
-          Cell: 09638-336699
-        </Typography.Text>
+        <Typography.Text>Cell: 09638-336699</Typography.Text>
       </div>
     </React.Fragment>
   );

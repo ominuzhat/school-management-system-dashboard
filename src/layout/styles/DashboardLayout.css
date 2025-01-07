@@ -93,11 +93,14 @@
 }
 
 .need-support-style {
-  margin: 8px;
-  padding: 10px;
-  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 12px;
+  padding: 20px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 30px rgba(33, 96, 155, 0.432); */
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 }
@@ -115,5 +118,11 @@
   #dashboard-header-icon {
     display: grid;
     place-items: "center";
+  }
+}
+
+@media (max-width: 768px) {
+  .search-section {
+    display: none;
   }
 }

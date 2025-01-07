@@ -12,10 +12,10 @@ const storedTheme = localStorage.getItem("themes") as "dark" | "light" | null;
 
 const initialState: ThemesTypes = {
   themes: storedTheme || "light",
-  primaryColor: "#F93939",
+  primaryColor: "#6097f9",
   darkColor: "#141414",
-  color1: "#000A4B",
-  color2: "#3C3C3E",
+  color1: "#FFFFFF",
+  color2: "#000000",
 };
 
 const themeSlice = createSlice({

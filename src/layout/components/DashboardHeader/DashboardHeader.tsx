@@ -3,6 +3,7 @@ import {
   Button,
   Flex,
   Image,
+  Input,
   Layout,
   List,
   Popover,
@@ -21,6 +22,7 @@ import { RootState } from "../../../app/store";
 import { toggleThemes } from "../../../app/features/themeSlice";
 import { flight } from "../../../utilities/images";
 import { useGetProfileQuery } from "../../../modules/Profile/api/profileEndpoint";
+import { CiSearch } from "react-icons/ci";
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,7 +49,8 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
           background: themes === "light" ? "white" : darkColor,
         }}
       >
-        <Flex gap={8} align="center" justify="center">
+        {" "}
+        <Flex align="center" justify="center" gap={8}>
           <Button
             onClick={() => setOpen(true)}
             type="primary"
@@ -59,9 +62,12 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
           <div>
             <Typography.Text
               strong
-              style={{ display: "block", fontSize: "1.2rem" }}
+              style={{
+                display: "flex",
+                fontSize: "1.2rem",
+              }}
             >
-              Hello, {data?.data?.name || "Code Canvas Creation"}
+              Hello, {data?.data?.name || "Education Hub"}
             </Typography.Text>
             <Typography.Text
               type="secondary"
@@ -71,7 +77,15 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
             </Typography.Text>
           </div>
         </Flex>
-        <Flex align="center" justify="center" gap={15}>
+        <Flex align="center" justify="center">
+          <Input
+            placeholder="Search"
+            prefix={<CiSearch />}
+            style={{ width: "300px" }}
+            className="search-section"
+          />
+        </Flex>
+        <Flex align="center" justify="center" gap={20}>
           <Badge count={17}>
             <Popover
               content={
@@ -135,7 +149,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                 />
                 <Typography.Text strong>Code Canvas Creation</Typography.Text>
                 <Typography.Text type="secondary" style={{ fontSize: "11px" }}>
-                  btstravelExpress@gmail.com
+                  info.codecanvascreation
                 </Typography.Text>
                 <Space>
                   <Link to="/profile">

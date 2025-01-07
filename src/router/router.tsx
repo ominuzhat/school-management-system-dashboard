@@ -51,6 +51,7 @@ import ProductView from "../modules/Product/pages/ProductView";
 import CategoryPage from "../modules/Configuration/Category/pages/CategoryPage";
 import OrderPages from "../modules/Order/pages/OrderPages";
 import ServicePages from "../modules/service/pages/ServicePages";
+import SecondLogin from "../modules/Auth/page/SecondLogin";
 
 const router = createBrowserRouter([
   {
@@ -339,6 +340,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/login-second",
+    element: <SecondLogin />,
   },
   {
     path: "/send-otp",
