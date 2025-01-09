@@ -52,6 +52,8 @@ import CategoryPage from "../modules/Configuration/Category/pages/CategoryPage";
 import OrderPages from "../modules/Order/pages/OrderPages";
 import ServicePages from "../modules/service/pages/ServicePages";
 import SecondLogin from "../modules/Auth/page/SecondLogin";
+import Verification from "../modules/Auth/components/Verification";
+import StudentsPage from "../modules/members/students/pages/StudentsPage";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +66,37 @@ const router = createBrowserRouter([
         path: "/",
         element: <Dashboard />,
       },
+      // stduents
+      {
+        path: "/students",
+        element: <Accounts />,
+        children: [
+          {
+            path: "/students",
+            element: <StudentsPage />,
+          },
+          // {
+          //   path: "product-view/:productId",
+          //   element: <ProductView />,
+          // },
+        ],
+      },
+      {
+        path: "/employees",
+        element: <Accounts />,
+        children: [
+          {
+            path: "/employees",
+            element: <StudentsPage />,
+          },
+          // {
+          //   path: "product-view/:productId",
+          //   element: <ProductView />,
+          // },
+        ],
+      },
+
+      // new for education
       {
         path: "/moneyreceipt",
         element: <Accounts />,
@@ -344,6 +377,10 @@ const router = createBrowserRouter([
   {
     path: "/login-second",
     element: <SecondLogin />,
+  },
+  {
+    path: "/verification",
+    element: <Verification />,
   },
   {
     path: "/send-otp",

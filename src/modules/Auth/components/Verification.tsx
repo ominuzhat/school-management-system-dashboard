@@ -1,29 +1,26 @@
-import { Card, Col, Input, Row, Typography } from "antd";
+import { Col, Input, Row, Typography } from "antd";
 import React, { useEffect } from "react";
 import { ErrorType, LoginTypes } from "../types/authTypes";
 import "../styles/Login.css";
-import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import { Form } from "../../../common/CommonAnt";
 import { useLoginMutation } from "../api/loginEndpoint";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  clearMessage,
-  loggedIn,
-  setMessage,
-} from "../../../app/features/authSlice";
+import { loggedIn, setMessage } from "../../../app/features/authSlice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { TOKEN_NAME } from "../../../utilities/baseQuery";
 import { openNotification } from "../../../app/features/notificationSlice";
-import {
-  emailValidator,
-  passwordValidator,
-} from "../../../utilities/validator";
+
 import { RootState } from "../../../app/store";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
 import { logo, welcome } from "../../../utilities/images";
 
-const SecondLogin: React.FC = () => {
+// const sharedProps: OTPProps = {
+//   onChange,
+//   onInput,
+// };
+
+const Verification: React.FC = () => {
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -123,9 +120,6 @@ const SecondLogin: React.FC = () => {
     }
   };
 
-  const handleOnFocus = (): void => {
-    dispatch(clearMessage());
-  };
   return (
     <React.Fragment>
       <Row>
@@ -146,7 +140,7 @@ const SecondLogin: React.FC = () => {
                 style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />
 
-              <Card className=" bg-[#b8deff] w-[500px]">
+              <div className=" bg-[#b8deff] w-[500px]">
                 <Typography.Title
                   level={3}
                   style={{ margin: 0, display: "block" }}
@@ -166,27 +160,14 @@ const SecondLogin: React.FC = () => {
                 >
                   <Form.Item<LoginTypes>
                     name="email"
-                    rules={[{ required: true }, { validator: emailValidator }]}
+                    rules={[{ required: true }]}
                   >
-                    <Input
+                    {/* <Input
                       onFocus={handleOnFocus}
                       prefix={<Iconify name="ph:user" />}
                       placeholder="e.g: some@example.com"
-                    />
-                  </Form.Item>
-
-                  <Form.Item<LoginTypes>
-                    name="password"
-                    rules={[
-                      { required: true },
-                      { validator: passwordValidator },
-                    ]}
-                  >
-                    <Input.Password
-                      onFocus={handleOnFocus}
-                      prefix={<Iconify name="ant-design:lock-outlined" />}
-                      placeholder="********"
-                    />
+                    /> */}
+                    <Input.OTP formatter={(str) => str.toUpperCase()} />
                   </Form.Item>
                 </Form>
 
@@ -204,7 +185,7 @@ const SecondLogin: React.FC = () => {
                 <Typography.Text type="danger" style={{ display: "block" }}>
                   {message}
                 </Typography.Text>
-              </Card>
+              </div>
             </div>
           </div>
         </Col>
@@ -221,4 +202,4 @@ const SecondLogin: React.FC = () => {
   );
 };
 
-export default SecondLogin;
+export default Verification;

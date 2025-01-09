@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { ThemesTypes } from "../../../app/features/themeSlice";
 import SidebarButtom from "./SidebarButtom";
+import { PiStudent } from "react-icons/pi";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -24,6 +25,31 @@ const MenuData: React.FC = () => {
     color: themes === "light" ? "#000000" : "white",
   };
 
+  const members = [
+    {
+      key: "/students",
+      label: <Link to="/students">Students</Link>,
+      icon: <PiStudent/>,
+      // icon: <Iconify name="mdi:person" style={iconStyle} />,
+    },
+    {
+      key: "/employees",
+      label: <Link to="/employees">Employees</Link>,
+      icon: <Iconify name="mdi:person" style={iconStyle} />,
+    },
+    // {
+    //   key: "/configuration",
+    //   label: "Configuration",
+    //   icon: <Iconify name="hugeicons:configuration-01" style={iconStyle} />,
+    //   children: [
+    //     {
+    //       label: <Link to="/category">Category</Link>,
+    //       icon: <Iconify name="tdesign:course" style={subIconStyle} />,
+    //       key: "/category",
+    //     },
+    //   ],
+    // },
+  ];
   const settings = [
     {
       key: "/product",
@@ -97,6 +123,18 @@ const MenuData: React.FC = () => {
             theme={themes}
             selectedKeys={[pathname]}
             items={items}
+          />
+        </div>
+        <span className="featues-title">Members</span>
+        <div>
+          <Menu
+            style={{
+              backgroundColor: "transparent",
+            }}
+            mode="inline"
+            theme={themes}
+            selectedKeys={[pathname]}
+            items={members}
           />
         </div>
         <span className="featues-title">General Settings</span>

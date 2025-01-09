@@ -1,6 +1,7 @@
 import React from "react";
 import { Button as AntButton, ButtonProps } from "antd";
 import { Link } from "react-router-dom";
+import { FaEye } from "react-icons/fa";
 
 interface Props extends ButtonProps {
   to: string;
@@ -16,7 +17,7 @@ const ViewButton: React.FC<Props> = ({ to, ...rest }) => {
         type="default"
         style={{ color: "white", background: "#3892E3" }}
       >
-        View
+        <FaEye />
       </AntButton>
     </Link>
   );
