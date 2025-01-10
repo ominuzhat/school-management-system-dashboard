@@ -84,6 +84,7 @@ abbr[title] {
 }
 
 .custom-calendar.light {
+  width: 100% !important;
   background-color: white;
   color: black;
 }

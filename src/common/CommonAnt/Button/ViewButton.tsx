@@ -15,7 +15,11 @@ const ViewButton: React.FC<Props> = ({ to, ...rest }) => {
         title="View"
         size="small"
         type="default"
-        style={{ color: "white", background: "#3892E3" }}
+        style={{
+          color: "#3892E3",
+          // background: "#3892E3",
+          border: "1px solid #3892E3",
+        }}
       >
         <FaEye />
       </AntButton>

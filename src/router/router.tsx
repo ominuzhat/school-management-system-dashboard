@@ -54,6 +54,7 @@ import ServicePages from "../modules/service/pages/ServicePages";
 import SecondLogin from "../modules/Auth/page/SecondLogin";
 import Verification from "../modules/Auth/components/Verification";
 import StudentsPage from "../modules/members/students/pages/StudentsPage";
+import StudentView from "../modules/members/students/components/StudentView";
 
 const router = createBrowserRouter([
   {
@@ -75,10 +76,10 @@ const router = createBrowserRouter([
             path: "/students",
             element: <StudentsPage />,
           },
-          // {
-          //   path: "product-view/:productId",
-          //   element: <ProductView />,
-          // },
+          {
+            path: "student-view/:studentId",
+            element: <StudentView />,
+          },
         ],
       },
       {

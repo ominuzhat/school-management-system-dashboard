@@ -12,8 +12,13 @@ import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import CreateStudent from "../components/CreateStudent";
 import UpdateStudent from "../components/UpdateStudent";
+import { IoGridOutline } from "react-icons/io5";
+import { GoColumns } from "react-icons/go";
+import { Table } from "../../../../common/CommonAnt";
+import studentColumns from "../utils/studentColumns";
 
 const StudentsPage = () => {
+  const [layout, setLayout] = useState("grid");
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
 
@@ -72,41 +77,85 @@ const StudentsPage = () => {
           </Col>
         </Row>
       </Card>
-      <Card title="All Students">
-        <Row gutter={[16, 16]}>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Col key={index} span={3} xs={12} lg={8} xxl={3}>
-              <div
-                style={{
-                  background: "#ffffff",
-                  textAlign: "center",
-                }}
-                className="border py-8 px-2 rounded-lg space-y-2"
-              >
-                <img src={no_img} alt="image" className="mx-auto" />
-                <p> {index + 1}</p>
-                <p className="font-serif"> Omi Hasan {index + 1} </p>
-                <div className="space-x-2">
-                  <ViewButton to={`product-view/${index + 1}`} />
-                  <EditButton
-                    onClick={() =>
-                      dispatch(
-                        showModal({
-                          title: "Update Student",
-                          content: <UpdateStudent record={"record"} />,
-                        })
-                      )
-                    }
-                  />
-                  <DeleteButton
-                    onConfirm={() => handleDelete(1)}
-                    onCancel={() => console.log("Cancel delete")}
-                  ></DeleteButton>
+      <Card
+        title={
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>All Students</span>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <IoGridOutline
+                className={`w-9 h-9 border px-2 cursor-pointer ${
+                  layout === "grid"
+                    ? "text-blue-500 border-blue-500"
+                    : "text-gray-500"
+                }`}
+                onClick={() => setLayout("grid")}
+              />
+              <GoColumns
+                className={`w-9 h-9 border px-2 cursor-pointer ${
+                  layout === "column"
+                    ? "text-blue-500 border-blue-500"
+                    : "text-gray-500"
+                }`}
+                onClick={() => setLayout("column")}
+              />
+            </div>
+          </div>
+        }
+      >
+        {layout === "grid" ? (
+          <Row gutter={[16, 16]}>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <Col key={index} span={3} xs={12} lg={8} xxl={3}>
+                <div
+                  style={{
+                    textAlign: "center",
+                  }}
+                  className="border py-8 px-2 rounded-lg space-y-2"
+                >
+                  <img src={no_img} alt="image" className="mx-auto" />
+                  <p> {index + 1}</p>
+                  <p className="font-serif"> Omi Hasan {index + 1} </p>
+                  <div className="space-x-2">
+                    <ViewButton to={`student-view/1`} />
+                    <EditButton
+                      onClick={() =>
+                        dispatch(
+                          showModal({
+                            title: "Update Student",
+                            content: <UpdateStudent record={"record"} />,
+                          })
+                        )
+                      }
+                    />
+                    <DeleteButton
+                      onConfirm={() => handleDelete(1)}
+                      onCancel={() => console.log("Cancel delete")}
+                    ></DeleteButton>
+                  </div>
                 </div>
-              </div>
-            </Col>
-          ))}
-        </Row>
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <Table
+            loading={true}
+            total={0}
+            dataSource={[]}
+            columns={studentColumns()}
+          />
+        )}
       </Card>
     </div>
   );

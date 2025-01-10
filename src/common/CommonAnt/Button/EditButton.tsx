@@ -11,7 +11,11 @@ const EditButton: React.FC<Props> = ({ ...rest }) => {
       title="Edit"
       size="small"
       type="default"
-      style={{ color: "white", background: "#FF5F00" }}
+      style={{
+        color: "#FFA500",
+        border: "1px solid #FFA500",
+        // background: "#FF5F00"
+      }}
     >
       <FaEdit />
     </AntButton>
