@@ -8,6 +8,10 @@ import { RootState } from "../../../app/store";
 import { ThemesTypes } from "../../../app/features/themeSlice";
 import SidebarButtom from "./SidebarButtom";
 import { PiStudent } from "react-icons/pi";
+import { SiGoogleclassroom } from "react-icons/si";
+import { IoBookOutline, IoPeopleOutline } from "react-icons/io5";
+import { MdCoPresent } from "react-icons/md";
+import { FaRegNoteSticky } from "react-icons/fa6";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -29,13 +33,13 @@ const MenuData: React.FC = () => {
     {
       key: "/students",
       label: <Link to="/students">Students</Link>,
-      icon: <PiStudent/>,
+      icon: <PiStudent />,
       // icon: <Iconify name="mdi:person" style={iconStyle} />,
     },
     {
       key: "/employees",
       label: <Link to="/employees">Employees</Link>,
-      icon: <Iconify name="mdi:person" style={iconStyle} />,
+      icon: <IoPeopleOutline />,
     },
     // {
     //   key: "/configuration",
@@ -50,11 +54,26 @@ const MenuData: React.FC = () => {
     //   ],
     // },
   ];
-  const settings = [
+  const generalSettings = [
     {
-      key: "/product",
-      label: <Link to="/product">Product</Link>,
-      icon: <Iconify name="mdi:person" style={iconStyle} />,
+      key: "/classes",
+      label: <Link to="/classes">Classes</Link>,
+      icon: <SiGoogleclassroom />,
+    },
+    {
+      key: "/subjects",
+      label: <Link to="/subjects">Subjects</Link>,
+      icon: <IoBookOutline />,
+    },
+    {
+      key: "/attendees",
+      label: <Link to="/attendees">Attendance</Link>,
+      icon: <MdCoPresent />,
+    },
+    {
+      key: "/Class-tests",
+      label: <Link to="/Class-tests">Class Test</Link>,
+      icon: <FaRegNoteSticky />,
     },
     {
       key: "/configuration",
@@ -146,7 +165,7 @@ const MenuData: React.FC = () => {
             mode="inline"
             theme={themes}
             selectedKeys={[pathname]}
-            items={settings}
+            items={generalSettings}
           />
         </div>
       </div>

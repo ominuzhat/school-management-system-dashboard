@@ -7,7 +7,6 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { no_img } from "../../../../utilities/images";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
-import UpdateService from "../../../service/components/UpdateService";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import CreateStudent from "../components/CreateStudent";

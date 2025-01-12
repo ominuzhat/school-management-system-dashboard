@@ -55,6 +55,7 @@ import SecondLogin from "../modules/Auth/page/SecondLogin";
 import Verification from "../modules/Auth/components/Verification";
 import StudentsPage from "../modules/members/students/pages/StudentsPage";
 import StudentView from "../modules/members/students/components/StudentView";
+import ClassesPage from "../modules/general settings/classes/pages/ClassesPage";
 
 const router = createBrowserRouter([
   {
@@ -89,6 +90,20 @@ const router = createBrowserRouter([
           {
             path: "/employees",
             element: <StudentsPage />,
+          },
+          // {
+          //   path: "product-view/:productId",
+          //   element: <ProductView />,
+          // },
+        ],
+      },
+      {
+        path: "/classes",
+        element: <Accounts />,
+        children: [
+          {
+            path: "/classes",
+            element: <ClassesPage />,
           },
           // {
           //   path: "product-view/:productId",
