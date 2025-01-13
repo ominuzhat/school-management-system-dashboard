@@ -1,20 +1,24 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Button, Card, Col, Row, Select } from "antd";
+import { IoGridOutline } from "react-icons/io5";
+import { PlusOutlined } from "@ant-design/icons";
+
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
-import { useState } from "react";
-import { showModal } from "../../../../app/features/modalSlice";
-import { PlusOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import { no_img } from "../../../../utilities/images";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import { Table } from "../../../../common/CommonAnt";
+
+import { showModal } from "../../../../app/features/modalSlice";
+
+import { no_img } from "../../../../utilities/images";
+import studentColumns from "../utils/studentColumns";
+
 import CreateStudent from "../components/CreateStudent";
 import UpdateStudent from "../components/UpdateStudent";
-import { IoGridOutline } from "react-icons/io5";
-import { GoColumns } from "react-icons/go";
-import { Table } from "../../../../common/CommonAnt";
-import studentColumns from "../utils/studentColumns";
+import { FaListUl } from "react-icons/fa6";
 
 const StudentsPage = () => {
   const [layout, setLayout] = useState("grid");
@@ -101,7 +105,8 @@ const StudentsPage = () => {
                 }`}
                 onClick={() => setLayout("grid")}
               />
-              <GoColumns
+
+              <FaListUl
                 className={`w-9 h-9 border px-2 cursor-pointer ${
                   layout === "column"
                     ? "text-blue-500 border-blue-500"

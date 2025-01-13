@@ -10,8 +10,24 @@ import SidebarButtom from "./SidebarButtom";
 import { PiStudent } from "react-icons/pi";
 import { SiGoogleclassroom } from "react-icons/si";
 import { IoBookOutline, IoPeopleOutline } from "react-icons/io5";
-import { MdCoPresent } from "react-icons/md";
-import { FaRegNoteSticky } from "react-icons/fa6";
+import {
+  MdAccountBalanceWallet,
+  MdCoPresent,
+  MdOutlinePayments,
+} from "react-icons/md";
+import { FaPiggyBank, FaRegNoteSticky } from "react-icons/fa6";
+import { TbCoinTaka, TbFileInvoice } from "react-icons/tb";
+import { GiExpense } from "react-icons/gi";
+import { BiSolidInstitution, BiSolidUserAccount } from "react-icons/bi";
+import {
+  AiOutlineAccountBook,
+  AiOutlineSafetyCertificate,
+} from "react-icons/ai";
+import { HiOutlineCash } from "react-icons/hi";
+import { FcRules } from "react-icons/fc";
+import { CiBookmarkCheck, CiSettings } from "react-icons/ci";
+import { GrCertificate } from "react-icons/gr";
+import { LiaCertificateSolid } from "react-icons/lia";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -24,10 +40,64 @@ const MenuData: React.FC = () => {
     color: themes === "light" ? "#000000" : "#FFFFFF",
   };
 
-  const subIconStyle: React.CSSProperties | undefined = {
-    marginRight: "5px",
-    color: themes === "light" ? "#000000" : "white",
-  };
+  const settings = [
+    {
+      key: "/institute-profile",
+      label: <Link to="/institute-profile">Institute Profile</Link>,
+      icon: <BiSolidInstitution />,
+    },
+    {
+      key: "/employees",
+      label: <Link to="/employees">Fee Particulars</Link>,
+      icon: <HiOutlineCash />,
+    },
+    {
+      key: "/employees",
+      label: <Link to="/employees">Accounts For Fee Invoice</Link>,
+      icon: <TbFileInvoice />,
+    },
+    {
+      key: "/employees",
+      label: <Link to="/employees">Rules & Regulations</Link>,
+      icon: <FcRules />,
+    },
+    {
+      key: "/employees",
+      label: <Link to="/employees">Marks Grading</Link>,
+      icon: <CiBookmarkCheck />,
+    },
+    {
+      key: "/employees",
+      label: <Link to="/employees">Account Settings</Link>,
+      icon: <CiSettings />,
+    },
+    {
+      key: "/attendance",
+      label: "Certificates",
+      icon: <GrCertificate />,
+      children: [
+        {
+          label: (
+            <Link to="/attendance/mark-student-attendance">
+              Leave Certificate
+            </Link>
+          ),
+          icon: <AiOutlineSafetyCertificate />,
+          key: "/attendance/mark-student-attendance",
+        },
+
+        {
+          label: (
+            <Link to="/attendance/mark-teacher-attendance">
+              Character Certificate
+            </Link>
+          ),
+          icon: <LiaCertificateSolid />,
+          key: "/attendance/mark-teacher-attendance",
+        },
+      ],
+    },
+  ];
 
   const members = [
     {
@@ -41,19 +111,61 @@ const MenuData: React.FC = () => {
       label: <Link to="/employees">Employees</Link>,
       icon: <IoPeopleOutline />,
     },
-    // {
-    //   key: "/configuration",
-    //   label: "Configuration",
-    //   icon: <Iconify name="hugeicons:configuration-01" style={iconStyle} />,
-    //   children: [
-    //     {
-    //       label: <Link to="/category">Category</Link>,
-    //       icon: <Iconify name="tdesign:course" style={subIconStyle} />,
-    //       key: "/category",
-    //     },
-    //   ],
-    // },
   ];
+
+  const payroll = [
+    {
+      key: "/salary",
+      label: <Link to="/salary">Salary</Link>,
+      icon: <MdOutlinePayments />,
+    },
+    {
+      key: "/fees",
+      label: <Link to="/fees">Fees</Link>,
+      icon: <TbCoinTaka />,
+    },
+    {
+      key: "/account",
+      label: "Account",
+      icon: <MdAccountBalanceWallet />,
+      children: [
+        {
+          label: (
+            <Link to="/attendance/mark-student-attendance">
+              Chart of Account
+            </Link>
+          ),
+          icon: <BiSolidUserAccount />,
+          key: "/attendance/mark-student-attendance",
+        },
+        {
+          label: (
+            <Link to="/attendance/mark-student-attendance">
+              Account Statement
+            </Link>
+          ),
+          icon: <AiOutlineAccountBook />,
+          key: "/attendance/mark-student-attendance",
+        },
+
+        {
+          label: (
+            <Link to="/attendance/mark-teacher-attendance">Add Income</Link>
+          ),
+          icon: <FaPiggyBank />,
+          key: "/attendance/mark-teacher-attendance",
+        },
+        {
+          label: (
+            <Link to="/attendance/mark-teacher-attendance">Add Expense</Link>
+          ),
+          icon: <GiExpense />,
+          key: "/attendance/mark-teacher-attendance",
+        },
+      ],
+    },
+  ];
+
   const generalSettings = [
     {
       key: "/classes",
@@ -65,66 +177,46 @@ const MenuData: React.FC = () => {
       label: <Link to="/subjects">Subjects</Link>,
       icon: <IoBookOutline />,
     },
-    {
-      key: "/attendees",
-      label: <Link to="/attendees">Attendance</Link>,
-      icon: <MdCoPresent />,
-    },
+
     {
       key: "/Class-tests",
       label: <Link to="/Class-tests">Class Test</Link>,
       icon: <FaRegNoteSticky />,
     },
+
     {
-      key: "/configuration",
-      label: "Configuration",
-      icon: <Iconify name="hugeicons:configuration-01" style={iconStyle} />,
+      key: "/attendance",
+      label: "Attendance",
+      icon: <MdCoPresent />,
       children: [
         {
-          label: <Link to="/category">Category</Link>,
-          icon: <Iconify name="tdesign:course" style={subIconStyle} />,
-          key: "/category",
+          label: (
+            <Link to="/attendance/mark-student-attendance">
+              Students Attendance
+            </Link>
+          ),
+          icon: <PiStudent />,
+          key: "/attendance/mark-student-attendance",
+        },
+
+        {
+          label: (
+            <Link to="/attendance/mark-teacher-attendance">
+              Teacher Attendance
+            </Link>
+          ),
+          icon: <IoPeopleOutline />,
+          key: "/attendance/mark-teacher-attendance",
         },
       ],
     },
   ];
+
   const items: MenuProps["items"] = [
     {
       key: "/",
       label: <Link to="/">Dashboard</Link>,
       icon: <Iconify name="mage:dashboard" style={iconStyle} />,
-    },
-    {
-      key: "/order",
-      label: <Link to="/order">Order</Link>,
-      icon: <Iconify name="mdi:work" style={iconStyle} />,
-    },
-    {
-      key: "/service",
-      label: <Link to="/service">Service</Link>,
-      icon: <Iconify name="mdi:work" style={iconStyle} />,
-    },
-    {
-      key: "/cart",
-      label: <Link to="/cart">Cart</Link>,
-      icon: <Iconify name="mdi:cart" style={iconStyle} />,
-    },
-    {
-      key: "/product",
-      label: <Link to="/product">Product</Link>,
-      icon: <Iconify name="mdi:person" style={iconStyle} />,
-    },
-    {
-      key: "/configuration",
-      label: "Configuration",
-      icon: <Iconify name="hugeicons:configuration-01" style={iconStyle} />,
-      children: [
-        {
-          label: <Link to="/category">Category</Link>,
-          icon: <Iconify name="tdesign:course" style={subIconStyle} />,
-          key: "/category",
-        },
-      ],
     },
   ];
 
@@ -166,6 +258,30 @@ const MenuData: React.FC = () => {
             theme={themes}
             selectedKeys={[pathname]}
             items={generalSettings}
+          />
+        </div>
+        <span className="featues-title">Finance Management</span>
+        <div>
+          <Menu
+            style={{
+              backgroundColor: "transparent",
+            }}
+            mode="inline"
+            theme={themes}
+            selectedKeys={[pathname]}
+            items={payroll}
+          />
+        </div>{" "}
+        <span className="featues-title">Settings</span>
+        <div>
+          <Menu
+            style={{
+              backgroundColor: "transparent",
+            }}
+            mode="inline"
+            theme={themes}
+            selectedKeys={[pathname]}
+            items={settings}
           />
         </div>
       </div>

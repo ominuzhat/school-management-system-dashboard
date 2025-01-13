@@ -8,7 +8,9 @@ interface Props<T> extends TableProps<T> {
 }
 
 const Table = <T extends object>({ total, ...restProps }: Props<T>) => {
-  const { limit, skip } = useSelector((state: RootState) => state.filter);
+  const { limit = 10, skip = 0 } = useSelector(
+    (state: RootState) => state.filter
+  );
 
   const dispatch = useDispatch();
 

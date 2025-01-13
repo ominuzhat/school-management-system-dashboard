@@ -56,6 +56,9 @@ import Verification from "../modules/Auth/components/Verification";
 import StudentsPage from "../modules/members/students/pages/StudentsPage";
 import StudentView from "../modules/members/students/components/StudentView";
 import ClassesPage from "../modules/general settings/classes/pages/ClassesPage";
+import SubjectsPage from "../modules/general settings/subjects/pages/SubjectsPage";
+import MarkStudentsAttendance from "../modules/general settings/attendance/mark student attendance/page/MarkStudentsAttendance";
+import MarkTeachersAttendance from "../modules/general settings/attendance/mark teacher attendance/page/MarkTeacherAttendancePage";
 
 const router = createBrowserRouter([
   {
@@ -68,7 +71,8 @@ const router = createBrowserRouter([
         path: "/",
         element: <Dashboard />,
       },
-      // stduents
+
+      // students
       {
         path: "/students",
         element: <Accounts />,
@@ -83,6 +87,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // employees
       {
         path: "/employees",
         element: <Accounts />,
@@ -97,6 +102,7 @@ const router = createBrowserRouter([
           // },
         ],
       },
+      // classes
       {
         path: "/classes",
         element: <Accounts />,
@@ -105,10 +111,32 @@ const router = createBrowserRouter([
             path: "/classes",
             element: <ClassesPage />,
           },
-          // {
-          //   path: "product-view/:productId",
-          //   element: <ProductView />,
-          // },
+        ],
+      },
+      // subjects
+      {
+        path: "/subjects",
+        element: <Accounts />,
+        children: [
+          {
+            path: "/subjects",
+            element: <SubjectsPage />,
+          },
+        ],
+      },
+      // attendance
+      {
+        path: "/attendance",
+        element: <Accounts />,
+        children: [
+          {
+            path: "mark-student-attendance",
+            element: <MarkStudentsAttendance />,
+          },
+          {
+            path: "mark-teacher-attendance",
+            element: <MarkTeachersAttendance />,
+          },
         ],
       },
 
