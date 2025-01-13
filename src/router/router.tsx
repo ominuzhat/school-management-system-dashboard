@@ -21,13 +21,9 @@ import CreatePassportManagement from "../modules/PassportMangement/components/Cr
 import ViewPassportManagement from "../modules/PassportMangement/components/ViewPassportManagement";
 import Invoice from "../modules/invoice/invoice/pages/Invoice";
 import NonCommision from "../modules/invoice/non-commission/pages/NonCommision";
-import ClientPage from "../modules/Client/pages/ClientPage";
 import CommisionAirTicket from "../modules/invoice/commission-air-ticket/pages/CommisionAirTicket";
 import AgentPage from "../modules/Agent/pages/AgentPages";
 import InvoicePages from "../modules/invoice/invoice/pages/InvoicePages";
-import ExpenseHeadPage from "../modules/Expense/pages/ExpenseHeadPage";
-import ExpenseListPage from "../modules/Expense/pages/ExpenseList";
-import CreateExpense from "../modules/Expense/components/CreateExpense";
 import EmployeePage from "../modules/Configuration/Employee/pages/EmployeePages";
 import DepartmentPage from "../modules/Configuration/Departments/pages/DepartmentsPage";
 import DesignationPage from "../modules/Configuration/Designation/pages/DesignationPage";
@@ -38,14 +34,6 @@ import UserRoles from "../modules/Configuration/User/Roles/pages/UserRolePage";
 import PayrollPages from "../modules/Payroll/pages/PayrollPages";
 import MoneyReceiptPage from "../modules/MoneyReceipt/pages/MoneyReceiptPage";
 import CreateMoneyReceipt from "../modules/MoneyReceipt/components/CreateMoneyReceipt";
-import ClientViewPage from "../modules/Client/pages/ClientViewPage";
-import ClientInvoice from "../modules/Client/component/ClientInvoice";
-import ClientDetails from "../modules/Client/component/ClientDetails";
-import ClientPayment from "../modules/Client/component/ClientPayment";
-import ClientQuotation from "../modules/Client/component/ClientQuotation";
-import ClientRefundProduct from "../modules/Client/component/ClientRefundProduct";
-import ClientListOfUploadPassport from "../modules/Client/component/ClientListOfUploadPassport";
-import CartPages from "../modules/Cart/pages/CartPages";
 import ProductPages from "../modules/Product/pages/ProductPages";
 import ProductView from "../modules/Product/pages/ProductView";
 import CategoryPage from "../modules/Configuration/Category/pages/CategoryPage";
@@ -177,24 +165,7 @@ const router = createBrowserRouter([
           },
         ],
       },
-      {
-        path: "/expense",
-        element: <Accounts />,
-        children: [
-          {
-            path: "head",
-            element: <ExpenseHeadPage />,
-          },
-          {
-            path: "list",
-            element: <ExpenseListPage />,
-          },
-          {
-            path: "create-expense",
-            element: <CreateExpense />,
-          },
-        ],
-      },
+
       {
         path: "/invoice",
         element: <Invoice />,
@@ -236,46 +207,6 @@ const router = createBrowserRouter([
           {
             path: "passport-view/1",
             element: <ViewPassportManagement />,
-          },
-        ],
-      },
-      {
-        path: "/",
-        element: <Accounts />,
-        children: [
-          {
-            path: "client",
-            element: <ClientPage />,
-          },
-          {
-            path: "client/1",
-            element: <ClientViewPage />,
-            children: [
-              {
-                path: "details",
-                element: <ClientDetails />,
-              },
-              {
-                path: "invoice",
-                element: <ClientInvoice />,
-              },
-              {
-                path: "payments",
-                element: <ClientPayment />,
-              },
-              {
-                path: "quotation",
-                element: <ClientQuotation />,
-              },
-              {
-                path: "refund-product",
-                element: <ClientRefundProduct />,
-              },
-              {
-                path: "list-of-upload-passports",
-                element: <ClientListOfUploadPassport />,
-              },
-            ],
           },
         ],
       },
@@ -323,10 +254,6 @@ const router = createBrowserRouter([
         ],
       },
 
-      {
-        path: "/cart",
-        element: <CartPages />,
-      },
       {
         path: "/category",
         element: <CategoryPage />,

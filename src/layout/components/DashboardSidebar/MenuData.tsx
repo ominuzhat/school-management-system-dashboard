@@ -224,7 +224,7 @@ const MenuData: React.FC = () => {
     <div className="dashboard-sidebar-style">
       <div>
         <SidebarTop />
-        <span className="featues-title">Main Menu</span>
+        <span className="features-title">Main Menu</span>
         <div>
           <Menu
             style={{
@@ -236,7 +236,7 @@ const MenuData: React.FC = () => {
             items={items}
           />
         </div>
-        <span className="featues-title">Members</span>
+        <span className="features-title">Members</span>
         <div>
           <Menu
             style={{
@@ -248,7 +248,7 @@ const MenuData: React.FC = () => {
             items={members}
           />
         </div>
-        <span className="featues-title">General Settings</span>
+        <span className="features-title">General Settings</span>
         <div>
           <Menu
             style={{
@@ -260,7 +260,7 @@ const MenuData: React.FC = () => {
             items={generalSettings}
           />
         </div>
-        <span className="featues-title">Finance Management</span>
+        <span className="features-title">Finance Management</span>
         <div>
           <Menu
             style={{
@@ -271,8 +271,8 @@ const MenuData: React.FC = () => {
             selectedKeys={[pathname]}
             items={payroll}
           />
-        </div>{" "}
-        <span className="featues-title">Settings</span>
+        </div>
+        <span className="features-title">Settings</span>
         <div>
           <Menu
             style={{
@@ -295,3 +295,5 @@ const MenuData: React.FC = () => {
 };
 
 export default MenuData;
+
+
