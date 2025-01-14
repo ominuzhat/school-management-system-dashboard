@@ -22,7 +22,7 @@ const ForgotPassword: React.FC = () => {
   const token = queryParams.get("token");
 
   if (token) {
-    dispatch(loggedIn({ success: true, access_token: token }));
+    dispatch(loggedIn({ success: true, access: token }));
   }
 
   console.log("pppp", token);

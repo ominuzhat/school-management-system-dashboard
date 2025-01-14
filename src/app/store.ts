@@ -67,9 +67,8 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore specific paths from the serializable check
         ignoredActions: [api.util.resetApiState.type],
-        ignoredPaths: ["modal.content"], // Example: if modal content is non-serializable
+        ignoredPaths: ["modal.content"],
       },
     }).concat(api.middleware),
   devTools: process.env.NODE_ENV === "development",

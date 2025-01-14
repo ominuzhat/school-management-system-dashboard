@@ -10,7 +10,7 @@ const loginEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<ApiResponse<LoginResponse>, LoginTypes>({
       query: (data) => ({
-        url: "/auth/login?web=0",
+        url: "/auth/jwt/create/",
         method: "POST",
         body: data,
       }),

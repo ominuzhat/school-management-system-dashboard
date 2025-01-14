@@ -54,18 +54,15 @@ const Verification: React.FC = () => {
             dispatch(
               loggedIn({
                 success,
-                access_token: response?.data?.data?.access_token,
+                access: response?.data?.data?.access,
               })
             );
-            localStorage.setItem(
-              TOKEN_NAME,
-              response?.data?.data?.access_token
-            );
+            localStorage.setItem(TOKEN_NAME, response?.data?.data?.access);
             // localStorage.setItem(
             //   TOKEN_NAME,
             //   JSON.stringify({
             //     success,
-            //     access_token: response?.data?.data?.access_token,
+            //     access: response?.data?.data?.access,
             //   })
             // );
             dispatch(
@@ -97,10 +94,10 @@ const Verification: React.FC = () => {
         });
 
         // const { success, data } = response;
-        // dispatch(loggedIn({ success, access_token: data?.access_token }));
+        // dispatch(loggedIn({ success, access: data?.access }));
         // localStorage.setItem(
         //   TOKEN_NAME,
-        //   JSON.stringify({ success, access_token: data?.access_token })
+        //   JSON.stringify({ success, access: data?.access })
         // );
         // dispatch(
         //   openNotification({
@@ -159,7 +156,7 @@ const Verification: React.FC = () => {
                   className="form-field-body"
                 >
                   <Form.Item<LoginTypes>
-                    name="email"
+                    name="username"
                     rules={[{ required: true }]}
                   >
                     {/* <Input

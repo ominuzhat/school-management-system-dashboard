@@ -15,10 +15,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { TOKEN_NAME } from "../../../utilities/baseQuery";
 import { openNotification } from "../../../app/features/notificationSlice";
-import {
-  emailValidator,
-  passwordValidator,
-} from "../../../utilities/validator";
+import { passwordValidator } from "../../../utilities/validator";
 import { RootState } from "../../../app/store";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
@@ -57,18 +54,15 @@ const Login: React.FC = () => {
             dispatch(
               loggedIn({
                 success,
-                access_token: response?.data?.data?.access_token,
+                access: response?.data?.data?.access,
               })
             );
-            localStorage.setItem(
-              TOKEN_NAME,
-              response?.data?.data?.access_token
-            );
+            localStorage.setItem(TOKEN_NAME, response?.data?.data?.access);
             // localStorage.setItem(
             //   TOKEN_NAME,
             //   JSON.stringify({
             //     success,
-            //     access_token: response?.data?.data?.access_token,
+            //     access: response?.data?.data?.access,
             //   })
             // );
             dispatch(
@@ -100,10 +94,10 @@ const Login: React.FC = () => {
         });
 
         // const { success, data } = response;
-        // dispatch(loggedIn({ success, access_token: data?.access_token }));
+        // dispatch(loggedIn({ success, access: data?.access }));
         // localStorage.setItem(
         //   TOKEN_NAME,
-        //   JSON.stringify({ success, access_token: data?.access_token })
+        //   JSON.stringify({ success, access: data?.access })
         // );
         // dispatch(
         //   openNotification({
@@ -155,13 +149,13 @@ const Login: React.FC = () => {
                 className="form-field-body"
               >
                 <Form.Item<LoginTypes>
-                  name="email"
-                  rules={[{ required: true }, { validator: emailValidator }]}
+                  name="username"
+                  rules={[{ required: true }]}
                 >
                   <Input
                     onFocus={handleOnFocus}
                     prefix={<Iconify name="ph:user" />}
-                    placeholder="e.g: some@example.com"
+                    placeholder="e.g: username"
                   />
                 </Form.Item>
 

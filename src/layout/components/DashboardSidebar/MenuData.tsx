@@ -9,7 +9,11 @@ import { ThemesTypes } from "../../../app/features/themeSlice";
 import SidebarButtom from "./SidebarButtom";
 import { PiStudent } from "react-icons/pi";
 import { SiGoogleclassroom } from "react-icons/si";
-import { IoBookOutline, IoPeopleOutline } from "react-icons/io5";
+import {
+  IoAccessibilityOutline,
+  IoBookOutline,
+  IoPeopleOutline,
+} from "react-icons/io5";
 import {
   MdAccountBalanceWallet,
   MdCoPresent,
@@ -27,7 +31,10 @@ import { HiOutlineCash } from "react-icons/hi";
 import { FcRules } from "react-icons/fc";
 import { CiBookmarkCheck, CiSettings } from "react-icons/ci";
 import { GrCertificate } from "react-icons/gr";
-import { LiaCertificateSolid } from "react-icons/lia";
+import {
+  LiaCertificateSolid,
+  LiaChalkboardTeacherSolid,
+} from "react-icons/lia";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -72,6 +79,12 @@ const MenuData: React.FC = () => {
       icon: <CiSettings />,
     },
     {
+      key: "/role-permission",
+      label: <Link to="/role-permission">Role & Permissions</Link>,
+      icon: <IoAccessibilityOutline />,
+    },
+
+    {
       key: "/attendance",
       label: "Certificates",
       icon: <GrCertificate />,
@@ -104,7 +117,11 @@ const MenuData: React.FC = () => {
       key: "/students",
       label: <Link to="/students">Students</Link>,
       icon: <PiStudent />,
-      // icon: <Iconify name="mdi:person" style={iconStyle} />,
+    },
+    {
+      key: "/teacher",
+      label: <Link to="/teacher">Teacher</Link>,
+      icon: <LiaChalkboardTeacherSolid />,
     },
     {
       key: "/employees",
@@ -295,5 +312,3 @@ const MenuData: React.FC = () => {
 };
 
 export default MenuData;
-
-

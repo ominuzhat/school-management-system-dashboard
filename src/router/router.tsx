@@ -47,12 +47,16 @@ import ClassesPage from "../modules/general settings/classes/pages/ClassesPage";
 import SubjectsPage from "../modules/general settings/subjects/pages/SubjectsPage";
 import MarkStudentsAttendance from "../modules/general settings/attendance/mark student attendance/page/MarkStudentsAttendance";
 import MarkTeachersAttendance from "../modules/general settings/attendance/mark teacher attendance/page/MarkTeacherAttendancePage";
+import InstituteProfile from "../modules/settings/institute profile/page/InstituteProfile";
+import PrivateRouter from "./PrivateRouter";
+import RolePermissionPage from "../modules/settings/role & permission/page/RolePermissionPage";
+import ViewRolePermission from "../modules/settings/role & permission/components/ViewRolePermission";
+import TeacherPage from "../modules/members/teachers/pages/TeacherPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <DashboardLayout />,
-    // element: <PrivateRouter children={<DashboardLayout />} />,
+    element: <PrivateRouter children={<DashboardLayout />} />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -83,6 +87,21 @@ const router = createBrowserRouter([
           {
             path: "/employees",
             element: <StudentsPage />,
+          },
+          // {
+          //   path: "product-view/:productId",
+          //   element: <ProductView />,
+          // },
+        ],
+      },
+      // teacher
+      {
+        path: "/teacher",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <TeacherPage />,
           },
           // {
           //   path: "product-view/:productId",
@@ -124,6 +143,36 @@ const router = createBrowserRouter([
           {
             path: "mark-teacher-attendance",
             element: <MarkTeachersAttendance />,
+          },
+        ],
+      },
+      // institution profile
+      {
+        path: "/institute-profile",
+        element: <Accounts />,
+        children: [
+          {
+            path: "/institute-profile",
+            element: <InstituteProfile />,
+          },
+          {
+            path: "mark-teacher-attendance",
+            element: <MarkTeachersAttendance />,
+          },
+        ],
+      },
+      // Role & permissions
+      {
+        path: "/role-permission",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <RolePermissionPage />,
+          },
+          {
+            path: ":roleId",
+            element: <ViewRolePermission />,
           },
         ],
       },
@@ -342,11 +391,11 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
+    path: "/login-second",
     element: <Login />,
   },
   {
-    path: "/login-second",
+    path: "/login",
     element: <SecondLogin />,
   },
   {

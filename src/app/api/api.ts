@@ -21,10 +21,9 @@ const baseQuery: BaseQueryFn<
 > = fetchBaseQuery({
   baseUrl,
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.access_token;
-
+    const token = (getState() as RootState).auth.access;
     if (token) {
-      headers.set("Authorization", `${token}`);
+      headers.set("Authorization", `JWT ${token}`);
     }
     return headers;
   },
@@ -38,8 +37,8 @@ export const api = createApi({
     const errorStatus = [
       401,
       // 403,
-      "CUSTOM_ERROR",
-      "FETCH_ERROR",
+      // "CUSTOM_ERROR",
+      // "FETCH_ERROR",
       "PARSING_ERROR",
       "TIMEOUT_ERROR",
     ];

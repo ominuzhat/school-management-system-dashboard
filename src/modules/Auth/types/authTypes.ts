@@ -1,5 +1,5 @@
 export type LoginTypes = {
-  email: string;
+  username: string;
   password: string;
 };
 
@@ -12,10 +12,17 @@ export type UserType = {
   updatedAt: string;
 };
 
+// export type LoginResponse = {
+//   success: boolean;
+//   access: string;
+//   user?: UserType;
+// };
+
 export type LoginResponse = {
   success: boolean;
-  access_token: string;
-  user: UserType;
+  message: string;
+  access: string;
+  refresh: string;
 };
 
 export type SendOTPTypes = {

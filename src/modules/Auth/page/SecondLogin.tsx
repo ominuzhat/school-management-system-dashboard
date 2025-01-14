@@ -1,5 +1,5 @@
 import { Card, Col, Input, Row, Typography } from "antd";
-import React, { useEffect } from "react";
+import React from "react";
 import { ErrorType, LoginTypes } from "../types/authTypes";
 import "../styles/Login.css";
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
@@ -14,13 +14,9 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { TOKEN_NAME } from "../../../utilities/baseQuery";
 import { openNotification } from "../../../app/features/notificationSlice";
-import {
-  emailValidator,
-  passwordValidator,
-} from "../../../utilities/validator";
+import { passwordValidator } from "../../../utilities/validator";
 import { RootState } from "../../../app/store";
-import { enqueueSnackbar } from "notistack";
-import axios from "axios";
+
 import { logo, welcome } from "../../../utilities/images";
 
 const SecondLogin: React.FC = () => {
@@ -28,90 +24,27 @@ const SecondLogin: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const hash = queryParams.get("hash");
   const { message } = useSelector((state: RootState) => state.auth);
 
   const from: string = location?.state?.from?.pathname || "/";
-
-  useEffect(() => {
-    if (hash) {
-      const verifyEmail = async () => {
-        try {
-          const response = await axios.post(
-            "https://code-canvas-official-app.onrender.com/auth/verify-email",
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${hash}`,
-              },
-            }
-          );
-          console.log("Verification successful:", response.data.data);
-          if (response) {
-            enqueueSnackbar(`Verification SuccessFully `, {
-              variant: "success",
-            });
-
-            const { success }: any = response;
-            dispatch(
-              loggedIn({
-                success,
-                access_token: response?.data?.data?.access_token,
-              })
-            );
-            localStorage.setItem(
-              TOKEN_NAME,
-              response?.data?.data?.access_token
-            );
-            // localStorage.setItem(
-            //   TOKEN_NAME,
-            //   JSON.stringify({
-            //     success,
-            //     access_token: response?.data?.data?.access_token,
-            //   })
-            // );
-            dispatch(
-              openNotification({
-                type: "success",
-                message: "You have successfully logged in.",
-              })
-            );
-            navigate(from);
-          }
-        } catch (error) {
-          console.error("Verification failed:", error);
-          enqueueSnackbar(`Verification Unsuccessful `, {
-            variant: "error",
-          });
-        }
-      };
-
-      verifyEmail();
-    }
-  }, [dispatch, from, hash, navigate]);
 
   const onFinish = async (values: LoginTypes): Promise<void> => {
     try {
       const response = await login(values).unwrap();
       if (response.success === true) {
-        enqueueSnackbar(`Check Your mail for confirm the Login`, {
-          variant: "success",
-        });
-
-        // const { success, data } = response;
-        // dispatch(loggedIn({ success, access_token: data?.access_token }));
-        // localStorage.setItem(
-        //   TOKEN_NAME,
-        //   JSON.stringify({ success, access_token: data?.access_token })
-        // );
-        // dispatch(
-        //   openNotification({
-        //     type: "success",
-        //     message: "You have successfully logged in.",
-        //   })
-        // );
-        // navigate(from);
+        const { success, data } = response;
+        dispatch(loggedIn({ success, access: data?.access }));
+        localStorage.setItem(
+          TOKEN_NAME,
+          JSON.stringify({ success, access: data?.access })
+        );
+        dispatch(
+          openNotification({
+            type: "success",
+            message: "You have successfully logged in.",
+          })
+        );
+        navigate(from);
       }
     } catch (error) {
       const { status } = error as ErrorType;
@@ -165,13 +98,13 @@ const SecondLogin: React.FC = () => {
                   className="form-field-body"
                 >
                   <Form.Item<LoginTypes>
-                    name="email"
-                    rules={[{ required: true }, { validator: emailValidator }]}
+                    name="username"
+                    rules={[{ required: true }]}
                   >
                     <Input
                       onFocus={handleOnFocus}
                       prefix={<Iconify name="ph:user" />}
-                      placeholder="e.g: some@example.com"
+                      placeholder="e.g: username"
                     />
                   </Form.Item>
 

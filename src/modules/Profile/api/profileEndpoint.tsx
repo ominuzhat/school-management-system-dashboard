@@ -6,14 +6,14 @@ const profileEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query<ApiResponse<ProfileTypes>, void>({
       query: () => ({
-        url: "/user/me",
+        url: "/auth/users/",
       }),
       providesTags: [{ type: "Profile", id: "PROFILE_ID" }],
     }),
 
     updateProfile: builder.mutation<ApiResponse<ProfileTypes>, ProfileTypes>({
       query: (data) => ({
-        url: "/user/me",
+        url: "/auth/users/",
         method: "PATCH",
         body: data,
       }),
