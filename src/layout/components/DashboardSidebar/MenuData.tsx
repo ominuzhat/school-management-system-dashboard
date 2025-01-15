@@ -54,28 +54,28 @@ const MenuData: React.FC = () => {
       icon: <BiSolidInstitution />,
     },
     {
-      key: "/employees",
-      label: <Link to="/employees">Fee Particulars</Link>,
+      key: "",
+      label: <Link to="">Fee Particulars</Link>,
       icon: <HiOutlineCash />,
     },
     {
-      key: "/employees",
-      label: <Link to="/employees">Accounts For Fee Invoice</Link>,
+      key: "",
+      label: <Link to="">Accounts For Fee Invoice</Link>,
       icon: <TbFileInvoice />,
     },
     {
-      key: "/employees",
-      label: <Link to="/employees">Rules & Regulations</Link>,
+      key: "",
+      label: <Link to="">Rules & Regulations</Link>,
       icon: <FcRules />,
     },
     {
-      key: "/employees",
-      label: <Link to="/employees">Marks Grading</Link>,
+      key: "",
+      label: <Link to="">Marks Grading</Link>,
       icon: <CiBookmarkCheck />,
     },
     {
-      key: "/employees",
-      label: <Link to="/employees">Account Settings</Link>,
+      key: "",
+      label: <Link to="">Account Settings</Link>,
       icon: <CiSettings />,
     },
     {
@@ -90,23 +90,17 @@ const MenuData: React.FC = () => {
       icon: <GrCertificate />,
       children: [
         {
-          label: (
-            <Link to="/attendance/mark-student-attendance">
-              Leave Certificate
-            </Link>
-          ),
+          label: <Link to="/mark-student-attendance">Leave Certificate</Link>,
           icon: <AiOutlineSafetyCertificate />,
-          key: "/attendance/mark-student-attendance",
+          key: "/mark-student-attendance",
         },
 
         {
           label: (
-            <Link to="/attendance/mark-teacher-attendance">
-              Character Certificate
-            </Link>
+            <Link to="/mark-teacher-attendance">Character Certificate</Link>
           ),
           icon: <LiaCertificateSolid />,
-          key: "/attendance/mark-teacher-attendance",
+          key: "/mark-teacher-attendance",
         },
       ],
     },

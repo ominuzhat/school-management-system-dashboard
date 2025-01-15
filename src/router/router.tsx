@@ -84,10 +84,10 @@ const router = createBrowserRouter([
         path: "/employees",
         element: <Accounts />,
         children: [
-          {
-            path: "/employees",
-            element: <StudentsPage />,
-          },
+          // {
+          //   path: "",
+          //   element: <StudentsPage />,
+          // },
           // {
           //   path: "product-view/:productId",
           //   element: <ProductView />,

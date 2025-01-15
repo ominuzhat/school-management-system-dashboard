@@ -6,6 +6,7 @@ import flight from "../assets/flight.jpeg";
 import airplane from "../assets/Airport.svg";
 import welcome from "../../public/welcome.svg";
 import no_img from "../../public/no-image.png";
+import helloImg from "../../public/Hello.svg";
 
 export const image_url: string =
   "https://m360ict.s3.ap-south-1.amazonaws.com/performance/";
@@ -22,4 +23,5 @@ export {
   airplane,
   welcome,
   no_img,
+  helloImg,
 };

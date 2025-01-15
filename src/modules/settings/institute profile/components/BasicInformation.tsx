@@ -1,5 +1,5 @@
 import { Card, Col, Row } from "antd";
-import { no_img } from "../../../../utilities/images";
+import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 
 const BasicInformation = () => {
   return (
@@ -12,37 +12,29 @@ const BasicInformation = () => {
           justifyItems: "center",
         }}
       >
-        <Col lg={6}>
-          <Card className="text-center ">
-            <img src={no_img} className="mx-auto " />
-            <p className="text-xl font-semibold uppercase font-serif pt-5">
-              Omi Hasan
-            </p>
-            <p className="pt-2">
-              <span className="font-semibold ">Registration No :</span> 111111
-            </p>
-          </Card>
-        </Col>
-        <Col span={18} className="space-y-2">
+        <Col span={24} className="space-y-2">
           <Card>
             <Row>
               <Col span={8} className="space-y-2">
                 <div>
-                  <p>
-                    <span className="font-semibold">Address</span> SobujBagh,
-                    Dhaka
+                  <span className="font-semibold">Address</span>
+                  <p className="flex items-center gap-1">
+                    <MdOutlineSubdirectoryArrowRight />
+                    SobujBagh, Dhaka
                   </p>
                 </div>
                 <div>
-                  <p>
-                    <span className="font-semibold">Contact Email:</span>{" "}
-                    omihasan@gmail.com
+                  <span className="font-semibold">Address</span>
+                  <p className="flex items-center gap-1">
+                    <MdOutlineSubdirectoryArrowRight />
+                    SobujBagh, Dhaka
                   </p>
                 </div>
                 <div>
-                  <p>
-                    <span className="font-semibold">Phone Number:</span>{" "}
-                    0162404050
+                  <span className="font-semibold">Address</span>
+                  <p className="flex items-center gap-1">
+                    <MdOutlineSubdirectoryArrowRight />
+                    SobujBagh, Dhaka
                   </p>
                 </div>
               </Col>
