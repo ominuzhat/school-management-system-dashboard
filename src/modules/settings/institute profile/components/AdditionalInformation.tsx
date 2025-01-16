@@ -3,35 +3,23 @@ import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import TextView from "../../../../common/components/TextView";
 import { IInstituteProfile } from "../type/InstituteProfile";
 
-const BasicInformation = ({
+const AdditionalInformation = ({
   data,
 }: {
   data: IInstituteProfile | undefined;
 }) => {
-  const { address, city, contact_email, phone_number, institution_type } =
-    data || {};
+  const {
+    founder,
+    description,
+    campus_size,
+    num_students,
+    accreditations,
+    ownership_type,
+    latitude,
+    longitude,
+  } = data || {};
 
   const basicInfo = [
-    {
-      fieldName: "Address",
-      text: address || "N/A",
-      Icon: MdOutlineSubdirectoryArrowRight,
-    },
-    {
-      fieldName: "City",
-      text: city || "N/A",
-      Icon: MdOutlineSubdirectoryArrowRight,
-    },
-    {
-      fieldName: "Contact Email",
-      text: contact_email || "N/A",
-      Icon: MdOutlineSubdirectoryArrowRight,
-    },
-    {
-      fieldName: "Phone Number",
-      text: phone_number || "N/A",
-      Icon: MdOutlineSubdirectoryArrowRight,
-    },
     {
       fieldName: "Established Date",
       text: data?.established_date
@@ -39,9 +27,45 @@ const BasicInformation = ({
         : "N/A",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
+
     {
-      fieldName: "Institution Type",
-      text: institution_type || "N/A",
+      fieldName: "Founder",
+      text: founder || "N/A",
+      Icon: MdOutlineSubdirectoryArrowRight,
+    },
+    {
+      fieldName: "Description",
+      text: description || "N/A",
+      Icon: MdOutlineSubdirectoryArrowRight,
+    },
+    {
+      fieldName: "Campus Size",
+      text: `${campus_size} acres` || "N/A",
+      Icon: MdOutlineSubdirectoryArrowRight,
+    },
+    {
+      fieldName: "Number of Students",
+      text: `${num_students}` || "N/A",
+      Icon: MdOutlineSubdirectoryArrowRight,
+    },
+    {
+      fieldName: "Accreditations",
+      text: accreditations || "N/A",
+      Icon: MdOutlineSubdirectoryArrowRight,
+    },
+    {
+      fieldName: "Ownership Type",
+      text: ownership_type || "N/A",
+      Icon: MdOutlineSubdirectoryArrowRight,
+    },
+    {
+      fieldName: "Latitude",
+      text: `${latitude}` || "N/A",
+      Icon: MdOutlineSubdirectoryArrowRight,
+    },
+    {
+      fieldName: "Longitude",
+      text: `${longitude}` || "N/A",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
   ];
@@ -76,4 +100,4 @@ const BasicInformation = ({
   );
 };
 
-export default BasicInformation;
+export default AdditionalInformation;

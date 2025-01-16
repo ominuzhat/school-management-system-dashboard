@@ -2,12 +2,12 @@ import { Badge, Card, Col, DatePicker, Input, Modal, Row, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 import { Form } from "../../../../common/CommonAnt";
-import { useCreateServiceMutation } from "../../../service/api/serviceEndpoints";
 import { useState } from "react";
 import moment from "moment";
+import { useCreateStudentMutation } from "../api/studentEndPoints";
 
 const CreateStudent = () => {
-  const [create, { isLoading, isSuccess }] = useCreateServiceMutation();
+  const [create, { isLoading, isSuccess }] = useCreateStudentMutation();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -62,12 +62,7 @@ const CreateStudent = () => {
 
   return (
     <div>
-      <Form
-        onFinish={onFinish}
-        isLoading={isLoading}
-        isSuccess={isSuccess}
-        initialValues={{ keyPoints: [""], faqs: [{}] }}
-      >
+      <Form onFinish={onFinish} isLoading={isLoading} isSuccess={isSuccess}>
         <Row gutter={[16, 16]}>
           <Col lg={24}>
             <Badge.Ribbon text="Student Information" placement="start">
@@ -114,22 +109,29 @@ const CreateStudent = () => {
                     <Row gutter={[16, 16]}>
                       <Col lg={8}>
                         <Form.Item<any>
-                          label="Student Name"
-                          name="name"
-                          rules={[{ required: true, message: "Student Name!" }]}
+                          label="First Name"
+                          name="first_name"
+                          rules={[{ required: true, message: "First Name!" }]}
                         >
-                          <Input placeholder="Student Name." />
+                          <Input placeholder="First Name." />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
                         <Form.Item<any>
-                          label="Last Registration"
-                          name="registration"
-                          rules={[
-                            { required: true, message: "Last Registration" },
-                          ]}
+                          label="Last Name"
+                          name="last_name"
+                          rules={[{ required: true, message: "Last Name!" }]}
                         >
-                          <Input placeholder="Last Registration" />
+                          <Input placeholder="Last Name." />
+                        </Form.Item>
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Email"
+                          name="email"
+                          rules={[{ required: true, message: "Email" }]}
+                        >
+                          <Input placeholder="Email" />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
@@ -152,7 +154,7 @@ const CreateStudent = () => {
                       <Col lg={8}>
                         <Form.Item<any>
                           label="Date of Admission"
-                          name="registration"
+                          name="enrollment_date"
                           rules={[
                             { required: true, message: "Date of Admission" },
                           ]}
@@ -167,26 +169,16 @@ const CreateStudent = () => {
                       </Col>
                       <Col lg={8}>
                         <Form.Item<any>
-                          label="Mobile No. for SMS/WhatsApp"
-                          name="registration"
+                          label="Mobile No for SMS/WhatsApp"
+                          name="phone_number"
                           rules={[
                             {
                               required: true,
                               message: "Please enter your mobile number",
                             },
-                            {
-                              pattern: /^[0-9]{11}$/,
-                              message:
-                                "Please enter a valid 10-digit mobile number",
-                            },
                           ]}
                         >
-                          <Input
-                            type="tel"
-                            placeholder="Enter Mobile Number"
-                            maxLength={11}
-                            pattern="[0-9]*"
-                          />{" "}
+                          <Input placeholder="Enter Mobile Number" />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
@@ -211,7 +203,7 @@ const CreateStudent = () => {
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
                   <Col lg={6}>
-                    <Form.Item<any> label="Date of Birth" name="dof">
+                    <Form.Item<any> label="Date of Birth" name="date_of_birth">
                       <DatePicker
                         placeholder="Select Date"
                         format="YYYY-MM-DD"

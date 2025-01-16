@@ -1,5 +1,4 @@
-import { Space } from "antd";
-import { GlobalOutlined } from "@ant-design/icons";
+import { Space, Tag } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
@@ -26,41 +25,53 @@ const studentColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Title",
-      dataIndex: "title",
+      title: "Name",
+      dataIndex: "first_name",
       align: "center",
-      sorter: (a, b) => a.title.localeCompare(b.title), // Sorting by title
-      render: (title) => (title ? title : "N/A"),
+      render: (name) => (name ? name : "N/A"),
+    },
+    {
+      key: "2",
+      title: "User Name",
+      dataIndex: "user",
+      align: "center",
+      render: (name) => (name ? name?.username : "N/A"),
+    },
+    {
+      key: "3",
+      title: "Email",
+      dataIndex: "email",
+      align: "center",
+      render: (email) => (email ? email : "N/A"),
     },
     {
       key: "4",
-      title: "Live Website Link",
+      title: "Phone",
+      dataIndex: "phone_number",
       align: "center",
-      dataIndex: "live_link",
-      render: (live_link) =>
-        live_link ? (
-          <a href={live_link} target="_blank" rel="noopener noreferrer">
-            <GlobalOutlined />
-          </a>
-        ) : (
-          "N/A"
-        ),
-    },
-    {
-      key: "6",
-      title: "Support",
-      dataIndex: "support_for",
-      align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (phone_number) => (phone_number ? phone_number : "N/A"),
     },
     {
       key: "5",
-      title: "Price",
-      dataIndex: "price",
+      title: "Enrollment Date",
+      dataIndex: "enrollment_date",
       align: "center",
-      sorter: (a, b) => a.price - b.price, // Sorting by price
-      render: (price) => (price ? price : "N/A"),
+      render: (enrollment_date) => (enrollment_date ? enrollment_date : "N/A"),
     },
+
+    {
+      key: "6",
+      title: "Active",
+      dataIndex: "is_active",
+      align: "center",
+      render: (is_active) =>
+        is_active ? (
+          <Tag color="green">Active</Tag>
+        ) : (
+          <Tag color="red">Inactive</Tag>
+        ),
+    },
+
     {
       title: "Actions",
       align: "center",

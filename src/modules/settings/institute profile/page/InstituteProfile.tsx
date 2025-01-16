@@ -3,46 +3,85 @@ import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import BasicInformation from "../components/BasicInformation";
 import { no_img } from "../../../../utilities/images";
 import WelcomeInstitute from "../components/WelcomeInstitute";
+import { useGetInstituteProfileQuery } from "../api/instituteProfileEndPoint";
+import SocialInformation from "../components/SocialInformation";
+import AdditionalInformation from "../components/AdditionalInformation";
+import EditButton from "../../../../common/CommonAnt/Button/EditButton";
+import UpdateInstituteProfile from "../components/UpdateInstituteProfile";
+import { showModal } from "../../../../app/features/modalSlice";
+import { useDispatch } from "react-redux";
 
 const InstituteProfile = () => {
+  const dispatch = useDispatch();
+  const { data: instituteProfile }: any = useGetInstituteProfileQuery({});
+
   return (
     <div>
       <div className="my-5">
         <BreadCrumb />
       </div>
-      <Row>
+      <Row gutter={[16, 8]}>
         <Col span={24} lg={24}>
           <Row
-            gutter={[8, 16]}
+            gutter={[8, 8]}
             style={{
               display: "flex",
-              alignItems: "center",
-              justifyItems: "center",
+              alignItems: "stretch",
             }}
           >
-            <Col lg={6}>
-              <Card className="text-center ">
+            <Col lg={6} style={{ display: "flex", flexDirection: "column" }}>
+              <Card className="text-center" style={{ flex: 1 }}>
                 <img
-                  src={no_img}
-                  className="mx-auto"
+                  src={
+                    (instituteProfile?.data?.logo &&
+                      instituteProfile?.data?.logo) ||
+                    no_img
+                  }
+                  className="mx-auto "
                   style={{ width: "12rem" }}
                 />
-                <p className="text-xl font-semibold uppercase font-serif pt-5">
-                  Compus Coaching Center
-                </p>
+                <br />
+                <EditButton
+                  onClick={() =>
+                    dispatch(
+                      showModal({
+                        title: "Update Institute Profile",
+                        content: (
+                          <UpdateInstituteProfile record={instituteProfile} />
+                        ),
+                      })
+                    )
+                  }
+                />
               </Card>
             </Col>
 
-            <Col lg={18}>
-              <WelcomeInstitute />
+            <Col lg={18} style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ flex: 1 }}>
+                <WelcomeInstitute name={instituteProfile?.data?.name} />
+              </div>
             </Col>
           </Row>
         </Col>
 
-        <Col span={24} lg={24} className="mt-2">
+        <Col span={24} lg={24}>
           <Badge.Ribbon text="Basic Information" placement="start">
             <Card className="py-5">
-              <BasicInformation />
+              <BasicInformation data={instituteProfile?.data} />
+            </Card>
+          </Badge.Ribbon>
+        </Col>
+        <Col span={24} lg={24}>
+          <Badge.Ribbon text="Additional Information" placement="start">
+            <Card className="py-5">
+              <AdditionalInformation data={instituteProfile?.data} />
+            </Card>
+          </Badge.Ribbon>
+        </Col>
+        <Col span={24} lg={24}>
+          <Badge.Ribbon text="Social Information" placement="start">
+            <Card className="py-5">
+              <SocialInformation data={instituteProfile?.data} />
             </Card>
           </Badge.Ribbon>
         </Col>

@@ -22,7 +22,7 @@ const App: React.FC = () => {
           algorithm:
             themes === "light" ? theme.defaultAlgorithm : theme.darkAlgorithm,
           token: {
-            fontFamily: "Hind Siliguri, sans-serif",
+            fontFamily: "Oleo, sans-serif",
             colorPrimary: primaryColor,
           },
         }}

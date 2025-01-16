@@ -2,6 +2,7 @@ import { Dispatch } from "@reduxjs/toolkit";
 import { ApiResponse } from "./constant";
 import { closeModal } from "../features/modalSlice";
 import { openNotification } from "../features/notificationSlice";
+import { GetErrorMassage } from "./errorHandler";
 
 interface QueryFulfilledResponse<T> {
   data: ApiResponse<T>;
@@ -32,7 +33,7 @@ export const handleOnQueryStarted = async <T>(
     dispatch(
       openNotification({
         type: "error",
-        message: error.error.data.message,
+        message: GetErrorMassage(error),
         placement: "bottomLeft",
       })
     );

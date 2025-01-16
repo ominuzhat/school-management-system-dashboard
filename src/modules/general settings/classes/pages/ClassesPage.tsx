@@ -6,9 +6,11 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import classesColumns from "../utils/ClassesColumns";
 import CreateClass from "../components/CreateClass";
+import { useGetClassesQuery } from "../api/classesEndPoints";
 
 const ClassesPage = () => {
   const dispatch = useDispatch();
+  const { data: classList, isLoading } = useGetClassesQuery({});
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -35,14 +37,13 @@ const ClassesPage = () => {
           </Col>
         </Row>
       </Card>
-      <Card>
-        <Table
-          loading={true}
-          total={0}
-          dataSource={[]}
-          columns={classesColumns()}
-        />
-      </Card>
+
+      <Table
+        loading={isLoading}
+        total={classList?.data?.length}
+        dataSource={classList?.data}
+        columns={classesColumns()}
+      />
     </div>
   );
 };

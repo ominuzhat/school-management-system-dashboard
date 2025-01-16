@@ -1,44 +1,26 @@
 import { Col, Input, Row, Select } from "antd";
 import { Form } from "../../../../common/CommonAnt";
-import { useCreateServiceMutation } from "../../../service/api/serviceEndpoints";
+import { useCreateClassesMutation } from "../api/classesEndPoints";
 
 const CreateClass = () => {
-  const [create, { isLoading, isSuccess }] = useCreateServiceMutation();
+  const [create, { isLoading, isSuccess }] = useCreateClassesMutation();
 
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
 
     Object.entries(values).forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        if (key === "images") {
-          // Handle the images array specifically
-          value.forEach((file) => {
-            if (file?.originFileObj) {
-              formData.append(key, file.originFileObj);
-            }
-          });
-        } else if (typeof value[0] === "object" && value[0] !== null) {
-          // Handle faqs or other objects in arrays
-          value.forEach((item, index) => {
-            formData.append(`${key}[${index}][question]`, item.question);
-            formData.append(`${key}[${index}][answer]`, item.answer);
-          });
-        } else {
-          // Handle keyPoints or other arrays of strings
-          value.forEach((item) => {
-            formData.append(key, item);
-          });
-        }
+        value.forEach((item) => {
+          formData.append(key, item);
+        });
       } else if (value instanceof File || value instanceof Blob) {
-        // If the value is a file or blob
         formData.append(key, value);
       } else {
-        // For regular string/number values
         formData.append(key, value as string | Blob);
       }
     });
 
-    console.log("ascfasd", values);
+    console.log("Form Values Submitted:", values);
 
     create(formData);
   };
@@ -49,41 +31,43 @@ const CreateClass = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={{ keyPoints: [""], faqs: [{}] }}
+        initialValues={{ name: "", description: "", class_teacher: null }}
       >
         <Row gutter={[16, 16]}>
           <Col lg={8}>
-            <Form.Item<any>
+            <Form.Item
               label="Class Name"
               name="name"
-              rules={[{ required: true, message: "Class Name!" }]}
+              rules={[{ required: true, message: "Class Name is required!" }]}
             >
-              <Input placeholder="Class Name." />
+              <Input placeholder="Enter Class Name" />
             </Form.Item>
           </Col>
           <Col lg={8}>
-            <Form.Item<any>
-              label="Monthly Tuition Fees"
-              name="registration"
-              rules={[{ required: true, message: "Monthly Tuition Fees" }]}
+            <Form.Item
+              label="Description"
+              name="description"
+              rules={[{ required: true, message: "Description is required!" }]}
             >
-              <Input placeholder="Monthly Tuition Fees" />
+              <Input.TextArea placeholder="Enter Description" rows={4} />
             </Form.Item>
           </Col>
           <Col lg={8}>
-            <Form.Item<any>
+            <Form.Item
               label="Select Class Teacher"
-              name="registration"
-              rules={[{ required: true, message: "Select Class Teacher" }]}
+              name="class_teacher"
+              rules={[
+                {
+                  required: true,
+                  message: "Class Teacher selection is required!",
+                },
+              ]}
             >
               <Select placeholder="Select Class Teacher" className="w-full">
-                {/* {categoryData?.data?.map((category) => (
-                    <Select.Option key={category.id} value={category?.id}>
-                        {category?.name}
-                    </Select.Option>
-                    ))} */}
-
-                <Select.Option value={1}>1</Select.Option>
+                {/* Replace with dynamic data */}
+                <Select.Option value={0}>Teacher 0</Select.Option>
+                <Select.Option value={1}>Teacher 1</Select.Option>
+                <Select.Option value={2}>Teacher 2</Select.Option>
               </Select>
             </Form.Item>
           </Col>

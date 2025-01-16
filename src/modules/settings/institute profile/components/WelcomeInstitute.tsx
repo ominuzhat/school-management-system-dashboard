@@ -1,7 +1,7 @@
 import { Col, Row, Typography } from "antd";
 import { helloImg } from "../../../../utilities/images";
 
-const WelcomeInstitute = () => {
+const WelcomeInstitute = ({ name }: { name: string | undefined }) => {
   const { Title } = Typography;
 
   return (
@@ -19,7 +19,7 @@ const WelcomeInstitute = () => {
             className="font-sans text-white text-4xl tracking-wide"
             style={{ marginBottom: 5 }}
           >
-            Hello, Compus Coaching Center
+            Hello, {name}
           </Title>
           <Typography.Text
             className="font-sans  tracking-wide opacity-90"
