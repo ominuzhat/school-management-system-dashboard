@@ -87,7 +87,7 @@ const studentColumns = (): ColumnsType<any> => {
               )
             }
           /> */}
-          <ViewButton to={`student-view/1`} />
+          <ViewButton to={`student-view/${record?.id}`} />
           {/* <DeleteButton 
           onClick={() => handleDelete(record.id)}>
             Delete

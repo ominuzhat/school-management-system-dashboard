@@ -5,18 +5,18 @@ import { showModal } from "../../../../app/features/modalSlice";
 import UpdateClass from "../components/UpdateClass";
 import { useDispatch } from "react-redux";
 
-const classesColumns = (): ColumnsType<any> => {
+const useClassesColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
-  //   const [deleteCartItem] = useDeleteOrderItemMutation();
+  // const [deleteCartItem] = useDeleteOrderItemMutation();
 
-  //   const handleDelete = async (id: any) => {
-  //     try {
-  //       await deleteCartItem({ id }).unwrap();
-  //       console.log("Item deleted successfully");
-  //     } catch (error) {
-  //       console.error("Failed to delete item:", error);
-  //     }
-  //   };
+  // const handleDelete = async (id: any) => {
+  //   try {
+  //     await deleteCartItem({ id }).unwrap();
+  //     console.log("Item deleted successfully");
+  //   } catch (error) {
+  //     console.error("Failed to delete item:", error);
+  //   }
+  // };
 
   return [
     {
@@ -73,4 +73,4 @@ const classesColumns = (): ColumnsType<any> => {
   ];
 };
 
-export default classesColumns;
+export default useClassesColumns;

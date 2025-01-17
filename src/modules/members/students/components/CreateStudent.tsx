@@ -5,8 +5,11 @@ import { Form } from "../../../../common/CommonAnt";
 import { useState } from "react";
 import moment from "moment";
 import { useCreateStudentMutation } from "../api/studentEndPoints";
+import { useGetClassesQuery } from "../../../general settings/classes/api/classesEndPoints";
 
 const CreateStudent = () => {
+  const { data: GetClassData } = useGetClassesQuery({});
+
   const [create, { isLoading, isSuccess }] = useCreateStudentMutation();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -141,11 +144,11 @@ const CreateStudent = () => {
                           rules={[{ required: true, message: "Select Class" }]}
                         >
                           <Select placeholder="Select Class" className="w-full">
-                            {/* {categoryData?.data?.map((category) => (
-                    <Select.Option key={category.id} value={category?.id}>
-                        {category?.name}
-                    </Select.Option>
-                    ))} */}
+                            {GetClassData?.data?.map((data, index) => (
+                              <Select.Option key={index} value={data?.id}>
+                                {data?.name}
+                              </Select.Option>
+                            ))}
 
                             <Select.Option value={1}>1</Select.Option>
                           </Select>

@@ -4,9 +4,9 @@ import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
-import classesColumns from "../utils/ClassesColumns";
 import CreateClass from "../components/CreateClass";
 import { useGetClassesQuery } from "../api/classesEndPoints";
+import useClassesColumns from "../utils/ClassesColumns";
 
 const ClassesPage = () => {
   const dispatch = useDispatch();
@@ -40,9 +40,9 @@ const ClassesPage = () => {
 
       <Table
         loading={isLoading}
-        total={classList?.data?.length}
-        dataSource={classList?.data}
-        columns={classesColumns()}
+        total={classList?.data && classList?.data?.length}
+        dataSource={classList?.data && classList?.data}
+        columns={useClassesColumns()}
       />
     </div>
   );

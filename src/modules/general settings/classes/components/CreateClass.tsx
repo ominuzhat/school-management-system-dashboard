@@ -34,7 +34,7 @@ const CreateClass = () => {
         initialValues={{ name: "", description: "", class_teacher: null }}
       >
         <Row gutter={[16, 16]}>
-          <Col lg={8}>
+          <Col lg={12}>
             <Form.Item
               label="Class Name"
               name="name"
@@ -43,16 +43,7 @@ const CreateClass = () => {
               <Input placeholder="Enter Class Name" />
             </Form.Item>
           </Col>
-          <Col lg={8}>
-            <Form.Item
-              label="Description"
-              name="description"
-              rules={[{ required: true, message: "Description is required!" }]}
-            >
-              <Input.TextArea placeholder="Enter Description" rows={4} />
-            </Form.Item>
-          </Col>
-          <Col lg={8}>
+          <Col lg={12}>
             <Form.Item
               label="Select Class Teacher"
               name="class_teacher"
@@ -69,6 +60,15 @@ const CreateClass = () => {
                 <Select.Option value={1}>Teacher 1</Select.Option>
                 <Select.Option value={2}>Teacher 2</Select.Option>
               </Select>
+            </Form.Item>
+          </Col>{" "}
+          <Col lg={24}>
+            <Form.Item
+              label="Description"
+              name="description"
+              rules={[{ required: true, message: "Description is required!" }]}
+            >
+              <Input.TextArea placeholder="Enter Description" rows={4} />
             </Form.Item>
           </Col>
         </Row>

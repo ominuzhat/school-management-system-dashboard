@@ -37,8 +37,21 @@ const studentsEndpoint = api.injectEndpoints({
       ],
     }),
 
+    getSingleStudent: builder.query<ApiResponse<IStudents>, number>({
+      query: (studId) => ({
+        url: `/api/v1.0/students/${studId}/`,
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.STUDENTS,
+          id: TagTypes.STUDENTS + "_ID",
+        },
+      ],
+    }),
+
     updateRestaurant: builder.mutation<
-      ApiResponse<RestaurantTypes>,
+      ApiResponse<IStudents>,
       { id: number | undefined; data: FormData }
     >({
       query: ({ id, data }) => ({
@@ -58,4 +71,5 @@ export const {
   useGetStudentsQuery,
   useCreateStudentMutation,
   useUpdateRestaurantMutation,
+  useGetSingleStudentQuery,
 } = studentsEndpoint;

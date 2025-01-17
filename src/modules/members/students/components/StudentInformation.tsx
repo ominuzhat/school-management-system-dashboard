@@ -1,178 +1,174 @@
-import { Badge, Card, Col, Row } from "antd";
+import { Badge, Card, Col, Row, Tag } from "antd";
 import { no_img } from "../../../../utilities/images";
+import TextView from "../../../../common/components/TextView";
+import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 
-const StudentInformation = () => {
+const StudentInformation = ({ data }: { data: any }) => {
+  const {
+    first_name,
+    last_name,
+    id,
+    is_active,
+    phone_number,
+    email,
+    date_of_birth,
+    address,
+  } = data || {};
+
+  const information = [
+    {
+      title: "Student Information",
+      data: [
+        {
+          fieldName: "Gender",
+          text: "Male",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Class",
+          text: "1",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Date of Admission",
+          text: "10-12-2024",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Email",
+          text: email || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Mobile No",
+          text: phone_number || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Date of Birth",
+          text: date_of_birth || "N/A",
+
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Student Birth ID",
+          text: "0162404050",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Address",
+          text: address || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Blood Group",
+          text: "O+",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+      ],
+    },
+    {
+      title: "Father Information",
+      data: [
+        {
+          fieldName: "Father Name",
+          text: "Mr. Alom",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Father Mobile No",
+          text: "0168520741",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Father NID",
+          text: "0168520741",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Occupation",
+          text: "Doctor",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Income",
+          text: "52000",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+      ],
+    },
+    {
+      title: "Mother Information",
+      data: [
+        {
+          fieldName: "Mother Name",
+          text: "Mrs. Alom",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Mother Mobile No",
+          text: "0168520741",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Mother NID",
+          text: "0168520741",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Occupation",
+          text: "Doctor",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Income",
+          text: "52000",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+      ],
+    },
+  ];
+
   return (
     <div>
-      <Row
-        gutter={[16, 16]}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyItems: "center",
-        }}
-      >
+      <Row gutter={[16, 16]} align="middle" justify="center">
+        {/* Student Overview */}
         <Col lg={6}>
-          <Card className="text-center ">
-            <img src={no_img} className="mx-auto " />
+          <Card className="text-center">
+            <img src={no_img} className="mx-auto" alt="Profile" />
             <p className="text-xl font-semibold uppercase font-serif pt-5">
-              Omi Hasan
+              {first_name} {last_name}
             </p>
-            <p className="pt-2">
-              <span className="font-semibold ">Registration No :</span> 111111
+            <p className="py-2">
+              <span className="font-semibold">Registration No:</span> {id}
             </p>
+            <Tag color={is_active ? "green" : "red"}>
+              {is_active ? "Active" : "Inactive"}
+            </Tag>
           </Card>
         </Col>
-        <Col lg={18} className="space-y-2">
-          <Badge.Ribbon text="Student Information" placement="start">
-            <Card className="py-2">
-              <Row>
-                <Col span={8} className="space-y-2">
-                  <div>
-                    <p>
-                      <span className="font-semibold">Gender:</span> Male
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Class:</span> 1
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Date of Admission:</span>{" "}
-                      10-12-2024
-                    </p>
-                  </div>
-                </Col>
-                <Col span={8} className="space-y-2">
-                  <div>
-                    <p>
-                      <span className="font-semibold">Mobile No:</span>{" "}
-                      0162404050
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Date of Birth:</span>{" "}
-                      10-10-1998
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Student Birth ID :</span>{" "}
-                      0162404050
-                    </p>
-                  </div>
-                </Col>
-                <Col span={8} className="space-y-2">
-                  <div>
-                    <p>
-                      <span className="font-semibold">Religion:</span> Islam
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Blood Group :</span> O+
-                    </p>
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </Badge.Ribbon>
-          <Badge.Ribbon text="Father Information" placement="start">
-            <Card className="py-2">
-              <Row>
-                <Col span={8} className="space-y-2">
-                  <div>
-                    <p>
-                      <span className="font-semibold">Father Name :</span> Mr.
-                      Alom
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Father Mobile No :</span>{" "}
-                      0168520741
-                    </p>
-                  </div>
-                </Col>
-                <Col span={8} className="space-y-2">
-                  <div>
-                    <p>
-                      <span className="font-semibold">Father NID :</span>{" "}
-                      0168520741
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Occupation:</span> Doctor
-                    </p>
-                  </div>
-                </Col>
-                <Col span={8} className="space-y-2">
-                  <div>
-                    <p>
-                      <span className="font-semibold">Father NID :</span>{" "}
-                      0168520741
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Income:</span> 52000
-                    </p>
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </Badge.Ribbon>
 
-          <Badge.Ribbon text="Mother Information" placement="start">
-            <Card className="py-2">
-              <Row>
-                <Col span={8} className="space-y-2">
-                  <div>
-                    <p>
-                      <span className="font-semibold">Mother Name :</span> Mrs.
-                      Alom
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Mother Mobile No :</span>{" "}
-                      0168520741
-                    </p>
-                  </div>
-                </Col>
-                <Col span={8} className="space-y-2">
-                  <div>
-                    <p>
-                      <span className="font-semibold">Mother NID :</span>{" "}
-                      0168520741
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Occupation:</span> Doctor
-                    </p>
-                  </div>
-                </Col>
-                <Col span={8} className="space-y-2">
-                  <div>
-                    <p>
-                      <span className="font-semibold">Mother NID :</span>{" "}
-                      0168520741
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <span className="font-semibold">Income:</span> 52000
-                    </p>
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </Badge.Ribbon>
+        {/* Detailed Information */}
+        <Col lg={18} className="space-y-1">
+          {information.map((section, index) => (
+            <Badge.Ribbon text={section.title} placement="start" key={index}>
+              <Card className="pt-2">
+                <Row gutter={[16, 16]}>
+                  {section.data.map((item, idx) => (
+                    <Col span={8} key={idx}>
+                      <div>
+                        <TextView
+                          fieldName={item.fieldName}
+                          text={item.text}
+                          Icon={item.Icon}
+                        />
+                      </div>
+                    </Col>
+                  ))}
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          ))}
         </Col>
       </Row>
     </div>

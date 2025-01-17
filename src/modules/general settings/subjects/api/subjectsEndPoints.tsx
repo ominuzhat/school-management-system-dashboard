@@ -3,26 +3,26 @@ import { FilterTypes } from "../../../../app/features/filterSlice";
 import { ApiResponse } from "../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../app/utils/tagTypes";
-import { IClasses } from "../type/classesType";
+import { ISubjects } from "../type/subjectsType";
 
-const classesEndpoint = api.injectEndpoints({
+const subjectsEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
-    getClasses: builder.query<ApiResponse<IClasses[]>, FilterTypes>({
+    getSubjects: builder.query<ApiResponse<ISubjects[]>, FilterTypes>({
       query: (params) => ({
-        url: "/api/v1.0/institutions/grade-levels/",
+        url: "/api/v1.0/institutions/subjects/",
         params,
       }),
       providesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.SUBJECTS,
+          id: TagTypes.SUBJECTS + "_ID",
         },
       ],
     }),
 
-    createClasses: builder.mutation<ApiResponse<IClasses>, FormData>({
+    createSubjects: builder.mutation<ApiResponse<ISubjects>, FormData>({
       query: (data) => ({
-        url: "/api/v1.0/institutions/grade-levels/",
+        url: "/api/v1.0/institutions/subjects/",
         method: "POST",
         body: data,
       }),
@@ -31,31 +31,31 @@ const classesEndpoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.SUBJECTS,
+          id: TagTypes.SUBJECTS + "_ID",
         },
       ],
     }),
 
-    getSingleClasses: builder.query<ApiResponse<IClasses>, number>({
+    getSingleSubjects: builder.query<ApiResponse<ISubjects>, number>({
       query: (roleId) => ({
-        url: `/api/v1.0/institutions/grade-levels/${roleId}/`,
+        url: `/api/v1.0/institutions/subjects/${roleId}/`,
       }),
 
       providesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.SUBJECTS,
+          id: TagTypes.SUBJECTS + "_ID",
         },
       ],
     }),
 
-    updateClasses: builder.mutation<
-      ApiResponse<IClasses>,
+    updateSubjects: builder.mutation<
+      ApiResponse<ISubjects>,
       { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/institutions/grade-levels/${id}/`,
+        url: `/api/v1.0/institutions/subjects/${id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -64,8 +64,8 @@ const classesEndpoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.SUBJECTS,
+          id: TagTypes.SUBJECTS + "_ID",
         },
       ],
     }),
@@ -73,8 +73,8 @@ const classesEndpoint = api.injectEndpoints({
 });
 
 export const {
-  useGetClassesQuery,
-  useCreateClassesMutation,
-  useUpdateClassesMutation,
-  useGetSingleClassesQuery,
-} = classesEndpoint;
+  useGetSubjectsQuery,
+  useCreateSubjectsMutation,
+  useUpdateSubjectsMutation,
+  useGetSingleSubjectsQuery,
+} = subjectsEndpoint;

@@ -4,11 +4,13 @@ import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
-import classesColumns from "../../classes/utils/ClassesColumns";
 import CreateSubjects from "../components/CreateSubjects";
+import { useGetSubjectsQuery } from "../api/subjectsEndPoints";
+import useSubjectColumns from "../utils/SubjectsColumns";
 
 const SubjectsPage = () => {
   const dispatch = useDispatch();
+  const { data: getSubjectsData, isLoading } = useGetSubjectsQuery({});
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -37,10 +39,10 @@ const SubjectsPage = () => {
       </Card>
       <Card>
         <Table
-          loading={true}
-          total={0}
-          dataSource={[]}
-          columns={classesColumns()}
+          loading={isLoading}
+          total={getSubjectsData?.data?.length}
+          dataSource={getSubjectsData?.data}
+          columns={useSubjectColumns()}
         />
       </Card>
     </div>
