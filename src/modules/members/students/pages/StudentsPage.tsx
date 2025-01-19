@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Button, Card, Col, Row, Select } from "antd";
@@ -14,12 +15,12 @@ import { Table } from "../../../../common/CommonAnt";
 import { showModal } from "../../../../app/features/modalSlice";
 
 import { no_img } from "../../../../utilities/images";
-import studentColumns from "../utils/studentColumns";
 
 import CreateStudent from "../components/CreateStudent";
-import UpdateStudent from "../components/UpdateStudent";
 import { FaListUl } from "react-icons/fa6";
 import { useGetStudentsQuery } from "../api/studentEndPoints";
+import UpdateStudent from "../components/UpdateStudent";
+import useStudentColumns from "../utils/studentColumns";
 
 const StudentsPage = () => {
   const [layout, setLayout] = useState("grid");
@@ -30,7 +31,7 @@ const StudentsPage = () => {
 
   const handleDelete = async (id: any) => {
     try {
-      await deleteCartItem({ id }).unwrap();
+      // await deleteCartItem({ id }).unwrap();
       console.log("Item deleted successfully");
     } catch (error) {
       console.error("Failed to delete item:", error);
@@ -137,12 +138,12 @@ const StudentsPage = () => {
                     {student?.first_name} {student?.last_name}
                   </p>
                   <div className="space-x-2">
-                    <ViewButton to={`student-view/1`} />
+                    <ViewButton to={`student-view/${student?.id}`} />
                     <EditButton
                       onClick={() =>
                         dispatch(
                           showModal({
-                            title: "Update Student",
+                            title: "Update Students",
                             content: <UpdateStudent record={"record"} />,
                           })
                         )
@@ -162,7 +163,7 @@ const StudentsPage = () => {
             loading={isLoading}
             total={studentData?.data?.length}
             dataSource={studentData?.data}
-            columns={studentColumns()}
+            columns={useStudentColumns()}
           />
         )}
       </Card>

@@ -3,11 +3,11 @@ import { FilterTypes } from "../../../../app/features/filterSlice";
 import { ApiResponse } from "../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../app/utils/tagTypes";
-import { ICreateTeacher } from "../types/teacherType";
+import { ICreateTeacher, IGetTeacher } from "../types/teacherType";
 
 const teacherEndPoint = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTeacher: builder.query<ApiResponse<ICreateTeacher[]>, FilterTypes>({
+    getTeacher: builder.query<ApiResponse<IGetTeacher[]>, FilterTypes>({
       query: (params) => ({
         url: "/api/v1.0/teachers/",
         params,
@@ -16,38 +16,6 @@ const teacherEndPoint = api.injectEndpoints({
         {
           type: TagTypes.TEACHER,
           id: TagTypes.TEACHER + "_ID",
-        },
-      ],
-    }),
-
-    getRolePermission: builder.query<
-      ApiResponse<TGetRolePermission[]>,
-      FilterTypes
-    >({
-      query: (params) => ({
-        url: "/api/v1.0/institutions/roles/",
-        params,
-      }),
-      providesTags: [
-        {
-          type: TagTypes.ROLE_PERMISSION,
-          id: TagTypes.ROLE_PERMISSION + "_ID",
-        },
-      ],
-    }),
-
-    getSingleRolePermission: builder.query<
-      ApiResponse<IGetSingleRolePermission>,
-      number
-    >({
-      query: (roleId) => ({
-        url: `/api/v1.0/institutions/roles/${roleId}/`,
-      }),
-
-      providesTags: [
-        {
-          type: TagTypes.ROLE_PERMISSION,
-          id: TagTypes.ROLE_PERMISSION + "_ID",
         },
       ],
     }),
@@ -63,18 +31,31 @@ const teacherEndPoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.ROLE_PERMISSION,
-          id: TagTypes.ROLE_PERMISSION + "_ID",
+          type: TagTypes.TEACHER,
+          id: TagTypes.TEACHER + "_ID",
         },
       ],
     }),
 
-    updateRolePermission: builder.mutation<
-      ApiResponse<IUpdateRolePermission>,
+    getSingleSTeacher: builder.query<ApiResponse<any>, number>({
+      query: (studId) => ({
+        url: `/api/v1.0/teachers/${studId}/`,
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.TEACHER,
+          id: TagTypes.TEACHER + "_ID",
+        },
+      ],
+    }),
+
+    updateTeacher: builder.mutation<
+      ApiResponse<any>,
       { id: number | undefined; data: FormData }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/institutions/roles/${id}/`,
+        url: `/api/v1.0/teachers/${id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -83,12 +64,17 @@ const teacherEndPoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.ROLE_PERMISSION,
-          id: TagTypes.ROLE_PERMISSION + "_ID",
+          type: TagTypes.TEACHER,
+          id: TagTypes.TEACHER + "_ID",
         },
       ],
     }),
   }),
 });
 
-export const { useGetTeacherQuery, useCreateTeacherMutation } = teacherEndPoint;
+export const {
+  useGetTeacherQuery,
+  useCreateTeacherMutation,
+  useGetSingleSTeacherQuery,
+  useUpdateTeacherMutation,
+} = teacherEndPoint;

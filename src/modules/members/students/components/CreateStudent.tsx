@@ -5,11 +5,8 @@ import { Form } from "../../../../common/CommonAnt";
 import { useState } from "react";
 import moment from "moment";
 import { useCreateStudentMutation } from "../api/studentEndPoints";
-import { useGetClassesQuery } from "../../../general settings/classes/api/classesEndPoints";
 
 const CreateStudent = () => {
-  const { data: GetClassData } = useGetClassesQuery({});
-
   const [create, { isLoading, isSuccess }] = useCreateStudentMutation();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -31,32 +28,35 @@ const CreateStudent = () => {
     Object.entries(values).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         if (key === "images") {
-          // Handle the images array specifically
           value.forEach((file) => {
             if (file?.originFileObj) {
               formData.append(key, file.originFileObj);
             }
           });
-        } else if (typeof value[0] === "object" && value[0] !== null) {
-          // Handle faqs or other objects in arrays
-          value.forEach((item, index) => {
-            formData.append(`${key}[${index}][question]`, item.question);
-            formData.append(`${key}[${index}][answer]`, item.answer);
-          });
         } else {
-          // Handle keyPoints or other arrays of strings
           value.forEach((item) => {
             formData.append(key, item);
           });
         }
+      } else if (key === "enrollment_date" && value) {
+        const formattedDate = moment(value).format("YYYY-MM-DD");
+        formData.append(key, formattedDate);
+      } else if (key === "date_of_birth" && value) {
+        const formattedDate = moment(value).format("YYYY-MM-DD");
+        formData.append(key, formattedDate);
       } else if (value instanceof File || value instanceof Blob) {
-        // If the value is a file or blob
         formData.append(key, value);
       } else {
-        // For regular string/number values
         formData.append(key, value as string | Blob);
       }
     });
+
+    const user = {
+      username: values.username,
+      password: values.password,
+    };
+
+    formData.append("user", JSON.stringify(user) as any);
 
     console.log("ascfasd", values);
 
@@ -65,7 +65,15 @@ const CreateStudent = () => {
 
   return (
     <div>
-      <Form onFinish={onFinish} isLoading={isLoading} isSuccess={isSuccess}>
+      <Form
+        onFinish={onFinish}
+        isLoading={isLoading}
+        isSuccess={isSuccess}
+        initialValues={{
+          enrollment_date: moment(),
+          is_active: true,
+        }}
+      >
         <Row gutter={[16, 16]}>
           <Col lg={24}>
             <Badge.Ribbon text="Student Information" placement="start">
@@ -137,23 +145,7 @@ const CreateStudent = () => {
                           <Input placeholder="Email" />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Select Class"
-                          name="registration"
-                          rules={[{ required: true, message: "Select Class" }]}
-                        >
-                          <Select placeholder="Select Class" className="w-full">
-                            {GetClassData?.data?.map((data, index) => (
-                              <Select.Option key={index} value={data?.id}>
-                                {data?.name}
-                              </Select.Option>
-                            ))}
 
-                            <Select.Option value={1}>1</Select.Option>
-                          </Select>
-                        </Form.Item>
-                      </Col>
                       <Col lg={8}>
                         <Form.Item<any>
                           label="Date of Admission"
@@ -164,7 +156,6 @@ const CreateStudent = () => {
                         >
                           <DatePicker
                             placeholder="Select Date"
-                            defaultValue={moment()}
                             format="YYYY-MM-DD"
                             className="w-full"
                           />
@@ -184,15 +175,40 @@ const CreateStudent = () => {
                           <Input placeholder="Enter Mobile Number" />
                         </Form.Item>
                       </Col>
+
                       <Col lg={8}>
                         <Form.Item<any>
-                          label="Discount In Fee"
-                          name="registration"
+                          label="Username"
+                          name="username"
+                          rules={[{ required: true, message: "Username!" }]}
+                        >
+                          <Input placeholder="Username." />
+                        </Form.Item>
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Password"
+                          name="password"
+                          rules={[{ required: true, message: "Password!" }]}
+                        >
+                          <Input placeholder="Password." />
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item
+                          label="Status"
+                          name="is_active"
                           rules={[
-                            { required: true, message: "Discount In Fee" },
+                            { required: true, message: "Status is required!" },
                           ]}
                         >
-                          <Input placeholder="In %" />
+                          <Select placeholder="Select Status">
+                            <Select.Option value={true}>Active</Select.Option>
+                            <Select.Option value={false}>
+                              Inactive
+                            </Select.Option>
+                          </Select>
                         </Form.Item>
                       </Col>
                     </Row>
@@ -206,7 +222,16 @@ const CreateStudent = () => {
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
                   <Col lg={6}>
-                    <Form.Item<any> label="Date of Birth" name="date_of_birth">
+                    <Form.Item<any>
+                      label="Date of Birth"
+                      name="date_of_birth"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Date of Birth is required!",
+                        },
+                      ]}
+                    >
                       <DatePicker
                         placeholder="Select Date"
                         format="YYYY-MM-DD"

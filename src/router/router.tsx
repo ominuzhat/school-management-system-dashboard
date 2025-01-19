@@ -16,9 +16,6 @@ import ClientAccount from "../modules/Accounts/components/ClientAccount/ClientAc
 import SendOTP from "../modules/Auth/components/SendOTP";
 import MatchOTP from "../modules/Auth/components/MatchOTP";
 import ForgotPassword from "../modules/Auth/components/ForgotPassword";
-import PassportManagement from "../modules/PassportMangement/page/PassportManagement";
-import CreatePassportManagement from "../modules/PassportMangement/components/CreatePassportManagement";
-import ViewPassportManagement from "../modules/PassportMangement/components/ViewPassportManagement";
 import Invoice from "../modules/invoice/invoice/pages/Invoice";
 import NonCommision from "../modules/invoice/non-commission/pages/NonCommision";
 import CommisionAirTicket from "../modules/invoice/commission-air-ticket/pages/CommisionAirTicket";
@@ -52,6 +49,8 @@ import PrivateRouter from "./PrivateRouter";
 import RolePermissionPage from "../modules/settings/role & permission/page/RolePermissionPage";
 import ViewRolePermission from "../modules/settings/role & permission/components/ViewRolePermission";
 import TeacherPage from "../modules/members/teachers/pages/TeacherPage";
+import TeacherView from "../modules/members/teachers/components/TeacherView";
+import FeesPage from "../modules/Finance Management/Fees/fees/page/FeesPage";
 
 const router = createBrowserRouter([
   {
@@ -103,10 +102,10 @@ const router = createBrowserRouter([
             path: "",
             element: <TeacherPage />,
           },
-          // {
-          //   path: "product-view/:productId",
-          //   element: <ProductView />,
-          // },
+          {
+            path: "teacher-view/:teacherId",
+            element: <TeacherView />,
+          },
         ],
       },
       // classes
@@ -128,6 +127,17 @@ const router = createBrowserRouter([
           {
             path: "/subjects",
             element: <SubjectsPage />,
+          },
+        ],
+      },
+      // Fees
+      {
+        path: "/fees",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <FeesPage />,
           },
         ],
       },
@@ -190,28 +200,6 @@ const router = createBrowserRouter([
             path: "",
             element: <MoneyReceiptPage />,
           },
-          {
-            path: "passport-view/1",
-            element: <ViewPassportManagement />,
-          },
-        ],
-      },
-      {
-        path: "/passport",
-        element: <Accounts />,
-        children: [
-          {
-            path: "create-passport",
-            element: <CreatePassportManagement />,
-          },
-          {
-            path: "passport-list",
-            element: <PassportManagement />,
-          },
-          {
-            path: "passport-view/1",
-            element: <ViewPassportManagement />,
-          },
         ],
       },
 
@@ -227,14 +215,6 @@ const router = createBrowserRouter([
             path: "non-commission-air-ticket",
             element: <NonCommision />,
           },
-          {
-            path: "passport-list",
-            element: <PassportManagement />,
-          },
-          {
-            path: "passport-view/1",
-            element: <ViewPassportManagement />,
-          },
         ],
       },
       {
@@ -248,14 +228,6 @@ const router = createBrowserRouter([
           {
             path: "non-commission-air-ticket",
             element: <NonCommision />,
-          },
-          {
-            path: "passport-list",
-            element: <PassportManagement />,
-          },
-          {
-            path: "passport-view/1",
-            element: <ViewPassportManagement />,
           },
         ],
       },

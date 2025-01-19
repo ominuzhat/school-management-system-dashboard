@@ -2,9 +2,13 @@ import { Space, Tag } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
+import EditButton from "../../../../common/CommonAnt/Button/EditButton";
+import { useDispatch } from "react-redux";
+import UpdateStudent from "../components/UpdateStudent";
+import { showModal } from "../../../../app/features/modalSlice";
 
-const studentColumns = (): ColumnsType<any> => {
-  //   const dispatch = useDispatch();
+const useStudentColumns = (): ColumnsType<any> => {
+  const dispatch = useDispatch();
   //   const [deleteCartItem] = useDeleteOrderItemMutation();
 
   //   const handleDelete = async (id: any) => {
@@ -77,16 +81,16 @@ const studentColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          {/* <EditButton
+          <EditButton
             onClick={() =>
               dispatch(
                 showModal({
-                  title: "Update Product",
-                  content: <UpdateProduct record={record} />,
+                  title: "Update Student",
+                  content: <UpdateStudent record={record} />,
                 })
               )
             }
-          /> */}
+          />
           <ViewButton to={`student-view/${record?.id}`} />
           {/* <DeleteButton 
           onClick={() => handleDelete(record.id)}>
@@ -98,4 +102,4 @@ const studentColumns = (): ColumnsType<any> => {
   ];
 };
 
-export default studentColumns;
+export default useStudentColumns;

@@ -37,7 +37,7 @@ const studentsEndpoint = api.injectEndpoints({
       ],
     }),
 
-    getSingleStudent: builder.query<ApiResponse<IStudents>, number>({
+    getSingleStudent: builder.query<ApiResponse<any>, number>({
       query: (studId) => ({
         url: `/api/v1.0/students/${studId}/`,
       }),
@@ -50,19 +50,24 @@ const studentsEndpoint = api.injectEndpoints({
       ],
     }),
 
-    updateRestaurant: builder.mutation<
+    updateStudent: builder.mutation<
       ApiResponse<IStudents>,
       { id: number | undefined; data: FormData }
     >({
       query: ({ id, data }) => ({
-        url: `/admin/restaurants/${id}`,
+        url: `/api/v1.0/students/${id}/`,
         method: "PATCH",
         body: data,
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         await handleOnQueryStarted(queryFulfilled, dispatch);
       },
-      invalidatesTags: [{ type: "Restaurant", id: "RESTAURANT_ID" }],
+      invalidatesTags: [
+        {
+          type: TagTypes.STUDENTS,
+          id: TagTypes.STUDENTS + "_ID",
+        },
+      ],
     }),
   }),
 });
@@ -70,6 +75,6 @@ const studentsEndpoint = api.injectEndpoints({
 export const {
   useGetStudentsQuery,
   useCreateStudentMutation,
-  useUpdateRestaurantMutation,
   useGetSingleStudentQuery,
+  useUpdateStudentMutation,
 } = studentsEndpoint;

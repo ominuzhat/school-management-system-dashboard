@@ -1,23 +1,25 @@
 import api from "../../../app/api/api";
 import { ApiResponse } from "../../../app/utils/constant";
-import { ProfileTypes } from "../types/profileTypes";
+import { TagTypes } from "../../../app/utils/tagTypes";
 
 const profileEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
-    getProfile: builder.query<ApiResponse<ProfileTypes>, void>({
+    getProfile: builder.query<ApiResponse<any>, void>({
       query: () => ({
-        url: "/auth/users/",
+        url: "/auth/users/me/",
       }),
-      providesTags: [{ type: "Profile", id: "PROFILE_ID" }],
+      providesTags: [{ type: TagTypes.PROFILE, id: TagTypes.PROFILE + "_ID" }],
     }),
 
-    updateProfile: builder.mutation<ApiResponse<ProfileTypes>, ProfileTypes>({
+    updateProfile: builder.mutation<ApiResponse<any>, any>({
       query: (data) => ({
-        url: "/auth/users/",
+        url: "/auth/users/me/",
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: [{ type: "Profile", id: "PROFILE_ID" }],
+      invalidatesTags: [
+        { type: TagTypes.PROFILE, id: TagTypes.PROFILE + "_ID" },
+      ],
     }),
   }),
 });

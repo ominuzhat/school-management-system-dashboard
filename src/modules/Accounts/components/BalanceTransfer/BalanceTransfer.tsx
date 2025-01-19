@@ -1,20 +1,12 @@
 import { useState } from "react";
 import { Button, Card, Col, Row } from "antd";
 
-import { Link } from "react-router-dom";
-import {
-  HarmonyOSOutlined,
-  ManOutlined,
-  PlusOutlined,
-  WomanOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import {
   RangePickerComponent,
   SearchComponent,
 } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
-import { columns, data } from "../../../PassportMangement/utils/passportUtils";
-import { Table } from "../../../../common/CommonAnt";
 import { showModal } from "../../../../app/features/modalSlice";
 import CreateBalanceTransfer from "./CreateBalanceTransfer";
 import { useDispatch } from "react-redux";
@@ -101,7 +93,6 @@ CreateBalanceTransfer
         </Row>
       </Card>
 
-      <Table total={50} columns={columns} dataSource={data} />
       {/* <Table size="middle" columns={columns} dataSource={data} /> */}
     </div>
   );

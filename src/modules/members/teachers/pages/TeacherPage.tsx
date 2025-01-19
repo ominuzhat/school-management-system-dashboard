@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Button, Card, Col, Row, Select } from "antd";
@@ -17,10 +18,12 @@ import { no_img } from "../../../../utilities/images";
 
 import { FaListUl } from "react-icons/fa6";
 import CreateTeacher from "../components/CreateTeacher";
+import useTeacherColumns from "../utils/teacherColumns";
+import { useGetTeacherQuery } from "../api/teachersEndPoints";
 import UpdateTeacher from "../components/UpdateTeacher";
-import teacherColumns from "../utils/teacherColumns";
 
 const TeacherPage = () => {
+  const { data: teacherData, isLoading } = useGetTeacherQuery({});
   const [layout, setLayout] = useState("grid");
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
@@ -118,9 +121,9 @@ const TeacherPage = () => {
           </div>
         }
       >
-        {layout === "grid" ? (
+        {layout !== "grid" ? (
           <Row gutter={[16, 16]}>
-            {Array.from({ length: 10 }).map((_, index) => (
+            {teacherData?.data?.map((teacher, index) => (
               <Col key={index} span={3} xs={12} lg={8} xxl={3}>
                 <div
                   style={{
@@ -129,16 +132,18 @@ const TeacherPage = () => {
                   className="border py-8 px-2 rounded-lg space-y-2"
                 >
                   <img src={no_img} alt="image" className="mx-auto" />
-                  <p> {index + 1}</p>
-                  <p className="font-serif"> Omi Hasan {index + 1} </p>
+                  <p> {teacher?.id}</p>
+                  <p className="font-serif">
+                    {teacher?.first_name} {teacher?.last_name}
+                  </p>
                   <div className="space-x-2">
-                    <ViewButton to={`student-view/1`} />
+                    <ViewButton to={`teacher-view/${teacher?.id}`} />
                     <EditButton
                       onClick={() =>
                         dispatch(
                           showModal({
-                            title: "Update Student",
-                            content: <UpdateTeacher record={"record"} />,
+                            title: "Update Teacher",
+                            content: <UpdateTeacher record={teacher} />,
                           })
                         )
                       }
@@ -154,10 +159,10 @@ const TeacherPage = () => {
           </Row>
         ) : (
           <Table
-            loading={true}
-            total={0}
-            dataSource={[]}
-            columns={teacherColumns()}
+            loading={isLoading}
+            total={teacherData?.data?.length}
+            dataSource={teacherData?.data}
+            columns={useTeacherColumns()}
           />
         )}
       </Card>

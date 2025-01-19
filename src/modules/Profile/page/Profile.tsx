@@ -3,54 +3,95 @@ import {
   Card,
   Col,
   Descriptions,
-  Form,
   Image,
-  Input,
   Row,
-  Select,
   Space,
   Tag,
   Typography,
 } from "antd";
-import type { FormProps } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
 import "../styles/Profile.css";
-import {
-  useGetProfileQuery,
-  useUpdateProfileMutation,
-} from "../api/profileEndpoint";
-import { PasswordTypes, ProfileTypes } from "../types/profileTypes";
-import { passwordValidator } from "../../../utilities/validator";
+import { useGetProfileQuery } from "../api/profileEndpoint";
+
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import { flight } from "../../../utilities/images";
+import UpdateTeacherProfile from "../components/UpdateTeacherProfile";
+import UpdateStudentProfile from "../components/UpdatedStudentsProfile";
+import UpdateEmployeeProfile from "../components/UpdatedEmpoyeeProfile";
+import { capitalize } from "../../../common/capitalize/Capitalize";
 
 const Profile: React.FC = () => {
   const { data: profileData, isFetching } = useGetProfileQuery();
-  const { Option } = Select;
-
-  console.log("first", profileData);
-
-  const { email, firstName, lastName, role, details, phone } =
-    profileData?.data || {};
-
-  const [create] = useUpdateProfileMutation();
   const [edit, setEdit] = useState<{ profile?: boolean; password?: boolean }>({
     profile: false,
     password: false,
   });
 
-  const [form] = Form.useForm();
+  const { username, teacher, student, employee } = profileData?.data || {};
 
-  const onFinish: FormProps<ProfileTypes>["onFinish"] = async (values) => {
-    console.log(values);
-    create(values);
-    // return;
+  const renderDescriptions = () => {
+    if (teacher) {
+      return [
+        {
+          key: "1",
+          label: capitalize("first name"),
+          children: capitalize(teacher.first_name || "N/A"),
+        },
+        {
+          key: "2",
+          label: capitalize("last name"),
+          children: capitalize(teacher.last_name || "N/A"),
+        },
+        {
+          key: "3",
+          label: capitalize("phone number"),
+          children: capitalize(teacher.phone_number || "N/A"),
+        },
+      ];
+    } else if (student) {
+      return [
+        {
+          key: "1",
+          label: capitalize("student id"),
+          children: capitalize(student.student_id || "N/A"),
+        },
+        {
+          key: "2",
+          label: capitalize("grade"),
+          children: capitalize(student.grade || "N/A"),
+        },
+        {
+          key: "3",
+          label: capitalize("email address"),
+          children: capitalize(student.email || "N/A"),
+        },
+      ];
+    } else if (employee) {
+      return [
+        {
+          key: "1",
+          label: capitalize("employee id"),
+          children: capitalize(employee.employee_id || "N/A"),
+        },
+        {
+          key: "2",
+          label: capitalize("department"),
+          children: capitalize(employee.department || "N/A"),
+        },
+        {
+          key: "3",
+          label: capitalize("email address"),
+          children: capitalize(employee.email || "N/A"),
+        },
+      ];
+    }
+    return [];
   };
 
-  useEffect(() => {
-    form.setFieldsValue(profileData?.data);
-  }, [profileData?.data, form]);
+  const handleProfileUpdateSuccess = () => {
+    setEdit((prev) => ({ ...prev, profile: false }));
+  };
 
   return (
     <React.Fragment>
@@ -75,9 +116,9 @@ const Profile: React.FC = () => {
                 id="profile-picture"
               />
               <Typography.Text strong style={{ fontSize: "2rem" }}>
-                {firstName}
+                {username}
               </Typography.Text>
-              <Typography.Text type="secondary">{email}</Typography.Text>
+              {/* <Typography.Text type="secondary">{email}</Typography.Text> */}
               <Tag color="success" bordered>
                 Active
               </Tag>
@@ -137,78 +178,31 @@ const Profile: React.FC = () => {
                 column={1}
                 layout="horizontal"
                 className="profile-description"
-                items={[
-                  {
-                    key: "1",
-                    label: "First Name",
-                    children: firstName ? firstName : "N/A",
-                  },
-                  {
-                    key: "2",
-                    label: "Last Name",
-                    children: lastName ? lastName : "N/A",
-                  },
-                  {
-                    key: "3",
-                    label: "Email Address",
-                    children: email ? email : "N/A",
-                  },
-                  {
-                    key: "3",
-                    label: "Details",
-                    children: details ? details : "N/A",
-                  },
-                  {
-                    key: "4",
-                    label: "Role",
-                    children: role?.name ? (
-                      <Tag color="blue">{role?.name}</Tag>
-                    ) : (
-                      <Tag color="red">N/A</Tag>
-                    ),
-                  },
-                ]}
+                items={renderDescriptions()}
               />
             )}
 
-            {edit.profile && (
-              <Form form={form} onFinish={onFinish} layout="vertical">
-                <Form.Item<ProfileTypes> label="First Name" name="firstName">
-                  <Input size="large" placeholder="First name" />
-                </Form.Item>
-                <Form.Item<ProfileTypes> label="Last Name" name="lastName">
-                  <Input size="large" placeholder="Last name" />
-                </Form.Item>
-                <Form.Item<ProfileTypes> label="Phone" name="phone">
-                  <Input size="large" placeholder="Phone Number" />
-                </Form.Item>
-                <Form.Item<ProfileTypes> label="Address" name="address">
-                  <Input size="large" placeholder="address Number" />
-                </Form.Item>
-                {/* <Form.Item<ProfileTypes> label="Gender" name="gender">
-                  <Select size="large" placeholder="Select Gender">
-                    <Option value="male">Male</Option>
-                    <Option value="female">Female</Option>
-                    <Option value="other">Other</Option>
-                  </Select>
-                </Form.Item> */}
-                {/* <Form.Item<ProfileTypes> label="Role" name="role">
-                  <Select size="large" placeholder="Select Role">
-                    <Option value="admin">Admin</Option>
-                    <Option value="user">User</Option>
-                    <Option value="other">Other</Option>
-                  </Select>
-                </Form.Item> */}
-
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Update Now
-                  </Button>
-                </Form.Item>
-              </Form>
+            {edit.profile && teacher && (
+              <UpdateTeacherProfile
+                data={profileData?.data}
+                onSubmitSuccess={handleProfileUpdateSuccess}
+              />
             )}
 
-            {edit.password && (
+            {edit.profile && student && (
+              <UpdateStudentProfile
+                data={profileData?.data}
+                onSubmitSuccess={handleProfileUpdateSuccess}
+              />
+            )}
+            {edit.profile && student && (
+              <UpdateEmployeeProfile
+                data={profileData?.data}
+                onSubmitSuccess={handleProfileUpdateSuccess}
+              />
+            )}
+
+            {/* {edit.password && (
               <Form
                 form={form}
                 // onFinish={}
@@ -247,7 +241,7 @@ const Profile: React.FC = () => {
                   </Button>
                 </Form.Item>
               </Form>
-            )}
+            )} */}
           </Card>
         </Col>
       </Row>

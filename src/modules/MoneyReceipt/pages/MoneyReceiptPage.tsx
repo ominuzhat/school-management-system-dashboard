@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button, Card, Col, Row } from "antd";
-import { Table } from "../../../common/CommonAnt";
 import {
   RangePickerComponent,
   SearchComponent,
@@ -8,7 +7,6 @@ import {
 import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
 import { Link } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
-import { columns, data } from "../../PassportMangement/utils/passportUtils";
 
 export interface DataType {
   key: string;
@@ -68,7 +66,6 @@ const MoneyReceiptPage = () => {
         </Row>
       </Card>
 
-      <Table total={50} columns={columns} dataSource={data} />
       {/* <Table size="middle" columns={columns} dataSource={data} /> */}
     </div>
   );

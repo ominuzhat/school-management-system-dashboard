@@ -1,11 +1,106 @@
-import React from "react";
+import { Space, Tag } from "antd";
 
-const teacherColumns = () => {
-  return (
-    <div>
-      <h1>cooo</h1>
-    </div>
-  );
+import type { ColumnsType } from "antd/es/table";
+import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
+import EditButton from "../../../../common/CommonAnt/Button/EditButton";
+import { useDispatch } from "react-redux";
+import { showModal } from "../../../../app/features/modalSlice";
+import UpdateStudent from "../../students/components/UpdateStudent";
+import UpdateTeacher from "../components/UpdateTeacher";
+
+const useTeacherColumns = (): ColumnsType<any> => {
+  const dispatch = useDispatch();
+  //   const [deleteCartItem] = useDeleteOrderItemMutation();
+
+  //   const handleDelete = async (id: any) => {
+  //     try {
+  //       await deleteCartItem({ id }).unwrap();
+  //       console.log("Item deleted successfully");
+  //     } catch (error) {
+  //       console.error("Failed to delete item:", error);
+  //     }
+  //   };
+
+  return [
+    {
+      key: "0",
+      title: "SL",
+      align: "center",
+      render: (_text, _record, index) => index + 1,
+    },
+    {
+      key: "1",
+      title: "Name",
+      dataIndex: "first_name",
+      align: "center",
+      render: (name) => (name ? name : "N/A"),
+    },
+    {
+      key: "2",
+      title: "User Name",
+      dataIndex: "user",
+      align: "center",
+      render: (name) => (name ? name?.username : "N/A"),
+    },
+    {
+      key: "3",
+      title: "Email",
+      dataIndex: "email",
+      align: "center",
+      render: (email) => (email ? email : "N/A"),
+    },
+    {
+      key: "4",
+      title: "Phone",
+      dataIndex: "phone_number",
+      align: "center",
+      render: (phone_number) => (phone_number ? phone_number : "N/A"),
+    },
+    {
+      key: "5",
+      title: "Hire Date",
+      dataIndex: "hire_date",
+      align: "center",
+      render: (hire_date) => (hire_date ? hire_date : "N/A"),
+    },
+
+    {
+      key: "6",
+      title: "Active",
+      dataIndex: "is_active",
+      align: "center",
+      render: (is_active) =>
+        is_active ? (
+          <Tag color="green">Active</Tag>
+        ) : (
+          <Tag color="red">Inactive</Tag>
+        ),
+    },
+
+    {
+      title: "Actions",
+      align: "center",
+      render: (record) => (
+        <Space>
+          <EditButton
+            onClick={() =>
+              dispatch(
+                showModal({
+                  title: "Update Teacher",
+                  content: <UpdateTeacher record={record} />,
+                })
+              )
+            }
+          />
+          <ViewButton to={`teacher-view/${record?.id}`} />
+          {/* <DeleteButton 
+          onClick={() => handleDelete(record.id)}>
+            Delete
+          </DeleteButton> */}
+        </Space>
+      ),
+    },
+  ];
 };
 
-export default teacherColumns;
+export default useTeacherColumns;

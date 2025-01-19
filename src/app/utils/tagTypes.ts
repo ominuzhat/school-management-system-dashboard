@@ -1,5 +1,4 @@
 export const TagTypes = {
-  PROFILE: "Profile",
   RESTAURANT: "Restaurant",
   USERS: "Users",
   LOGIN: "Login",
@@ -16,6 +15,8 @@ export const TagTypes = {
   STUDENTS: "Students",
   ClASSES: "Classes",
   SUBJECTS: "Subjects",
+  PROFILE: "Profile",
+  FESS: "Fess",
 } as const;
 
 export type TagType = (typeof TagTypes)[keyof typeof TagTypes];

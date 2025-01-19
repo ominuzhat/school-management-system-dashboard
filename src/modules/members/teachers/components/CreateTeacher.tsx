@@ -1,21 +1,10 @@
 import { Badge, Card, Col, DatePicker, Input, Modal, Row, Select } from "antd";
-import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useState } from "react";
 import moment from "moment";
-import { ICreateTeacher } from "../types/teacherType";
-import {
-  emailValidator,
-  passwordValidator,
-  phoneValidator,
-} from "../../../../utilities/validator";
 import { useCreateTeacherMutation } from "../api/teachersEndPoints";
-import dayjs from "dayjs";
 
 const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
@@ -36,51 +25,40 @@ const CreateTeacher = () => {
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
 
-    const teacherData = {
-      first_name: values.first_name,
-      last_name: values.last_name,
-      email: values.email,
-      phone_number: values.phone_number,
-      hire_date: dayjs(values.hire_date).format("YYYY-MM-DD"),
-      user: {
-        password: values.password,
-        username: values.username,
-      },
+    Object.entries(values).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        if (key === "images") {
+          value.forEach((file) => {
+            if (file?.originFileObj) {
+              formData.append(key, file.originFileObj);
+            }
+          });
+        } else {
+          value.forEach((item) => {
+            formData.append(key, item);
+          });
+        }
+      } else if (key === "hire_date" && value) {
+        const formattedDate = moment(value).format("YYYY-MM-DD");
+        formData.append(key, formattedDate);
+      } else if (key === "date_of_birth" && value) {
+        const formattedDate = moment(value).format("YYYY-MM-DD");
+        formData.append(key, formattedDate);
+      } else if (value instanceof File || value instanceof Blob) {
+        formData.append(key, value);
+      } else {
+        formData.append(key, value as string | Blob);
+      }
+    });
+
+    const user = {
+      username: values.username,
+      password: values.password,
     };
 
-    // Object.entries(values).forEach(([key, value]) => {
-    //   if (Array.isArray(value)) {
-    //     if (key === "images") {
-    //       // Handle the images array specifically
-    //       value.forEach((file) => {
-    //         if (file?.originFileObj) {
-    //           formData.append(key, file.originFileObj);
-    //         }
-    //       });
-    //     } else if (typeof value[0] === "object" && value[0] !== null) {
-    //       // Handle faqs or other objects in arrays
-    //       value.forEach((item, index) => {
-    //         formData.append(`${key}[${index}][question]`, item.question);
-    //         formData.append(`${key}[${index}][answer]`, item.answer);
-    //       });
-    //     } else {
-    //       // Handle keyPoints or other arrays of strings
-    //       value.forEach((item) => {
-    //         formData.append(key, item);
-    //       });
-    //     }
-    //   } else if (value instanceof File || value instanceof Blob) {
-    //     // If the value is a file or blob
-    //     formData.append(key, value);
-    //   } else {
-    //     // For regular string/number values
-    //     formData.append(key, value as string | Blob);
-    //   }
-    // });
+    formData.append("user", JSON.stringify(user) as any);
 
-    console.log("ascfasd", teacherData);
-
-    create(teacherData);
+    create(formData);
   };
 
   return (
@@ -89,7 +67,10 @@ const CreateTeacher = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={{ keyPoints: [""], faqs: [{}] }}
+        initialValues={{
+          hire_date: moment(),
+          is_active: true,
+        }}
       >
         <Row gutter={[16, 16]}>
           <Col lg={24}>
@@ -136,7 +117,7 @@ const CreateTeacher = () => {
                   <Col span={18}>
                     <Row gutter={[16, 16]}>
                       <Col lg={8}>
-                        <Form.Item<ICreateTeacher>
+                        <Form.Item<any>
                           label="First Name"
                           name="first_name"
                           rules={[{ required: true, message: "First Name!" }]}
@@ -145,72 +126,32 @@ const CreateTeacher = () => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <Form.Item<ICreateTeacher>
+                        <Form.Item<any>
                           label="Last Name"
                           name="last_name"
                           rules={[{ required: true, message: "Last Name!" }]}
                         >
                           <Input placeholder="Last Name." />
                         </Form.Item>
-                      </Col>{" "}
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="User Name"
-                          name="username"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please enter your user name",
-                            },
-                          ]}
-                        >
-                          <Input type="text" placeholder="Enter User Name" />
-                        </Form.Item>
                       </Col>
                       <Col lg={8}>
                         <Form.Item<any>
-                          label="Password"
-                          name="password"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please enter your Password",
-                            },
-                          ]}
-                        >
-                          <Input.Password
-                            placeholder="Enter password"
-                            iconRender={(visible) =>
-                              visible ? (
-                                <EyeTwoTone />
-                              ) : (
-                                <EyeInvisibleOutlined />
-                              )
-                            }
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col lg={8}>
-                        <Form.Item<ICreateTeacher>
                           label="Email"
                           name="email"
-                          rules={[
-                            { required: true, message: "Email" },
-                            { validator: emailValidator },
-                          ]}
+                          rules={[{ required: true, message: "Email" }]}
                         >
                           <Input placeholder="Email" />
                         </Form.Item>
                       </Col>
+
                       <Col lg={8}>
-                        <Form.Item<ICreateTeacher>
+                        <Form.Item<any>
                           label="Hire Date"
                           name="hire_date"
                           rules={[{ required: true, message: "Hire Date" }]}
                         >
                           <DatePicker
                             placeholder="Select Date"
-                            defaultValue={moment()}
                             format="YYYY-MM-DD"
                             className="w-full"
                           />
@@ -218,19 +159,52 @@ const CreateTeacher = () => {
                       </Col>
                       <Col lg={8}>
                         <Form.Item<any>
-                          label="Mobile No. for SMS/WhatsApp"
+                          label="Mobile No for SMS/WhatsApp"
                           name="phone_number"
                           rules={[
                             {
-                              required: false,
+                              required: true,
                               message: "Please enter your mobile number",
                             },
                           ]}
                         >
-                          <Input
-                            type="text"
-                            placeholder="Enter Mobile Number"
-                          />
+                          <Input placeholder="Enter Mobile Number" />
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Username"
+                          name="username"
+                          rules={[{ required: true, message: "Username!" }]}
+                        >
+                          <Input placeholder="Username." />
+                        </Form.Item>
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Password"
+                          name="password"
+                          rules={[{ required: true, message: "Password!" }]}
+                        >
+                          <Input placeholder="Password." />
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item
+                          label="Status"
+                          name="is_active"
+                          rules={[
+                            { required: true, message: "Status is required!" },
+                          ]}
+                        >
+                          <Select placeholder="Select Status">
+                            <Select.Option value={true}>Active</Select.Option>
+                            <Select.Option value={false}>
+                              Inactive
+                            </Select.Option>
+                          </Select>
                         </Form.Item>
                       </Col>
                     </Row>
@@ -244,7 +218,16 @@ const CreateTeacher = () => {
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
                   <Col lg={6}>
-                    <Form.Item<any> label="Date of Birth" name="dof">
+                    <Form.Item<any>
+                      label="Date of Birth"
+                      name="date_of_birth"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Date of Birth is required!",
+                        },
+                      ]}
+                    >
                       <DatePicker
                         placeholder="Select Date"
                         format="YYYY-MM-DD"
@@ -254,10 +237,10 @@ const CreateTeacher = () => {
                   </Col>
                   <Col lg={6}>
                     <Form.Item<any>
-                      label="Teacher's Birth ID / NID"
+                      label="Teacher Birth ID / NID"
                       name="registration"
                     >
-                      <Input placeholder="Teacher's Birth ID / NID" />
+                      <Input placeholder="Teacher Birth ID / NID" />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
@@ -269,7 +252,14 @@ const CreateTeacher = () => {
                       </Select>
                     </Form.Item>
                   </Col>
-
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Institution Name"
+                      name="institution_name"
+                    >
+                      <Input placeholder="Institution Name." />
+                    </Form.Item>
+                  </Col>
                   <Col lg={6}>
                     <Form.Item<any> label="Religion" name="religion">
                       <Input placeholder="Religion" />
@@ -294,6 +284,105 @@ const CreateTeacher = () => {
                   <Col lg={6}>
                     <Form.Item<any> label="Address" name="address">
                       <Input placeholder="Address" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+          <Col lg={24}>
+            <Badge.Ribbon text="Father Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Father Name" name="name">
+                      <Input placeholder="Father Name." />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Mobile No. "
+                      name="mobile_no"
+                      rules={[
+                        {
+                          pattern: /^[0-9]{11}$/,
+                          message:
+                            "Please enter a valid 10-digit mobile number",
+                        },
+                      ]}
+                    >
+                      <Input
+                        type="tel"
+                        placeholder="Enter Mobile Number"
+                        maxLength={11}
+                        pattern="[0-9]*"
+                      />{" "}
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Father NID" name="f_nid">
+                      <Input placeholder="Father NID" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Occupation" name="occupation">
+                      <Input placeholder="Occupation" />
+                    </Form.Item>
+                  </Col>
+
+                  <Col lg={4}>
+                    <Form.Item<any> label="Income" name="income">
+                      <Input placeholder="Income" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+
+          <Col lg={24}>
+            <Badge.Ribbon text="Mother Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Father Name" name="name">
+                      <Input placeholder="Father Name." />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Mobile No. "
+                      name="mobile_no"
+                      rules={[
+                        {
+                          pattern: /^[0-9]{11}$/,
+                          message:
+                            "Please enter a valid 10-digit mobile number",
+                        },
+                      ]}
+                    >
+                      <Input
+                        type="tel"
+                        placeholder="Enter Mobile Number"
+                        maxLength={11}
+                        pattern="[0-9]*"
+                      />{" "}
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Mother NID" name="m_nid">
+                      <Input placeholder="Mother NID" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Occupation" name="occupation">
+                      <Input placeholder="Occupation" />
+                    </Form.Item>
+                  </Col>
+
+                  <Col lg={4}>
+                    <Form.Item<any> label="Income" name="income">
+                      <Input placeholder="Income" />
                     </Form.Item>
                   </Col>
                 </Row>

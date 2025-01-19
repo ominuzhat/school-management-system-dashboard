@@ -53,11 +53,7 @@ const MenuData: React.FC = () => {
       label: <Link to="/institute-profile">Institute Profile</Link>,
       icon: <BiSolidInstitution />,
     },
-    {
-      key: "",
-      label: <Link to="">Fee Particulars</Link>,
-      icon: <HiOutlineCash />,
-    },
+
     {
       key: "",
       label: <Link to="">Accounts For Fee Invoice</Link>,
@@ -130,11 +126,30 @@ const MenuData: React.FC = () => {
       label: <Link to="/salary">Salary</Link>,
       icon: <MdOutlinePayments />,
     },
+    // {
+    //   key: "/fees",
+    //   label: <Link to="/fees">Fees</Link>,
+    //   icon: <TbCoinTaka />,
+    // },
+
     {
       key: "/fees",
-      label: <Link to="/fees">Fees</Link>,
+      label: "Fees",
       icon: <TbCoinTaka />,
+      children: [
+        {
+          label: <Link to="/fees">Fees</Link>,
+          icon: <BiSolidUserAccount />,
+          key: "/fees",
+        },
+        {
+          label: <Link to="/fees/fees-particular">Fees Particulars</Link>,
+          icon: <HiOutlineCash />,
+          key: "/fees/fees-particular",
+        },
+      ],
     },
+
     {
       key: "/account",
       label: "Account",
