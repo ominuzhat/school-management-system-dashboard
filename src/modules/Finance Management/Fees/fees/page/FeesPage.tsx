@@ -6,9 +6,13 @@ import CreateFees from "../components/CreateFees";
 import { PlusOutlined } from "@ant-design/icons";
 import { SearchComponent } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useState } from "react";
+import { Table } from "../../../../../common/CommonAnt";
+import { useGetFeesQuery } from "../api/feesEndpoints";
+import useFeesColumns from "../utils/FeesColumns";
 
 const FeesPage = () => {
   const dispatch = useDispatch();
+  const { data: feesList, isLoading } = useGetFeesQuery({});
 
   const [search, setSearch] = useState("");
 
@@ -59,6 +63,13 @@ const FeesPage = () => {
           </Col>
         </Row>
       </Card>
+
+      <Table
+        loading={isLoading}
+        total={feesList?.data && feesList?.data?.length}
+        dataSource={feesList?.data && feesList?.data}
+        columns={useFeesColumns()}
+      />
     </div>
   );
 };

@@ -1,48 +1,18 @@
-import { Badge, Button, Card, Col, Row, Select, Tooltip } from "antd";
-import { Form } from "../../../../../common/CommonAnt";
-import { useCreateFeesMutation } from "../api/feesEndpoints";
-import { useState } from "react";
+import { Badge, Button, Card, Col, Form, Row, Select } from "antd";
+import { useState, useEffect } from "react";
+import {
+  useGetSingleFeesQuery,
+  useUpdateFeesMutation,
+} from "../api/feesEndpoints";
 import { useGetClassesQuery } from "../../../../general settings/classes/api/classesEndPoints";
 import { useGetStudentsQuery } from "../../../../members/students/api/studentEndPoints";
 import { useGetSubjectsQuery } from "../../../../general settings/subjects/api/subjectsEndPoints";
 import MultipleFeesItemForm from "./MultipleFeesItemForm";
 
-const guidelineContentBn = (
-  <>
-    <h3 style={{ margin: "0 0 8px", fontWeight: "bold" }}>নির্দেশিকা</h3>
-    <p style={{ margin: 0 }}>
-      <strong>সকলের জন্য নিয়ম:</strong>
-      এই নিয়মগুলো <em>সকল ছাত্রছাত্রী</em> এর জন্য প্রযোজ্য, তাদের শ্রেণি,
-      বিষয় বা ব্যক্তিগত অবস্থা নির্বিশেষে। এটি তখন ব্যবহার করুন যখন নিয়মটি
-      সর্বজনীনভাবে কার্যকর করতে চান।
-    </p>
-    <p style={{ margin: "8px 0 0" }}>
-      <strong>শ্রেণি ভিত্তিক নিয়ম:</strong>
-      এই নিয়মগুলো শুধুমাত্র <em>নির্বাচিত শ্রেণি</em> এর জন্য প্রযোজ্য হবে।
-      উদাহরণস্বরূপ, যদি কোনও নিয়ম শুধুমাত্র দশম শ্রেণির জন্য হয়, তবে অন্য
-      শ্রেণির ছাত্রছাত্রীদের উপর এটি প্রভাব ফেলবে না।
-    </p>
-    <p style={{ margin: "8px 0 0" }}>
-      <strong>বিষয় ভিত্তিক নিয়ম:</strong>
-      এই ধরনের নিয়ম <em>নির্দিষ্ট বিষয়ের</em> জন্য প্রযোজ্য। নিয়মগুলো
-      শুধুমাত্র সেই বিষয়গুলোর উপর প্রযোজ্য হবে এবং সংশ্লিষ্ট ছাত্রছাত্রীদের
-      জন্য কার্যকর হবে।
-    </p>
-    <p style={{ margin: "8px 0 0" }}>
-      <strong>ছাত্র ভিত্তিক নিয়ম:</strong>
-      এই নিয়মগুলো <em>নির্দিষ্ট ছাত্রছাত্রীদের</em> জন্য প্রযোজ্য। এটি তখন
-      ব্যবহার করুন যখন নিয়মটি গ্রুপের পরিবর্তে ব্যক্তিদের লক্ষ্য করে কার্যকর
-      করতে চান।
-    </p>
-    <p style={{ margin: "8px 0 0" }}>
-      <em>মন্তব্য:</em> নির্বাচন করা টাইপ অনুযায়ী নিয়ম কার্যকর করার পরিধি এবং
-      লক্ষ্য নির্ধারিত হয়।
-    </p>
-  </>
-);
+const UpdateFees = ({ record }: { record: any }) => {
+  const { data: feeData } = useGetSingleFeesQuery(Number(record));
+  const [updateFees, { isLoading, isSuccess }] = useUpdateFeesMutation();
 
-const CreateFees = () => {
-  const [create, { isLoading, isSuccess }] = useCreateFeesMutation();
   const { data: classData, isLoading: classLoading } = useGetClassesQuery({});
   const { data: studentData, isLoading: studentLoading } = useGetStudentsQuery(
     {}
@@ -53,19 +23,37 @@ const CreateFees = () => {
 
   const [feeType, setFeeType] = useState("");
 
+  console.log(feeData?.data);
+
+  useEffect(() => {
+    if (feeData) {
+      form.setFieldsValue({
+        fee_type: feeData.data?.fee_type,
+        grade_level: feeData.data?.grade_level?.map((level: any) => level.id),
+        student: feeData.data?.student?.map((level: any) => level.id),
+        subject: feeData.data?.subject?.map((level: any) => level.id),
+        fees: feeData.data?.fees,
+      });
+      setFeeType(feeData?.data?.fee_type);
+    }
+  }, [feeData]);
+
+  const [form] = Form.useForm();
+
   const onFinish = (values: any): void => {
-    create(values);
+    console.log(values, "result");
+
+    updateFees({ id: record, data: { ...values } });
   };
 
   return (
     <div>
       <Form
+        form={form}
         onFinish={onFinish}
-        isLoading={isLoading}
-        isSuccess={isSuccess}
         initialValues={{
           fee_type: feeType,
-          fees: [""],
+          fees: feeData?.data?.fees || [""],
         }}
       >
         <Row gutter={[16, 16]}>
@@ -168,17 +156,6 @@ const CreateFees = () => {
             </Col>
           )}
 
-          <Col className="flex items-center justify-center">
-            <Tooltip
-              className="text-black"
-              placement="bottom"
-              color={"rgba( 35, 117, 245, 0.50 )"}
-              title={guidelineContentBn}
-            >
-              <Button>Guideline</Button>
-            </Tooltip>
-          </Col>
-
           <Col lg={24}>
             <Badge.Ribbon text="Particulars" color="blue" placement="start">
               <Card className="pt-5">
@@ -186,10 +163,16 @@ const CreateFees = () => {
               </Card>
             </Badge.Ribbon>
           </Col>
+
+          <Col className="flex items-center justify-center">
+            <Button htmlType="submit" loading={isLoading}>
+              Update Fees
+            </Button>
+          </Col>
         </Row>
       </Form>
     </div>
   );
 };
 
-export default CreateFees;
+export default UpdateFees;

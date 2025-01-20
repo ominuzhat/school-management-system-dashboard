@@ -51,6 +51,8 @@ import ViewRolePermission from "../modules/settings/role & permission/components
 import TeacherPage from "../modules/members/teachers/pages/TeacherPage";
 import TeacherView from "../modules/members/teachers/components/TeacherView";
 import FeesPage from "../modules/Finance Management/Fees/fees/page/FeesPage";
+import FeesView from "../modules/Finance Management/Fees/fees/components/FeesView";
+import AdmissionPage from "../modules/general settings/admission/page/AdmissionPage";
 
 const router = createBrowserRouter([
   {
@@ -130,6 +132,18 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // admission
+      {
+        path: "/admission",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <AdmissionPage />,
+          },
+        ],
+      },
+      
       // Fees
       {
         path: "/fees",
@@ -138,6 +152,11 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <FeesPage />,
+          },
+
+          {
+            path: "fees-view/:feesId",
+            element: <FeesView />,
           },
         ],
       },

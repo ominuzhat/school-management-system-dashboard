@@ -6,7 +6,7 @@ import { TagTypes } from "../../../../../app/utils/tagTypes";
 
 const feesEndPoints = api.injectEndpoints({
   endpoints: (builder) => ({
-    getFees: builder.query<ApiResponse<IStudents[]>, FilterTypes>({
+    getFees: builder.query<ApiResponse<any[]>, FilterTypes>({
       query: (params) => ({
         url: "/api/v1.0/fees/",
         params,
@@ -19,7 +19,7 @@ const feesEndPoints = api.injectEndpoints({
       ],
     }),
 
-    createFees: builder.mutation<ApiResponse<ICreateStudent>, FormData>({
+    createFees: builder.mutation<ApiResponse<any>, FormData>({
       query: (data) => ({
         url: "/api/v1.0/fees/",
         method: "POST",
@@ -50,7 +50,7 @@ const feesEndPoints = api.injectEndpoints({
     }),
 
     updateFees: builder.mutation<
-      ApiResponse<IStudents>,
+      ApiResponse<any>,
       { id: number | undefined; data: FormData }
     >({
       query: ({ id, data }) => ({

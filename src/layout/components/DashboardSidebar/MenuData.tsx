@@ -35,6 +35,7 @@ import {
   LiaCertificateSolid,
   LiaChalkboardTeacherSolid,
 } from "react-icons/lia";
+import { IoMdPersonAdd } from "react-icons/io";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -202,6 +203,11 @@ const MenuData: React.FC = () => {
       key: "/subjects",
       label: <Link to="/subjects">Subjects</Link>,
       icon: <IoBookOutline />,
+    },
+    {
+      key: "/admission",
+      label: <Link to="/admission">Admission</Link>,
+      icon: <IoMdPersonAdd />,
     },
 
     {

@@ -22,7 +22,7 @@ const ViewRolePermission = () => {
       </h1>
 
       <Row gutter={[16, 16]}>
-        <Col lg={users && users.length > 10 ? 24 : 12}>
+        <Col lg={users && users.length < 10 ? 24 : 12}>
           <Badge.Ribbon text="Users" placement="start">
             <Table
               loading={isLoading}
@@ -34,9 +34,9 @@ const ViewRolePermission = () => {
         </Col>
         <Col
           lg={
-            users && users.length > 10 && permissions && permissions.length > 10
-              ? 24
-              : 12
+            users && users.length < 10 && permissions && permissions.length > 10
+              ? 12
+              : 24
           }
         >
           <Badge.Ribbon text="Permissions" placement="start">
