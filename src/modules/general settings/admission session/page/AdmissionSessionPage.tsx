@@ -4,13 +4,24 @@ import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
-import CreateSubjects from "../components/CreateSubjects";
-import { useGetSubjectsQuery } from "../api/subjectsEndPoints";
-import useSubjectColumns from "../utils/SubjectsColumns";
+import { useGetAdmissionSessionQuery } from "../api/admissionSessionEndPoints";
+import useAdmissionSessionsColumns from "../utils/admissionSessionColumns";
+import CreateAdmissionSessions from "../components/CreateAdmissionSessions";
+import { IAdmissionSession } from "../type/admissionSessionType";
 
-const SubjectsPage = () => {
+const AdmissionSessionPage = () => {
   const dispatch = useDispatch();
-  const { data: getSubjectsData, isLoading } = useGetSubjectsQuery({});
+  const { data: getAdmissionSessions, isLoading } = useGetAdmissionSessionQuery(
+    {}
+  );
+
+  const dataLength =
+    (getAdmissionSessions?.data as IAdmissionSession[] | undefined)?.length ??
+    0;
+
+  const dataSource =
+    (getAdmissionSessions?.data as IAdmissionSession[] | undefined) ?? [];
+
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -24,15 +35,15 @@ const SubjectsPage = () => {
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Add Subjects",
-                    content: <CreateSubjects />,
+                    title: "Add Addmission Session",
+                    content: <CreateAdmissionSessions />,
                   })
                 )
               }
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Add Subjects
+              Add Addmission Session
             </Button>
           </Col>
         </Row>
@@ -40,13 +51,13 @@ const SubjectsPage = () => {
       <Card>
         <Table
           loading={isLoading}
-          total={getSubjectsData?.data?.results?.length}
-          dataSource={getSubjectsData?.data?.results}
-          columns={useSubjectColumns()}
+          total={dataLength}
+          dataSource={dataSource}
+          columns={useAdmissionSessionsColumns()}
         />
       </Card>
     </div>
   );
 };
 
-export default SubjectsPage;
+export default AdmissionSessionPage;

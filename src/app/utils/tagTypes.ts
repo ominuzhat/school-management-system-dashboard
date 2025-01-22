@@ -17,6 +17,8 @@ export const TagTypes = {
   SUBJECTS: "Subjects",
   PROFILE: "Profile",
   FESS: "Fess",
+  ADMISSION_SESSION: "Admission_Session",
+  ADMISSION: "Admission",
 } as const;
 
 export type TagType = (typeof TagTypes)[keyof typeof TagTypes];

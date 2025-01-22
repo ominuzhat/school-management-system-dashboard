@@ -3,29 +3,32 @@ import { FilterTypes } from "../../../../app/features/filterSlice";
 import { ApiResponse, PaginatedResponse } from "../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../app/utils/tagTypes";
-import { IClasses } from "../type/classesType";
+import { IAdmission } from "../type/admissionType";
 
-const classesEndpoint = api.injectEndpoints({
+const admissionEndPoint = api.injectEndpoints({
   endpoints: (builder) => ({
-    getClasses: builder.query<
-      ApiResponse<PaginatedResponse<IClasses[]>>,
+    getAdmission: builder.query<
+      ApiResponse<PaginatedResponse<IAdmission[]>>,
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/institutions/grade-levels/",
+        url: "api/v1.0/admissions/",
         params,
       }),
       providesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.ADMISSION,
+          id: TagTypes.ADMISSION + "_ID",
         },
       ],
     }),
 
-    createClasses: builder.mutation<ApiResponse<IClasses>, FormData>({
+    createAdmission: builder.mutation<
+      ApiResponse<IAdmission>,
+      FormData
+    >({
       query: (data) => ({
-        url: "/api/v1.0/institutions/grade-levels/",
+        url: "api/v1.0/admissions/",
         method: "POST",
         body: data,
       }),
@@ -34,34 +37,34 @@ const classesEndpoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.ADMISSION,
+          id: TagTypes.ADMISSION + "_ID",
         },
       ],
     }),
 
-    getSingleClasses: builder.query<
-      ApiResponse<PaginatedResponse<IClasses>>,
+    getSingleCAdmission: builder.query<
+      ApiResponse<IAdmission>,
       number
     >({
       query: (roleId) => ({
-        url: `/api/v1.0/institutions/grade-levels/${roleId}/`,
+        url: `api/v1.0/admissions/${roleId}/`,
       }),
 
       providesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.ADMISSION,
+          id: TagTypes.ADMISSION + "_ID",
         },
       ],
     }),
 
-    updateClasses: builder.mutation<
-      ApiResponse<IClasses>,
+    updateAdmission: builder.mutation<
+      ApiResponse<IAdmission>,
       { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/institutions/grade-levels/${id}/`,
+        url: `api/v1.0/admissions/${id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -70,8 +73,8 @@ const classesEndpoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.ADMISSION,
+          id: TagTypes.ADMISSION + "_ID",
         },
       ],
     }),
@@ -79,8 +82,8 @@ const classesEndpoint = api.injectEndpoints({
 });
 
 export const {
-  useGetClassesQuery,
-  useCreateClassesMutation,
-  useUpdateClassesMutation,
-  useGetSingleClassesQuery,
-} = classesEndpoint;
+  useCreateAdmissionMutation,
+  useGetAdmissionQuery,
+  useGetSingleCAdmissionQuery,
+  useUpdateAdmissionMutation,
+} = admissionEndPoint;

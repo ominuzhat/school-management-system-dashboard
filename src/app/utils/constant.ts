@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 
 export interface ApiResponse<T> {
-  data?: T;
+  data?: T | PaginatedResponse<T>; 
   message?: string;
   success: boolean;
   token?: string;
@@ -10,6 +10,11 @@ export interface ApiResponse<T> {
   type?: string;
 }
 
+export interface PaginatedResponse<T> {
+  count?: number;
+  next?: string | null;
+  previous?: string | null;
+  results: T[];
+}
 export type SetStateAnyOrNull = Dispatch<SetStateAction<any | null>>;
-
 export type SetStateNullable<T> = Dispatch<SetStateAction<T | null>>;

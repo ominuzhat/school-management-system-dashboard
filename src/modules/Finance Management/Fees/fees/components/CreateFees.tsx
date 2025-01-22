@@ -106,7 +106,7 @@ const CreateFees = () => {
                     classLoading ? "Loading classes..." : "Please select"
                   }
                   options={
-                    classData?.data?.map((classItem: any) => ({
+                    classData?.data?.results?.map((classItem: any) => ({
                       label: classItem.name,
                       value: classItem.id,
                     })) || []
@@ -132,7 +132,7 @@ const CreateFees = () => {
                     studentLoading ? "Loading Students..." : "Please select"
                   }
                   options={
-                    studentData?.data?.map((studentItem: any) => ({
+                    studentData?.data?.results?.map((studentItem: any) => ({
                       label: studentItem.user.username,
                       value: studentItem.id,
                     })) || []
@@ -158,7 +158,7 @@ const CreateFees = () => {
                     subjectLoading ? "Loading Subjects..." : "Please select"
                   }
                   options={
-                    subjectData?.data?.map((subjectItem: any) => ({
+                    subjectData?.data?.results?.map((subjectItem: any) => ({
                       label: subjectItem.name,
                       value: subjectItem.id,
                     })) || []

@@ -99,3 +99,39 @@ abbr[title] {
   border-left: 4px solid rgb(0, 153, 255) !important;
   border-radius: 0px !important;
 }
+
+
+.custom-select {
+  width: 100%;
+  padding: 4px;
+  font-size: 14px;
+  line-height: 16px;
+  color: #000000;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  background-color: #ffffff;
+  appearance: none; 
+  height: fit-content;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.custom-select:focus {
+  border-color: #40a9ff; /* Ant Design primary color */
+  box-shadow: 0 0 5px rgba(24, 144, 255, 0.5); /* Subtle blue shadow */
+  outline: none;
+}
+
+.custom-select option {
+  padding: 4px 8px;
+  font-size: 14px;
+  color: #000000;
+}
+
+.custom-select[multiple] {
+  height: auto;
+  overflow: auto;
+}
+
+.custom-select::-ms-expand {
+  display: none; /* Hides default dropdown arrow in Internet Explorer */
+}

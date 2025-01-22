@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export type FilterTypes =
-  | {
+  | ({
       limit?: number;
       skip?: number;
       key?: string | undefined;
-    }
+    } & Record<string, any>)
   | undefined;
 
 const initialState: FilterTypes = {

@@ -1,13 +1,16 @@
 import api from "../../../../app/api/api";
 import { FilterTypes } from "../../../../app/features/filterSlice";
-import { ApiResponse } from "../../../../app/utils/constant";
+import { ApiResponse, PaginatedResponse } from "../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../app/utils/tagTypes";
 import { ICreateTeacher, IGetTeacher } from "../types/teacherType";
 
 const teacherEndPoint = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTeacher: builder.query<ApiResponse<IGetTeacher[]>, FilterTypes>({
+    getTeacher: builder.query<
+      ApiResponse<PaginatedResponse<IGetTeacher>>,
+      FilterTypes
+    >({
       query: (params) => ({
         url: "/api/v1.0/teachers/",
         params,

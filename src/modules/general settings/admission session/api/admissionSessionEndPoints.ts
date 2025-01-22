@@ -3,29 +3,32 @@ import { FilterTypes } from "../../../../app/features/filterSlice";
 import { ApiResponse, PaginatedResponse } from "../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../app/utils/tagTypes";
-import { IClasses } from "../type/classesType";
+import { IAdmissionSession } from "../type/admissionSessionType";
 
-const classesEndpoint = api.injectEndpoints({
+const admissionSessionEndPoint = api.injectEndpoints({
   endpoints: (builder) => ({
-    getClasses: builder.query<
-      ApiResponse<PaginatedResponse<IClasses[]>>,
+    getAdmissionSession: builder.query<
+      ApiResponse<PaginatedResponse<IAdmissionSession[]>>,
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/institutions/grade-levels/",
+        url: "api/v1.0/admissions/sessions/",
         params,
       }),
       providesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.ADMISSION_SESSION,
+          id: TagTypes.ADMISSION_SESSION + "_ID",
         },
       ],
     }),
 
-    createClasses: builder.mutation<ApiResponse<IClasses>, FormData>({
+    createAdmissionSession: builder.mutation<
+      ApiResponse<IAdmissionSession>,
+      FormData
+    >({
       query: (data) => ({
-        url: "/api/v1.0/institutions/grade-levels/",
+        url: "api/v1.0/admissions/sessions/",
         method: "POST",
         body: data,
       }),
@@ -34,34 +37,34 @@ const classesEndpoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.ADMISSION_SESSION,
+          id: TagTypes.ADMISSION_SESSION + "_ID",
         },
       ],
     }),
 
-    getSingleClasses: builder.query<
-      ApiResponse<PaginatedResponse<IClasses>>,
+    getSingleCAdmissionSession: builder.query<
+      ApiResponse<IAdmissionSession>,
       number
     >({
       query: (roleId) => ({
-        url: `/api/v1.0/institutions/grade-levels/${roleId}/`,
+        url: `api/v1.0/admissions/sessions/${roleId}/`,
       }),
 
       providesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.ADMISSION_SESSION,
+          id: TagTypes.ADMISSION_SESSION + "_ID",
         },
       ],
     }),
 
-    updateClasses: builder.mutation<
-      ApiResponse<IClasses>,
+    updateAdmissionSession: builder.mutation<
+      ApiResponse<IAdmissionSession>,
       { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/institutions/grade-levels/${id}/`,
+        url: `api/v1.0/admissions/sessions/${id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -70,8 +73,8 @@ const classesEndpoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.ClASSES,
-          id: TagTypes.ClASSES + "_ID",
+          type: TagTypes.ADMISSION_SESSION,
+          id: TagTypes.ADMISSION_SESSION + "_ID",
         },
       ],
     }),
@@ -79,8 +82,8 @@ const classesEndpoint = api.injectEndpoints({
 });
 
 export const {
-  useGetClassesQuery,
-  useCreateClassesMutation,
-  useUpdateClassesMutation,
-  useGetSingleClassesQuery,
-} = classesEndpoint;
+  useCreateAdmissionSessionMutation,
+  useGetAdmissionSessionQuery,
+  useGetSingleCAdmissionSessionQuery,
+  useUpdateAdmissionSessionMutation,
+} = admissionSessionEndPoint;

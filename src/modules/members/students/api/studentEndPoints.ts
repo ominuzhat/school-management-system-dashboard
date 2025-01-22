@@ -1,13 +1,16 @@
 import api from "../../../../app/api/api";
 import { FilterTypes } from "../../../../app/features/filterSlice";
-import { ApiResponse } from "../../../../app/utils/constant";
+import { ApiResponse, PaginatedResponse } from "../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../app/utils/tagTypes";
 import { ICreateStudent, IStudents } from "../types/studentsType";
 
 const studentsEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
-    getStudents: builder.query<ApiResponse<IStudents[]>, FilterTypes>({
+    getStudents: builder.query<
+      ApiResponse<PaginatedResponse<IStudents>>,
+      FilterTypes
+    >({
       query: (params) => ({
         url: "/api/v1.0/students/",
         params,

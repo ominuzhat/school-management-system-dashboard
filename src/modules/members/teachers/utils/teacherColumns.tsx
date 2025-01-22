@@ -5,7 +5,6 @@ import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
-import UpdateStudent from "../../students/components/UpdateStudent";
 import UpdateTeacher from "../components/UpdateTeacher";
 
 const useTeacherColumns = (): ColumnsType<any> => {

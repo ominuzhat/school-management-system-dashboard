@@ -123,7 +123,7 @@ const TeacherPage = () => {
       >
         {layout !== "grid" ? (
           <Row gutter={[16, 16]}>
-            {teacherData?.data?.map((teacher, index) => (
+            {teacherData?.data?.results?.map((teacher:any, index:number) => (
               <Col key={index} span={3} xs={12} lg={8} xxl={3}>
                 <div
                   style={{
@@ -160,8 +160,8 @@ const TeacherPage = () => {
         ) : (
           <Table
             loading={isLoading}
-            total={teacherData?.data?.length}
-            dataSource={teacherData?.data}
+            total={teacherData?.data?.results.length}
+            dataSource={teacherData?.data?.results}
             columns={useTeacherColumns()}
           />
         )}

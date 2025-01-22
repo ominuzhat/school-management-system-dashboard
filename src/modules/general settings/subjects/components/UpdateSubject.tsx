@@ -4,8 +4,8 @@ import {
   useGetSingleSubjectsQuery,
   useUpdateSubjectsMutation,
 } from "../api/subjectsEndPoints";
-import { ISubjects } from "../type/subjectsType";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
+import { ISubjects } from "../type/subjectsType";
 
 const UpdateSubjects = ({ record }: any) => {
   const [form] = Form.useForm();
@@ -15,10 +15,11 @@ const UpdateSubjects = ({ record }: any) => {
 
   useEffect(() => {
     if (singleData?.data) {
+      const subjectData = singleData?.data as unknown as ISubjects;
       form.setFieldsValue({
-        name: singleData.data.name,
-        marks: singleData.data.marks,
-        grade_level: singleData.data.grade_level?.name,
+        name: subjectData.name,
+        marks: subjectData.marks,
+        grade_level: subjectData.grade_level?.id,
       });
     }
   }, [singleData, form]);
@@ -40,7 +41,7 @@ const UpdateSubjects = ({ record }: any) => {
 
         <Form.Item<ISubjects> label="Class " name="grade_level">
           <Select placeholder="Select Class" className="w-full">
-            {GetClassData?.data?.map((data, index) => (
+            {GetClassData?.data?.results?.map((data: any, index) => (
               <Select.Option key={index} value={data?.id}>
                 {data?.name}
               </Select.Option>

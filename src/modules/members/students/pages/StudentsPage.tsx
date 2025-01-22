@@ -124,7 +124,7 @@ const StudentsPage = () => {
       >
         {layout !== "grid" ? (
           <Row gutter={[16, 16]}>
-            {studentData?.data?.map((student, index) => (
+            {studentData?.data?.results?.map((student: any, index) => (
               <Col key={index} span={3} xs={12} lg={8} xxl={3}>
                 <div
                   style={{
@@ -161,8 +161,8 @@ const StudentsPage = () => {
         ) : (
           <Table
             loading={isLoading}
-            total={studentData?.data?.length}
-            dataSource={studentData?.data}
+            total={studentData?.data?.results?.length}
+            dataSource={studentData?.data?.results}
             columns={useStudentColumns()}
           />
         )}

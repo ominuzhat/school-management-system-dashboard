@@ -53,6 +53,8 @@ import TeacherView from "../modules/members/teachers/components/TeacherView";
 import FeesPage from "../modules/Finance Management/Fees/fees/page/FeesPage";
 import FeesView from "../modules/Finance Management/Fees/fees/components/FeesView";
 import AdmissionPage from "../modules/general settings/admission/page/AdmissionPage";
+import AdmissionSessionPage from "../modules/general settings/admission session/page/AdmissionSessionPage";
+import CreateAdmission from "../modules/general settings/admission/components/CreateAdmission";
 
 const router = createBrowserRouter([
   {
@@ -141,9 +143,24 @@ const router = createBrowserRouter([
             path: "",
             element: <AdmissionPage />,
           },
+          {
+            path: "/admission/create-admission",
+            element: <CreateAdmission />,
+          },
         ],
       },
-      
+      // admission session
+      {
+        path: "/admission-session",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <AdmissionSessionPage />,
+          },
+        ],
+      },
+
       // Fees
       {
         path: "/fees",

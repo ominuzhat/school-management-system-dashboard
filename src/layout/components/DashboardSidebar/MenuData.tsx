@@ -36,6 +36,7 @@ import {
   LiaChalkboardTeacherSolid,
 } from "react-icons/lia";
 import { IoMdPersonAdd } from "react-icons/io";
+import { VscGoToEditingSession } from "react-icons/vsc";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -193,7 +194,7 @@ const MenuData: React.FC = () => {
     },
   ];
 
-  const generalSettings = [
+  const institution = [
     {
       key: "/classes",
       label: <Link to="/classes">Classes</Link>,
@@ -203,6 +204,11 @@ const MenuData: React.FC = () => {
       key: "/subjects",
       label: <Link to="/subjects">Subjects</Link>,
       icon: <IoBookOutline />,
+    },
+    {
+      key: "/admission-session",
+      label: <Link to="/admission-session">Admission Session</Link>,
+      icon: <VscGoToEditingSession />,
     },
     {
       key: "/admission",
@@ -280,7 +286,7 @@ const MenuData: React.FC = () => {
             items={members}
           />
         </div>
-        <span className="features-title">General Settings</span>
+        <span className="features-title">Institution</span>
         <div>
           <Menu
             style={{
@@ -289,7 +295,7 @@ const MenuData: React.FC = () => {
             mode="inline"
             theme={themes}
             selectedKeys={[pathname]}
-            items={generalSettings}
+            items={institution}
           />
         </div>
         <span className="features-title">Finance Management</span>
