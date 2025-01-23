@@ -23,10 +23,7 @@ const admissionEndPoint = api.injectEndpoints({
       ],
     }),
 
-    createAdmission: builder.mutation<
-      ApiResponse<IAdmission>,
-      FormData
-    >({
+    createAdmission: builder.mutation<ApiResponse<IAdmission>, FormData>({
       query: (data) => ({
         url: "api/v1.0/admissions/",
         method: "POST",
@@ -43,10 +40,7 @@ const admissionEndPoint = api.injectEndpoints({
       ],
     }),
 
-    getSingleCAdmission: builder.query<
-      ApiResponse<IAdmission>,
-      number
-    >({
+    getSingleCAdmission: builder.query<ApiResponse<IAdmission>, number>({
       query: (roleId) => ({
         url: `api/v1.0/admissions/${roleId}/`,
       }),
@@ -84,6 +78,7 @@ const admissionEndPoint = api.injectEndpoints({
 export const {
   useCreateAdmissionMutation,
   useGetAdmissionQuery,
+  useLazyGetAdmissionQuery,
   useGetSingleCAdmissionQuery,
   useUpdateAdmissionMutation,
 } = admissionEndPoint;

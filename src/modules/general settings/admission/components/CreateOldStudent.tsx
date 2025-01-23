@@ -15,7 +15,7 @@ const CreateOldStudent = () => {
   const { data: studentData } = useGetStudentsQuery({});
   const { data: sessionData } = useGetAdmissionSessionQuery({});
   const [selectedClass, setSelectedClass] = useState<number>(0);
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]); // Track selected subjects
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const { data: subjectData } = useGetSubjectsQuery({
     grade_level: selectedClass,
   });

@@ -1,52 +1,59 @@
-import { Button, Card, Col, DatePicker, Row, Select, Table } from "antd";
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  notification,
+  Row,
+  Select,
+  Table,
+} from "antd";
 import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
 import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
 import { useState } from "react";
+import { useLazyGetAdmissionQuery } from "../../../admission/api/admissionEndPoints";
 import MarkStudentsAttendanceColumns from "../utils/MarkStudentsAttendanceColumn";
+import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";
+import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
+import { useCreateStudentAttendanceMutation } from "../api/studentAttendanceEndPoints";
 
-const dataSource = [
-  {
-    key: "1",
-    id: "101",
-    photo: "https://via.placeholder.com/50", // Placeholder for student photo
-    studentName: "John Doe",
-    fatherName: "Michael Doe",
-    status: "",
-    description: "john Doe has due",
-  },
-  {
-    key: "2",
-    id: "102",
-    photo: "https://via.placeholder.com/50",
-    studentName: "Jane Smith",
-    fatherName: "Robert Smith",
-    status: "",
-  },
-  {
-    key: "3",
-    id: "103",
-    photo: "https://via.placeholder.com/50",
-    studentName: "Emily Johnson",
-    fatherName: "David Johnson",
-    status: "",
-  },
-];
+const { Option } = Select;
 
 const MarkStudentsAttendance = () => {
-  const [statusMap, setStatusMap] = useState<{ [key: string]: string }>(
-    dataSource.reduce((acc, student) => {
-      acc[student.id] = student.status || "present";
-      return acc;
-    }, {} as { [key: string]: string })
-  );
+  const [result, setResult] = useState();
+  const [formData, setFormData] = useState({
+    date: dayjs().format("YYYY-MM-DD"),
+    grade_level: undefined,
+    session: undefined,
+  });
+  const [create] = useCreateStudentAttendanceMutation();
+  const { data: sessionData } = useGetAdmissionSessionQuery({});
+  const { data: classData } = useGetClassesQuery({});
+  const [fetchAdmissionData, { data: admissionData, isLoading }] =
+    useLazyGetAdmissionQuery({});
 
-  const handleSetAllStatus = (status: string) => {
-    const updatedStatusMap: { [key: string]: string } = {};
-    dataSource.forEach((student) => {
-      updatedStatusMap[student.id] = status;
-    });
-    setStatusMap(updatedStatusMap);
+  const handleChange = (key: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleSearch = () => {
+    if (formData.session !== undefined && formData.grade_level !== undefined) {
+      fetchAdmissionData(formData);
+    } else {
+      notification.open({
+        message: "Alert",
+        description: "Select Class and Session First",
+      });
+    }
+  };
+
+  const handleAttendanceSubmit = () => {
+    create(result);
   };
 
   return (
@@ -56,66 +63,88 @@ const MarkStudentsAttendance = () => {
       </div>
       <Card>
         <Row justify="space-between" align="middle" gutter={[10, 10]}>
-          <Col lg={8}>
+          <Col lg={20}>
             <Row gutter={[16, 16]}>
-              <Col lg={12} xs={24}>
+              <Col lg={4} xs={24}>
                 <DatePicker
                   className="w-full"
                   defaultValue={dayjs()}
                   format="YYYY-MM-DD"
+                  onChange={(date) =>
+                    handleChange(
+                      "date",
+                      date ? dayjs(date).format("YYYY-MM-DD") : null
+                    )
+                  }
                 />
               </Col>
-              <Col lg={12} xs={24}>
-                <Select placeholder="Select Class" className="w-full">
-                  <Select.Option value={1}>1</Select.Option>
+              <Col lg={4} xs={24}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Class"
+                  onChange={(value) => handleChange("grade_level", value)}
+                >
+                  {Array.isArray(classData?.data) &&
+                    classData.data.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+              <Col lg={4} xs={24}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Session"
+                  allowClear
+                  showSearch
+                  onChange={(value) => handleChange("session", value)}
+                >
+                  {Array.isArray(sessionData?.data) &&
+                    sessionData?.data.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data?.name}
+                      </Option>
+                    ))}
                 </Select>
               </Col>
             </Row>
           </Col>
 
+          {/* Search Button */}
           <Col lg={4} xs={24}>
             <Button
               type="primary"
-              htmlType="submit"
-              loading={false}
+              htmlType="button"
               icon={<Iconify name="iconamoon:send-fill" />}
               className="w-full"
+              onClick={handleSearch}
             >
-              Submit Attendance
+              Search Students
             </Button>
           </Col>
         </Row>
       </Card>
-
-      <Table
-        columns={MarkStudentsAttendanceColumns(
-          dataSource,
-          statusMap,
-          setStatusMap,
-          handleSetAllStatus
-        )}
-        dataSource={dataSource}
-        pagination={false}
-        loading={false}
-        expandable={{
-          expandedRowRender: (record) => (
-            <p style={{ margin: 0 }}>{record.description}</p>
-          ),
-          rowExpandable: (record) => record.name !== "Not Expandable",
-        }}
-      />
-      {/* <Table
-          loading={false}
-          total={0}
-          dataSource={dataSource}
-          columns={MarkStudentsAttendanceColumns(
-            dataSource,
-            statusMap,
-            setStatusMap,
-            handleSetAllStatus
-          )}
+      <Card>
+        <Table
+          loading={isLoading}
+          dataSource={admissionData?.data?.results}
+          columns={MarkStudentsAttendanceColumns({
+            admissionData: admissionData?.data?.results || [],
+            formData,
+            setResult,
+          })}
           pagination={false}
-        /> */}
+          rowKey="id"
+        />
+        <Button
+          className="mt-5"
+          type="primary"
+          onClick={handleAttendanceSubmit}
+        >
+          Submit Attendance
+        </Button>
+      </Card>
     </div>
   );
 };
