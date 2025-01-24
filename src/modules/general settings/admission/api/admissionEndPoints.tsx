@@ -3,7 +3,7 @@ import { FilterTypes } from "../../../../app/features/filterSlice";
 import { ApiResponse, PaginatedResponse } from "../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../app/utils/tagTypes";
-import { IAdmission } from "../type/admissionType";
+import { IAdmission, ISingleAdmission } from "../type/admissionType";
 
 const admissionEndPoint = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -40,9 +40,9 @@ const admissionEndPoint = api.injectEndpoints({
       ],
     }),
 
-    getSingleCAdmission: builder.query<ApiResponse<IAdmission>, number>({
-      query: (roleId) => ({
-        url: `api/v1.0/admissions/${roleId}/`,
+    getSingleAdmission: builder.query<ApiResponse<ISingleAdmission>, number>({
+      query: (admissionId) => ({
+        url: `api/v1.0/admissions/${admissionId}/`,
       }),
 
       providesTags: [
@@ -79,6 +79,6 @@ export const {
   useCreateAdmissionMutation,
   useGetAdmissionQuery,
   useLazyGetAdmissionQuery,
-  useGetSingleCAdmissionQuery,
+  useGetSingleAdmissionQuery,
   useUpdateAdmissionMutation,
 } = admissionEndPoint;

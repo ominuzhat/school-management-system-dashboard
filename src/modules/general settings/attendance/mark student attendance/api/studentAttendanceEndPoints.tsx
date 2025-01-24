@@ -15,7 +15,7 @@ const studentAttendanceEndPoint = api.injectEndpoints({
       FilterTypes
     >({
       query: (params) => ({
-        url: "api/v1.0/admissions/attendances/mark-attendance/",
+        url: "/api/v1.0/admissions/attendances/",
         params,
       }),
       providesTags: [
@@ -88,5 +88,6 @@ export const {
   useCreateStudentAttendanceMutation,
   useGetSingleStudentAttendanceQuery,
   useGetStudentAttendanceQuery,
+  useLazyGetStudentAttendanceQuery,
   useUpdateStudentAttendanceMutation,
 } = studentAttendanceEndPoint;

@@ -1,8 +1,13 @@
 import { Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
+import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
+import EditButton from "../../../../common/CommonAnt/Button/EditButton";
+import { useNavigate } from "react-router-dom";
 
 const useAdmissionColumns = (): ColumnsType<any> => {
+  const navigate = useNavigate();
+
   //   const [deleteCartItem] = useDeleteOrderItemMutation();
 
   //   const handleDelete = async (id: any) => {
@@ -85,16 +90,14 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          {/* <EditButton
+          <EditButton
             onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Admission Session",
-                  content: <UpdateAdmissionSessions record={record?.id} />,
-                })
-              )
+              navigate(`/admission/update-admission/${record?.id}`)
             }
-          /> */}
+          />
+
+          <ViewButton to={`admission-view/${record?.id}`} />
+
           {/* <DeleteButton
           onClick={() => handleDelete(record.id)}>
             Delete

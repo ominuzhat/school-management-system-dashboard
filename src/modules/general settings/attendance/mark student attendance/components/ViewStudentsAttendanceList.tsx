@@ -1,39 +1,26 @@
-import {
-  Button,
-  Card,
-  Col,
-  DatePicker,
-  notification,
-  Row,
-  Select,
-  Table,
-} from "antd";
+import { Button, Card, Col, DatePicker, notification, Row, Select } from "antd";
 import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
-import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
-import { useState } from "react";
-import { useLazyGetAdmissionQuery } from "../../../admission/api/admissionEndPoints";
 import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";
 import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
-import { useCreateStudentAttendanceMutation } from "../api/studentAttendanceEndPoints";
-import useMarkStudentsAttendanceColumns from "../utils/MarkStudentsAttendanceColumn";
-import { Link } from "react-router-dom";
-import { MdOutlineArrowRightAlt } from "react-icons/md";
+import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
+import { useState } from "react";
+import { useLazyGetStudentAttendanceQuery } from "../api/studentAttendanceEndPoints";
 
 const { Option } = Select;
 
-const MarkStudentsAttendance = () => {
-  const [result, setResult] = useState<Record<string, any> | null>(null); // Use a type that matches your expected result
+const ViewStudentsAttendanceList = () => {
+  const { data: sessionData } = useGetAdmissionSessionQuery({});
+  const { data: classData } = useGetClassesQuery({});
   const [formData, setFormData] = useState({
     date: dayjs().format("YYYY-MM-DD"),
     grade_level: undefined,
     session: undefined,
   });
-  const [create] = useCreateStudentAttendanceMutation();
-  const { data: sessionData } = useGetAdmissionSessionQuery({});
-  const { data: classData } = useGetClassesQuery({});
-  const [fetchAdmissionData, { data: admissionData, isLoading }] =
-    useLazyGetAdmissionQuery({});
+
+  // Use lazy query hook to fetch data when the button is clicked
+  const [fetchAttendance, { data: admissionData, isLoading }] =
+    useLazyGetStudentAttendanceQuery();
 
   const handleChange = (key: string, value: any) => {
     setFormData((prev) => ({
@@ -42,9 +29,12 @@ const MarkStudentsAttendance = () => {
     }));
   };
 
+  console.log(admissionData); // You can see the data here after fetching
+
   const handleSearch = () => {
     if (formData.session && formData.grade_level) {
-      fetchAdmissionData(formData);
+      // Trigger the API call with the formData
+      fetchAttendance(formData);
     } else {
       notification.open({
         message: "Alert",
@@ -53,38 +43,12 @@ const MarkStudentsAttendance = () => {
     }
   };
 
-  const handleAttendanceSubmit = () => {
-    if (result) {
-      create(result as any);
-    } else {
-      notification.error({
-        message: "Error",
-        description:
-          "Attendance data is missing. Please check before submitting.",
-      });
-    }
-  };
-
   return (
-    <div className="space-y-5">
+    <div>
       <div className="my-5">
         <BreadCrumb />
       </div>
-      <Link to="/attendance/mark-student-attendance-list">
-        <p
-          style={{
-            fontSize: "14px",
-            fontWeight: "400",
-            color: "#1890ff",
-            padding: "8px 16px",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-          }}
-          className="flex items-center gap-2  w-64"
-        >
-          View List of Attendance <MdOutlineArrowRightAlt className="text-xl" />
-        </p>
-      </Link>
+
       <Card>
         <Row justify="space-between" align="middle" gutter={[10, 10]}>
           <Col lg={20}>
@@ -148,28 +112,17 @@ const MarkStudentsAttendance = () => {
           </Col>
         </Row>
       </Card>
-      <Card>
-        <Table
-          loading={isLoading}
-          dataSource={admissionData?.data?.results || []}
-          columns={useMarkStudentsAttendanceColumns({
-            admissionData: admissionData?.data?.results || [],
-            formData,
-            setResult,
-          })}
-          pagination={false}
-          rowKey="id"
-        />
-        <Button
-          className="mt-5"
-          type="primary"
-          onClick={handleAttendanceSubmit}
-        >
-          Submit Attendance
-        </Button>
-      </Card>
+
+      {/* Show loading or the fetched admission data */}
+      {isLoading && <div>Loading...</div>}
+      {admissionData && (
+        <div>
+          {/* Render your attendance data here */}
+          <pre>{JSON.stringify(admissionData, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 };
 
-export default MarkStudentsAttendance;
+export default ViewStudentsAttendanceList;

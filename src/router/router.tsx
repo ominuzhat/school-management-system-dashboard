@@ -55,6 +55,9 @@ import FeesView from "../modules/Finance Management/Fees/fees/components/FeesVie
 import AdmissionPage from "../modules/general settings/admission/page/AdmissionPage";
 import AdmissionSessionPage from "../modules/general settings/admission session/page/AdmissionSessionPage";
 import CreateAdmission from "../modules/general settings/admission/components/CreateAdmission";
+import AdmissionView from "../modules/general settings/admission/components/AdmissionView";
+import UpdateAdmission from "../modules/general settings/admission/components/UpdateAdmission";
+import ViewStudentsAttendanceList from "../modules/general settings/attendance/mark student attendance/components/ViewStudentsAttendanceList";
 
 const router = createBrowserRouter([
   {
@@ -147,6 +150,14 @@ const router = createBrowserRouter([
             path: "/admission/create-admission",
             element: <CreateAdmission />,
           },
+          {
+            path: "/admission/admission-view/:admissionId",
+            element: <AdmissionView />,
+          },
+          {
+            path: "/admission/update-admission/:admissionId",
+            element: <UpdateAdmission />,
+          },
         ],
       },
       // admission session
@@ -185,6 +196,10 @@ const router = createBrowserRouter([
           {
             path: "mark-student-attendance",
             element: <MarkStudentsAttendance />,
+          },
+          {
+            path: "mark-student-attendance-list",
+            element: <ViewStudentsAttendanceList />,
           },
           {
             path: "mark-teacher-attendance",

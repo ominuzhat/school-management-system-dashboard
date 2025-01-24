@@ -1,68 +1,77 @@
-import { Card, Col, Input, Row, Select } from "antd";
-import { Form } from "../../../../common/CommonAnt";
-import { useCreateAdmissionMutation } from "../api/admissionEndPoints";
-import { IAdmission } from "../type/admissionType";
+import { useState, useEffect } from "react";
+import { Card, Col, Form, Input, Row, Select, Button } from "antd";
+import {
+  useGetSingleAdmissionQuery,
+  useUpdateAdmissionMutation,
+} from "../api/admissionEndPoints";
 import { useGetStudentsQuery } from "../../../members/students/api/studentEndPoints";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
-import { IClasses } from "../../classes/type/classesType";
-import { useState } from "react";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
+import { useParams } from "react-router-dom";
 
 const { Option } = Select;
 
-const CreateOldStudent = () => {
+const UpdateOldAdmissionStudent = () => {
+  const { admissionId } = useParams();
+  const { data: singleAdmissionData } = useGetSingleAdmissionQuery(
+    Number(admissionId)
+  );
+  const singleAdmission: any = singleAdmissionData?.data;
+
+  const [form] = Form.useForm();
   const { data: studentData } = useGetStudentsQuery({});
   const { data: sessionData } = useGetAdmissionSessionQuery({});
-  const [selectedClass, setSelectedClass] = useState<number>();
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+  const [selectedClass, setSelectedClass] = useState<number>(
+    singleAdmission?.subjects?.[0]?.grade_level?.id || 0
+  );
+
   const { data: subjectData } = useGetSubjectsQuery({
     grade_level: selectedClass,
   });
   const { data: classData } = useGetClassesQuery({});
-  const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
+  const [updateAdmission] = useUpdateAdmissionMutation();
+
+  useEffect(() => {
+    if (singleAdmission) {
+      form.setFieldsValue({
+        student: singleAdmission?.student?.id,
+        session: singleAdmission?.session?.id,
+        discount_type: singleAdmission?.discount_type,
+        discount_value: singleAdmission?.discount_value,
+        fee_type: singleAdmission?.fee_type,
+        grade_level: singleAdmission?.subjects?.[0]?.grade_level?.id,
+        subjects: singleAdmission?.subjects?.map((sub: any) => sub.id),
+      });
+    }
+    setSelectedClass(singleAdmission?.subjects?.[0]?.grade_level?.id);
+  }, [singleAdmission, form]);
 
   const onFinish = (values: any): void => {
-    console.log(values);
-
-    const result: any = {
-      discount_type: values.discount_type,
-      discount_value: values.discount_value,
-      fee_type: values.fee_type,
-      session: values.session,
-      student: values.student,
-      subjects: values.subjects,
-      registration_number: "reg324",
+    const updatedData = {
+      ...values,
+      registration_number: singleAdmission?.registration_number,
     };
 
-    create(result);
+    updateAdmission({ id: singleAdmission?.id, data: updatedData });
   };
 
   const handleClassChange = (value: number) => {
     setSelectedClass(value);
-    setSelectedSubjects([]);
-  };
-
-  const handleSubjectsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const options = Array.from(e.target.selectedOptions);
-    setSelectedSubjects(options.map((option) => option.value));
+    form.setFieldsValue({ subjects: [] });
   };
 
   return (
     <div>
-      <Form
-        onFinish={onFinish}
-        isLoading={isLoading}
-        isSuccess={isSuccess}
-        initialValues={{ subjects: selectedSubjects }}
-      >
+      <Form form={form} onFinish={onFinish} initialValues={{}}>
         <Card>
           <Row gutter={[16, 16]}>
+            {/* Form fields here */}
             <Col lg={8}>
-              <Form.Item<IAdmission>
+              <Form.Item
                 label="Student"
                 name="student"
-                rules={[{ required: true, message: "Student" }]}
+                rules={[{ required: true, message: "Student is required" }]}
               >
                 <Select
                   className="w-full"
@@ -78,11 +87,13 @@ const CreateOldStudent = () => {
                 </Select>
               </Form.Item>
             </Col>
+
+            {/* Other form items... */}
             <Col lg={8}>
-              <Form.Item<IAdmission>
+              <Form.Item
                 label="Session"
                 name="session"
-                rules={[{ required: true, message: "Session" }]}
+                rules={[{ required: true, message: "Session is required" }]}
               >
                 <Select
                   className="w-full"
@@ -99,37 +110,35 @@ const CreateOldStudent = () => {
                 </Select>
               </Form.Item>
             </Col>
+
             <Col lg={8}>
               <Form.Item
                 label="Discount Type"
                 name="discount_type"
                 initialValue="amount"
               >
-                <Select
-                  placeholder="Select Discount Type"
-                  className="w-full"
-                  defaultValue="amount"
-                >
+                <Select placeholder="Select Discount Type" className="w-full">
                   <Option value="amount">Amount</Option>
                   <Option value="percent">Percent</Option>
                 </Select>
               </Form.Item>
             </Col>
+
             <Col lg={8}>
               <Form.Item
                 label="Discount Value"
                 name="discount_value"
                 initialValue={0}
               >
-                <Input placeholder="Discount Value" defaultValue={0} />
+                <Input placeholder="Discount Value" />
               </Form.Item>
             </Col>
 
             <Col lg={8}>
-              <Form.Item<IAdmission>
+              <Form.Item
                 label="Fee Type"
                 name="fee_type"
-                rules={[{ required: true, message: "Fee Type" }]}
+                rules={[{ required: true, message: "Fee Type is required" }]}
               >
                 <Select className="w-full" placeholder="Select Fee Type">
                   <Option value="class">Class</Option>
@@ -137,11 +146,12 @@ const CreateOldStudent = () => {
                 </Select>
               </Form.Item>
             </Col>
+
             <Col lg={8}>
-              <Form.Item<IAdmission>
+              <Form.Item
                 label="Class"
                 name="grade_level"
-                rules={[{ required: true, message: "Class" }]}
+                rules={[{ required: true, message: "Class is required" }]}
               >
                 <Select
                   className="w-full"
@@ -150,7 +160,7 @@ const CreateOldStudent = () => {
                   onChange={handleClassChange}
                 >
                   {Array.isArray(classData?.data) &&
-                    classData.data.map((data: IClasses) => (
+                    classData?.data?.map((data: any) => (
                       <Option key={data.id} value={data.id}>
                         {data.name}
                       </Option>
@@ -161,34 +171,36 @@ const CreateOldStudent = () => {
 
             {selectedClass !== 0 && (
               <Col lg={8}>
-                <Form.Item<IAdmission>
-                  label="Subject"
+                <Form.Item
+                  label="Subjects"
                   name="subjects"
-                  rules={[{ required: true, message: "Subject" }]}
-                  getValueProps={() => ({
-                    value: selectedSubjects,
-                  })}
-                  getValueFromEvent={(e) =>
-                    Array.from(e.target.selectedOptions).map(
-                      (option: any) => option.value
-                    )
-                  }
+                  rules={[{ required: true, message: "Subject is required" }]}
                 >
-                  <select
-                    className="custom-select"
-                    multiple
-                    value={selectedSubjects}
-                    onChange={handleSubjectsChange}
+                  <Select
+                    className="w-full"
+                    mode="multiple"
+                    placeholder="Select Subjects"
                   >
                     {subjectData?.data?.results?.map((data: any) => (
-                      <option key={data.id} value={data.id}>
+                      <Option key={data?.id} value={data.id}>
                         {data.name}
-                      </option>
+                      </Option>
                     ))}
-                  </select>
+                  </Select>
                 </Form.Item>
               </Col>
             )}
+          </Row>
+
+          {/* Submit Button */}
+          <Row justify="end" style={{ marginTop: "20px" }}>
+            <Col>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form.Item>
+            </Col>
           </Row>
         </Card>
       </Form>
@@ -196,4 +208,4 @@ const CreateOldStudent = () => {
   );
 };
 
-export default CreateOldStudent;
+export default UpdateOldAdmissionStudent;

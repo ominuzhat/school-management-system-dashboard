@@ -1,7 +1,7 @@
 import { Button, Radio, Space } from "antd";
 import { useEffect, useState } from "react";
 
-const MarkStudentsAttendanceColumns = ({
+const useMarkStudentsAttendanceColumns = ({
   admissionData,
   formData,
   setResult,
@@ -34,9 +34,7 @@ const MarkStudentsAttendanceColumns = ({
       status: "present",
     }));
     setAdmission(initialAttendance);
-  }, []);
 
-  useEffect(() => {
     if (admission.length > 0 && formData) {
       const result = {
         session: formData?.session,
@@ -47,7 +45,7 @@ const MarkStudentsAttendanceColumns = ({
 
       setResult(result);
     }
-  }, [admission, formData, setResult]);
+  }, [formData, setResult]);
 
   const handleSetAllStatus = (status: string) => {
     const updatedStatusMap: Record<string, string> = {};
@@ -60,7 +58,6 @@ const MarkStudentsAttendanceColumns = ({
     });
 
     setStatusMap(updatedStatusMap);
-
     setAdmission(updatedAdmission);
   };
 
@@ -123,4 +120,4 @@ const MarkStudentsAttendanceColumns = ({
   ];
 };
 
-export default MarkStudentsAttendanceColumns;
+export default useMarkStudentsAttendanceColumns;
