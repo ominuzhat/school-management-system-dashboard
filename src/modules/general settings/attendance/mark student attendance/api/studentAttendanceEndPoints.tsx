@@ -25,6 +25,21 @@ const studentAttendanceEndPoint = api.injectEndpoints({
         },
       ],
     }),
+    getMarkStudentAttendance: builder.query<
+      ApiResponse<PaginatedResponse<TAttendanceData[]>>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "api/v1.0/admissions/attendances/mark-attendance/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.STUDENT_ATTENDANCE,
+          id: TagTypes.STUDENT_ATTENDANCE + "_ID",
+        },
+      ],
+    }),
 
     createStudentAttendance: builder.mutation<
       ApiResponse<TAttendanceData>,
@@ -85,6 +100,9 @@ const studentAttendanceEndPoint = api.injectEndpoints({
 });
 
 export const {
+  useGetMarkStudentAttendanceQuery,
+  useLazyGetMarkStudentAttendanceQuery,
+
   useCreateStudentAttendanceMutation,
   useGetSingleStudentAttendanceQuery,
   useGetStudentAttendanceQuery,

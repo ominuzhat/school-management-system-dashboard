@@ -2,16 +2,58 @@ import { Button, Radio, Space } from "antd";
 import { useEffect, useState } from "react";
 
 const useMarkStudentsAttendanceColumns = ({
-  admissionData,
+  attendanceData,
   formData,
   setResult,
+  gradeLevel,
+  session,
 }: {
-  admissionData: any[];
+  attendanceData: any[];
   formData: any;
   setResult: any;
+  gradeLevel: any;
+  session: any;
 }) => {
   const [admission, setAdmission] = useState<any[]>([]);
   const [statusMap, setStatusMap] = useState<Record<string, string>>({});
+  const [previousAttendanceData, setPreviousAttendanceData] = useState<any[]>(
+    []
+  );
+
+  useEffect(() => {
+    if (
+      JSON.stringify(attendanceData) !== JSON.stringify(previousAttendanceData)
+    ) {
+      const initialStatusMap: Record<string, string> = {};
+      const initialAdmission = attendanceData?.map((student) => {
+        const status =
+          student?.status === "not marked"
+            ? "present"
+            : student?.status || "present";
+        initialStatusMap[student.admission.id] = status;
+        return {
+          admission: student.admission.id,
+          status: status,
+        };
+      });
+
+      setStatusMap(initialStatusMap);
+      setAdmission(initialAdmission);
+      setPreviousAttendanceData(attendanceData);
+    }
+  }, [attendanceData, previousAttendanceData]);
+
+  useEffect(() => {
+    if (formData && admission.length > 0) {
+      const result = {
+        session: formData?.session,
+        grade_level: formData.grade_level,
+        date: formData.date,
+        records: admission,
+      };
+      setResult(result);
+    }
+  }, [formData, admission, setResult]);
 
   const handleStatusChange = (e: any, recordId: string) => {
     const value = e.target.value;
@@ -28,67 +70,54 @@ const useMarkStudentsAttendanceColumns = ({
     });
   };
 
-  useEffect(() => {
-    const initialAttendance = admissionData?.map((student) => ({
-      admission: student.id,
-      status: "present",
-    }));
-    setAdmission(initialAttendance);
-
-    if (admission.length > 0 && formData) {
-      const result = {
-        session: formData?.session,
-        grade_level: formData.grade_level,
-        date: formData.date,
-        records: admission,
-      };
-
-      setResult(result);
-    }
-  }, [formData, setResult]);
-
   const handleSetAllStatus = (status: string) => {
     const updatedStatusMap: Record<string, string> = {};
-    const updatedAdmission = admissionData.map((student) => {
-      updatedStatusMap[student.id] = status;
+    const updatedAdmission = attendanceData?.map((student) => {
+      updatedStatusMap[student.admission.id] = status;
       return {
-        admission: student.id,
+        admission: student.admission.id,
         status: status,
       };
     });
 
     setStatusMap(updatedStatusMap);
     setAdmission(updatedAdmission);
+    setResult(updatedAdmission);
   };
 
   return [
     {
       title: "Student Name",
-      dataIndex: "student",
+      dataIndex: "admission",
       key: "student",
       align: "center",
-      render: (text: string) => <span>{text}</span>,
+      render: (admission: any) => (
+        <span>
+          {admission?.student?.first_name} {admission?.student?.last_name}
+        </span>
+      ),
     },
     {
       title: "Registration Number",
-      dataIndex: "registration_number",
+      dataIndex: "admission",
       key: "registration_number",
       align: "left",
-      render: (text: string) => <span>{text}</span>,
+      render: (admission: any) => <span>{admission?.registration_number}</span>,
     },
     {
       title: "Class",
-      dataIndex: "grade_level",
+      dataIndex: "admission",
       key: "grade_level",
       align: "center",
-      render: (text: string) => <span>{text}</span>,
+      render: () => <span>{gradeLevel?.name}</span>,
     },
     {
       title: "Session",
-      dataIndex: "session",
+      dataIndex: "admission",
       key: "session",
       align: "center",
-      render: (text: any) => <span>{text?.name}</span>,
+      render: () => <span>{session?.name}</span>,
+
     },
     {
       title: (
@@ -107,8 +136,8 @@ const useMarkStudentsAttendanceColumns = ({
       render: (record: any) => (
         <Space>
           <Radio.Group
-            onChange={(e) => handleStatusChange(e, record.id)}
-            value={statusMap[record?.id] || "present"}
+            onChange={(e) => handleStatusChange(e, record.admission.id)}
+            value={statusMap[record.admission?.id] || "present"}
           >
             <Radio value="present">P</Radio>
             <Radio value="late">L</Radio>

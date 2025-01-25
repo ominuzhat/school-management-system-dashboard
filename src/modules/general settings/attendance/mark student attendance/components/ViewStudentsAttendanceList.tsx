@@ -6,6 +6,8 @@ import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
 import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
 import { useState } from "react";
 import { useLazyGetStudentAttendanceQuery } from "../api/studentAttendanceEndPoints";
+import { Table } from "../../../../../common/CommonAnt";
+import useStudentsAttendanceListColumns from "../utils/studentsAttendanceListColumns";
 
 const { Option } = Select;
 
@@ -18,8 +20,7 @@ const ViewStudentsAttendanceList = () => {
     session: undefined,
   });
 
-  // Use lazy query hook to fetch data when the button is clicked
-  const [fetchAttendance, { data: admissionData, isLoading }] =
+  const [fetchAttendance, { data: studentsAttendanceList, isLoading }] =
     useLazyGetStudentAttendanceQuery();
 
   const handleChange = (key: string, value: any) => {
@@ -29,17 +30,13 @@ const ViewStudentsAttendanceList = () => {
     }));
   };
 
-  console.log(admissionData); // You can see the data here after fetching
-
   const handleSearch = () => {
-    if (formData.session && formData.grade_level) {
-      // Trigger the API call with the formData
+    if (formData?.date) {
       fetchAttendance(formData);
     } else {
-      notification.open({
-        message: "Alert",
-        description: "Select Class and Session First",
-      });
+      const { date, ...updatedFormData }: any = formData;
+
+      fetchAttendance(updatedFormData);
     }
   };
 
@@ -113,14 +110,14 @@ const ViewStudentsAttendanceList = () => {
         </Row>
       </Card>
 
-      {/* Show loading or the fetched admission data */}
-      {isLoading && <div>Loading...</div>}
-      {admissionData && (
-        <div>
-          {/* Render your attendance data here */}
-          <pre>{JSON.stringify(admissionData, null, 2)}</pre>
-        </div>
-      )}
+      <Card>
+        <Table
+          loading={isLoading}
+          total={studentsAttendanceList?.data?.results?.length}
+          dataSource={studentsAttendanceList?.data?.results}
+          columns={useStudentsAttendanceListColumns()}
+        />
+      </Card>
     </div>
   );
 };

@@ -31,7 +31,15 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Student Name",
       dataIndex: "student",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) =>
+        title ? title?.first_name + " " + title?.last_name : "N/A",
+    },
+    {
+      key: "22",
+      title: "User Name",
+      dataIndex: "student",
+      align: "center",
+      render: (title) => (title ? title?.user?.username : "N/A"),
     },
     {
       key: "2",

@@ -4,23 +4,20 @@ import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
-import { useGetAdmissionSessionQuery } from "../api/admissionSessionEndPoints";
-import useAdmissionSessionsColumns from "../utils/admissionSessionColumns";
-import CreateAdmissionSessions from "../components/CreateAdmissionSessions";
-import { IAdmissionSession } from "../type/admissionSessionType";
+import { useGetDepartmentQuery } from "../api/departmentEndPoints";
+import CreateDepartmentModal from "../components/CreateDepartmentModal";
+import useDepartmentColumns from "../utils/departmentColumns";
+import { IGetDepartment } from "../types/departmentType";
 
-const AdmissionSessionPage = () => {
+const DepartmentPage = () => {
   const dispatch = useDispatch();
-  const { data: getAdmissionSessions, isLoading } = useGetAdmissionSessionQuery(
-    {}
-  );
+  const { data: departmentData, isLoading } = useGetDepartmentQuery({});
 
   const dataLength =
-    (getAdmissionSessions?.data as IAdmissionSession[] | undefined)?.length ??
-    0;
+    (departmentData?.data as IGetDepartment[] | undefined)?.length ?? 0;
 
   const dataSource =
-    (getAdmissionSessions?.data as IAdmissionSession[] | undefined) ?? [];
+    (departmentData?.data as IGetDepartment[] | undefined) ?? [];
 
   return (
     <div className="space-y-5">
@@ -35,15 +32,15 @@ const AdmissionSessionPage = () => {
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Add Admission Session",
-                    content: <CreateAdmissionSessions />,
+                    title: "Add Department ",
+                    content: <CreateDepartmentModal />,
                   })
                 )
               }
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Add Admission Session
+              Add Department
             </Button>
           </Col>
         </Row>
@@ -53,11 +50,11 @@ const AdmissionSessionPage = () => {
           loading={isLoading}
           total={dataLength}
           dataSource={dataSource}
-          columns={useAdmissionSessionsColumns()}
+          columns={useDepartmentColumns()}
         />
       </Card>
     </div>
   );
 };
 
-export default AdmissionSessionPage;
+export default DepartmentPage;

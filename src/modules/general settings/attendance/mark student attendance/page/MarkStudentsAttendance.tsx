@@ -12,10 +12,12 @@ import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
 import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
 import { useState } from "react";
-import { useLazyGetAdmissionQuery } from "../../../admission/api/admissionEndPoints";
 import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";
 import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
-import { useCreateStudentAttendanceMutation } from "../api/studentAttendanceEndPoints";
+import {
+  useCreateStudentAttendanceMutation,
+  useLazyGetMarkStudentAttendanceQuery,
+} from "../api/studentAttendanceEndPoints";
 import useMarkStudentsAttendanceColumns from "../utils/MarkStudentsAttendanceColumn";
 import { Link } from "react-router-dom";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
@@ -32,8 +34,8 @@ const MarkStudentsAttendance = () => {
   const [create] = useCreateStudentAttendanceMutation();
   const { data: sessionData } = useGetAdmissionSessionQuery({});
   const { data: classData } = useGetClassesQuery({});
-  const [fetchAdmissionData, { data: admissionData, isLoading }] =
-    useLazyGetAdmissionQuery({});
+  const [fetchAdmissionData, { data: attendanceData, isLoading }] =
+    useLazyGetMarkStudentAttendanceQuery({});
 
   const handleChange = (key: string, value: any) => {
     setFormData((prev) => ({
@@ -100,6 +102,9 @@ const MarkStudentsAttendance = () => {
                       date ? dayjs(date).format("YYYY-MM-DD") : null
                     )
                   }
+                  // disabledDate={(current) => {
+                  //   return current && current > dayjs().endOf("day");
+                  // }}
                 />
               </Col>
               <Col lg={4} xs={24}>
@@ -151,9 +156,11 @@ const MarkStudentsAttendance = () => {
       <Card>
         <Table
           loading={isLoading}
-          dataSource={admissionData?.data?.results || []}
+          dataSource={attendanceData?.data?.records || []}
           columns={useMarkStudentsAttendanceColumns({
-            admissionData: admissionData?.data?.results || [],
+            attendanceData: (attendanceData?.data?.records as any) || [],
+            gradeLevel: (attendanceData?.data?.grade_level as any) || {},
+            session: (attendanceData?.data?.session as any) || {},
             formData,
             setResult,
           })}

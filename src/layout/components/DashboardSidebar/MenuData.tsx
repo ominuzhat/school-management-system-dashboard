@@ -206,6 +206,11 @@ const MenuData: React.FC = () => {
       icon: <IoBookOutline />,
     },
     {
+      key: "/department",
+      label: <Link to="/department">Department</Link>,
+      icon: <IoBookOutline />,
+    },
+    {
       key: "/admission-session",
       label: <Link to="/admission-session">Admission Session</Link>,
       icon: <VscGoToEditingSession />,

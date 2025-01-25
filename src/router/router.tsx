@@ -21,8 +21,6 @@ import NonCommision from "../modules/invoice/non-commission/pages/NonCommision";
 import CommisionAirTicket from "../modules/invoice/commission-air-ticket/pages/CommisionAirTicket";
 import AgentPage from "../modules/Agent/pages/AgentPages";
 import InvoicePages from "../modules/invoice/invoice/pages/InvoicePages";
-import EmployeePage from "../modules/Configuration/Employee/pages/EmployeePages";
-import DepartmentPage from "../modules/Configuration/Departments/pages/DepartmentsPage";
 import DesignationPage from "../modules/Configuration/Designation/pages/DesignationPage";
 import GroupPage from "../modules/Configuration/Group/pages/GroupPage";
 import ClientCategoryPage from "../modules/Configuration/ClientCategory/pages/ClientCategoryPages";
@@ -58,6 +56,8 @@ import CreateAdmission from "../modules/general settings/admission/components/Cr
 import AdmissionView from "../modules/general settings/admission/components/AdmissionView";
 import UpdateAdmission from "../modules/general settings/admission/components/UpdateAdmission";
 import ViewStudentsAttendanceList from "../modules/general settings/attendance/mark student attendance/components/ViewStudentsAttendanceList";
+import DepartmentPage from "../modules/general settings/Department/page/DepartmentPage";
+import EmployeePage from "../modules/members/employees/pages/EmployeePage";
 
 const router = createBrowserRouter([
   {
@@ -90,10 +90,10 @@ const router = createBrowserRouter([
         path: "/employees",
         element: <Accounts />,
         children: [
-          // {
-          //   path: "",
-          //   element: <StudentsPage />,
-          // },
+          {
+            path: "",
+            element: <EmployeePage />,
+          },
           // {
           //   path: "product-view/:productId",
           //   element: <ProductView />,
@@ -112,6 +112,17 @@ const router = createBrowserRouter([
           {
             path: "teacher-view/:teacherId",
             element: <TeacherView />,
+          },
+        ],
+      },
+      // Department
+      {
+        path: "/department",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <DepartmentPage />,
           },
         ],
       },
