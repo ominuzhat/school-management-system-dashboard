@@ -26,14 +26,11 @@ import GroupPage from "../modules/Configuration/Group/pages/GroupPage";
 import ClientCategoryPage from "../modules/Configuration/ClientCategory/pages/ClientCategoryPages";
 import UserPage from "../modules/Configuration/User/Users/pages/UserPages";
 import UserRoles from "../modules/Configuration/User/Roles/pages/UserRolePage";
-import PayrollPages from "../modules/Payroll/pages/PayrollPages";
 import MoneyReceiptPage from "../modules/MoneyReceipt/pages/MoneyReceiptPage";
 import CreateMoneyReceipt from "../modules/MoneyReceipt/components/CreateMoneyReceipt";
-import ProductPages from "../modules/Product/pages/ProductPages";
-import ProductView from "../modules/Product/pages/ProductView";
+
 import CategoryPage from "../modules/Configuration/Category/pages/CategoryPage";
-import OrderPages from "../modules/Order/pages/OrderPages";
-import ServicePages from "../modules/service/pages/ServicePages";
+
 import SecondLogin from "../modules/Auth/page/SecondLogin";
 import Verification from "../modules/Auth/components/Verification";
 import StudentsPage from "../modules/members/students/pages/StudentsPage";
@@ -58,6 +55,9 @@ import UpdateAdmission from "../modules/general settings/admission/components/Up
 import ViewStudentsAttendanceList from "../modules/general settings/attendance/mark student attendance/components/ViewStudentsAttendanceList";
 import DepartmentPage from "../modules/general settings/Department/page/DepartmentPage";
 import EmployeePage from "../modules/members/employees/pages/EmployeePage";
+import ViewSingleStudentsAttendanceList from "../modules/general settings/attendance/mark student attendance/components/ViewSingleStudentsAttendanceList";
+import SingleViewEmployee from "../modules/members/employees/components/SingleViewEmployee";
+import PayrollPage from "../modules/Finance Management/payroll/pages/PayrollPages";
 
 const router = createBrowserRouter([
   {
@@ -94,10 +94,10 @@ const router = createBrowserRouter([
             path: "",
             element: <EmployeePage />,
           },
-          // {
-          //   path: "product-view/:productId",
-          //   element: <ProductView />,
-          // },
+          {
+            path: "employee-view/:employeeId",
+            element: <SingleViewEmployee />,
+          },
         ],
       },
       // teacher
@@ -182,7 +182,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-
       // Fees
       {
         path: "/fees",
@@ -211,6 +210,10 @@ const router = createBrowserRouter([
           {
             path: "mark-student-attendance-list",
             element: <ViewStudentsAttendanceList />,
+          },
+          {
+            path: "mark-student-attendance-list/:attendanceId",
+            element: <ViewSingleStudentsAttendanceList />,
           },
           {
             path: "mark-teacher-attendance",
@@ -247,6 +250,11 @@ const router = createBrowserRouter([
             element: <ViewRolePermission />,
           },
         ],
+      },
+      // payroll
+      {
+        path: "/payroll",
+        element: <PayrollPage />,
       },
 
       // new for education
@@ -295,49 +303,6 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/product",
-        element: <Accounts />,
-        children: [
-          {
-            path: "/product",
-            element: <ProductPages />,
-          },
-          {
-            path: "product-view/:productId",
-            element: <ProductView />,
-          },
-        ],
-      },
-      {
-        path: "/order",
-        element: <Accounts />,
-        children: [
-          {
-            path: "/order",
-            element: <OrderPages />,
-          },
-          {
-            path: "product-view/:productId",
-            element: <ProductView />,
-          },
-        ],
-      },
-      {
-        path: "/service",
-        element: <Accounts />,
-        children: [
-          {
-            path: "/service",
-            element: <ServicePages />,
-          },
-          {
-            path: "product-view/:productId",
-            element: <ProductView />,
-          },
-        ],
-      },
-
-      {
         path: "/category",
         element: <CategoryPage />,
       },
@@ -358,10 +323,7 @@ const router = createBrowserRouter([
         path: "/group",
         element: <GroupPage />,
       },
-      {
-        path: "/payroll",
-        element: <PayrollPages />,
-      },
+
       {
         path: "/client-category",
         element: <ClientCategoryPage />,

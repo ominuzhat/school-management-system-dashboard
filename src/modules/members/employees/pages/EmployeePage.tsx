@@ -18,13 +18,16 @@ import { no_img } from "../../../../utilities/images";
 
 import { FaListUl } from "react-icons/fa6";
 import { useGetEmployeeQuery } from "../api/employeeEndPoints";
+import useEmployeeColumns from "../utils/employeeColumns";
+import CreateEmployee from "../components/CreateEmployee";
+import UpdateEmployee from "../components/UpdateEmployee";
 
 const EmployeePage = () => {
   const [layout, setLayout] = useState("grid");
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
 
-  const { data: studentData, isLoading } = useGetEmployeeQuery({});
+  const { data: employeeData, isLoading } = useGetEmployeeQuery({});
 
   const handleDelete = async (id: any) => {
     try {
@@ -42,21 +45,21 @@ const EmployeePage = () => {
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           <Col lg={4} xs={24}>
-            {/* <Button
+            <Button
               type="primary"
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Add Student",
-                    content: <CreateStudent />,
+                    title: "Add Employee",
+                    content: <CreateEmployee />,
                   })
                 )
               }
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Add Student
-            </Button> */}
+              Add Employee
+            </Button>
           </Col>
           <Col lg={10} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
@@ -74,7 +77,7 @@ const EmployeePage = () => {
               <Col lg={12} xs={12}>
                 <SearchComponent
                   onSearch={(value) => setSearch(value)}
-                  placeholder="Search students"
+                  placeholder="Search employees"
                 />
               </Col>
             </Row>
@@ -90,7 +93,7 @@ const EmployeePage = () => {
               alignItems: "center",
             }}
           >
-            <span>All Students</span>
+            <span>All Employee</span>
             <div
               style={{
                 display: "flex",
@@ -121,7 +124,7 @@ const EmployeePage = () => {
       >
         {layout !== "grid" ? (
           <Row gutter={[16, 16]}>
-            {studentData?.data?.results?.map((student: any, index) => (
+            {employeeData?.data?.results?.map((employee: any, index) => (
               <Col key={index} span={3} xs={12} lg={8} xxl={3}>
                 <div
                   style={{
@@ -130,22 +133,22 @@ const EmployeePage = () => {
                   className="border py-8 px-2 rounded-lg space-y-2"
                 >
                   <img src={no_img} alt="image" className="mx-auto" />
-                  <p> {student?.id}</p>
+                  <p> {employee?.id}</p>
                   <p className="font-serif">
-                    {student?.first_name} {student?.last_name}
+                    {employee?.first_name} {employee?.last_name}
                   </p>
                   <div className="space-x-2">
-                    <ViewButton to={`student-view/${student?.id}`} />
-                    {/* <EditButton
+                    <ViewButton to={`employee-view/${employee?.id}`} />
+                    <EditButton
                       onClick={() =>
                         dispatch(
                           showModal({
-                            title: "Update Students",
-                            content: <UpdateStudent record={"record"} />,
+                            title: "Update Employee",
+                            content: <UpdateEmployee records={employee} />,
                           })
                         )
                       }
-                    /> */}
+                    />
                     <DeleteButton
                       onConfirm={() => handleDelete(1)}
                       onCancel={() => console.log("Cancel delete")}
@@ -156,13 +159,12 @@ const EmployeePage = () => {
             ))}
           </Row>
         ) : (
-          "ss"
-          //   <Table
-          //     loading={isLoading}
-          //     total={studentData?.data?.results?.length}
-          //     dataSource={studentData?.data?.results}
-          //     columns={useStudentColumns()}
-          //   />
+          <Table
+            loading={isLoading}
+            total={employeeData?.data?.results?.length}
+            dataSource={employeeData?.data?.results}
+            columns={useEmployeeColumns()}
+          />
         )}
       </Card>
     </div>

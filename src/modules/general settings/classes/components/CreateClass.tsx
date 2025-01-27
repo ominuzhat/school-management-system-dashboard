@@ -1,10 +1,13 @@
 import { Col, Input, Row, Select } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateClassesMutation } from "../api/classesEndPoints";
+import { useGetTeacherQuery } from "../../../members/teachers/api/teachersEndPoints";
 
 const CreateClass = () => {
   const [create, { isLoading, isSuccess }] = useCreateClassesMutation();
+  const { data: teacherData } = useGetTeacherQuery({});
 
+  console.log(teacherData);
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
 
@@ -19,8 +22,6 @@ const CreateClass = () => {
         formData.append(key, value as string | Blob);
       }
     });
-
-    console.log("Form Values Submitted:", values);
 
     create(formData);
   };
@@ -55,13 +56,14 @@ const CreateClass = () => {
               ]}
             >
               <Select placeholder="Select Class Teacher" className="w-full">
-                {/* Replace with dynamic data */}
-                <Select.Option value={0}>Teacher 0</Select.Option>
-                <Select.Option value={1}>Teacher 1</Select.Option>
-                <Select.Option value={2}>Teacher 2</Select.Option>
+                {teacherData?.data?.results?.map((teacher: any) => (
+                  <Select.Option key={teacher.id} value={teacher.id}>
+                    {teacher?.first_name}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
-          </Col>{" "}
+          </Col>
           <Col lg={24}>
             <Form.Item
               label="Description"

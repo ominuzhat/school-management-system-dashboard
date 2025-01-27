@@ -1,4 +1,6 @@
-import { Button, Card, Col, DatePicker, notification, Row, Select } from "antd";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
+import { Button, Card, Col, DatePicker, Row, Select } from "antd";
 import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
 import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";

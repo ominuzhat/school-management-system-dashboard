@@ -76,6 +76,21 @@ const studentAttendanceEndPoint = api.injectEndpoints({
         },
       ],
     }),
+    getSingleStudentAttendanceList: builder.query<
+      ApiResponse<TAttendanceData>,
+      number
+    >({
+      query: (attendanceId) => ({
+        url: `api/v1.0/admissions/attendances/${attendanceId}/`,
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.STUDENT_ATTENDANCE,
+          id: TagTypes.STUDENT_ATTENDANCE + "_ID",
+        },
+      ],
+    }),
 
     updateStudentAttendance: builder.mutation<
       ApiResponse<TAttendanceData>,
@@ -102,6 +117,7 @@ const studentAttendanceEndPoint = api.injectEndpoints({
 export const {
   useGetMarkStudentAttendanceQuery,
   useLazyGetMarkStudentAttendanceQuery,
+  useGetSingleStudentAttendanceListQuery,
 
   useCreateStudentAttendanceMutation,
   useGetSingleStudentAttendanceQuery,

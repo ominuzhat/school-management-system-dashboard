@@ -124,6 +124,11 @@ const MenuData: React.FC = () => {
 
   const payroll = [
     {
+      key: "/payroll",
+      label: <Link to="/payroll">Payroll</Link>,
+      icon: <MdOutlinePayments />,
+    },
+    {
       key: "/salary",
       label: <Link to="/salary">Salary</Link>,
       icon: <MdOutlinePayments />,

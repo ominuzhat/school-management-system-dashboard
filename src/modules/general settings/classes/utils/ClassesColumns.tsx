@@ -45,7 +45,7 @@ const useClassesColumns = (): ColumnsType<any> => {
       title: "Class Teacher Name",
       dataIndex: "class_teacher",
       align: "center",
-      render: (price) => (price ? price : "N/A"),
+      render: (title) => (title ? title?.first_name : "N/A"),
     },
     {
       title: "Actions",

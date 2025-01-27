@@ -289,7 +289,6 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
             </Badge.Ribbon>
           </Col>
 
-          {/* Repeat for Father & Mother Information similarly */}
         </Row>
       </Form>
     </div>

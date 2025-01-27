@@ -1,7 +1,6 @@
 import { Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 
-
 import { useParams } from "react-router-dom";
 import { useGetSingleSTeacherQuery } from "../api/teachersEndPoints";
 import TeacherInformation from "./TeacherInformation";
@@ -24,16 +23,13 @@ const TeacherView = () => {
             <TeacherInformation data={data?.data && data?.data} />
             <Row>
               <Col span={24} className="my-2">
-                <TeacherSubjects data={data?.data && data?.data}/>
+                <TeacherSubjects data={data?.data && data?.data} />
               </Col>
             </Row>
           </Col>
           <Col lg={8}>
             <TeacherAttendance />
             <TeacherPerformance />
-            {/* <StudentsAttendance />
-            <StudentDueWithCalendar />
-            <StudentPerformance /> */}
           </Col>
         </Row>
       </Card>

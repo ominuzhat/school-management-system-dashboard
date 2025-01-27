@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Oleo+Script&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto&display=swap");
 body {
   margin: 0;
   padding: 0;
@@ -100,7 +100,6 @@ abbr[title] {
   border-radius: 0px !important;
 }
 
-
 .custom-select {
   width: 100%;
   padding: 4px;
@@ -110,7 +109,7 @@ abbr[title] {
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   background-color: #ffffff;
-  appearance: none; 
+  appearance: none;
   height: fit-content;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -134,4 +133,18 @@ abbr[title] {
 
 .custom-select::-ms-expand {
   display: none; /* Hides default dropdown arrow in Internet Explorer */
+}
+
+/* Customize zebra striping */
+.ant-table-row-even {
+  background-color: #f9f9f9; /* Light gray for even rows */
+}
+
+.ant-table-row-odd {
+  background-color: #ffffff; /* White for odd rows */
+}
+
+/* Optional: Customize hover row colors */
+.ant-table-row:hover {
+  background-color: #f1f1f1; /* Light hover color */
 }

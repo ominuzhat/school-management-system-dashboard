@@ -18,6 +18,7 @@ export const TagTypes = {
   SUBJECTS: "Subjects",
   PROFILE: "Profile",
   FESS: "Fess",
+  PAYROLL: "Payroll",
   ADMISSION: "Admission",
   DEPARTMENT: "Department",
   ADMISSION_SESSION: "Admission_Session",

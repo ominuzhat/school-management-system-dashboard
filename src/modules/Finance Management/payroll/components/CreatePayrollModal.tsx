@@ -1,16 +1,28 @@
-import { Card, Col, DatePicker, Divider, Input, Row, Select } from "antd";
-import { Form } from "../../../common/CommonAnt";
-import { useCreateRestaurantMutation } from "../../Restaurants/api/restaurantsEndpoint";
+import {
+  Card,
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  Radio,
+  Row,
+  Select,
+} from "antd";
+import { useCreateRestaurantMutation } from "../../../Restaurants/api/restaurantsEndpoint";
 import {
   CommonPaymentMethod,
   DatePickerWithOptionalToday,
-} from "../../../common/CommonAnt/CommonSearch/CommonSearch";
+} from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
 
 import { UploadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import PayrollDeduction from "./PayrollDeduction";
+import { useGetTeacherQuery } from "../../../members/teachers/api/teachersEndPoints";
+import { useGetEmployeeQuery } from "../../../members/employees/api/employeeEndPoints";
+import { useEffect } from "react";
 
 const props: UploadProps = {
   name: "file",
@@ -32,10 +44,50 @@ const props: UploadProps = {
 
 const CreatePayrollModal = () => {
   const [create, { isLoading, isSuccess }] = useCreateRestaurantMutation();
+  const { data: teacherData } = useGetTeacherQuery({});
+  const { data: employeeData } = useGetEmployeeQuery({});
+  const [form] = Form.useForm();
+
+  const category = Form.useWatch("category", form);
+  const baseSalary = Form.useWatch("base_salary", form);
+  const selectedEmployee = Form.useWatch("employee", form);
+  const selectedTeacher = Form.useWatch("teacher", form);
+
+  useEffect(() => {
+    // Reset the base salary when switching categories
+    if (category === "employee" && selectedEmployee) {
+      const employee = employeeData?.data?.results?.find(
+        (emp: any) => emp.id === selectedEmployee
+      );
+      console.log(employee);
+
+      if (employee) {
+        form.setFieldsValue({
+          base_salary: employee.base_salary,
+        });
+      }
+    } else if (category === "teacher" && selectedTeacher) {
+      const teacher = teacherData?.data?.results?.find(
+        (data: any) => data.id === selectedTeacher
+      );
+
+      if (teacher) {
+        form.setFieldsValue({
+          base_salary: teacher.base_salary,
+        });
+      }
+    }
+  }, [
+    category, // Ensure category changes trigger the effect
+    selectedEmployee,
+    selectedTeacher,
+    employeeData?.data?.results,
+    teacherData?.data?.results,
+    form,
+  ]);
 
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
-
     Object.entries(values).forEach(([key, value]) => {
       if (
         key === "restaurant_logo" &&
@@ -53,54 +105,77 @@ const CreatePayrollModal = () => {
   return (
     <div>
       <Form
+        form={form}
         onFinish={onFinish}
-        isLoading={isLoading}
-        isSuccess={isSuccess}
-        initialValues={{ users: [{}] }}
+        // isLoading={isLoading}
+        // isSuccess={isSuccess}
+        initialValues={{ users: [{}], category: "teacher" }}
+        layout="vertical"
       >
         <Card>
+          <Form.Item name="category">
+            <Radio.Group
+              options={[
+                { value: "teacher", label: "Teacher" },
+                { value: "employee", label: "Employee" },
+              ]}
+            />
+          </Form.Item>
+          <Divider />
           <Row gutter={[16, 16]}>
-            <Col lg={6}>
-              <Form.Item<any>
-                label="Employee Name"
-                name="dueDate"
-                rules={[
-                  { required: true, message: "Input your Employee Name!" },
-                ]}
-              >
-                <Select
-                  showSearch
-                  placeholder="Employee Name"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={[
-                    { value: "1", label: "Jack" },
-                    { value: "2", label: "Lucy" },
-                    { value: "3", label: "Tom" },
+            {category === "teacher" ? (
+              <Col lg={6}>
+                <Form.Item
+                  label="Select Teacher"
+                  name="teacher"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Teacher selection is required!",
+                    },
                   ]}
-                />
-              </Form.Item>
-            </Col>
+                >
+                  <Select placeholder="Select Teacher" className="w-full">
+                    {/* Assuming teacherData is an array of teacher objects */}
+                    {teacherData?.data?.results?.map((teacher: any) => (
+                      <Select.Option key={teacher.id} value={teacher.id}>
+                        {teacher?.first_name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            ) : (
+              <Col lg={6}>
+                <Form.Item
+                  label="Select Employee"
+                  name="employee"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Employee selection is required!",
+                    },
+                  ]}
+                >
+                  <Select placeholder="Select Employee" className="w-full">
+                    {employeeData?.data?.results?.map((employee: any) => (
+                      <Select.Option key={employee.id} value={employee.id}>
+                        {employee.first_name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
+
             <Col lg={6}>
-              <Form.Item<any>
-                label="Base Salary"
-                name="dueDate"
-                rules={[{ required: true, message: "Input your Base Salary!" }]}
-              >
+              <Form.Item<any> label="Base Salary" name="base_salary">
                 <Input placeholder="Base Salary" type="number" disabled />
               </Form.Item>
             </Col>
+
             <Col lg={6}>
-              <Form.Item<any>
-                label="Daily Salary"
-                name="dueDate"
-                rules={[
-                  { required: true, message: "Input your Daily Salary!" },
-                ]}
-              >
+              <Form.Item<any> label="Daily Salary" name="dueDate">
                 <Input placeholder="Daily Salary" type="number" disabled />
               </Form.Item>
             </Col>

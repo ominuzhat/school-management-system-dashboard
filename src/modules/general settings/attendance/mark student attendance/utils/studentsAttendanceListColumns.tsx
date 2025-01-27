@@ -1,10 +1,8 @@
 import { Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { useDispatch } from "react-redux";
+import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
 
 const useStudentsAttendanceListColumns = (): ColumnsType<any> => {
-  const dispatch = useDispatch();
-
   return [
     {
       key: "0",
@@ -84,7 +82,7 @@ const useStudentsAttendanceListColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          {/* Add actions like edit, view, or delete here */}
+          <ViewButton to={`${record?.id}`} />
         </Space>
       ),
     },

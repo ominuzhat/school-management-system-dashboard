@@ -4,18 +4,22 @@ import {
   useGetSingleClassesQuery,
   useUpdateClassesMutation,
 } from "../api/classesEndPoints";
+import { useGetTeacherQuery } from "../../../members/teachers/api/teachersEndPoints";
 
 const UpdateClass = ({ record }: any) => {
   const [form] = Form.useForm();
   const { data: singleData } = useGetSingleClassesQuery(record);
   const [updateClass, { isLoading }] = useUpdateClassesMutation();
+  const { data: teacherData } = useGetTeacherQuery({});
+
+  console.log(singleData?.data);
 
   useEffect(() => {
     if (singleData?.data) {
       form.setFieldsValue({
         name: singleData.data.name,
         description: singleData.data.description,
-        class_teacher: singleData.data.class_teacher,
+        class_teacher: singleData.data.class_teacher?.id,
       });
     }
   }, [singleData, form]);
@@ -36,10 +40,12 @@ const UpdateClass = ({ record }: any) => {
         </Form.Item>
 
         <Form.Item label="Select Class Teacher" name="class_teacher">
-          <Select placeholder="Select Class Teacher">
-            <Select.Option value={null}>None</Select.Option>
-            <Select.Option value={1}>Teacher 1</Select.Option>
-            <Select.Option value={2}>Teacher 2</Select.Option>
+          <Select placeholder="Select Class Teacher" className="w-full">
+            {teacherData?.data?.results?.map((teacher: any) => (
+              <Select.Option key={teacher.id} value={teacher.id}>
+                {teacher?.first_name}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
 
