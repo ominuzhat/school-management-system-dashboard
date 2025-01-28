@@ -2,6 +2,9 @@ import { Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
+import EditButton from "../../../../common/CommonAnt/Button/EditButton";
+import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
+import UpdatePayroll from "../components/UpdatePayroll";
 
 const usePayrollColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -25,10 +28,17 @@ const usePayrollColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Employee Name",
+      title: "Name",
       dataIndex: "employee",
       align: "center",
-      render: (employee) => `${employee.first_name} ${employee.last_name}`,
+      render: (employee, record) => {
+        if (employee) {
+          return `${employee?.first_name} ${employee?.last_name}`;
+        } else if (record?.teacher) {
+          return `${record?.teacher?.first_name} ${record?.teacher?.last_name}`;
+        }
+        return "N/A";
+      },
     },
     {
       key: "2",
@@ -36,7 +46,7 @@ const usePayrollColumns = (): ColumnsType<any> => {
       dataIndex: "employee",
       align: "center",
       render: (employee) =>
-        employee.department?.name ? employee.department.name : "N/A",
+        employee?.department?.name ? employee.department.name : "Teacher",
     },
     {
       key: "3",
@@ -72,26 +82,22 @@ const usePayrollColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <button
+          <EditButton
             onClick={() =>
               dispatch(
                 showModal({
-                  title: "Update Employee",
-                  content: `Update details for ${record.employee.first_name} ${record.employee.last_name}`,
+                  title: "Update Payroll",
+                  content: <UpdatePayroll record={record?.id} />,
                 })
               )
             }
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => {
-              // Handle delete action
-              console.log("Deleting record:", record.id);
-            }}
-          >
-            Delete
-          </button>
+          />
+          <ViewButton to={`payroll-view/${record?.id}`} />
+
+          {/* <DeleteButton
+        onClick={() => handleDelete(record.id)}>
+          Delete
+        </DeleteButton> */}
         </Space>
       ),
     },

@@ -1,62 +1,42 @@
+import { useState, useEffect } from "react";
 import {
-  Card,
-  Col,
-  Divider,
   Form as AntForm,
   Input,
-  Radio,
   Row,
+  Col,
+  Card,
+  Divider,
+  Radio,
   Select,
+  DatePicker,
 } from "antd";
-import { RangePickerComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
-
-import type { UploadProps } from "antd";
-import { message } from "antd";
-import PayrollDeduction from "./PayrollDeduction";
+import {
+  useGetSinglePayrollQuery,
+  useUpdatePayrollMutation,
+} from "../api/payrollEndPoints";
 import { useGetTeacherQuery } from "../../../members/teachers/api/teachersEndPoints";
 import { useGetEmployeeQuery } from "../../../members/employees/api/employeeEndPoints";
-import { useEffect, useState } from "react";
-import { Moment } from "moment";
-import { useCreatePayrollMutation } from "../api/payrollEndPoints";
+import PayrollDeduction from "./PayrollDeduction";
 import { Form } from "../../../../common/CommonAnt";
+import dayjs, { Dayjs } from "dayjs";
 
-const props: UploadProps = {
-  name: "file",
-  action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-
-interface PeriodDate {
-  period_start: string;
-  period_end: string;
-}
-const CreatePayrollModal = () => {
-  const [create, { isLoading, isSuccess }] = useCreatePayrollMutation();
+const { RangePicker } = DatePicker;
+const UpdatePayroll = ({ record }: { record: any }) => {
+  const [form] = AntForm.useForm();
+  const [update, { isLoading, isSuccess }] = useUpdatePayrollMutation();
+  const { data: payrollData } = useGetSinglePayrollQuery(Number(record));
   const { data: teacherData } = useGetTeacherQuery({});
   const { data: employeeData } = useGetEmployeeQuery({});
-  const [periodDate, setPeriodDate] = useState<PeriodDate>({
-    period_start: "",
-    period_end: "",
-  });
 
-  const [form] = AntForm.useForm();
+  const [periodDate, setPeriodDate] = useState<[string | null, string | null]>([
+    null,
+    null,
+  ]);
 
-  const category = AntForm.useWatch("category", form);
-  const baseSalary = AntForm.useWatch("base_salary", form);
   const selectedEmployee = AntForm.useWatch("employee", form);
   const selectedTeacher = AntForm.useWatch("teacher", form);
+  const category = AntForm.useWatch("category", form);
+  const baseSalary = AntForm.useWatch("base_salary", form);
   const mobileBill = AntForm.useWatch("mobile_bill", form);
   const feedAllowance = AntForm.useWatch("feed_allowance", form);
   const performanceBonus = AntForm.useWatch("performance_bonus", form);
@@ -69,7 +49,7 @@ const CreatePayrollModal = () => {
   const salesCommission = AntForm.useWatch("sales_commission", form);
   const otherAllowance = AntForm.useWatch("other_allowance", form);
   const advanceSalary = AntForm.useWatch("advance_salary", form);
-  const providentFUnd = AntForm.useWatch("provident_fund", form);
+  const providentFund = AntForm.useWatch("provident_fund", form);
   const deductions = AntForm.useWatch("deductions", form);
 
   useEffect(() => {
@@ -91,6 +71,7 @@ const CreatePayrollModal = () => {
       (total, value) => total + (Number(value) || 0),
       0
     );
+
     const totalDeductions =
       deductions?.reduce(
         (total: any, deduction: any) =>
@@ -99,51 +80,17 @@ const CreatePayrollModal = () => {
       ) || 0;
 
     const grossSalary = Number(baseSalary) + totalAllowances;
-
     const netSalary =
-      Number(grossSalary) -
+      grossSalary -
       (Number(advanceSalary) || 0) -
-      (Number(providentFUnd) || 0) -
+      (Number(providentFund) || 0) -
       totalDeductions;
 
-    if (category === "employee" && selectedEmployee) {
-      const employee = employeeData?.data?.results?.find(
-        (emp: any) => emp.id === selectedEmployee
-      );
-
-      if (employee) {
-        form.setFieldsValue({
-          base_salary: employee.base_salary,
-          attendance: employee.attendance,
-        });
-      }
-    } else if (category === "teacher" && selectedTeacher) {
-      const teacher = teacherData?.data?.results?.find(
-        (data: any) => data.id === selectedTeacher
-      );
-
-      if (teacher) {
-        form.setFieldsValue({
-          base_salary: teacher.base_salary,
-          attendance: teacher.attendance,
-        });
-      }
-    }
-
-    if (baseSalary) {
-      form.setFieldsValue({
-        daily_salary: (Number(baseSalary) / 30).toFixed(2),
-        gross_salary: grossSalary.toFixed(2),
-        net_salary: netSalary.toFixed(2),
-      });
-    }
+    form.setFieldsValue({
+      gross_salary: grossSalary.toFixed(2),
+      net_salary: netSalary.toFixed(2),
+    });
   }, [
-    category,
-    selectedEmployee,
-    selectedTeacher,
-    employeeData?.data?.results,
-    teacherData?.data?.results,
-    form,
     baseSalary,
     mobileBill,
     feedAllowance,
@@ -157,29 +104,92 @@ const CreatePayrollModal = () => {
     salesCommission,
     otherAllowance,
     advanceSalary,
-    providentFUnd,
+    providentFund,
     deductions,
+    form,
   ]);
 
-  const handleRangeChange = (dates: [Moment | null, Moment | null] | null) => {
-    const start = dates?.[0]?.format("YYYY-MM-DD") || "";
-    const end = dates?.[1]?.format("YYYY-MM-DD") || "";
-    setPeriodDate({ period_start: start, period_end: end });
+  // Set initial values from backend data
+  useEffect(() => {
+    if (payrollData) {
+      const {
+        period_start,
+        period_end,
+        teacher,
+        employee,
+        deductions,
+        ...otherFields
+      } = payrollData?.data || {};
+
+      setPeriodDate([period_start || null, period_end || null]);
+
+      form.setFieldsValue({
+        daily_salary: (Number(baseSalary) / 30).toFixed(2),
+        category: payrollData?.data?.employee ? "employee" : "teacher",
+        period: [
+          period_start ? dayjs(period_start, "YYYY-MM-DD") : null,
+          period_end ? dayjs(period_end, "YYYY-MM-DD") : null,
+        ],
+        teacher: teacher?.id,
+        employee: employee?.id,
+        base_salary: employee ? employee?.base_salary : teacher?.base_salary,
+        deductions,
+        ...otherFields,
+      });
+
+      if (category === "employee" && selectedEmployee) {
+        const employee = employeeData?.data?.results?.find(
+          (emp: any) => emp.id === selectedEmployee
+        );
+
+        if (employee) {
+          form.setFieldsValue({
+            base_salary: employee.base_salary,
+            attendance: employee.attendance,
+          });
+        }
+      } else if (category === "teacher" && selectedTeacher) {
+        const teacher = teacherData?.data?.results?.find(
+          (data: any) => data.id === selectedTeacher
+        );
+        if (teacher) {
+          form.setFieldsValue({
+            base_salary: teacher?.base_salary,
+            attendance: teacher?.attendance,
+          });
+        }
+      }
+    }
+  }, [
+    payrollData,
+    form,
+    baseSalary,
+    category,
+    selectedEmployee,
+    selectedTeacher,
+    employeeData?.data?.results,
+    teacherData?.data?.results,
+  ]);
+
+  const handleRangeChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
+    const start = dates?.[0] ? dates[0].format("YYYY-MM-DD") : null;
+    const end = dates?.[1] ? dates[1].format("YYYY-MM-DD") : null;
+
+    setPeriodDate([start, end]);
+    form.setFieldsValue({ period: [start, end] });
   };
 
   const onFinish = (values: any): void => {
-    console.log(values, "finished");
-    // const formData: FormData = new FormData();
-
+    console.log(values);
     const result = {
-      period_start: periodDate?.period_start,
-      period_end: periodDate?.period_end,
+      period_start: periodDate?.[0],
+      period_end: periodDate?.[1],
       employee: selectedEmployee,
       teacher: selectedTeacher,
       attendance_days: 0,
       deductions: deductions,
       advance_salary: advanceSalary,
-      provident_fund: providentFUnd,
+      provident_fund: providentFund,
       mobile_bill: mobileBill,
       feed_allowance: feedAllowance,
       performance_bonus: performanceBonus,
@@ -193,10 +203,9 @@ const CreatePayrollModal = () => {
       other_allowance: otherAllowance,
     };
 
-    console.log(result);
-
-    create(result as any);
+    update({ id: record, data: result });
   };
+
   return (
     <div>
       <Form
@@ -204,7 +213,6 @@ const CreatePayrollModal = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={{ deductions: [{}], category: "teacher" }}
         layout="vertical"
       >
         <Card>
@@ -216,8 +224,16 @@ const CreatePayrollModal = () => {
               ]}
             />
           </Form.Item>
-          <Form.Item name="">
-            <RangePickerComponent
+          <Form.Item name="period">
+            <RangePicker
+              value={
+                periodDate[0] && periodDate[1]
+                  ? [
+                      dayjs(periodDate[0], "YYYY-MM-DD"),
+                      dayjs(periodDate[1], "YYYY-MM-DD"),
+                    ]
+                  : [null, null]
+              }
               onChange={handleRangeChange}
               format="YYYY-MM-DD"
             />
@@ -268,74 +284,28 @@ const CreatePayrollModal = () => {
               </Col>
             )}
             <Col lg={6}>
-              <Form.Item<any> label="Base Salary" name="base_salary">
+              <Form.Item label="Base Salary" name="base_salary">
                 <Input placeholder="Base Salary" type="number" disabled />
               </Form.Item>
             </Col>
             <Col lg={6}>
-              <Form.Item<any> label="Daily Salary" name="daily_salary">
+              <Form.Item label="Daily Salary" name="daily_salary">
                 <Input placeholder="Daily Salary" type="number" disabled />
               </Form.Item>
             </Col>
-            <Col lg={6}>
-              <Form.Item<any> label="Attendance (Days)" name="attendance">
-                <Input placeholder="Attendance (Days)" type="number" disabled />
-              </Form.Item>
-            </Col>
-
-            {/* <Col lg={6}>
-              <Form.Item<any>
-                label="Method"
-                name="method"
-                rules={[{ required: true, message: "Input your Method!" }]}
-              >
-                <CommonPaymentMethod />
-              </Form.Item>
-            </Col>
-            <Col lg={6}>
-              <Form.Item<any>
-                label="Accounts"
-                name="account"
-                rules={[{ required: true, message: "Input your Accounts!" }]}
-              >
-                <Select
-                  showSearch
-                  placeholder="Accounts"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={[
-                    { value: "1", label: "Jack" },
-                    { value: "2", label: "Lucy" },
-                    { value: "3", label: "Tom" },
-                  ]}
-                />
-              </Form.Item>
-            </Col>
-            <Col lg={6}>
-              <Form.Item<any>
-                label="Available Balance"
-                name="available_balance"
-              >
-                <Input placeholder="Available Balance" type="number" />
-              </Form.Item>
-            </Col> */}
           </Row>
-
           <Divider plain>Deductions</Divider>
           <Row gutter={[16, 16]}>
             <Col lg={12}>
               <PayrollDeduction />
             </Col>
             <Col lg={6}>
-              <Form.Item<any> label="Advance Salary" name="advance_salary">
+              <Form.Item label="Advance Salary" name="advance_salary">
                 <Input placeholder="Advance Salary" type="number" />
               </Form.Item>
             </Col>
             <Col lg={6}>
-              <Form.Item<any> label="Provident Fund" name="provident_fund">
+              <Form.Item label="Provident Fund" name="provident_fund">
                 <Input placeholder="Provident Fund" type="number" />
               </Form.Item>
             </Col>
@@ -414,9 +384,7 @@ const CreatePayrollModal = () => {
                 <Input placeholder="Total Salary" disabled />
               </Form.Item>
             </Col>
-            <Col lg={6}>
-
-            </Col>
+            <Col lg={6}></Col>
           </Row>
         </Card>
       </Form>
@@ -424,4 +392,4 @@ const CreatePayrollModal = () => {
   );
 };
 
-export default CreatePayrollModal;
+export default UpdatePayroll;

@@ -28,9 +28,7 @@ import UserPage from "../modules/Configuration/User/Users/pages/UserPages";
 import UserRoles from "../modules/Configuration/User/Roles/pages/UserRolePage";
 import MoneyReceiptPage from "../modules/MoneyReceipt/pages/MoneyReceiptPage";
 import CreateMoneyReceipt from "../modules/MoneyReceipt/components/CreateMoneyReceipt";
-
 import CategoryPage from "../modules/Configuration/Category/pages/CategoryPage";
-
 import SecondLogin from "../modules/Auth/page/SecondLogin";
 import Verification from "../modules/Auth/components/Verification";
 import StudentsPage from "../modules/members/students/pages/StudentsPage";
@@ -58,6 +56,7 @@ import EmployeePage from "../modules/members/employees/pages/EmployeePage";
 import ViewSingleStudentsAttendanceList from "../modules/general settings/attendance/mark student attendance/components/ViewSingleStudentsAttendanceList";
 import SingleViewEmployee from "../modules/members/employees/components/SingleViewEmployee";
 import PayrollPage from "../modules/Finance Management/payroll/pages/PayrollPages";
+import ViewPayroll from "../modules/Finance Management/payroll/components/ViewPayroll";
 
 const router = createBrowserRouter([
   {
@@ -252,9 +251,20 @@ const router = createBrowserRouter([
         ],
       },
       // payroll
+
       {
         path: "/payroll",
-        element: <PayrollPage />,
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <PayrollPage />,
+          },
+          {
+            path: "payroll-view/:payrollId",
+            element: <ViewPayroll />,
+          },
+        ],
       },
 
       // new for education

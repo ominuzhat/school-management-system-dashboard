@@ -4,7 +4,7 @@ import { Button, Col, Form, Input, Row, Space } from "antd";
 const PayrollDeduction = () => {
   return (
     <div>
-      <Form.List name="users">
+      <Form.List name="deductions">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
@@ -23,16 +23,16 @@ const PayrollDeduction = () => {
                     <Form.Item
                       label="Deductions Amount"
                       {...restField}
-                      name={[name, "first"]}
+                      name={[name, "amount"]}
                     >
-                      <Input placeholder="Deductions Amount" />
+                      <Input placeholder="Deductions Amount" type="number" />
                     </Form.Item>
                   </Col>
                   <Col lg={10}>
                     <Form.Item
                       label="Deductions Reasons"
                       {...restField}
-                      name={[name, "last"]}
+                      name={[name, "remarks"]}
                     >
                       <Input placeholder="Deductions Reasons" />
                     </Form.Item>

@@ -23,7 +23,7 @@ const payrollEndPoints = api.injectEndpoints({
       ],
     }),
 
-    createPayroll: builder.mutation<ApiResponse<IGetPayroll>, FormData>({
+    createPayroll: builder.mutation<ApiResponse<IGetPayroll>, any>({
       query: (data) => ({
         url: "/api/v1.0/payrolls/",
         method: "POST",
@@ -41,8 +41,8 @@ const payrollEndPoints = api.injectEndpoints({
     }),
 
     getSinglePayroll: builder.query<ApiResponse<any>, number>({
-      query: (studId) => ({
-        url: `/api/v1.0/payrolls/${studId}/`,
+      query: (payrollId) => ({
+        url: `/api/v1.0/payrolls/${payrollId}/`,
       }),
 
       providesTags: [
@@ -55,7 +55,7 @@ const payrollEndPoints = api.injectEndpoints({
 
     updatePayroll: builder.mutation<
       ApiResponse<any>,
-      { id: number | undefined; data: FormData }
+      { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
         url: `/api/v1.0/payrolls/${id}/`,
