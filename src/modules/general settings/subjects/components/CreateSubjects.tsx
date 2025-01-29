@@ -42,13 +42,12 @@ const CreateSubject = () => {
               rules={[{ required: true, message: "Select Class " }]}
             >
               <Select placeholder="Select Class" className="w-full">
-                {GetClassData?.data?.results?.map(
-                  (data: any, index: number) => (
+                {Array.isArray(GetClassData?.data) &&
+                  GetClassData?.data?.map((data: any, index: number) => (
                     <Select.Option key={index} value={data?.id}>
                       {data?.name}
                     </Select.Option>
-                  )
-                )}
+                  ))}
               </Select>
             </Form.Item>
           </Col>

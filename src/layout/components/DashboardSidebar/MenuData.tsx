@@ -18,6 +18,7 @@ import {
   MdAccountBalanceWallet,
   MdCoPresent,
   MdOutlinePayments,
+  MdPayment,
 } from "react-icons/md";
 import { FaPiggyBank, FaRegNoteSticky } from "react-icons/fa6";
 import { TbCoinTaka, TbFileInvoice } from "react-icons/tb";
@@ -129,9 +130,9 @@ const MenuData: React.FC = () => {
       icon: <MdOutlinePayments />,
     },
     {
-      key: "/salary",
-      label: <Link to="/salary">Salary</Link>,
-      icon: <MdOutlinePayments />,
+      key: "/payment",
+      label: <Link to="/payment">Payment</Link>,
+      icon: <MdPayment />,
     },
     // {
     //   key: "/fees",

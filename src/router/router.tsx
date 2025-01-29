@@ -57,6 +57,8 @@ import ViewSingleStudentsAttendanceList from "../modules/general settings/attend
 import SingleViewEmployee from "../modules/members/employees/components/SingleViewEmployee";
 import PayrollPage from "../modules/Finance Management/payroll/pages/PayrollPages";
 import ViewPayroll from "../modules/Finance Management/payroll/components/ViewPayroll";
+import PaymentPage from "../modules/Finance Management/payment/pages/PaymentPage";
+import ViewPayment from "../modules/Finance Management/payment/components/ViewPayment";
 
 const router = createBrowserRouter([
   {
@@ -250,8 +252,24 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // payroll
 
+      // payment
+      {
+        path: "/payment",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <PaymentPage />,
+          },
+          {
+            path: "payment-view/:paymentId",
+            element: <ViewPayment />,
+          },
+        ],
+      },
+
+      // payroll
       {
         path: "/payroll",
         element: <Accounts />,
@@ -266,7 +284,7 @@ const router = createBrowserRouter([
           },
         ],
       },
-
+      // _______________________________________________________________________________________________________________
       // new for education
       {
         path: "/moneyreceipt",

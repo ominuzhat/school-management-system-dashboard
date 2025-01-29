@@ -80,7 +80,7 @@ export const CreateCommonButton = ({ to, btnName }: any) => {
     <Button>
       <Link
         to={to}
-          className="border px-6 py-2 rounded-lg bg-baseColor text-white"
+        className="border px-6 py-2 rounded-lg bg-baseColor text-white"
       >
         {btnName}
       </Link>
@@ -152,11 +152,19 @@ export const CustomMonthPicker: React.FC<CustomMonthPickerProps> = ({
   );
 };
 
-export const CommonPaymentMethod = () => {
+export const CommonPaymentMethod = ({
+  value,
+  onChange,
+}: {
+  value?: string;
+  onChange?: (val: string) => void;
+}) => {
   return (
     <Select
       showSearch
       placeholder="Search Payment"
+      value={value}
+      onChange={onChange}
       filterOption={(input, option: any) =>
         (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
       }
@@ -165,15 +173,15 @@ export const CommonPaymentMethod = () => {
           value: "cash",
           label: (
             <p>
-              <DollarOutlined className="me-2" /> Cash{" "}
+              <DollarOutlined className="me-2" /> Cash
             </p>
           ),
         },
         {
-          value: "bank",
+          value: "bank_transfer",
           label: (
             <p>
-              <BankOutlined className="me-2" /> bank{" "}
+              <BankOutlined className="me-2" /> Bank
             </p>
           ),
         },
@@ -181,8 +189,7 @@ export const CommonPaymentMethod = () => {
           value: "mobile_banking",
           label: (
             <p>
-              <MobileOutlined className="me-2" />
-              Mobile Banking
+              <MobileOutlined className="me-2" /> Mobile Banking
             </p>
           ),
         },
@@ -195,7 +202,7 @@ export const CommonPaymentMethod = () => {
           ),
         },
         {
-          value: "credit_card",
+          value: "cheque",
           label: (
             <p>
               <WalletOutlined className="me-2" /> Cheque

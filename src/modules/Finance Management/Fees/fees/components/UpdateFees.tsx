@@ -94,10 +94,12 @@ const UpdateFees = ({ record }: { record: any }) => {
                     classLoading ? "Loading classes..." : "Please select"
                   }
                   options={
-                    classData?.data?.map((classItem: any) => ({
-                      label: classItem.name,
-                      value: classItem.id,
-                    })) || []
+                    (Array.isArray(classData?.data) &&
+                      classData?.data?.map((classItem: any) => ({
+                        label: classItem.name,
+                        value: classItem.id,
+                      }))) ||
+                    []
                   }
                 />
               </Form.Item>
@@ -120,10 +122,12 @@ const UpdateFees = ({ record }: { record: any }) => {
                     studentLoading ? "Loading Students..." : "Please select"
                   }
                   options={
-                    studentData?.data?.map((studentItem: any) => ({
-                      label: studentItem.user.username,
-                      value: studentItem.id,
-                    })) || []
+                    (Array.isArray(studentData?.data) &&
+                      studentData?.data?.map((studentItem: any) => ({
+                        label: studentItem.user.username,
+                        value: studentItem.id,
+                      }))) ||
+                    []
                   }
                 />
               </Form.Item>
@@ -146,10 +150,12 @@ const UpdateFees = ({ record }: { record: any }) => {
                     subjectLoading ? "Loading Subjects..." : "Please select"
                   }
                   options={
-                    subjectData?.data?.map((subjectItem: any) => ({
-                      label: subjectItem.name,
-                      value: subjectItem.id,
-                    })) || []
+                    (Array.isArray(subjectData?.data) &&
+                      subjectData?.data?.map((subjectItem: any) => ({
+                        label: subjectItem.name,
+                        value: subjectItem.id,
+                      }))) ||
+                    []
                   }
                 />
               </Form.Item>
