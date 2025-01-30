@@ -17,13 +17,15 @@ export const TagTypes = {
   ClASSES: "Classes",
   SUBJECTS: "Subjects",
   PROFILE: "Profile",
-  FESS: "Fess",
+  FESS: "Fees",
+  TUITION_FEES: "Tuition_fees",
   PAYROLL: "Payroll",
   PAYMENT: "Payment",
   ADMISSION: "Admission",
   DEPARTMENT: "Department",
   ADMISSION_SESSION: "Admission_Session",
   STUDENT_ATTENDANCE: "Student_Attendance",
+  TEACHER_ATTENDANCE: "Teacher_Attendance",
 } as const;
 
 export type TagType = (typeof TagTypes)[keyof typeof TagTypes];

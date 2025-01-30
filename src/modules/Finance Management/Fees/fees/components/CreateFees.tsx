@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Col, Row, Select, Tooltip } from "antd";
+import { Badge, Button, Card, Col, Row, Select, Switch, Tooltip } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import { useCreateFeesMutation } from "../api/feesEndpoints";
 import { useState } from "react";
@@ -106,10 +106,12 @@ const CreateFees = () => {
                     classLoading ? "Loading classes..." : "Please select"
                   }
                   options={
-                    classData?.data?.results?.map((classItem: any) => ({
-                      label: classItem.name,
-                      value: classItem.id,
-                    })) || []
+                    (Array?.isArray(classData?.data) &&
+                      classData?.data?.map((classItem: any) => ({
+                        label: classItem.name,
+                        value: classItem.id,
+                      }))) ||
+                    []
                   }
                 />
               </Form.Item>
@@ -159,7 +161,7 @@ const CreateFees = () => {
                   }
                   options={
                     subjectData?.data?.results?.map((subjectItem: any) => ({
-                      label: subjectItem.name,
+                      label: `${subjectItem.name} (${subjectItem?.grade_level?.name})`,
                       value: subjectItem.id,
                     })) || []
                   }
@@ -167,7 +169,11 @@ const CreateFees = () => {
               </Form.Item>
             </Col>
           )}
-
+          <Col>
+            <Form.Item label="Package" name="package" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+          </Col>
           <Col className="flex items-center justify-center">
             <Tooltip
               className="text-black"

@@ -62,9 +62,16 @@ const useTeacherColumns = (): ColumnsType<any> => {
       align: "center",
       render: (hire_date) => (hire_date ? hire_date : "N/A"),
     },
-
     {
       key: "6",
+      title: "Base Salary",
+      dataIndex: "base_salary",
+      align: "center",
+      render: (base_salary) => (base_salary ? base_salary : "N/A"),
+    },
+
+    {
+      key: "7",
       title: "Active",
       dataIndex: "is_active",
       align: "center",

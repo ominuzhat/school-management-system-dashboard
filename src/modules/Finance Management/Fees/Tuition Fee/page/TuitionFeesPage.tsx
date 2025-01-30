@@ -1,25 +1,25 @@
-import { Button, Card, Col, Row, Select } from "antd";
+import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../../app/features/modalSlice";
-import CreateFees from "../components/CreateFees";
 import { PlusOutlined } from "@ant-design/icons";
 import { SearchComponent } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useState } from "react";
 import { Table } from "../../../../../common/CommonAnt";
-import { useGetFeesQuery } from "../api/feesEndpoints";
-import useFeesColumns from "../utils/FeesColumns";
-import { useGetClassesQuery } from "../../../../general settings/classes/api/classesEndPoints";
+import { useGetTuitionFeesQuery } from "../api/tuitionFeeEndPoints";
+import useTuitionFeesColumns from "../utils/tuitionFeesColumns";
+import { IGetTuitionFee } from "../type/tuitionFeeTypes";
+import CreateTuitionFees from "../component/CreateTuitionFees";
 
-const FeesPage = () => {
+const TuitionFeesPage = () => {
   const dispatch = useDispatch();
-  const { data: feesList, isLoading } = useGetFeesQuery({});
-  const { data: classData } = useGetClassesQuery({});
+  const { data: tuitionFees, isLoading } = useGetTuitionFeesQuery({});
   const [search, setSearch] = useState("");
 
-  const dataLength = (feesList?.data as any[] | undefined)?.length ?? 0;
+  const dataLength =
+    (tuitionFees?.data as IGetTuitionFee[] | undefined)?.length ?? 0;
 
-  const dataSource = (feesList?.data as any[] | undefined) ?? [];
+  const dataSource = (tuitionFees?.data as IGetTuitionFee[] | undefined) ?? [];
 
   return (
     <div>
@@ -34,29 +34,19 @@ const FeesPage = () => {
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Add Fees",
-                    content: <CreateFees />,
+                    title: "Add Tuition Fees",
+                    content: <CreateTuitionFees />,
                   })
                 )
               }
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Add Fees
+              Add Tuition Fees
             </Button>
           </Col>
           <Col lg={10} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
-              <Col lg={12} xs={12}>
-                <Select placeholder="Select Class" className="w-full">
-                  {Array?.isArray(classData?.data) &&
-                    classData?.data?.map((data) => (
-                      <Select.Option key={data.id} value={data?.id}>
-                        {data?.name}
-                      </Select.Option>
-                    ))}
-                </Select>
-              </Col>
               <Col lg={12} xs={12}>
                 <SearchComponent
                   onSearch={(value) => setSearch(value)}
@@ -72,10 +62,10 @@ const FeesPage = () => {
         loading={isLoading}
         total={dataLength}
         dataSource={dataSource}
-        columns={useFeesColumns()}
+        columns={useTuitionFeesColumns()}
       />
     </div>
   );
 };
 
-export default FeesPage;
+export default TuitionFeesPage;

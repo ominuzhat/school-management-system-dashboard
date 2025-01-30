@@ -4,8 +4,8 @@ export type TAttendanceRecord = {
 };
 
 export type TAttendanceData = {
-  session: number; // Session ID
-  grade_level: number; // Grade level ID
-  date: string; // The date for the attendance record
-  records: TAttendanceRecord[]; // List of attendance records
+  session: number; 
+  grade_level: number; 
+  date: string; 
+  records: TAttendanceRecord[];
 };

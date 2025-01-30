@@ -1,52 +1,66 @@
-import { Button, Card, Col, DatePicker, Row, Select, Table } from "antd";
+import { Button, Card, Col, DatePicker, notification, Row } from "antd";
 import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
-import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
-import { useState } from "react";
-import MarkTeachersAttendanceColumns from "../utils/MarkTeacherAttendanceColumn";
-
-const dataSource = [
-  {
-    key: "1",
-    id: "101",
-    photo: "https://via.placeholder.com/50", // Placeholder for student photo
-    studentName: "John Doe",
-    fatherName: "Michael Doe",
-    status: "",
-    description: "john Doe has due",
-  },
-  {
-    key: "2",
-    id: "102",
-    photo: "https://via.placeholder.com/50",
-    studentName: "Jane Smith",
-    fatherName: "Robert Smith",
-    status: "",
-  },
-  {
-    key: "3",
-    id: "103",
-    photo: "https://via.placeholder.com/50",
-    studentName: "Emily Johnson",
-    fatherName: "David Johnson",
-    status: "",
-  },
-];
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { MdOutlineArrowRightAlt } from "react-icons/md";
+import { useCreateTeacherAttendanceMutation } from "../api/teacherAttendanceEndPoints";
+import { useGetTeacherQuery } from "../../../../members/teachers/api/teachersEndPoints";
+import { useGetEmployeeQuery } from "../../../../members/employees/api/employeeEndPoints";
+import { Table } from "../../../../../common/CommonAnt";
+import useMarkTeacherAttendanceColumns from "../utils/MarkTeacherAttendanceColumn";
 
 const MarkTeachersAttendance = () => {
-  const [statusMap, setStatusMap] = useState<{ [key: string]: string }>(
-    dataSource.reduce((acc, student) => {
-      acc[student.id] = student.status || "present";
-      return acc;
-    }, {} as { [key: string]: string })
-  );
+  const [result, setResult] = useState<Record<string, any> | null>(null);
+  const [formData, setFormData] = useState({
+    date: dayjs().format("YYYY-MM-DD"),
+  });
+  const [allData, setAllData] = useState([]);
+  const [create] = useCreateTeacherAttendanceMutation();
+  const { data: teacherData, isLoading } = useGetTeacherQuery({});
+  const { data: employeeData } = useGetEmployeeQuery({});
 
-  const handleSetAllStatus = (status: string) => {
-    const updatedStatusMap: { [key: string]: string } = {};
-    dataSource.forEach((student) => {
-      updatedStatusMap[student.id] = status;
-    });
-    setStatusMap(updatedStatusMap);
+  console.log(allData);
+
+  useEffect(() => {
+    if (teacherData?.data?.results && employeeData?.data?.results) {
+      setAllData([
+        ...teacherData?.data?.results,
+        ...employeeData?.data?.results,
+      ]);
+    }
+  }, [teacherData, employeeData]);
+  // const handleChange = (key: string, value: any) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [key]: value,
+  //   }));
+  // };
+
+  // fetchAdmissionData(formData);
+
+  // const handleSearch = () => {
+  //   if (formData.session && formData.grade_level) {
+  //   } else {
+  //     notification.open({
+  //       message: "Alert",
+  //       description: "Select Class and Session First",
+  //     });
+  //   }
+  // };
+
+  console.log(result);
+
+  const handleAttendanceSubmit = () => {
+    if (result) {
+      // create(result as any);
+    } else {
+      notification.error({
+        message: "Error",
+        description:
+          "Attendance data is missing. Please check before submitting.",
+      });
+    }
   };
 
   return (
@@ -54,68 +68,60 @@ const MarkTeachersAttendance = () => {
       <div className="my-5">
         <BreadCrumb />
       </div>
+      <Link to="/attendance/mark-teacher-attendance-list">
+        <p
+          style={{
+            fontSize: "14px",
+            fontWeight: "400",
+            color: "#1890ff",
+            padding: "8px 16px",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
+          }}
+          className="flex items-center gap-2  w-64"
+        >
+          View List of Attendance <MdOutlineArrowRightAlt className="text-xl" />
+        </p>
+      </Link>
+
       <Card>
         <Row justify="space-between" align="middle" gutter={[10, 10]}>
-          <Col lg={8}>
-            <Row gutter={[16, 16]}>
-              <Col lg={12} xs={24}>
-                <DatePicker
-                  className="w-full"
-                  defaultValue={dayjs()}
-                  format="YYYY-MM-DD"
-                />
-              </Col>
-              <Col lg={12} xs={24}>
-                <Select placeholder="Select Class" className="w-full">
-                  <Select.Option value={1}>1</Select.Option>
-                </Select>
-              </Col>
-            </Row>
-          </Col>
-
-          <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={false}
-              icon={<Iconify name="iconamoon:send-fill" />}
+          <Col lg={3} xs={24}>
+            <DatePicker
               className="w-full"
-            >
-              Submit Attendance
-            </Button>
+              defaultValue={dayjs()}
+              format="YYYY-MM-DD"
+              onChange={(date) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  date: date?.format("YYYY-MM-DD"),
+                }))
+              }
+            />
           </Col>
         </Row>
       </Card>
 
-      <Table
-        columns={MarkTeachersAttendanceColumns(
-          dataSource,
-          statusMap,
-          setStatusMap,
-          handleSetAllStatus
-        )}
-        dataSource={dataSource}
-        pagination={false}
-        loading={false}
-        expandable={{
-          expandedRowRender: (record) => (
-            <p style={{ margin: 0 }}>{record.description}</p>
-          ),
-          rowExpandable: (record) => record.name !== "Not Expandable",
-        }}
-      />
-      {/* <Table
-          loading={false}
-          total={0}
-          dataSource={dataSource}
-          columns={MarkStudentsAttendanceColumns(
-            dataSource,
-            statusMap,
-            setStatusMap,
-            handleSetAllStatus
-          )}
+      <Card>
+        <Table
+          loading={isLoading}
+          dataSource={allData || []}
+          columns={useMarkTeacherAttendanceColumns({
+            attendanceData: (allData as any) || [],
+            formData,
+            setResult,
+          })}
           pagination={false}
-        /> */}
+          rowKey="id"
+        />
+        <Button
+          className="mt-5"
+          type="primary"
+          onClick={handleAttendanceSubmit}
+        >
+          Submit Attendance
+        </Button>
+      </Card>
     </div>
   );
 };

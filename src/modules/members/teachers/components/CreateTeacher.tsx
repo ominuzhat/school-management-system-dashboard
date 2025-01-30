@@ -171,7 +171,15 @@ const CreateTeacher = () => {
                           <Input placeholder="Enter Mobile Number" />
                         </Form.Item>
                       </Col>
-
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Base Salary"
+                          name="base_salary"
+                          rules={[{ required: true, message: "Base Salary!" }]}
+                        >
+                          <Input placeholder="Base Salary." />
+                        </Form.Item>
+                      </Col>
                       <Col lg={8}>
                         <Form.Item<any>
                           label="Username"

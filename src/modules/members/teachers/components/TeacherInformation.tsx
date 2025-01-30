@@ -13,6 +13,7 @@ const TeacherInformation = ({ data }: { data: any }) => {
     email,
     date_of_birth,
     address,
+    base_salary,
   } = data || {};
 
   const information = [
@@ -61,8 +62,8 @@ const TeacherInformation = ({ data }: { data: any }) => {
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Blood Group",
-          text: "O+",
+          fieldName: "Base Salary",
+          text: base_salary || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],

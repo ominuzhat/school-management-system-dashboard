@@ -1,4 +1,5 @@
-import { Badge, Button, Card, Col, Form, Row, Select } from "antd";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Badge, Button, Card, Col, Form, Row, Select, Switch } from "antd";
 import { useState, useEffect } from "react";
 import {
   useGetSingleFeesQuery,
@@ -11,7 +12,7 @@ import MultipleFeesItemForm from "./MultipleFeesItemForm";
 
 const UpdateFees = ({ record }: { record: any }) => {
   const { data: feeData } = useGetSingleFeesQuery(Number(record));
-  const [updateFees, { isLoading, isSuccess }] = useUpdateFeesMutation();
+  const [updateFees, { isLoading }] = useUpdateFeesMutation();
 
   const { data: classData, isLoading: classLoading } = useGetClassesQuery({});
   const { data: studentData, isLoading: studentLoading } = useGetStudentsQuery(
@@ -29,9 +30,10 @@ const UpdateFees = ({ record }: { record: any }) => {
     if (feeData) {
       form.setFieldsValue({
         fee_type: feeData.data?.fee_type,
-        grade_level: feeData.data?.grade_level?.map((level: any) => level.id),
-        student: feeData.data?.student?.map((level: any) => level.id),
-        subject: feeData.data?.subject?.map((level: any) => level.id),
+        package: feeData.data?.package,
+        grade_level: feeData?.data?.grade_level?.map((level: any) => level.id),
+        student: feeData?.data?.student?.map((level: any) => level?.id),
+        subject: feeData?.data?.subject?.map((level: any) => level?.id),
         fees: feeData.data?.fees,
       });
       setFeeType(feeData?.data?.fee_type);
@@ -122,12 +124,10 @@ const UpdateFees = ({ record }: { record: any }) => {
                     studentLoading ? "Loading Students..." : "Please select"
                   }
                   options={
-                    (Array.isArray(studentData?.data) &&
-                      studentData?.data?.map((studentItem: any) => ({
-                        label: studentItem.user.username,
-                        value: studentItem.id,
-                      }))) ||
-                    []
+                    studentData?.data?.results?.map((studentItem: any) => ({
+                      label: studentItem.user.username,
+                      value: studentItem.id,
+                    })) || []
                   }
                 />
               </Form.Item>
@@ -150,17 +150,20 @@ const UpdateFees = ({ record }: { record: any }) => {
                     subjectLoading ? "Loading Subjects..." : "Please select"
                   }
                   options={
-                    (Array.isArray(subjectData?.data) &&
-                      subjectData?.data?.map((subjectItem: any) => ({
-                        label: subjectItem.name,
-                        value: subjectItem.id,
-                      }))) ||
-                    []
+                    subjectData?.data?.results?.map((subjectItem: any) => ({
+                      label: subjectItem?.name,
+                      value: subjectItem.id,
+                    })) || []
                   }
                 />
               </Form.Item>
             </Col>
           )}
+          <Col>
+            <Form.Item label="Package" name="package" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+          </Col>
 
           <Col lg={24}>
             <Badge.Ribbon text="Particulars" color="blue" placement="start">

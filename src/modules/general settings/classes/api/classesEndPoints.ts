@@ -23,7 +23,7 @@ const classesEndpoint = api.injectEndpoints({
       ],
     }),
 
-    createClasses: builder.mutation<ApiResponse<IClasses>, FormData>({
+    createClasses: builder.mutation<ApiResponse<IClasses>, any>({
       query: (data) => ({
         url: "/api/v1.0/institutions/grade-levels/",
         method: "POST",

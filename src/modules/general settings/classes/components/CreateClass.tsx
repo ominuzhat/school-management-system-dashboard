@@ -7,23 +7,11 @@ const CreateClass = () => {
   const [create, { isLoading, isSuccess }] = useCreateClassesMutation();
   const { data: teacherData } = useGetTeacherQuery({});
 
-  console.log(teacherData);
   const onFinish = (values: any): void => {
-    const formData: FormData = new FormData();
 
-    Object.entries(values).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        value.forEach((item) => {
-          formData.append(key, item);
-        });
-      } else if (value instanceof File || value instanceof Blob) {
-        formData.append(key, value);
-      } else {
-        formData.append(key, value as string | Blob);
-      }
-    });
 
-    create(formData);
+
+    create(values);
   };
 
   return (
@@ -45,16 +33,7 @@ const CreateClass = () => {
             </Form.Item>
           </Col>
           <Col lg={12}>
-            <Form.Item
-              label="Select Class Teacher"
-              name="class_teacher"
-              rules={[
-                {
-                  required: true,
-                  message: "Class Teacher selection is required!",
-                },
-              ]}
-            >
+            <Form.Item label="Select Class Teacher" name="class_teacher">
               <Select placeholder="Select Class Teacher" className="w-full">
                 {teacherData?.data?.results?.map((teacher: any) => (
                   <Select.Option key={teacher.id} value={teacher.id}>
@@ -65,11 +44,7 @@ const CreateClass = () => {
             </Form.Item>
           </Col>
           <Col lg={24}>
-            <Form.Item
-              label="Description"
-              name="description"
-              rules={[{ required: true, message: "Description is required!" }]}
-            >
+            <Form.Item label="Description" name="description">
               <Input.TextArea placeholder="Enter Description" rows={4} />
             </Form.Item>
           </Col>

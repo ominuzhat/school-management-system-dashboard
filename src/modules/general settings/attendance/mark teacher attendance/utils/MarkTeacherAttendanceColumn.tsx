@@ -1,49 +1,117 @@
-import { Radio, Space, Button } from "antd";
-import { ColumnsType } from "antd/es/table";
+import { Button, Radio, Space } from "antd";
+import { useEffect, useState } from "react";
 
-const MarkTeachersAttendanceColumns = (
-  students: any[],
-  statusMap: any,
-  setStatusMap: any,
-  handleSetAllStatus: any
-): ColumnsType<any> => {
-  const handleStatusChange = (e: any, recordId: any) => {
+const useMarkTeacherAttendanceColumns = ({
+  attendanceData,
+  formData,
+  setResult,
+}: {
+  attendanceData: any[];
+  formData: any;
+  setResult: any;
+}) => {
+  const [admission, setAdmission] = useState<any[]>([]);
+  const [statusMap, setStatusMap] = useState<Record<string, string>>({});
+  const [previousAttendanceData, setPreviousAttendanceData] = useState<any[]>(
+    []
+  );
+
+
+  useEffect(() => {
+    if (
+      JSON.stringify(attendanceData) !== JSON.stringify(previousAttendanceData)
+    ) {
+      const initialStatusMap: Record<string, string> = {};
+      const initialAdmission = attendanceData?.map((teacher) => {
+        const status =
+          teacher?.status === "not marked"
+            ? "present"
+            : teacher?.status || "present";
+        initialStatusMap[teacher?.id] = status;
+        return {
+          admission: teacher?.id,
+          status: status,
+        };
+      });
+
+      setStatusMap(initialStatusMap);
+      setAdmission(initialAdmission);
+      setPreviousAttendanceData(attendanceData);
+    }
+  }, [attendanceData, previousAttendanceData]);
+
+  useEffect(() => {
+    if (formData && admission.length > 0) {
+      const result = {
+        date: formData.date,
+        records: admission,
+      };
+      setResult(result);
+    }
+  }, [formData, admission, setResult]);
+
+  const handleStatusChange = (e: any, recordId: string) => {
     const value = e.target.value;
-    setStatusMap((prevStatusMap: any) => ({
+    setStatusMap((prevStatusMap) => ({
       ...prevStatusMap,
       [recordId]: value,
     }));
+
+    setAdmission((prevData) => {
+      const updatedData = prevData.filter(
+        (item) => item.admission !== recordId
+      );
+      return [...updatedData, { admission: Number(recordId), status: value }];
+    });
+  };
+
+  const handleSetAllStatus = (status: string) => {
+    const updatedStatusMap: Record<string, string> = {};
+    const updatedAdmission = attendanceData?.map((teacher) => {
+      updatedStatusMap[teacher?.id] = status;
+      return {
+        admission: teacher?.id,
+        status: status,
+      };
+    });
+
+    setStatusMap(updatedStatusMap);
+    setAdmission(updatedAdmission);
+    setResult(updatedAdmission);
   };
 
   return [
     {
-      key: "0",
-      title: "SL",
+      title: "Name",
+      dataIndex: "first_name",
+      key: "teacher",
       align: "center",
-      render: (_text, _record, index) => index + 1,
-    },
-    {
-      key: "1",
-      title: "Teacher Name",
-      dataIndex: "studentName",
-      align: "center",
-      render: (title) => (title ? title : "N/A"),
-    },
-    {
-      key: "2",
-      title: "Father Name",
-      dataIndex: "fatherName",
-      align: "center",
-      render: (title) => (title ? title : "N/A"),
-    },
-    {
-      key: "2",
-      title: "Employee Type",
-      dataIndex: "fatherName",
-      align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (_: any, record: any) =>
+        `${record.first_name} ${record.last_name}`,
     },
 
+    {
+      title: "User Name",
+      dataIndex: "user",
+      key: "user",
+      align: "center",
+      render: (user: any) => <span>{user?.username}</span>,
+    },
+
+    {
+      title: "Role Name",
+      dataIndex: "phone_number",
+      key: "user",
+      align: "center",
+      render: (phone_number: any) => <span>{phone_number}</span>,
+    },
+    {
+      title: "Role Name",
+      dataIndex: "user",
+      key: "user",
+      align: "center",
+      render: (user: any) => <span>{user?.role?.name}</span>,
+    },
     {
       title: (
         <div className="flex items-center justify-center gap-5">
@@ -58,15 +126,15 @@ const MarkTeachersAttendanceColumns = (
       ),
       width: 400,
       align: "center",
-      render: (record) => (
+      render: (record: any) => (
         <Space>
           <Radio.Group
-            onChange={(e) => handleStatusChange(e, record?.id)}
-            value={statusMap[record?.id] || "present"}
+            onChange={(e) => handleStatusChange(e, record.admission.id)}
+            value={statusMap[record.admission?.id] || "present"}
           >
-            <Radio value={"present"}>P</Radio>
-            <Radio value={"late"}>L</Radio>
-            <Radio value={"absent"}>A</Radio>
+            <Radio value="present">P</Radio>
+            <Radio value="late">L</Radio>
+            <Radio value="absent">A</Radio>
           </Radio.Group>
         </Space>
       ),
@@ -74,4 +142,6 @@ const MarkTeachersAttendanceColumns = (
   ];
 };
 
-export default MarkTeachersAttendanceColumns;
+export default useMarkTeacherAttendanceColumns;
+
+

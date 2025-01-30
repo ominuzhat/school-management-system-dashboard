@@ -22,9 +22,9 @@ const CreateOldStudent = () => {
   const { data: classData } = useGetClassesQuery({});
   const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
 
-  const onFinish = (values: any): void => {
-    console.log(values);
+  console.log(subjectData?.data?.results);
 
+  const onFinish = (values: any): void => {
     const result: any = {
       discount_type: values.discount_type,
       discount_value: values.discount_value,
@@ -182,7 +182,7 @@ const CreateOldStudent = () => {
                   >
                     {subjectData?.data?.results?.map((data: any) => (
                       <option key={data.id} value={data.id}>
-                        {data.name}
+                        {data.name} ({data?.grade_level?.name})
                       </option>
                     ))}
                   </select>

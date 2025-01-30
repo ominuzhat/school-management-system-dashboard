@@ -188,7 +188,14 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                           <Input placeholder="Enter Mobile Number" />
                         </Form.Item>
                       </Col>
-
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Base Salary"
+                          name="base_salary"
+                        >
+                          <Input placeholder="Base Salary." />
+                        </Form.Item>
+                      </Col>
                       <Col lg={8}>
                         <Form.Item label="Username" name="username">
                           <Input placeholder="Username." />

@@ -25,6 +25,23 @@ const rolePermissionEndPoint = api.injectEndpoints({
       ],
     }),
 
+    createRole: builder.mutation<ApiResponse<any>, FormData>({
+      query: (data) => ({
+        url: "api/v1.0/institutions/roles/",
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.ROLE_PERMISSION,
+          id: TagTypes.ROLE_PERMISSION + "_ID",
+        },
+      ],
+    }),
+
     getRolePermission: builder.query<
       ApiResponse<TGetRolePermission[]>,
       FilterTypes
@@ -92,6 +109,7 @@ const rolePermissionEndPoint = api.injectEndpoints({
 });
 
 export const {
+  useCreateRoleMutation,
   useGetRolePermissionQuery,
   useGetSingleRolePermissionQuery,
   useGetPermissionQuery,

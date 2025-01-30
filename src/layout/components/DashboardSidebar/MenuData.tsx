@@ -151,6 +151,11 @@ const MenuData: React.FC = () => {
           key: "/fees",
         },
         {
+          label: <Link to="/tuition-fees">Tuition Fees</Link>,
+          icon: <BiSolidUserAccount />,
+          key: "/tuition-fees",
+        },
+        {
           label: <Link to="/fees/fees-particular">Fees Particulars</Link>,
           icon: <HiOutlineCash />,
           key: "/fees/fees-particular",
