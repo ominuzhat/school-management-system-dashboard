@@ -19,6 +19,7 @@ export const TagTypes = {
   PROFILE: "Profile",
   FESS: "Fees",
   TUITION_FEES: "Tuition_fees",
+  TUITION_FEES_PAYMENT: "Tuition_fees_Payment",
   PAYROLL: "Payroll",
   PAYMENT: "Payment",
   ADMISSION: "Admission",

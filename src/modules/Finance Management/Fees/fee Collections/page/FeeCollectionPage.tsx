@@ -1,17 +1,19 @@
-import { Col, DatePicker, Row, Select } from "antd";
+import { Col, DatePicker, Input, Row, Select } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
-import { useCreateTuitionFeesMutation } from "../api/tuitionFeeEndPoints";
 import { useGetAdmissionQuery } from "../../../../general settings/admission/api/admissionEndPoints";
 import { debounce } from "lodash";
 import { useState } from "react";
 import dayjs from "dayjs";
+import { useCreateTuitionFeesMutation } from "../../Tuition Fee/api/tuitionFeeEndPoints";
 
-const CreateTuitionFees = () => {
+const FeeCollectionPage = () => {
   const [search, setSearch] = useState("");
   const [create, { isLoading, isSuccess }] = useCreateTuitionFeesMutation();
   const { data: admissionData, isFetching } = useGetAdmissionQuery({
     search: search,
   });
+
+  console.log(admissionData?.data);
 
   const onFinish = (values: any): void => {
     const formattedValues = {
@@ -52,6 +54,52 @@ const CreateTuitionFees = () => {
             </Form.Item>
           </Col>
 
+          <Col>
+            <Form.Item label="Class" name="class">
+              <Input placeholder="Class" />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label="Section" name="Section">
+              <Input placeholder="Section" />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label="Roll" name="Roll">
+              <Input placeholder="Roll" />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label="Shift" name="Shift">
+              <Input placeholder="Shift" />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label="Due" name="Due">
+              <Input placeholder="Due" />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label="Tuition Fee" name="Tuition Fee">
+              <Input placeholder="Tuition Fee" />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label="Picnic" name="Picnic">
+              <Input placeholder="Picnic" />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label="Due" name="Due">
+              <Input placeholder="Due" />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label="Due" name="Due">
+              <Input placeholder="Due" />
+            </Form.Item>
+          </Col>
+
           <Col lg={8}>
             <Form.Item<any>
               label="Date"
@@ -72,4 +120,4 @@ const CreateTuitionFees = () => {
   );
 };
 
-export default CreateTuitionFees;
+export default FeeCollectionPage;

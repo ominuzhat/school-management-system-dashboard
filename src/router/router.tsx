@@ -60,6 +60,8 @@ import ViewPayroll from "../modules/Finance Management/payroll/components/ViewPa
 import PaymentPage from "../modules/Finance Management/payment/pages/PaymentPage";
 import ViewPayment from "../modules/Finance Management/payment/components/ViewPayment";
 import TuitionFeesPage from "../modules/Finance Management/Fees/Tuition Fee/page/TuitionFeesPage";
+import TuitionFeePaymentPage from "../modules/Finance Management/Tuition payment/pages/TuitionFeePaymentPage";
+import FeeCollectionPage from "../modules/Finance Management/Fees/fee Collections/page/FeeCollectionPage";
 
 const router = createBrowserRouter([
   {
@@ -200,6 +202,14 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // ------------------------------------
+
+      {
+        path: "/fee-collection",
+        element: <FeeCollectionPage />,
+      },
+
+      // --------------------------------------
       // Tuition Fees
       {
         path: "/tuition-fees",
@@ -216,6 +226,23 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // Tuition Fees Payment
+      {
+        path: "/tuition-fees-payment",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <TuitionFeePaymentPage />,
+          },
+
+          {
+            path: "fees-view/:feesId",
+            element: <FeesView />,
+          },
+        ],
+      },
+
       // attendance
       {
         path: "/attendance",

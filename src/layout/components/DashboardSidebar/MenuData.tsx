@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { ThemesTypes } from "../../../app/features/themeSlice";
 import SidebarButtom from "./SidebarButtom";
-import { PiStudent } from "react-icons/pi";
+import { PiContactlessPaymentBold, PiStudent } from "react-icons/pi";
 import { SiGoogleclassroom } from "react-icons/si";
 import {
   IoAccessibilityOutline,
@@ -38,6 +38,7 @@ import {
 } from "react-icons/lia";
 import { IoMdPersonAdd } from "react-icons/io";
 import { VscGoToEditingSession } from "react-icons/vsc";
+import { RiLuggageDepositLine, RiSecurePaymentLine } from "react-icons/ri";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -129,22 +130,39 @@ const MenuData: React.FC = () => {
       label: <Link to="/payroll">Payroll</Link>,
       icon: <MdOutlinePayments />,
     },
-    {
-      key: "/payment",
-      label: <Link to="/payment">Payment</Link>,
-      icon: <MdPayment />,
-    },
     // {
-    //   key: "/fees",
-    //   label: <Link to="/fees">Fees</Link>,
-    //   icon: <TbCoinTaka />,
+    //   key: "/payment",
+    //   label: <Link to="/payment">Payment</Link>,
+    //   icon: <MdPayment />,
     // },
 
+    {
+      key: "/payment",
+      label: "payment",
+      icon: <MdPayment />,
+      children: [
+        {
+          label: <Link to="/payment">Payment</Link>,
+          icon: <PiContactlessPaymentBold />,
+          key: "/payment",
+        },
+        {
+          label: <Link to="/tuition-fees-payment">Tuition Fee Payment</Link>,
+          icon: <RiSecurePaymentLine />,
+          key: "/tuition-fees-payment",
+        },
+      ],
+    },
     {
       key: "/fees",
       label: "Fees",
       icon: <TbCoinTaka />,
       children: [
+        {
+          label: <Link to="/fee-collection">Fees Collection</Link>,
+          icon: <BiSolidUserAccount />,
+          key: "/fee-collection",
+        },
         {
           label: <Link to="/fees">Fees</Link>,
           icon: <BiSolidUserAccount />,
@@ -219,7 +237,7 @@ const MenuData: React.FC = () => {
     {
       key: "/department",
       label: <Link to="/department">Department</Link>,
-      icon: <IoBookOutline />,
+      icon: <RiLuggageDepositLine />,
     },
     {
       key: "/admission-session",
