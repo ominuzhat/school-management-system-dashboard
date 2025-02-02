@@ -1,59 +1,54 @@
 import { Button, Card, Col, DatePicker, notification, Row } from "antd";
 import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-import { useCreateTeacherAttendanceMutation } from "../api/teacherAttendanceEndPoints";
-import { useGetTeacherQuery } from "../../../../members/teachers/api/teachersEndPoints";
-import { useGetEmployeeQuery } from "../../../../members/employees/api/employeeEndPoints";
+import {
+  useCreateTeacherAttendanceMutation,
+  useLazyGetMarkTeacherAttendanceQuery,
+} from "../api/teacherAttendanceEndPoints";
 import { Table } from "../../../../../common/CommonAnt";
 import useMarkTeacherAttendanceColumns from "../utils/MarkTeacherAttendanceColumn";
+import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
 
 const MarkTeachersAttendance = () => {
   const [result, setResult] = useState<Record<string, any> | null>(null);
   const [formData, setFormData] = useState({
     date: dayjs().format("YYYY-MM-DD"),
   });
-  const [allData, setAllData] = useState([]);
   const [create] = useCreateTeacherAttendanceMutation();
-  const { data: teacherData, isLoading } = useGetTeacherQuery({});
-  const { data: employeeData } = useGetEmployeeQuery({});
 
-  console.log(allData);
+  const [fetchAttendanceData, { data: attendanceData, isLoading }] =
+    useLazyGetMarkTeacherAttendanceQuery({});
 
-  useEffect(() => {
-    if (teacherData?.data?.results && employeeData?.data?.results) {
-      setAllData([
-        ...teacherData?.data?.results,
-        ...employeeData?.data?.results,
-      ]);
+  const handleSearch = () => {
+    if (formData) {
+      fetchAttendanceData(formData);
+    } else {
+      notification.open({
+        message: "Alert",
+        description: "Select Date First",
+      });
     }
-  }, [teacherData, employeeData]);
-  // const handleChange = (key: string, value: any) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [key]: value,
-  //   }));
-  // };
-
-  // fetchAdmissionData(formData);
-
-  // const handleSearch = () => {
-  //   if (formData.session && formData.grade_level) {
-  //   } else {
-  //     notification.open({
-  //       message: "Alert",
-  //       description: "Select Class and Session First",
-  //     });
-  //   }
-  // };
-
-  console.log(result);
+  };
 
   const handleAttendanceSubmit = () => {
     if (result) {
-      // create(result as any);
+      create(result as any)
+        .unwrap()
+        .then(() => {
+          notification.success({
+            message: "Success",
+            description: "Attendance submitted successfully!",
+          });
+        })
+        .catch(() => {
+          notification.error({
+            message: "Error",
+            description: "Failed to submit attendance.",
+          });
+        });
     } else {
       notification.error({
         message: "Error",
@@ -99,20 +94,32 @@ const MarkTeachersAttendance = () => {
               }
             />
           </Col>
+
+          <Col lg={4} xs={24}>
+            <Button
+              type="primary"
+              htmlType="button"
+              icon={<Iconify name="iconamoon:send-fill" />}
+              className="w-full"
+              onClick={handleSearch}
+            >
+              Search Students
+            </Button>
+          </Col>
         </Row>
       </Card>
 
       <Card>
         <Table
           loading={isLoading}
-          dataSource={allData || []}
+          dataSource={attendanceData?.data?.records || []}
           columns={useMarkTeacherAttendanceColumns({
-            attendanceData: (allData as any) || [],
+            attendanceData: attendanceData?.data?.records || [],
             formData,
             setResult,
           })}
           pagination={false}
-          rowKey="id"
+          rowKey={Math.random()}
         />
         <Button
           className="mt-5"

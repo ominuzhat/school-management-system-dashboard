@@ -16,23 +16,29 @@ const useMarkTeacherAttendanceColumns = ({
     []
   );
 
-
   useEffect(() => {
     if (
       JSON.stringify(attendanceData) !== JSON.stringify(previousAttendanceData)
     ) {
       const initialStatusMap: Record<string, string> = {};
-      const initialAdmission = attendanceData?.map((teacher) => {
-        const status =
-          teacher?.status === "not marked"
-            ? "present"
-            : teacher?.status || "present";
-        initialStatusMap[teacher?.id] = status;
-        return {
-          admission: teacher?.id,
-          status: status,
-        };
-      });
+      const initialAdmission = attendanceData
+        ?.map((data) => {
+          const status =
+            data?.status === "not marked"
+              ? "present"
+              : data?.status || "present";
+
+          if (data?.teacher) {
+            initialStatusMap[`teacher-${data?.teacher.id}`] = status;
+            return { teacher: data?.teacher.id, status };
+          } else if (data?.employee) {
+            initialStatusMap[`employee-${data.employee.id}`] = status;
+            return { employee: data.employee.id, status };
+          }
+
+          return null;
+        })
+        .filter(Boolean);
 
       setStatusMap(initialStatusMap);
       setAdmission(initialAdmission);
@@ -44,74 +50,121 @@ const useMarkTeacherAttendanceColumns = ({
     if (formData && admission.length > 0) {
       const result = {
         date: formData.date,
-        records: admission,
+        records: attendanceData?.map((data) => {
+          const status =
+            statusMap[
+              `${data?.teacher ? "teacher" : "employee"}-${
+                data?.teacher ? data.teacher.id : data.employee.id
+              }`
+            ] ||
+            data?.status ||
+            "present";
+
+          return {
+            [data?.teacher ? "teacher" : "employee"]:
+              data?.teacher?.id || data?.employee?.id,
+            status,
+          };
+        }),
       };
+
       setResult(result);
     }
-  }, [formData, admission, setResult]);
+  }, [formData, admission, statusMap, attendanceData, setResult]);
 
-  const handleStatusChange = (e: any, recordId: string) => {
+  const handleStatusChange = (
+    e: any,
+    recordId: number,
+    type: "teacher" | "employee"
+  ) => {
     const value = e.target.value;
+    const statusKey = `${type}-${recordId}`;
+
     setStatusMap((prevStatusMap) => ({
       ...prevStatusMap,
-      [recordId]: value,
+      [statusKey]: value,
     }));
 
     setAdmission((prevData) => {
       const updatedData = prevData.filter(
-        (item) => item.admission !== recordId
+        (item) => !(item.teacher === recordId || item.employee === recordId)
       );
-      return [...updatedData, { admission: Number(recordId), status: value }];
+
+      return [
+        ...updatedData,
+        type === "teacher"
+          ? { teacher: recordId, status: value }
+          : { employee: recordId, status: value },
+      ];
     });
   };
 
   const handleSetAllStatus = (status: string) => {
     const updatedStatusMap: Record<string, string> = {};
-    const updatedAdmission = attendanceData?.map((teacher) => {
-      updatedStatusMap[teacher?.id] = status;
-      return {
-        admission: teacher?.id,
-        status: status,
-      };
-    });
+    const updatedAdmission = attendanceData
+      ?.map((data) => {
+        if (data?.teacher) {
+          updatedStatusMap[`teacher-${data?.teacher.id}`] = status;
+          return { teacher: data?.teacher.id, status };
+        } else if (data?.employee) {
+          updatedStatusMap[`employee-${data.employee.id}`] = status;
+          return { employee: data.employee.id, status };
+        }
+
+        return null;
+      })
+      .filter(Boolean);
 
     setStatusMap(updatedStatusMap);
     setAdmission(updatedAdmission);
-    setResult(updatedAdmission);
+    setResult({
+      date: formData.date,
+      records: updatedAdmission,
+    });
   };
 
   return [
     {
-      title: "Name",
-      dataIndex: "first_name",
-      key: "teacher",
+      title: "Full Name",
+      dataIndex: "full_name",
+      key: "1",
       align: "center",
       render: (_: any, record: any) =>
-        `${record.first_name} ${record.last_name}`,
+        record?.teacher
+          ? `${record?.teacher.first_name} ${record?.teacher.last_name}`
+          : `${record?.employee.first_name} ${record?.employee.last_name}`,
     },
-
     {
       title: "User Name",
-      dataIndex: "user",
-      key: "user",
+      dataIndex: "username",
+      key: "2",
       align: "center",
-      render: (user: any) => <span>{user?.username}</span>,
+      render: (_: any, record: any) =>
+        record?.teacher
+          ? `${record?.teacher?.user?.username} `
+          : `${record?.employee?.user?.username} `,
+    },
+    {
+      title: "Role Type",
+      dataIndex: "roll_type",
+      key: "3",
+      align: "center",
+      render: (_: any, record: any) =>
+        record?.teacher
+          ? `${record?.teacher?.user?.role?.name} `
+          : `${record?.employee?.user?.role?.name} `,
+    },
+    {
+      title: "Phone Number",
+      dataIndex: "phone_number",
+      key: "4",
+      align: "center",
+      render: (_: any, record: any) =>
+        record?.teacher
+          ? `${record?.teacher?.phone_number} `
+          : `${record?.employee.phone_number} `,
     },
 
-    {
-      title: "Role Name",
-      dataIndex: "phone_number",
-      key: "user",
-      align: "center",
-      render: (phone_number: any) => <span>{phone_number}</span>,
-    },
-    {
-      title: "Role Name",
-      dataIndex: "user",
-      key: "user",
-      align: "center",
-      render: (user: any) => <span>{user?.role?.name}</span>,
-    },
     {
       title: (
         <div className="flex items-center justify-center gap-5">
@@ -126,22 +179,28 @@ const useMarkTeacherAttendanceColumns = ({
       ),
       width: 400,
       align: "center",
-      render: (record: any) => (
-        <Space>
-          <Radio.Group
-            onChange={(e) => handleStatusChange(e, record.admission.id)}
-            value={statusMap[record.admission?.id] || "present"}
-          >
-            <Radio value="present">P</Radio>
-            <Radio value="late">L</Radio>
-            <Radio value="absent">A</Radio>
-          </Radio.Group>
-        </Space>
-      ),
+      render: (record: any) => {
+        const recordId = record.teacher
+          ? record?.teacher?.id
+          : record?.employee?.id;
+        const type = record?.teacher ? "teacher" : "employee";
+        const statusKey = `${type}-${recordId}`;
+
+        return (
+          <Space size="middle">
+            <Radio.Group
+              value={statusMap[statusKey]}
+              onChange={(e) => handleStatusChange(e, recordId, type)}
+            >
+              <Radio value="present">Present</Radio>
+              <Radio value="late">Late</Radio>
+              <Radio value="absent">Absent</Radio>
+            </Radio.Group>
+          </Space>
+        );
+      },
     },
   ];
 };
 
 export default useMarkTeacherAttendanceColumns;
-
-

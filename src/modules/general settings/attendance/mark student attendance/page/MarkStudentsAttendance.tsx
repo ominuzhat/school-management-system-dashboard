@@ -25,7 +25,7 @@ import { MdOutlineArrowRightAlt } from "react-icons/md";
 const { Option } = Select;
 
 const MarkStudentsAttendance = () => {
-  const [result, setResult] = useState<Record<string, any> | null>(null); // Use a type that matches your expected result
+  const [result, setResult] = useState<Record<string, any> | null>(null); 
   const [formData, setFormData] = useState({
     date: dayjs().format("YYYY-MM-DD"),
     grade_level: undefined,

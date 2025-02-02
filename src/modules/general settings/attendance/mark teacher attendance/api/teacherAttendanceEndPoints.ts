@@ -29,7 +29,7 @@ const teacherAttendanceEndPoint = api.injectEndpoints({
       FilterTypes
     >({
       query: (params) => ({
-        url: "api/v1.0/employees/attendances/mark-attendance/mark-attendance/",
+        url: "api/v1.0/employees/attendances/mark-attendance/",
         params,
       }),
       providesTags: [
@@ -40,12 +40,9 @@ const teacherAttendanceEndPoint = api.injectEndpoints({
       ],
     }),
 
-    createTeacherAttendance: builder.mutation<
-      ApiResponse<any>,
-      FormData
-    >({
+    createTeacherAttendance: builder.mutation<ApiResponse<any>, FormData>({
       query: (data) => ({
-        url: "api/v1.0/employees/attendances/mark-attendance/mark-attendance/",
+        url: "api/v1.0/employees/attendances/mark-attendance/",
         method: "POST",
         body: data,
       }),
@@ -60,12 +57,9 @@ const teacherAttendanceEndPoint = api.injectEndpoints({
       ],
     }),
 
-    getSingleTeacherAttendance: builder.query<
-      ApiResponse<any>,
-      number
-    >({
+    getSingleTeacherAttendance: builder.query<ApiResponse<any>, number>({
       query: (roleId) => ({
-        url: `api/v1.0/employees/attendances/mark-attendance/mark-attendance/${roleId}/`,
+        url: `api/v1.0/employees/attendances/mark-attendance/${roleId}/`,
       }),
 
       providesTags: [
@@ -75,10 +69,7 @@ const teacherAttendanceEndPoint = api.injectEndpoints({
         },
       ],
     }),
-    getSingleTeacherAttendanceList: builder.query<
-      ApiResponse<any>,
-      number
-    >({
+    getSingleTeacherAttendanceList: builder.query<ApiResponse<any>, number>({
       query: (attendanceId) => ({
         url: `api/v1.0/employees/attendances/mark-attendance/${attendanceId}/`,
       }),
@@ -96,7 +87,7 @@ const teacherAttendanceEndPoint = api.injectEndpoints({
       { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
-        url: `api/v1.0/employees/attendances/mark-attendance/mark-attendance/${id}/`,
+        url: `api/v1.0/employees/attendances/mark-attendance/${id}/`,
         method: "PATCH",
         body: data,
       }),
