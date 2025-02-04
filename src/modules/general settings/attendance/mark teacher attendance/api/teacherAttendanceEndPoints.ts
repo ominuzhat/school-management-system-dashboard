@@ -9,6 +9,22 @@ import { TagTypes } from "../../../../../app/utils/tagTypes";
 
 const teacherAttendanceEndPoint = api.injectEndpoints({
   endpoints: (builder) => ({
+    getTeacherAttendanceList: builder.query<
+      ApiResponse<PaginatedResponse<any[]>>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "/api/v1.0/employees/attendances/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.TEACHER_ATTENDANCE,
+          id: TagTypes.TEACHER_ATTENDANCE + "_ID",
+        },
+      ],
+    }),
+
     getTeacherAttendance: builder.query<
       ApiResponse<PaginatedResponse<any[]>>,
       FilterTypes
@@ -24,6 +40,7 @@ const teacherAttendanceEndPoint = api.injectEndpoints({
         },
       ],
     }),
+
     getMarkTeacherAttendance: builder.query<
       ApiResponse<PaginatedResponse<any[]>>,
       FilterTypes
@@ -57,9 +74,9 @@ const teacherAttendanceEndPoint = api.injectEndpoints({
       ],
     }),
 
-    getSingleTeacherAttendance: builder.query<ApiResponse<any>, number>({
+    getSingleEmployeeAttendance: builder.query<ApiResponse<any>, number>({
       query: (roleId) => ({
-        url: `api/v1.0/employees/attendances/mark-attendance/${roleId}/`,
+        url: `api/v1.0/employees/attendances/${roleId}/`,
       }),
 
       providesTags: [
@@ -105,12 +122,13 @@ const teacherAttendanceEndPoint = api.injectEndpoints({
 });
 
 export const {
+  useGetTeacherAttendanceListQuery,
   useGetMarkTeacherAttendanceQuery,
   useLazyGetMarkTeacherAttendanceQuery,
   useGetSingleTeacherAttendanceListQuery,
 
   useCreateTeacherAttendanceMutation,
-  useGetSingleTeacherAttendanceQuery,
+  useGetSingleEmployeeAttendanceQuery,
   useGetTeacherAttendanceQuery,
   useLazyGetTeacherAttendanceQuery,
   useUpdateTeacherAttendanceMutation,

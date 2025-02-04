@@ -16,8 +16,6 @@ const CreateTuitionFeePayment = () => {
   const [create, { isLoading, isSuccess }] =
     useCreateTuitionFeePaymentMutation();
 
-  console.log(GetPayrollData?.data);
-
   const onFinish = (values: any): void => {
     create(values);
   };

@@ -2,14 +2,14 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export type FilterTypes =
   | ({
-      limit?: number;
+      page_size?: number;
       skip?: number;
       key?: string | undefined;
     } & Record<string, any>)
   | undefined;
 
 const initialState: FilterTypes = {
-  limit: 50,
+  page_size: 50,
   skip: 0,
   key: undefined,
 };
@@ -19,7 +19,7 @@ const filterSlice = createSlice({
   initialState,
   reducers: {
     setLimit: (state, { payload }: PayloadAction<number>) => {
-      state.limit = payload;
+      state.page_size = payload;
     },
 
     setSkip: (state, { payload }: PayloadAction<number>) => {

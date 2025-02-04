@@ -63,7 +63,7 @@ const MarkTeachersAttendance = () => {
       <div className="my-5">
         <BreadCrumb />
       </div>
-      <Link to="/attendance/mark-teacher-attendance-list">
+      <Link to="/attendance/mark-employee-attendance-list">
         <p
           style={{
             fontSize: "14px",
@@ -103,7 +103,7 @@ const MarkTeachersAttendance = () => {
               className="w-full"
               onClick={handleSearch}
             >
-              Search Students
+              Search Employee
             </Button>
           </Col>
         </Row>

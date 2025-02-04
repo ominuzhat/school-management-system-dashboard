@@ -67,7 +67,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                 fontSize: "1.2rem",
               }}
             >
-              Hello, {data?.data?.name || "Education Hub"}
+              Hello, {data?.data?.username || "Education Hub"}
             </Typography.Text>
             <Typography.Text
               type="secondary"

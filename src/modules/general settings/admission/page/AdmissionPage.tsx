@@ -7,11 +7,26 @@ import { Table } from "../../../../common/CommonAnt";
 import { useGetAdmissionQuery } from "../api/admissionEndPoints";
 import useAdmissionColumns from "../utils/admissionColumns";
 import { useNavigate } from "react-router-dom";
+import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
+import { useGetStudentsQuery } from "../../../members/students/api/studentEndPoints";
+import { debounce } from "lodash";
+const { Option } = Select;
 
 const AdmissionPage = () => {
   const [search, setSearch] = useState("");
+
+  const [filters, setFilters] = useState({
+    search: "",
+    is_active: "",
+    session: "",
+    student: "",
+  });
   const navigate = useNavigate();
-  const { data: getAdmission, isLoading } = useGetAdmissionQuery({});
+  const { data: getAdmission, isLoading } = useGetAdmissionQuery(filters);
+  const { data: getSession } = useGetAdmissionSessionQuery({});
+  const { data: getStudent, isFetching } = useGetStudentsQuery({
+    search: search,
+  });
 
   return (
     <div>
@@ -31,24 +46,72 @@ const AdmissionPage = () => {
               Add Admission
             </Button>
           </Col>
-          <Col lg={10} xs={24}>
+          <Col lg={14} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
-              <Col lg={12} xs={12}>
-                <Select placeholder="Select Class" className="w-full">
-                  {/* {categoryData?.data?.map((category) => (
-                  <Select.Option key={category.id} value={category?.id}>
-                    {category?.name}
-                  </Select.Option>
-                ))} */}
-
-                  <Select.Option value={1}>1</Select.Option>
+              <Col lg={6} xs={12}>
+                <SearchComponent
+                  onSearch={(value) =>
+                    setFilters((prev) => ({ ...prev, search: value }))
+                  }
+                  placeholder="Search Admission"
+                />
+              </Col>
+              <Col lg={6} xs={12}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Student"
+                  allowClear
+                  showSearch
+                  onSearch={debounce(setSearch, 500)}
+                  filterOption={false}
+                  loading={isFetching}
+                  notFoundContent={
+                    Array?.isArray(getStudent?.data?.results) &&
+                    getStudent?.data?.results?.length === 0
+                      ? "No Students found"
+                      : null
+                  }
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, student: value }))
+                  }
+                >
+                  {getStudent?.data?.results?.map((data: any) => (
+                    <Option key={data.id} value={data.id}>
+                      {data?.first_name} {data?.last_name}
+                    </Option>
+                  ))}
                 </Select>
               </Col>
-              <Col lg={12} xs={12}>
-                <SearchComponent
-                  onSearch={(value) => setSearch(value)}
-                  placeholder="Search students"
-                />
+              <Col lg={6} xs={12}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Session"
+                  allowClear
+                  showSearch
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, session: value }))
+                  }
+                >
+                  {Array.isArray(getSession?.data) &&
+                    getSession?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data?.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+              <Col lg={6} xs={12}>
+                <Select
+                  placeholder="Select Active"
+                  className="w-full"
+                  allowClear
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, is_active: value }))
+                  }
+                >
+                  <Select.Option value={true}>ACTIVE</Select.Option>
+                  <Select.Option value={false}>INACTIVE</Select.Option>
+                </Select>
               </Col>
             </Row>
           </Col>

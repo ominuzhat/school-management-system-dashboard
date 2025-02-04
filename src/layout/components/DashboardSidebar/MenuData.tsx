@@ -58,52 +58,52 @@ const MenuData: React.FC = () => {
       icon: <BiSolidInstitution />,
     },
 
-    {
-      key: "",
-      label: <Link to="">Accounts For Fee Invoice</Link>,
-      icon: <TbFileInvoice />,
-    },
-    {
-      key: "",
-      label: <Link to="">Rules & Regulations</Link>,
-      icon: <FcRules />,
-    },
-    {
-      key: "",
-      label: <Link to="">Marks Grading</Link>,
-      icon: <CiBookmarkCheck />,
-    },
-    {
-      key: "",
-      label: <Link to="">Account Settings</Link>,
-      icon: <CiSettings />,
-    },
+    // {
+    //   key: "",
+    //   label: <Link to="">Accounts For Fee Invoice</Link>,
+    //   icon: <TbFileInvoice />,
+    // },
+    // {
+    //   key: "",
+    //   label: <Link to="">Rules & Regulations</Link>,
+    //   icon: <FcRules />,
+    // },
+    // {
+    //   key: "",
+    //   label: <Link to="">Marks Grading</Link>,
+    //   icon: <CiBookmarkCheck />,
+    // },
+    // {
+    //   key: "",
+    //   label: <Link to="">Account Settings</Link>,
+    //   icon: <CiSettings />,
+    // },
     {
       key: "/role-permission",
       label: <Link to="/role-permission">Role & Permissions</Link>,
       icon: <IoAccessibilityOutline />,
     },
 
-    {
-      key: "/attendance",
-      label: "Certificates",
-      icon: <GrCertificate />,
-      children: [
-        {
-          label: <Link to="/mark-student-attendance">Leave Certificate</Link>,
-          icon: <AiOutlineSafetyCertificate />,
-          key: "/mark-student-attendance",
-        },
+    // {
+    //   key: "/attendance",
+    //   label: "Certificates",
+    //   icon: <GrCertificate />,
+    //   children: [
+    //     {
+    //       label: <Link to="/mark-student-attendance">Leave Certificate</Link>,
+    //       icon: <AiOutlineSafetyCertificate />,
+    //       key: "/mark-student-attendance",
+    //     },
 
-        {
-          label: (
-            <Link to="/mark-teacher-attendance">Character Certificate</Link>
-          ),
-          icon: <LiaCertificateSolid />,
-          key: "/mark-teacher-attendance",
-        },
-      ],
-    },
+    //     {
+    //       label: (
+    //         <Link to="/mark-teacher-attendance">Character Certificate</Link>
+    //       ),
+    //       icon: <LiaCertificateSolid />,
+    //       key: "/mark-teacher-attendance",
+    //     },
+    //   ],
+    // },
   ];
 
   const members = [
@@ -117,10 +117,23 @@ const MenuData: React.FC = () => {
       label: <Link to="/teacher">Teacher</Link>,
       icon: <LiaChalkboardTeacherSolid />,
     },
+
     {
       key: "/employees",
-      label: <Link to="/employees">Employees</Link>,
+      label: "employees",
       icon: <IoPeopleOutline />,
+      children: [
+        {
+          key: "/employees",
+          label: <Link to="/employees">Employees</Link>,
+          icon: <IoPeopleOutline />,
+        },
+        {
+          key: "/department",
+          label: <Link to="/department">Department</Link>,
+          icon: <RiLuggageDepositLine />,
+        },
+      ],
     },
   ];
 
@@ -130,11 +143,6 @@ const MenuData: React.FC = () => {
       label: <Link to="/payroll">Payroll</Link>,
       icon: <MdOutlinePayments />,
     },
-    // {
-    //   key: "/payment",
-    //   label: <Link to="/payment">Payment</Link>,
-    //   icon: <MdPayment />,
-    // },
 
     {
       key: "/payment",
@@ -234,27 +242,31 @@ const MenuData: React.FC = () => {
       label: <Link to="/subjects">Subjects</Link>,
       icon: <IoBookOutline />,
     },
-    {
-      key: "/department",
-      label: <Link to="/department">Department</Link>,
-      icon: <RiLuggageDepositLine />,
-    },
-    {
-      key: "/admission-session",
-      label: <Link to="/admission-session">Admission Session</Link>,
-      icon: <VscGoToEditingSession />,
-    },
-    {
-      key: "/admission",
-      label: <Link to="/admission">Admission</Link>,
-      icon: <IoMdPersonAdd />,
-    },
 
     {
-      key: "/Class-tests",
-      label: <Link to="/Class-tests">Class Test</Link>,
-      icon: <FaRegNoteSticky />,
+      key: "/admission",
+      label: "Admission",
+      icon: <MdCoPresent />,
+      children: [
+        {
+          key: "/admission",
+          label: <Link to="/admission">Admission</Link>,
+          icon: <IoMdPersonAdd />,
+        },
+
+        {
+          key: "/admission-session",
+          label: <Link to="/admission-session">Admission Session</Link>,
+          icon: <VscGoToEditingSession />,
+        },
+      ],
     },
+
+    // {
+    //   key: "/Class-tests",
+    //   label: <Link to="/Class-tests">Class Test</Link>,
+    //   icon: <FaRegNoteSticky />,
+    // },
 
     {
       key: "/attendance",
@@ -273,12 +285,12 @@ const MenuData: React.FC = () => {
 
         {
           label: (
-            <Link to="/attendance/mark-teacher-attendance">
-              Teacher Attendance
+            <Link to="/attendance/mark-employee-attendance">
+              Employee Attendance
             </Link>
           ),
           icon: <IoPeopleOutline />,
-          key: "/attendance/mark-teacher-attendance",
+          key: "/attendance/mark-employee-attendance",
         },
       ],
     },

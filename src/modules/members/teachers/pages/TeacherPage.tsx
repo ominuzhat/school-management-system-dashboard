@@ -23,14 +23,17 @@ import { useGetTeacherQuery } from "../api/teachersEndPoints";
 import UpdateTeacher from "../components/UpdateTeacher";
 
 const TeacherPage = () => {
-  const { data: teacherData, isLoading } = useGetTeacherQuery({});
-  const [layout, setLayout] = useState("grid");
-  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
+  const [layout, setLayout] = useState("grid");
+  const [filters, setFilters] = useState({ search: "", is_active: "" });
+
+  const { data: teacherData, isLoading } = useGetTeacherQuery(filters);
+
 
   const handleDelete = async (id: any) => {
+    console.log(id);
     try {
-      await deleteCartItem({ id }).unwrap();
+      // await deleteCartItem({ id }).unwrap();
       console.log("Item deleted successfully");
     } catch (error) {
       console.error("Failed to delete item:", error);
@@ -62,20 +65,24 @@ const TeacherPage = () => {
           </Col>
           <Col lg={10} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
-              <Col lg={12} xs={12}>
-                <Select placeholder="Select Class" className="w-full">
-                  {/* {categoryData?.data?.map((category) => (
-                  <Select.Option key={category.id} value={category?.id}>
-                    {category?.name}
-                  </Select.Option>
-                ))} */}
-
-                  <Select.Option value={1}>1</Select.Option>
+              <Col lg={8} xs={12}>
+                <Select
+                  placeholder="Select Active"
+                  className="w-full"
+                  allowClear
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, is_active: value }))
+                  }
+                >
+                  <Select.Option value={true}>ACTIVE</Select.Option>
+                  <Select.Option value={false}>INACTIVE</Select.Option>
                 </Select>
               </Col>
-              <Col lg={12} xs={12}>
+              <Col lg={16} xs={12}>
                 <SearchComponent
-                  onSearch={(value) => setSearch(value)}
+                  onSearch={(value) =>
+                    setFilters((prev) => ({ ...prev, search: value }))
+                  }
                   placeholder="Search Teacher"
                 />
               </Col>
@@ -123,7 +130,7 @@ const TeacherPage = () => {
       >
         {layout !== "grid" ? (
           <Row gutter={[16, 16]}>
-            {teacherData?.data?.results?.map((teacher:any, index:number) => (
+            {teacherData?.data?.results?.map((teacher: any, index: number) => (
               <Col key={index} span={3} xs={12} lg={8} xxl={3}>
                 <div
                   style={{

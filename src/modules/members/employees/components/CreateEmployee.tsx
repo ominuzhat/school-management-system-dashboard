@@ -13,10 +13,10 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useState } from "react";
-import moment from "moment";
 import { useCreateEmployeeMutation } from "../api/employeeEndPoints";
 import { useGetRolePermissionQuery } from "../../../settings/role & permission/api/rolePermissionEndPoints";
 import { useGetDepartmentQuery } from "../../../general settings/Department/api/departmentEndPoints";
+import dayjs from "dayjs";
 
 const CreateEmployee = () => {
   const [create, { isLoading, isSuccess }] = useCreateEmployeeMutation();
@@ -54,7 +54,7 @@ const CreateEmployee = () => {
           });
         }
       } else if (key === "hire_date" && value) {
-        const formattedDate = moment(value).format("YYYY-MM-DD");
+        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (value instanceof File || value instanceof Blob) {
         formData.append(key, value);
@@ -81,7 +81,7 @@ const CreateEmployee = () => {
         isLoading={isLoading}
         isSuccess={isSuccess}
         initialValues={{
-          hire_date: moment(),
+          hire_date: dayjs(),
           is_active: true,
         }}
       >

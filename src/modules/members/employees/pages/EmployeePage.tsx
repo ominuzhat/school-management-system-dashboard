@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Button, Card, Col, Row, Select } from "antd";
+import { Button, Card, Col, Row } from "antd";
 import { IoGridOutline } from "react-icons/io5";
 import { PlusOutlined } from "@ant-design/icons";
 
@@ -27,9 +27,14 @@ const EmployeePage = () => {
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
 
-  const { data: employeeData, isLoading } = useGetEmployeeQuery({});
+  const { data: employeeData, isLoading } = useGetEmployeeQuery({
+    search: search,
+  });
+
+  const employeeColumns = useEmployeeColumns();
 
   const handleDelete = async (id: any) => {
+    console.log(id);
     try {
       // await deleteCartItem({ id }).unwrap();
       console.log("Item deleted successfully");
@@ -61,26 +66,11 @@ const EmployeePage = () => {
               Add Employee
             </Button>
           </Col>
-          <Col lg={10} xs={24}>
-            <Row justify="space-between" gutter={[16, 0]}>
-              <Col lg={12} xs={12}>
-                <Select placeholder="Select Class" className="w-full">
-                  {/* {categoryData?.data?.map((category) => (
-                  <Select.Option key={category.id} value={category?.id}>
-                    {category?.name}
-                  </Select.Option>
-                ))} */}
-
-                  <Select.Option value={1}>1</Select.Option>
-                </Select>
-              </Col>
-              <Col lg={12} xs={12}>
-                <SearchComponent
-                  onSearch={(value) => setSearch(value)}
-                  placeholder="Search employees"
-                />
-              </Col>
-            </Row>
+          <Col lg={6} xs={24}>
+            <SearchComponent
+              onSearch={(value) => setSearch(value)}
+              placeholder="Search employees"
+            />
           </Col>
         </Row>
       </Card>
@@ -94,6 +84,7 @@ const EmployeePage = () => {
             }}
           >
             <span>All Employee</span>
+
             <div
               style={{
                 display: "flex",
@@ -163,7 +154,7 @@ const EmployeePage = () => {
             loading={isLoading}
             total={employeeData?.data?.results?.length}
             dataSource={employeeData?.data?.results}
-            columns={useEmployeeColumns()}
+            columns={employeeColumns}
           />
         )}
       </Card>

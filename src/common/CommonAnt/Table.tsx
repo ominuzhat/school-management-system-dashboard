@@ -8,7 +8,7 @@ interface Props<T> extends TableProps<T> {
 }
 
 const Table = <T extends object>({ total, ...restProps }: Props<T>) => {
-  const { limit = 10, skip = 0 } = useSelector(
+  const { page_size = 10, skip = 0 } = useSelector(
     (state: RootState) => state.filter
   );
 
@@ -25,11 +25,11 @@ const Table = <T extends object>({ total, ...restProps }: Props<T>) => {
         showSizeChanger: true,
         showTotal: (total) => (
           <Typography.Text strong>
-            Total {limit} of {total}
+            Total {page_size} of {total}
           </Typography.Text>
         ),
-        current: Math.floor(skip / limit) + 1,
-        pageSize: limit,
+        current: Math.floor(skip / page_size) + 1,
+        pageSize: page_size,
         onChange: (page, pageSize) => {
           dispatch(setLimit(pageSize));
           dispatch(setSkip((page - 1) * pageSize));

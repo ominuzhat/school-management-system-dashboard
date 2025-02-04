@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
@@ -92,19 +92,27 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? title : "N/A"),
     },
+    {
+      key: "9",
+      title: "Status",
+      dataIndex: "student",
+      align: "center",
+      render: (title) =>
+        title?.is_active ? (
+          <Tag color="green">Active</Tag>
+        ) : (
+          <Tag color="red">Inactive</Tag>
+        ),
+    },
 
     {
       title: "Actions",
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              navigate(`/admission/update-admission/${record?.id}`)
-            }
-          />
+          <EditButton onClick={() => navigate(`/admission/${record?.id}`)} />
 
-          <ViewButton to={`admission-view/${record?.id}`} />
+          <ViewButton to={`/admission/admission-view/${record?.id}`} />
 
           {/* <DeleteButton
           onClick={() => handleDelete(record.id)}>

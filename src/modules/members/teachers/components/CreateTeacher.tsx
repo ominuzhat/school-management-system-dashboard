@@ -1,10 +1,20 @@
-import { Badge, Card, Col, DatePicker, Input, Modal, Row, Select } from "antd";
+import {
+  Badge,
+  Card,
+  Col,
+  DatePicker,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Switch,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useState } from "react";
-import moment from "moment";
 import { useCreateTeacherMutation } from "../api/teachersEndPoints";
+import dayjs from "dayjs";
 
 const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
@@ -39,10 +49,10 @@ const CreateTeacher = () => {
           });
         }
       } else if (key === "hire_date" && value) {
-        const formattedDate = moment(value).format("YYYY-MM-DD");
+        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (key === "date_of_birth" && value) {
-        const formattedDate = moment(value).format("YYYY-MM-DD");
+        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (value instanceof File || value instanceof Blob) {
         formData.append(key, value);
@@ -68,7 +78,7 @@ const CreateTeacher = () => {
         isLoading={isLoading}
         isSuccess={isSuccess}
         initialValues={{
-          hire_date: moment(),
+          hire_date: dayjs(),
           is_active: true,
         }}
       >
@@ -195,7 +205,7 @@ const CreateTeacher = () => {
                           name="password"
                           rules={[{ required: true, message: "Password!" }]}
                         >
-                          <Input placeholder="Password." />
+                          <Input.Password placeholder="Password." />
                         </Form.Item>
                       </Col>
 
@@ -203,16 +213,15 @@ const CreateTeacher = () => {
                         <Form.Item
                           label="Status"
                           name="is_active"
+                          valuePropName="checked"
                           rules={[
                             { required: true, message: "Status is required!" },
                           ]}
                         >
-                          <Select placeholder="Select Status">
-                            <Select.Option value={true}>Active</Select.Option>
-                            <Select.Option value={false}>
-                              Inactive
-                            </Select.Option>
-                          </Select>
+                          <Switch
+                            checkedChildren="Active"
+                            unCheckedChildren="Inactive"
+                          />
                         </Form.Item>
                       </Col>
                     </Row>
@@ -240,6 +249,9 @@ const CreateTeacher = () => {
                         placeholder="Select Date"
                         format="YYYY-MM-DD"
                         className="w-full"
+                        disabledDate={(current) => {
+                          return current && current > dayjs().endOf("day");
+                        }}
                       />
                     </Form.Item>
                   </Col>

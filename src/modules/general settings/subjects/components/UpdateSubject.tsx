@@ -41,11 +41,12 @@ const UpdateSubjects = ({ record }: any) => {
 
         <Form.Item<ISubjects> label="Class " name="grade_level">
           <Select placeholder="Select Class" className="w-full">
-            {GetClassData?.data?.results?.map((data: any, index) => (
-              <Select.Option key={index} value={data?.id}>
-                {data?.name}
-              </Select.Option>
-            ))}
+            {Array.isArray(GetClassData?.data) &&
+              GetClassData?.data?.map((data: any, index) => (
+                <Select.Option key={index} value={data?.id}>
+                  {data?.name}
+                </Select.Option>
+              ))}
           </Select>
         </Form.Item>
 

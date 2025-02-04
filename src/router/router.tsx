@@ -62,6 +62,8 @@ import ViewPayment from "../modules/Finance Management/payment/components/ViewPa
 import TuitionFeesPage from "../modules/Finance Management/Fees/Tuition Fee/page/TuitionFeesPage";
 import TuitionFeePaymentPage from "../modules/Finance Management/Tuition payment/pages/TuitionFeePaymentPage";
 import FeeCollectionPage from "../modules/Finance Management/Fees/fee Collections/page/FeeCollectionPage";
+import ViewEmployeeAttendanceList from "../modules/general settings/attendance/mark teacher attendance/components/ViewEmployeeAttendanceList";
+import ViewSingleEmployeeAttendance from "../modules/general settings/attendance/mark teacher attendance/components/ViewSingleEmployeeAttandance";
 
 const router = createBrowserRouter([
   {
@@ -170,7 +172,7 @@ const router = createBrowserRouter([
             element: <AdmissionView />,
           },
           {
-            path: "/admission/update-admission/:admissionId",
+            path: "/admission/:admissionId",
             element: <UpdateAdmission />,
           },
         ],
@@ -261,8 +263,16 @@ const router = createBrowserRouter([
             element: <ViewSingleStudentsAttendanceList />,
           },
           {
-            path: "mark-teacher-attendance",
+            path: "mark-employee-attendance",
             element: <MarkTeachersAttendance />,
+          },
+          {
+            path: "mark-employee-attendance-list",
+            element: <ViewEmployeeAttendanceList />,
+          },
+          {
+            path: "mark-employee-attendance-list/:attendanceId",
+            element: <ViewSingleEmployeeAttendance />,
           },
         ],
       },

@@ -14,13 +14,13 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useEffect, useState } from "react";
-import moment from "moment";
 import {
   useGetSingleEmployeeQuery,
   useUpdateEmployeeMutation,
 } from "../api/employeeEndPoints";
 import { useGetRolePermissionQuery } from "../../../settings/role & permission/api/rolePermissionEndPoints";
 import { useGetDepartmentQuery } from "../../../general settings/Department/api/departmentEndPoints";
+import dayjs from "dayjs";
 
 const UpdateEmployee = ({ records }: any) => {
   const [update, { isLoading, isSuccess }] = useUpdateEmployeeMutation();
@@ -32,7 +32,9 @@ const UpdateEmployee = ({ records }: any) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [_originalImages, setOriginalImages] = useState<any[]>([]);
+  const [originalImages, setOriginalImages] = useState<any[]>([]);
+
+  console.log(originalImages);
 
   useEffect(() => {
     if (singleEmployeeData?.data) {
@@ -50,7 +52,7 @@ const UpdateEmployee = ({ records }: any) => {
 
       form.setFieldsValue({
         ...singleEmployeeData.data,
-        hire_date: moment(singleEmployeeData.data.hire_date),
+        hire_date: dayjs(singleEmployeeData.data.hire_date),
         username: singleEmployeeData.data?.user?.username,
         role: singleEmployeeData.data?.user?.role?.id,
         department: singleEmployeeData.data?.department?.id,
@@ -86,10 +88,7 @@ const UpdateEmployee = ({ records }: any) => {
           });
         }
       } else if (key === "hire_date" && value) {
-        const formattedDate = moment(value).format("YYYY-MM-DD");
-        formData.append(key, formattedDate);
-      } else if (key === "date_of_birth" && value) {
-        const formattedDate = moment(value).format("YYYY-MM-DD");
+        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (value instanceof File || value instanceof Blob) {
         formData.append(key, value);
@@ -120,7 +119,7 @@ const UpdateEmployee = ({ records }: any) => {
           //   first_name: singleEmployeeData?.data?.first_name || "",
           last_name: singleEmployeeData?.data?.last_name || "",
           email: singleEmployeeData?.data?.email || "",
-          hire_date: moment(),
+          hire_date: dayjs(),
           is_active: true,
         }}
       >
@@ -201,12 +200,6 @@ const UpdateEmployee = ({ records }: any) => {
                       </Col>
 
                       <Col lg={8}>
-                        <Form.Item label="Username" name="username">
-                          <Input placeholder="Username" />
-                        </Form.Item>
-                      </Col>
-
-                      <Col lg={8}>
                         <Form.Item label="Base Salary" name="base_salary">
                           <Input placeholder="Base Salary" />
                         </Form.Item>
@@ -244,6 +237,16 @@ const UpdateEmployee = ({ records }: any) => {
                                   </Select.Option>
                                 ))}
                           </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item label="Username" name="username">
+                          <Input placeholder="Username" disabled />
+                        </Form.Item>
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item<any> label="Password" name="password">
+                          <Input.Password placeholder="Password." />
                         </Form.Item>
                       </Col>
 

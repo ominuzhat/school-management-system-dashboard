@@ -171,7 +171,7 @@ const useMarkTeacherAttendanceColumns = ({
           <Button onClick={() => handleSetAllStatus("present")}>
             All Present
           </Button>
-          <Button onClick={() => handleSetAllStatus("late")}>All Late</Button>
+          <Button onClick={() => handleSetAllStatus("leave")}>All leave</Button>
           <Button onClick={() => handleSetAllStatus("absent")}>
             All Absent
           </Button>
@@ -193,7 +193,7 @@ const useMarkTeacherAttendanceColumns = ({
               onChange={(e) => handleStatusChange(e, recordId, type)}
             >
               <Radio value="present">Present</Radio>
-              <Radio value="late">Late</Radio>
+              <Radio value="leave">leave</Radio>
               <Radio value="absent">Absent</Radio>
             </Radio.Group>
           </Space>

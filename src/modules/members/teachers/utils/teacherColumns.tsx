@@ -29,16 +29,18 @@ const useTeacherColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Name",
+      title: "Full Name",
       dataIndex: "first_name",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (_: any, record: any) =>
+        `${record?.first_name} ${record?.last_name}`,
     },
     {
       key: "2",
       title: "User Name",
       dataIndex: "user",
       align: "center",
+      sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
       render: (name) => (name ? name?.username : "N/A"),
     },
     {
@@ -46,6 +48,7 @@ const useTeacherColumns = (): ColumnsType<any> => {
       title: "Email",
       dataIndex: "email",
       align: "center",
+      sorter: (a, b) => (a.email || "").localeCompare(b.email || ""),
       render: (email) => (email ? email : "N/A"),
     },
     {
@@ -60,6 +63,9 @@ const useTeacherColumns = (): ColumnsType<any> => {
       title: "Hire Date",
       dataIndex: "hire_date",
       align: "center",
+      sorter: (a, b) =>
+        new Date(a.hire_date || 0).getTime() -
+        new Date(b.hire_date || 0).getTime(),
       render: (hire_date) => (hire_date ? hire_date : "N/A"),
     },
     {

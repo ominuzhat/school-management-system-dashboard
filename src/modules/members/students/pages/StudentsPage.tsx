@@ -23,13 +23,14 @@ import UpdateStudent from "../components/UpdateStudent";
 import useStudentColumns from "../utils/studentColumns";
 
 const StudentsPage = () => {
-  const [layout, setLayout] = useState("grid");
-  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
+  const [layout, setLayout] = useState("grid");
+  const [filters, setFilters] = useState({ search: "", is_active: "" });
 
-  const { data: studentData, isLoading } = useGetStudentsQuery({});
+  const { data: studentData, isLoading } = useGetStudentsQuery(filters);
 
   const handleDelete = async (id: any) => {
+    console.log(id);
     try {
       // await deleteCartItem({ id }).unwrap();
       console.log("Item deleted successfully");
@@ -63,20 +64,24 @@ const StudentsPage = () => {
           </Col>
           <Col lg={10} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
-              <Col lg={12} xs={12}>
-                <Select placeholder="Select Class" className="w-full">
-                  {/* {categoryData?.data?.map((category) => (
-                  <Select.Option key={category.id} value={category?.id}>
-                    {category?.name}
-                  </Select.Option>
-                ))} */}
-
-                  <Select.Option value={1}>1</Select.Option>
+              <Col lg={8} xs={12}>
+                <Select
+                  placeholder="Select Active"
+                  className="w-full"
+                  allowClear
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, is_active: value }))
+                  }
+                >
+                  <Select.Option value={true}>ACTIVE</Select.Option>
+                  <Select.Option value={false}>INACTIVE</Select.Option>
                 </Select>
               </Col>
-              <Col lg={12} xs={12}>
+              <Col lg={16} xs={12}>
                 <SearchComponent
-                  onSearch={(value) => setSearch(value)}
+                  onSearch={(value) =>
+                    setFilters((prev) => ({ ...prev, search: value }))
+                  }
                   placeholder="Search students"
                 />
               </Col>

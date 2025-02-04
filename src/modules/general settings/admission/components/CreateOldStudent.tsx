@@ -8,11 +8,15 @@ import { IClasses } from "../../classes/type/classesType";
 import { useState } from "react";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
+import { debounce } from "lodash";
 
 const { Option } = Select;
 
 const CreateOldStudent = () => {
-  const { data: studentData } = useGetStudentsQuery({});
+  const [search, setSearch] = useState("");
+  const { data: studentData, isFetching } = useGetStudentsQuery({
+    search: search,
+  });
   const { data: sessionData } = useGetAdmissionSessionQuery({});
   const [selectedClass, setSelectedClass] = useState<number>();
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
@@ -21,8 +25,6 @@ const CreateOldStudent = () => {
   });
   const { data: classData } = useGetClassesQuery({});
   const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
-
-  console.log(subjectData?.data?.results);
 
   const onFinish = (values: any): void => {
     const result: any = {
@@ -69,6 +71,15 @@ const CreateOldStudent = () => {
                   placeholder="Select Student"
                   allowClear
                   showSearch
+                  onSearch={debounce(setSearch, 500)}
+                  filterOption={false}
+                  loading={isFetching}
+                  notFoundContent={
+                    Array?.isArray(studentData?.data?.results) &&
+                    studentData?.data?.results?.length === 0
+                      ? "No Students found"
+                      : null
+                  }
                 >
                   {studentData?.data?.results?.map((data: any) => (
                     <Option key={data.id} value={data.id}>

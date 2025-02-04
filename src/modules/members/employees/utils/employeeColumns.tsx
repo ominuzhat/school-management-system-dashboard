@@ -5,9 +5,19 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
 import UpdateEmployee from "../components/UpdateEmployee";
+import { useGetDepartmentQuery } from "../../../general settings/Department/api/departmentEndPoints";
 
 const useEmployeeColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+
+  const { data: departmentList } = useGetDepartmentQuery({});
+
+  const departmentFilters = Array.isArray(departmentList?.data)
+    ? departmentList.data.map((dept: any) => ({
+        text: dept.name,
+        value: dept.name,
+      }))
+    : [];
 
   return [
     {
@@ -18,16 +28,18 @@ const useEmployeeColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Name",
+      title: "Full Name",
       dataIndex: "first_name",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (_: any, record: any) =>
+        `${record?.first_name} ${record?.last_name}`,
     },
     {
       key: "2",
       title: "User Name",
       dataIndex: "user",
       align: "center",
+      sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
       render: (user) => (user ? user.username : "N/A"),
     },
     {
@@ -35,6 +47,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       title: "Email",
       dataIndex: "email",
       align: "center",
+      sorter: (a, b) => (a.email || "").localeCompare(b.email || ""),
       render: (email) => (email ? email : "N/A"),
     },
     {
@@ -63,6 +76,10 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       title: "Department",
       dataIndex: ["department", "name"],
       align: "center",
+      showSorterTooltip: { target: "full-header" },
+      filters: departmentFilters.length > 0 ? departmentFilters : undefined,
+      onFilter: (value, record) => record?.department?.name === value,
+      // sorter: (a, b) => a?.department?.name?.localeCompare(b?.department?.name),
       render: (department) => (department ? department : "N/A"),
     },
     {
@@ -70,6 +87,9 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       title: "Hire Date",
       dataIndex: "hire_date",
       align: "center",
+      sorter: (a, b) =>
+        new Date(a.hire_date || 0).getTime() -
+        new Date(b.hire_date || 0).getTime(),
       render: (hire_date) => (hire_date ? hire_date : "N/A"),
     },
     {

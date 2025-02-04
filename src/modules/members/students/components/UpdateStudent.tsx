@@ -9,16 +9,17 @@ import {
   Card,
   Select,
   DatePicker,
+  Switch,
 } from "antd";
 import React, { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 
 import { Form } from "../../../../common/CommonAnt";
-import moment from "moment";
 import {
   useGetSingleStudentQuery,
   useUpdateStudentMutation,
 } from "../api/studentEndPoints";
+import dayjs from "dayjs";
 
 interface Props {
   record: any;
@@ -34,6 +35,7 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
   const [previewTitle, setPreviewTitle] = useState("");
 
   const [originalImages, setOriginalImages] = useState<any[]>([]);
+  console.log(originalImages);
 
   useEffect(() => {
     if (singleStudent) {
@@ -50,8 +52,8 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
       form.setFieldsValue({
         ...singleStudent.data,
         username: singleStudent?.data?.user?.username,
-        enrollment_date: moment(singleStudent?.data?.enrollment_date),
-        date_of_birth: moment(singleStudent?.data?.date_of_birth),
+        enrollment_date: dayjs(singleStudent?.data?.enrollment_date),
+        date_of_birth: dayjs(singleStudent?.data?.date_of_birth),
         picture: initialImages,
       });
     }
@@ -84,10 +86,10 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
           });
         }
       } else if (key === "enrollment_date" && value) {
-        const formattedDate = moment(value).format("YYYY-MM-DD");
+        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (key === "date_of_birth" && value) {
-        const formattedDate = moment(value).format("YYYY-MM-DD");
+        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (value instanceof File || value instanceof Blob) {
         formData.append(key, value);
@@ -107,7 +109,7 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
         onFinish={onFinish}
         isLoading={isLoading}
         initialValues={{
-          enrollment_date: moment(),
+          enrollment_date: dayjs(),
           is_active: true,
         }}
       >
@@ -194,23 +196,24 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
 
                       <Col lg={8}>
                         <Form.Item label="Username" name="username">
-                          <Input placeholder="Username." />
+                          <Input placeholder="Username." disabled />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
                         <Form.Item label="Password" name="password">
-                          <Input placeholder="Password." />
+                          <Input.Password placeholder="Password." />
                         </Form.Item>
                       </Col>
-
                       <Col lg={8}>
-                        <Form.Item label="Status" name="is_active">
-                          <Select placeholder="Select Status">
-                            <Select.Option value={true}>Active</Select.Option>
-                            <Select.Option value={false}>
-                              Inactive
-                            </Select.Option>
-                          </Select>
+                        <Form.Item
+                          label="Status"
+                          name="is_active"
+                          valuePropName="checked"
+                        >
+                          <Switch
+                            checkedChildren="Active"
+                            unCheckedChildren="Inactive"
+                          />
                         </Form.Item>
                       </Col>
                     </Row>
@@ -230,6 +233,9 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
                         placeholder="Select Date"
                         format="YYYY-MM-DD"
                         className="w-full"
+                        disabledDate={(current) => {
+                          return current && current > dayjs().endOf("day");
+                        }}
                       />
                     </Form.Item>
                   </Col>
@@ -288,7 +294,6 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
               </Card>
             </Badge.Ribbon>
           </Col>
-
         </Row>
       </Form>
     </div>

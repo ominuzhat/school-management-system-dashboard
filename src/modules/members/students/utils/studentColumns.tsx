@@ -29,23 +29,26 @@ const useStudentColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Name",
+      title: "Full Name",
       dataIndex: "first_name",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (_: any, record: any) =>
+        `${record?.first_name} ${record?.last_name}`,
     },
     {
       key: "2",
       title: "User Name",
       dataIndex: "user",
       align: "center",
-      render: (name) => (name ? name?.username : "N/A"),
+      sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
+      render: (user) => (user?.username ? user.username : "N/A"),
     },
     {
       key: "3",
       title: "Email",
       dataIndex: "email",
       align: "center",
+      sorter: (a, b) => (a.email || "").localeCompare(b.email || ""),
       render: (email) => (email ? email : "N/A"),
     },
     {
@@ -60,9 +63,11 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Enrollment Date",
       dataIndex: "enrollment_date",
       align: "center",
+      sorter: (a, b) =>
+        new Date(a.enrollment_date || 0).getTime() -
+        new Date(b.enrollment_date || 0).getTime(),
       render: (enrollment_date) => (enrollment_date ? enrollment_date : "N/A"),
     },
-
     {
       key: "6",
       title: "Active",
