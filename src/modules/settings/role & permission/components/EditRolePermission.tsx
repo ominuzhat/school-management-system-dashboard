@@ -1,5 +1,13 @@
-import React, { useEffect } from "react";
-import { Col, Form as AntForm, Input, Row, Button, Checkbox } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  Col,
+  Form as AntForm,
+  Input,
+  Row,
+  Button,
+  Checkbox,
+  Divider,
+} from "antd";
 import { IGetSingleRolePermission } from "../type/rolePermissionTypes";
 import {
   useGetPermissionQuery,
@@ -19,6 +27,8 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
   );
   const { data: permissionData } = useGetPermissionQuery({});
 
+  const [selectAll, setSelectAll] = useState(false);
+
   useEffect(() => {
     const permissionIds = userPermissionData?.data?.permissions?.map(
       (permission: any) => permission?.id
@@ -31,6 +41,22 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
 
   const onFinish = (values: any): void => {
     update({ id: record.id, data: values });
+  };
+
+  const handleSelectAll = () => {
+    setSelectAll((prev) => !prev);
+    if (!selectAll) {
+      const allPermissions = permissionData?.data?.map(
+        (permission: any) => permission.id
+      );
+      form.setFieldsValue({
+        permissions: allPermissions,
+      });
+    } else {
+      form.setFieldsValue({
+        permissions: [],
+      });
+    }
   };
 
   return (
@@ -60,15 +86,39 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
           >
             <Checkbox.Group>
               <Row>
-                {permissionData?.data?.map((permission: any) => (
-                  <Col span={8} key={permission.id}>
-                    <Checkbox value={permission.id}>{permission.name}</Checkbox>
-                  </Col>
-                ))}
+                {/* Select All button */}
+                <Col span={24}>
+                  <Button
+                    type="text"
+                    className="w-100"
+                    shape="round"
+                    onClick={handleSelectAll}
+                  >
+                    {selectAll ? "Deselect All" : "Select All"}
+                  </Button>
+                  <Divider />
+                </Col>
+                {/* Individual permission checkboxes */}
+                {Array.isArray(permissionData?.data) &&
+                  permissionData?.data?.map((permission: any) => (
+                    <Col span={8} key={permission.id}>
+                      <Checkbox
+                        value={permission.id}
+                        checked={
+                          selectAll ||
+                          form
+                            .getFieldValue("permissions")
+                            ?.includes(permission.id)
+                        }
+                      >
+                        {permission.name}
+                      </Checkbox>
+                    </Col>
+                  ))}
               </Row>
             </Checkbox.Group>
           </AntForm.Item>
-        </Col>{" "}
+        </Col>
         <Col>
           <AntForm.Item>
             <Button type="primary" htmlType="submit" loading={isLoading}>

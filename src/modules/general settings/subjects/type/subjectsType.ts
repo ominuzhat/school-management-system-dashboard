@@ -1,3 +1,5 @@
+import { IGetTeacher } from "../../../members/teachers/types/teacherType";
+
 export interface ISubjects {
   id: number;
   name: string;
@@ -9,5 +11,5 @@ export interface IGrade_Level {
   id: 1;
   name: string;
   description: string;
-  class_teacher: string | null;
+  class_teacher: IGetTeacher | null;
 }

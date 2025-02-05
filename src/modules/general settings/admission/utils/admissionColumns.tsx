@@ -39,20 +39,31 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "User Name",
       dataIndex: "student",
       align: "center",
-      render: (title) => (title ? title?.user?.username : "N/A"),
+      sorter: (a, b) =>
+        a.student?.user?.username?.localeCompare(
+          b.student?.user?.username || ""
+        ),
+      render: (student) => student?.user?.username || "N/A",
     },
     {
       key: "2",
       title: "Admission Number",
       dataIndex: "registration_number",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      sorter: (a, b) =>
+        (a.registration_number || "").localeCompare(
+          b.registration_number || ""
+        ),
+      render: (registration_number) => registration_number || "N/A",
     },
     {
       key: "3",
       title: "Admission Date",
       dataIndex: "admission_date",
       align: "center",
+      sorter: (a, b) =>
+        new Date(a.admission_date || 0).getTime() -
+        new Date(b.admission_date || 0).getTime(),
       render: (title) => (title ? title : "N/A"),
     },
 
@@ -61,7 +72,9 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Session",
       dataIndex: "session",
       align: "center",
-      render: (title) => (title ? capitalize(title.name) : "N/A"),
+      sorter: (a, b) =>
+        (a.session?.name || "").localeCompare(b.session?.name || ""),
+      render: (session) => (session?.name ? capitalize(session.name) : "N/A"),
     },
     {
       key: "5",
@@ -75,9 +88,9 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Fee Type",
       dataIndex: "fee_type",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      sorter: (a, b) => (a.fee_type || "").localeCompare(b.fee_type || ""),
+      render: (fee_type) => (fee_type ? capitalize(fee_type) : "N/A"),
     },
-
     {
       key: "7",
       title: "One Time Fee",

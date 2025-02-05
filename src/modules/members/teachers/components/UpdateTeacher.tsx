@@ -187,12 +187,15 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                           label="Mobile No for SMS/WhatsApp"
                           name="phone_number"
                         >
-                          <Input placeholder="Enter Mobile Number" />
+                          <Input
+                            addonBefore="+088"
+                            placeholder="Enter Mobile Number"
+                          />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
                         <Form.Item<any> label="Base Salary" name="base_salary">
-                          <Input placeholder="Base Salary." />
+                          <Input placeholder="Base Salary." type="number" />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>

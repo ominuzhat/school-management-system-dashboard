@@ -176,7 +176,7 @@ const CreateEmployee = () => {
                           name="phone_number"
                           rules={[{ required: true, message: "Phone Number" }]}
                         >
-                          <Input placeholder="Phone Number" />
+                          <Input placeholder="Phone Number" type="tel" />
                         </Form.Item>
                       </Col>
 
@@ -239,7 +239,7 @@ const CreateEmployee = () => {
                           name="base_salary"
                           rules={[{ required: true, message: "Base Salary!" }]}
                         >
-                          <Input placeholder="Base Salary." />
+                          <Input placeholder="Base Salary." type="number" />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>

@@ -133,7 +133,7 @@ const UpdatePayroll = ({ record }: { record: any }) => {
         teacher: teacher?.id,
         employee: employee?.id,
         base_salary: employee ? employee?.base_salary : teacher?.base_salary,
-        deductions,
+        deductions: deductions.length > 0 ? deductions : [{}],
         ...otherFields,
       });
 
@@ -181,13 +181,16 @@ const UpdatePayroll = ({ record }: { record: any }) => {
 
   const onFinish = (values: any): void => {
     console.log(values);
+    const validDeductions = deductions?.filter(
+      (deduction: any) => deduction?.amount && Number(deduction.amount) > 0
+    );
     const result = {
       period_start: periodDate?.[0],
       period_end: periodDate?.[1],
       employee: selectedEmployee,
       teacher: selectedTeacher,
       attendance_days: 0,
-      deductions: deductions,
+      ...(validDeductions?.length > 0 ? { deductions: validDeductions } : []),
       advance_salary: advanceSalary,
       provident_fund: providentFund,
       mobile_bill: mobileBill,

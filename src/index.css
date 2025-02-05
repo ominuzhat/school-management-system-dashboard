@@ -37,3 +37,19 @@ body::-webkit-scrollbar-corner {
 .ant-descriptions-view .ant-descriptions-item-label {
   font-weight: bold;
 }
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #8888881c;
+}

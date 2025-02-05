@@ -201,7 +201,7 @@ const UpdateEmployee = ({ records }: any) => {
 
                       <Col lg={8}>
                         <Form.Item label="Base Salary" name="base_salary">
-                          <Input placeholder="Base Salary" />
+                          <Input placeholder="Base Salary" type="number" />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>

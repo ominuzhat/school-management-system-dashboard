@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
@@ -32,7 +32,37 @@ const useAdmissionSessionsColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? title : "N/A"),
     },
+    {
+      key: "1",
+      title: "Session Status",
+      dataIndex: "status",
+      align: "center",
+      render: (status) => {
+        let color = "";
 
+        switch (status) {
+          case "open":
+            color = "green"; // Open status is green
+            break;
+          case "closed":
+            color = "red"; // Closed status is red
+            break;
+          case "on_hold":
+            color = "orange"; // On Hold status is orange
+            break;
+          default:
+            color = "gray"; // Default color if status is not found
+        }
+
+        return status ? (
+          <Tag color={color}>
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </Tag>
+        ) : (
+          "N/A"
+        );
+      },
+    },
     {
       title: "Actions",
       align: "center",

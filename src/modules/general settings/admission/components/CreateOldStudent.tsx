@@ -16,8 +16,11 @@ const CreateOldStudent = () => {
   const [search, setSearch] = useState("");
   const { data: studentData, isFetching } = useGetStudentsQuery({
     search: search,
+    is_active: true,
   });
-  const { data: sessionData } = useGetAdmissionSessionQuery({});
+  const { data: sessionData } = useGetAdmissionSessionQuery({
+    status: open,
+  });
   const [selectedClass, setSelectedClass] = useState<number>();
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const { data: subjectData } = useGetSubjectsQuery({
@@ -132,7 +135,11 @@ const CreateOldStudent = () => {
                 name="discount_value"
                 initialValue={0}
               >
-                <Input placeholder="Discount Value" defaultValue={0} />
+                <Input
+                  placeholder="Discount Value"
+                  defaultValue={0}
+                  type="number"
+                />
               </Form.Item>
             </Col>
 
@@ -157,6 +164,7 @@ const CreateOldStudent = () => {
                 <Select
                   className="w-full"
                   placeholder="Select Class"
+                  allowClear
                   value={selectedClass}
                   onChange={handleClassChange}
                 >
@@ -170,7 +178,7 @@ const CreateOldStudent = () => {
               </Form.Item>
             </Col>
 
-            {selectedClass !== 0 && (
+            {selectedClass && (
               <Col lg={8}>
                 <Form.Item<IAdmission>
                   label="Subject"

@@ -6,20 +6,23 @@ import { PlusOutlined } from "@ant-design/icons";
 import { SearchComponent } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useState } from "react";
 import { Table } from "../../../../../common/CommonAnt";
-import { useGetTuitionFeesQuery } from "../api/tuitionFeeEndPoints";
-import useTuitionFeesColumns from "../utils/tuitionFeesColumns";
-import { IGetTuitionFee } from "../type/tuitionFeeTypes";
-import CreateTuitionFees from "../component/CreateTuitionFees";
+import { useGetAdditionalFeesQuery } from "../api/additionalFeeEndPoints";
+import useAdditionalFeesColumns from "../utils/additionalFeesColumns";
+import CreateAdditionalFees from "../component/CreateAdditionalFees";
+import { IGetAdditionalFee } from "../type/additionalFeeTypes";
 
-const TuitionFeesPage = () => {
+const AdditionalFeesPage = () => {
   const dispatch = useDispatch();
-  const { data: tuitionFees, isLoading } = useGetTuitionFeesQuery({});
   const [search, setSearch] = useState("");
+  const { data: additionalFee, isLoading } = useGetAdditionalFeesQuery({
+    search: search,
+  });
 
   const dataLength =
-    (tuitionFees?.data as IGetTuitionFee[] | undefined)?.length ?? 0;
+    (additionalFee?.data as IGetAdditionalFee[] | undefined)?.length ?? 0;
 
-  const dataSource = (tuitionFees?.data as IGetTuitionFee[] | undefined) ?? [];
+  const dataSource =
+    (additionalFee?.data as IGetAdditionalFee[] | undefined) ?? [];
 
   return (
     <div>
@@ -34,26 +37,22 @@ const TuitionFeesPage = () => {
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Add Tuition Fees",
-                    content: <CreateTuitionFees />,
+                    title: "Add Additional Fees",
+                    content: <CreateAdditionalFees />,
                   })
                 )
               }
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Add Tuition Fees
+              Add Additional Fees
             </Button>
           </Col>
-          <Col lg={10} xs={24}>
-            <Row justify="space-between" gutter={[16, 0]}>
-              <Col lg={12} xs={12}>
-                <SearchComponent
-                  onSearch={(value) => setSearch(value)}
-                  placeholder="Search students"
-                />
-              </Col>
-            </Row>
+          <Col lg={6} xs={24}>
+            <SearchComponent
+              onSearch={(value) => setSearch(value)}
+              placeholder="Search Additional"
+            />
           </Col>
         </Row>
       </Card>
@@ -62,10 +61,10 @@ const TuitionFeesPage = () => {
         loading={isLoading}
         total={dataLength}
         dataSource={dataSource}
-        columns={useTuitionFeesColumns()}
+        columns={useAdditionalFeesColumns()}
       />
     </div>
   );
 };
 
-export default TuitionFeesPage;
+export default AdditionalFeesPage;

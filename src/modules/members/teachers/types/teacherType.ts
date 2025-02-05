@@ -18,7 +18,8 @@ export interface IGetTeacher {
   hire_date: Date;
   is_active: boolean;
   user: IGetUser;
-  base_salary: any;
+  base_salary?: any;
+  attendance?: any;
 }
 
 export interface IGetUser {

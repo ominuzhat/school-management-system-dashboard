@@ -3,25 +3,24 @@ import { FilterTypes } from "../../../../app/features/filterSlice";
 import { ApiResponse, PaginatedResponse } from "../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../app/utils/tagTypes";
-import { ICreateTeacher, IGetTeacher } from "../types/teacherType";
+import { ICreateTeacher } from "../types/teacherType";
 
 const teacherEndPoint = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTeacher: builder.query<
-      ApiResponse<PaginatedResponse<IGetTeacher>>,
-      FilterTypes
-    >({
-      query: (params) => ({
-        url: "/api/v1.0/teachers/",
-        params,
-      }),
-      providesTags: [
-        {
-          type: TagTypes.TEACHER,
-          id: TagTypes.TEACHER + "_ID",
-        },
-      ],
-    }),
+    getTeacher: builder.query<ApiResponse<PaginatedResponse<any>>, FilterTypes>(
+      {
+        query: (params) => ({
+          url: "/api/v1.0/teachers/",
+          params,
+        }),
+        providesTags: [
+          {
+            type: TagTypes.TEACHER,
+            id: TagTypes.TEACHER + "_ID",
+          },
+        ],
+      }
+    ),
 
     createTeacher: builder.mutation<ApiResponse<ICreateTeacher>, FormData>({
       query: (data) => ({

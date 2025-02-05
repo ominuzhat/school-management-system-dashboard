@@ -1,5 +1,4 @@
 import { Button, Card, Col, Row } from "antd";
-
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
@@ -10,13 +9,14 @@ import { Table } from "../../../../common/CommonAnt";
 
 import usePayrollColumns from "../utils/payrollColumns";
 import { useGetPayrollQuery } from "../api/payrollEndPoints";
+import { useState } from "react";
 
 const PayrollPage = () => {
-  const { data: payrollData, isLoading } = useGetPayrollQuery({});
+  const [search, setSearch] = useState();
 
-  const handleSearch = (value: string) => {
-    console.log("Search Value:", value);
-  };
+  const { data: payrollData, isLoading } = useGetPayrollQuery({
+    search: search,
+  });
   const dispatch = useDispatch();
   return (
     <div className="space-y-5">
@@ -44,7 +44,7 @@ const PayrollPage = () => {
           </Col>
           <Col lg={6}>
             <SearchComponent
-              onSearch={handleSearch}
+              onSearch={(value: any) => setSearch(value)}
               placeholder="Enter Your Payroll"
             />
           </Col>

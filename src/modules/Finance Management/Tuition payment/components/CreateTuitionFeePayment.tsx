@@ -5,11 +5,11 @@ import debounce from "lodash/debounce";
 import { useState } from "react";
 import { useCreateTuitionFeePaymentMutation } from "../api/tuitionPaymentEndPoints";
 import { ICreateTuitionFeePayment } from "../types/tuitionPaymentTypes";
-import { useGetTuitionFeesQuery } from "../../Fees/Tuition Fee/api/tuitionFeeEndPoints";
+import { useGetAdditionalFeesQuery } from "../../Fees/Additional Fee/api/additionalFeeEndPoints";
 
 const CreateTuitionFeePayment = () => {
   const [search, setSearch] = useState("");
-  const { data: GetPayrollData, isFetching } = useGetTuitionFeesQuery({
+  const { data: GetPayrollData, isFetching } = useGetAdditionalFeesQuery({
     search: search,
   });
 

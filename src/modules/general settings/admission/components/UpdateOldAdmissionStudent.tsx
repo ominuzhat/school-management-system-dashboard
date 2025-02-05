@@ -68,11 +68,7 @@ const UpdateOldAdmissionStudent = () => {
           <Row gutter={[16, 16]}>
             {/* Form fields here */}
             <Col lg={8}>
-              <Form.Item
-                label="Student"
-                name="student"
-                rules={[{ required: true, message: "Student is required" }]}
-              >
+              <Form.Item label="Student" name="student">
                 <Select
                   className="w-full"
                   placeholder="Select Student"
@@ -90,11 +86,7 @@ const UpdateOldAdmissionStudent = () => {
 
             {/* Other form items... */}
             <Col lg={8}>
-              <Form.Item
-                label="Session"
-                name="session"
-                rules={[{ required: true, message: "Session is required" }]}
-              >
+              <Form.Item label="Session" name="session">
                 <Select
                   className="w-full"
                   placeholder="Select Session"
@@ -130,16 +122,12 @@ const UpdateOldAdmissionStudent = () => {
                 name="discount_value"
                 initialValue={0}
               >
-                <Input placeholder="Discount Value" />
+                <Input placeholder="Discount Value" type="number" />
               </Form.Item>
             </Col>
 
             <Col lg={8}>
-              <Form.Item
-                label="Fee Type"
-                name="fee_type"
-                rules={[{ required: true, message: "Fee Type is required" }]}
-              >
+              <Form.Item label="Fee Type" name="fee_type">
                 <Select className="w-full" placeholder="Select Fee Type">
                   <Option value="class">Class</Option>
                   <Option value="subject">Subjects</Option>
@@ -148,11 +136,7 @@ const UpdateOldAdmissionStudent = () => {
             </Col>
 
             <Col lg={8}>
-              <Form.Item
-                label="Class"
-                name="grade_level"
-                rules={[{ required: true, message: "Class is required" }]}
-              >
+              <Form.Item label="Class" name="grade_level">
                 <Select
                   className="w-full"
                   placeholder="Select Class"
@@ -171,11 +155,7 @@ const UpdateOldAdmissionStudent = () => {
 
             {selectedClass !== 0 && (
               <Col lg={8}>
-                <Form.Item
-                  label="Subjects"
-                  name="subjects"
-                  rules={[{ required: true, message: "Subject is required" }]}
-                >
+                <Form.Item label="Subjects" name="subjects">
                   <Select
                     className="w-full"
                     mode="multiple"

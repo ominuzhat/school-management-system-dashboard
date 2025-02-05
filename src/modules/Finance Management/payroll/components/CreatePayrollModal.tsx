@@ -10,8 +10,8 @@ import {
 } from "antd";
 import { RangePickerComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
 
-import type { UploadProps } from "antd";
-import { message } from "antd";
+// import type { UploadProps } from "antd";
+// import { message } from "antd";
 import PayrollDeduction from "./PayrollDeduction";
 import { useGetTeacherQuery } from "../../../members/teachers/api/teachersEndPoints";
 import { useGetEmployeeQuery } from "../../../members/employees/api/employeeEndPoints";
@@ -20,23 +20,23 @@ import { Moment } from "moment";
 import { useCreatePayrollMutation } from "../api/payrollEndPoints";
 import { Form } from "../../../../common/CommonAnt";
 
-const props: UploadProps = {
-  name: "file",
-  action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
+// const props: UploadProps = {
+//   name: "file",
+//   action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+//   headers: {
+//     authorization: "authorization-text",
+//   },
+//   onChange(info) {
+//     if (info.file.status !== "uploading") {
+//       console.log(info.file, info.fileList);
+//     }
+//     if (info.file.status === "done") {
+//       message.success(`${info.file.name} file uploaded successfully`);
+//     } else if (info.file.status === "error") {
+//       message.error(`${info.file.name} file upload failed.`);
+//     }
+//   },
+// };
 
 interface PeriodDate {
   period_start: string;
@@ -168,8 +168,11 @@ const CreatePayrollModal = () => {
   };
 
   const onFinish = (values: any): void => {
-    console.log(values, "finished");
     // const formData: FormData = new FormData();
+    console.log(values);
+    const validDeductions = deductions?.filter(
+      (deduction: any) => deduction?.amount && Number(deduction.amount) > 0
+    );
 
     const result = {
       period_start: periodDate?.period_start,
@@ -177,7 +180,6 @@ const CreatePayrollModal = () => {
       employee: selectedEmployee,
       teacher: selectedTeacher,
       attendance_days: 0,
-      deductions: deductions,
       advance_salary: advanceSalary,
       provident_fund: providentFUnd,
       mobile_bill: mobileBill,
@@ -191,9 +193,8 @@ const CreatePayrollModal = () => {
       profit_share: profitShare,
       sales_commission: salesCommission,
       other_allowance: otherAllowance,
+      ...(validDeductions?.length > 0 ? { deductions: validDeductions } : []),
     };
-
-    console.log(result);
 
     create(result as any);
   };
@@ -216,7 +217,15 @@ const CreatePayrollModal = () => {
               ]}
             />
           </Form.Item>
-          <Form.Item name="">
+          <Form.Item
+            name=""
+            rules={[
+              {
+                required: true,
+                message: "Choose  date",
+              },
+            ]}
+          >
             <RangePickerComponent
               onChange={handleRangeChange}
               format="YYYY-MM-DD"
@@ -414,9 +423,7 @@ const CreatePayrollModal = () => {
                 <Input placeholder="Total Salary" disabled />
               </Form.Item>
             </Col>
-            <Col lg={6}>
-
-            </Col>
+            <Col lg={6}></Col>
           </Row>
         </Card>
       </Form>

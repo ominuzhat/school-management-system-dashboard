@@ -1,6 +1,6 @@
 import { Card, Col, Input, Row, Typography } from "antd";
 import React from "react";
-import { ErrorType, LoginTypes } from "../types/authTypes";
+import { LoginTypes } from "../types/authTypes";
 import "../styles/Login.css";
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import { Form } from "../../../common/CommonAnt";
@@ -11,7 +11,7 @@ import {
   loggedIn,
   setMessage,
 } from "../../../app/features/authSlice";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TOKEN_NAME } from "../../../utilities/baseQuery";
 import { openNotification } from "../../../app/features/notificationSlice";
 import { passwordValidator } from "../../../utilities/validator";
@@ -22,37 +22,35 @@ import { logo, welcome } from "../../../utilities/images";
 const SecondLogin: React.FC = () => {
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
+
   const { message } = useSelector((state: RootState) => state.auth);
 
-  const from: string = location?.state?.from?.pathname || "/";
+  const from: string = "/";
 
   const onFinish = async (values: LoginTypes): Promise<void> => {
     try {
-      const response = await login(values).unwrap();
-      if (response.success === true) {
-        const { success, data } = response;
-        dispatch(loggedIn({ success, access: data?.access }));
-        localStorage.setItem(
-          TOKEN_NAME,
-          JSON.stringify({ success, access: data?.access })
-        );
-        dispatch(
-          openNotification({
-            type: "success",
-            message: "You have successfully logged in.",
-          })
-        );
-        navigate(from);
-      }
-    } catch (error) {
-      const { status } = error as ErrorType;
-      if (status === "FETCH_ERROR") {
-        dispatch(
-          setMessage("We're sorry, our system is currently unavailable.")
-        );
-      }
+      const response = await login({
+        ...values,
+        password: "StrongPassword123!",
+      }).unwrap();
+      const { success, data } = response;
+      dispatch(
+        openNotification({
+          type: "success",
+          message: "You have successfully logged in.",
+        })
+      );
+      dispatch(loggedIn({ success, access: data?.access }));
+      localStorage.setItem(
+        TOKEN_NAME,
+        JSON.stringify({ success, access: data?.access })
+      );
+      window.location.href = from;
+    } catch (error: any) {
+      const errorRes = error?.data?.message
+        ? error?.data.message
+        : "We're sorry, our system is currently unavailable.";
+      dispatch(setMessage(errorRes));
     }
   };
 

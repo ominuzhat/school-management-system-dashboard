@@ -140,24 +140,18 @@ const MenuData: React.FC = () => {
   const payroll = [
     {
       key: "/payroll",
-      label: <Link to="/payroll">Payroll</Link>,
-      icon: <MdOutlinePayments />,
-    },
-
-    {
-      key: "/payment",
-      label: "payment",
+      label: "Salary",
       icon: <MdPayment />,
       children: [
+        {
+          key: "/payroll",
+          label: <Link to="/payroll">Payroll</Link>,
+          icon: <MdOutlinePayments />,
+        },
         {
           label: <Link to="/payment">Payment</Link>,
           icon: <PiContactlessPaymentBold />,
           key: "/payment",
-        },
-        {
-          label: <Link to="/tuition-fees-payment">Tuition Fee Payment</Link>,
-          icon: <RiSecurePaymentLine />,
-          key: "/tuition-fees-payment",
         },
       ],
     },
@@ -167,24 +161,19 @@ const MenuData: React.FC = () => {
       icon: <TbCoinTaka />,
       children: [
         {
-          label: <Link to="/fee-collection">Fees Collection</Link>,
-          icon: <BiSolidUserAccount />,
-          key: "/fee-collection",
-        },
-        {
-          label: <Link to="/fees">Fees</Link>,
+          label: <Link to="/fees">Config</Link>,
           icon: <BiSolidUserAccount />,
           key: "/fees",
         },
         {
-          label: <Link to="/tuition-fees">Tuition Fees</Link>,
-          icon: <BiSolidUserAccount />,
-          key: "/tuition-fees",
+          label: <Link to="/additional-fee">Additional Fee</Link>,
+          icon: <HiOutlineCash />,
+          key: "/additional-fee",
         },
         {
-          label: <Link to="/fees/fees-particular">Fees Particulars</Link>,
-          icon: <HiOutlineCash />,
-          key: "/fees/fees-particular",
+          label: <Link to="/fee-collection">Collect Fee</Link>,
+          icon: <RiSecurePaymentLine />,
+          key: "/fee-collection",
         },
       ],
     },
