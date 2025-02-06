@@ -5,10 +5,10 @@ import {
   Row,
   Select,
   Form as AntForm,
-  DatePickerProps,
   Card,
-  Button,
   Tag,
+  Typography,
+  message,
 } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import { useGetAdmissionQuery } from "../../../../general settings/admission/api/admissionEndPoints";
@@ -18,10 +18,19 @@ import dayjs from "dayjs";
 import { useCreateCollectFeesMutation } from "../api/collectFeeEndPoints";
 import { CommonPaymentMethod } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useGetAdditionalFeesQuery } from "../../Additional Fee/api/additionalFeeEndPoints";
+import {
+  UserOutlined,
+  CalendarOutlined,
+  DollarOutlined,
+} from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 const CollectFeePage = () => {
   const [search, setSearch] = useState("");
   const [selectedFees, setSelectedFees] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState({});
+  const [selectedAdditionalFee, setSelectedAdditionalFee] = useState([]);
   const [create, { isLoading, isSuccess }] = useCreateCollectFeesMutation();
   const { data: additionalData } = useGetAdditionalFeesQuery({});
   const { data: admissionData, isFetching } = useGetAdmissionQuery({
@@ -30,9 +39,7 @@ const CollectFeePage = () => {
   const [form] = AntForm.useForm();
 
   const admission = AntForm.useWatch("admission", form);
-  const dueAmount = AntForm.useWatch("due", form);
-  console.log(dueAmount);
-  console.log(admissionData?.data?.results);
+  const addOns = AntForm.useWatch("add_ons", form);
 
   useEffect(() => {
     if (admission) {
@@ -40,16 +47,27 @@ const CollectFeePage = () => {
         (data: any) => data?.id === admission
       );
 
-      if (admission) {
+      const foundAdditionalData =
+        Array.isArray(additionalData?.data) &&
+        additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
+
+      if (foundAdmission) {
         form.setFieldsValue({
           class: foundAdmission?.grade_level,
           session: foundAdmission?.session?.name,
-          due: foundAdmission?.due_amount,
         });
         setSelectedFees(foundAdmission?.fees);
+        setSelectedStudent(foundAdmission);
+        setSelectedAdditionalFee(foundAdditionalData);
       }
     }
-  }, [admission, admissionData?.data?.results, form, setSelectedFees]);
+  }, [
+    addOns,
+    additionalData?.data,
+    admission,
+    admissionData?.data?.results,
+    form,
+  ]);
 
   const onFinish = (values: any): void => {
     const results = {
@@ -61,25 +79,32 @@ const CollectFeePage = () => {
       month: dayjs(values?.month).format("YYYY-MM-DD"),
     };
 
-    create(results);
-  };
-
-  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
+    create(results)
+      .unwrap()
+      .then(() => {
+        message.success("Fee collected successfully!");
+      })
+      .catch(() => {
+        message.error("Failed to collect fee. Please try again.");
+      });
   };
 
   return (
-    <div>
+    <div className="p-6">
+      <Title level={3} className="mb-6 text-center text-blue-600">
+        Collect Fees
+      </Title>
       <Form
         form={form}
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
         layout="horizontal"
+        buttonLabel="Collect Fee"
       >
-        <Card>
+        <Card className="mb-6 shadow-lg rounded-lg">
           <Row gutter={[16, 16]}>
-            <Col lg={6}>
+            <Col lg={8} md={12}>
               <Form.Item
                 label="Select Student"
                 name="admission"
@@ -98,6 +123,7 @@ const CollectFeePage = () => {
                       ? "No Student found"
                       : null
                   }
+                  suffixIcon={<UserOutlined />}
                 >
                   {admissionData?.data?.results?.map((data: any) => (
                     <Select.Option key={data?.id} value={data?.id}>
@@ -107,27 +133,35 @@ const CollectFeePage = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col lg={6}>
+            <Col lg={4} md={12}>
               <Form.Item label="Class" name="class">
-                <Input placeholder="Class" disabled />
+                <Input placeholder="Class" disabled prefix={<UserOutlined />} />
               </Form.Item>
             </Col>
-            <Col lg={6}>
+            <Col lg={4} md={12}>
               <Form.Item label="Session" name="session">
-                <Input placeholder="Session" disabled />
+                <Input
+                  placeholder="Session"
+                  disabled
+                  prefix={<CalendarOutlined />}
+                />
               </Form.Item>
-            </Col>{" "}
-            {/* <Col lg={6}>
-              <Form.Item label="Due" name="due">
-                <Input placeholder="Due" disabled />
+            </Col>
+            <Col lg={4} md={12}>
+              <Form.Item
+                label="Month"
+                name="month"
+                initialValue={dayjs()}
+                rules={[{ required: true, message: "Payment Month" }]}
+              >
+                <DatePicker
+                  picker="month"
+                  className="w-full"
+                  suffixIcon={<CalendarOutlined />}
+                />
               </Form.Item>
-            </Col> */}
-            <Col lg={6}>
-              <Form.Item label="Month" name="month">
-                <DatePicker onChange={onChange} picker="month" />
-              </Form.Item>
-            </Col>{" "}
-            <Col lg={6}>
+            </Col>
+            <Col lg={4} md={12}>
               <AntForm.Item
                 label="Payment Date"
                 name="payment_date"
@@ -138,14 +172,15 @@ const CollectFeePage = () => {
                   placeholder="Select Date"
                   format="YYYY-MM-DD"
                   className="w-full"
+                  suffixIcon={<CalendarOutlined />}
                 />
               </AntForm.Item>
             </Col>
-            <Col lg={4}>
+            <Col lg={12}>
               <Form.Item label="Additional" name="add_ons">
                 <Select
                   mode="multiple"
-                  placeholder="Additional "
+                  placeholder="Select Additional Fees"
                   className="w-full"
                   allowClear
                   showSearch
@@ -153,8 +188,9 @@ const CollectFeePage = () => {
                   filterOption={false}
                   loading={isFetching}
                   notFoundContent={
-                    admissionData?.data?.results?.length === 0
-                      ? "No Student found"
+                    Array.isArray(additionalData?.data) &&
+                    additionalData?.data?.length === 0
+                      ? "No additional fees found"
                       : null
                   }
                 >
@@ -167,91 +203,94 @@ const CollectFeePage = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col lg={4}>
-              <Form.Item label="Payment Method" name="payment_method">
-                <CommonPaymentMethod />
-              </Form.Item>
-            </Col>
-            {/* <Col>
-              <Form.Item label="Paid Amount" name="paid_amount">
-                <Input placeholder="Paid Amount" type="number" />
-              </Form.Item>
-            </Col> */}
           </Row>
         </Card>
 
-        <Card className="p-4">
-          <table className="">
-            <thead>
-              <tr className="border-b">
-                <th className="p-2 text-left">SL</th>
-                <th className="p-2 text-left">Name</th>
-                <th className="p-2 text-left">Type</th>
-                <th className="p-2 text-center">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {selectedFees?.map((data: any, index: number) => (
-                <tr key={index} className="border-b">
-                  <td className="p-2">{index + 1}</td>
-                  <td className="p-2">{data?.name}</td>
-                  <td className="p-2">
-                    {data?.one_time ? (
-                      <Tag color="purple">One Time</Tag>
-                    ) : (
-                      <Tag color="green">Monthly</Tag>
-                    )}
-                  </td>
-                  <td className="p-2 text-center">{data?.amount}</td>
+        {admission && (
+          <Card className="p-4 shadow-lg rounded-lg">
+            <table className="w-full mb-6">
+              <thead>
+                <tr className="border-b">
+                  <th className="p-3 text-left">SL</th>
+                  <th className="p-3 text-left">Name</th>
+                  <th className="p-3 text-left">Type</th>
+                  <th className="p-3 text-center">Amount</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {[...selectedFees, ...selectedAdditionalFee].map(
+                  (data: any, index: number) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-3">{index + 1}</td>
+                      <td className="p-3">{data?.name}</td>
+                      <td className="p-3">
+                        {selectedAdditionalFee.some(
+                          (additional: any) => additional?.id === data?.id
+                        ) ? (
+                          <Tag color="green">Additional</Tag>
+                        ) : (
+                          <Tag color="purple">Regular</Tag>
+                        )}
+                      </td>
+                      <td className="p-3 text-center">{data?.amount}</td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
 
-          <div className="w-full flex flex-col md:flex-row justify-between items-center  pt-3">
-            <div></div> {/* Placeholder to maintain structure */}
-            <div className="w-full md:w-[21rem] flex flex-col md:flex-row items-center justify-between">
-              <p className="text-lg font-medium">Sub Total :</p>
-              <span className="border px-6 py-1 text-lg font-semibold">
-                5000
-              </span>
+            <div className="flex justify-between gap-10 pt-4">
+              <div className="flex flex-col gap-3">
+                <Text strong className="text-lg text-slate-600">
+                  Total Amount :
+                </Text>
+                <Text strong className="text-lg text-red-600">
+                  Total Due :
+                </Text>
+                <Text strong className="text-lg text-green-600">
+                  Paid :
+                </Text>
+              </div>
+
+              <div className="flex flex-col gap-3  ">
+                <div className="flex justify-end">
+                  <p className="border-slate-600 bg-slate-600 text-white px-6 text-lg font-semibold w-24">
+                    {selectedStudent?.total_amount || "0000"}
+                  </p>
+                </div>
+                <div className="flex justify-end">
+                  <p className="border-red-600 bg-red-600 text-white px-6 text-lg font-semibold w-24">
+                    {selectedStudent?.due_amount || "0000"}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-5">
+                  <Form.Item
+                    name="payment_method"
+                    className="mb-0"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter payment Method",
+                      },
+                    ]}
+                  >
+                    <CommonPaymentMethod />
+                  </Form.Item>
+
+                  <Form.Item name="paid_amount" className="mb-0">
+                    <Input
+                      type="number"
+                      placeholder="000"
+                      className="border border-green-600 w-full md:w-[7rem] rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      prefix={<DollarOutlined />}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="w-full flex flex-col md:flex-row justify-between items-center  pt-3">
-            <div></div> {/* Placeholder to maintain structure */}
-            <div className="w-full md:w-[21rem] flex flex-col md:flex-row items-center justify-between">
-              <p className="text-lg font-medium text-red-600">Total Due :</p>
-              <Input
-                name="due"
-                type="number"
-                placeholder="000"
-                disabled
-                className="border rounded-none border-green-600 p-2 w-full md:w-[5.5rem] focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-              {/* <span className="border border-red-600 px-6 py-1 text-lg font-semibold">
-                {dueAmount}
-              </span> */}
-            </div>
-          </div>
-
-          <div className="w-full flex flex-col md:flex-row justify-between items-center pt-3">
-            <div></div>
-
-            <div className="w-full md:w-[21rem] flex flex-col md:flex-row items-center justify-between gap-4">
-              <label className="text-lg font-medium">Paid Amount:</label>
-              <Input
-                name="paid_amount"
-                type="number"
-                placeholder="000"
-                className="border rounded-none border-green-600 p-2 w-full md:w-[5.5rem] focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-
-              {/* <span className="border border-green-600 px-6 py-2 text-lg font-semibold rounded-md bg-green-50 text-green-700">
-                $5000
-              </span> */}
-            </div>
-          </div>
-        </Card>
+          </Card>
+        )}
       </Form>
     </div>
   );
