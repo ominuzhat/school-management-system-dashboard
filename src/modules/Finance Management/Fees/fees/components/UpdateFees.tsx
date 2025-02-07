@@ -24,7 +24,6 @@ const UpdateFees = ({ record }: { record: any }) => {
 
   const [feeType, setFeeType] = useState("");
 
-  console.log(feeData?.data);
 
   useEffect(() => {
     if (feeData) {

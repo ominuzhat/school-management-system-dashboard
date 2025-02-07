@@ -3,11 +3,11 @@ import { FilterTypes } from "../../../../../app/features/filterSlice";
 import { ApiResponse } from "../../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../../app/utils/tagTypes";
-import { CollectFee, ICreateCollectFee } from "../type/collectFeeType";
+import { ICreateCollectFee } from "../type/collectFeeType";
 
 const collectFeeEndPoints = api.injectEndpoints({
   endpoints: (builder) => ({
-    getCollectFees: builder.query<ApiResponse<CollectFee[]>, FilterTypes>({
+    getCollectFees: builder.query<ApiResponse<any>, FilterTypes>({
       query: (params) => ({
         url: "/api/v1.0/admissions/collect-fees/",
         params,
@@ -38,8 +38,8 @@ const collectFeeEndPoints = api.injectEndpoints({
     }),
 
     getCollectSingleFees: builder.query<ApiResponse<any>, number>({
-      query: (studId) => ({
-        url: `/api/v1.0/admissions/collect-fees/${studId}/`,
+      query: (collectFeeId) => ({
+        url: `/api/v1.0/admissions/collect-fees/${collectFeeId}/`,
       }),
 
       providesTags: [
@@ -52,7 +52,7 @@ const collectFeeEndPoints = api.injectEndpoints({
 
     deleteCollectItem: builder.mutation<
       ApiResponse<ICreateCollectFee>,
-      { id: any }
+      { id: ICreateCollectFee }
     >({
       query: (id) => ({
         url: `/api/v1.0/admissions/collect-fees/${id}/`,
@@ -68,7 +68,7 @@ const collectFeeEndPoints = api.injectEndpoints({
 
     updateCollectFees: builder.mutation<
       ApiResponse<ICreateCollectFee>,
-      { id: number | undefined; data: FormData }
+      { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
         url: `/api/v1.0/admissions/collect-fees/${id}/`,

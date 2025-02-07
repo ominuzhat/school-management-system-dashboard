@@ -1,5 +1,6 @@
 import { ISubjects } from "../../../../general settings/subjects/type/subjectsType";
 import { IGetInstitution } from "../../../../members/teachers/types/teacherType";
+import { IGetAdditionalFee } from "../../Additional Fee/type/additionalFeeTypes";
 
 export interface ISession {
   id: number;
@@ -91,4 +92,14 @@ export interface ICreateCollectFee {
   payment_method: string;
   payment_date: string;
   add_ons: number[];
+}
+
+export interface IGetCollectFee {
+  id: number;
+  admission: IAdmission;
+  month: string;
+  paid_amount: number;
+  payment_method: string;
+  payment_date: string;
+  add_ons: IGetAdditionalFee[];
 }

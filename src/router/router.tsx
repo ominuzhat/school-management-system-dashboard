@@ -60,10 +60,13 @@ import ViewPayroll from "../modules/Finance Management/payroll/components/ViewPa
 import PaymentPage from "../modules/Finance Management/payment/pages/PaymentPage";
 import ViewPayment from "../modules/Finance Management/payment/components/ViewPayment";
 import TuitionFeePaymentPage from "../modules/Finance Management/Tuition payment/pages/TuitionFeePaymentPage";
-import FeeCollectionPage from "../modules/Finance Management/Fees/Collect Fee/page/CollectFee";
 import ViewEmployeeAttendanceList from "../modules/general settings/attendance/mark teacher attendance/components/ViewEmployeeAttendanceList";
 import ViewSingleEmployeeAttendance from "../modules/general settings/attendance/mark teacher attendance/components/ViewSingleEmployeeAttandance";
 import AdditionalFeesPage from "../modules/Finance Management/Fees/Additional Fee/page/AdditionalFeesPage";
+import CollectFeePage from "../modules/Finance Management/Fees/Collect Fee/page/CollectFeePage";
+import CreateCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateCollectFee";
+import UpdateCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/UpdateCollectFee";
+import SingleCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/SingleCollectFee";
 
 const router = createBrowserRouter([
   {
@@ -204,14 +207,31 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // ------------------------------------
 
+      // collect fee
       {
-        path: "/fee-collection",
-        element: <FeeCollectionPage />,
+        path: "/collect-fee",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <CreateCollectFee />,
+          },
+          {
+            path: "list",
+            element: <CollectFeePage />,
+          },
+          {
+            path: ":collectFeeId",
+            element: <UpdateCollectFee />,
+          },
+          {
+            path: "view/:collectFeeId",
+            element: <SingleCollectFee />,
+          },
+        ],
       },
 
-      // --------------------------------------
       // Tuition Fees
       {
         path: "/additional-fee",
@@ -285,10 +305,10 @@ const router = createBrowserRouter([
             path: "/institute-profile",
             element: <InstituteProfile />,
           },
-          {
-            path: "mark-teacher-attendance",
-            element: <MarkTeachersAttendance />,
-          },
+          // {
+          //   path: "mark-teacher-attendance",
+          //   element: <MarkTeachersAttendance />,
+          // },
         ],
       },
       // Role & permissions

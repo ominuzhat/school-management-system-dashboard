@@ -20,7 +20,11 @@ import {
   MdOutlinePayments,
   MdPayment,
 } from "react-icons/md";
-import { FaPiggyBank, FaRegNoteSticky } from "react-icons/fa6";
+import {
+  FaPiggyBank,
+  FaRegAddressCard,
+  FaRegNoteSticky,
+} from "react-icons/fa6";
 import { TbCoinTaka, TbFileInvoice } from "react-icons/tb";
 import { GiExpense } from "react-icons/gi";
 import { BiSolidInstitution, BiSolidUserAccount } from "react-icons/bi";
@@ -171,9 +175,9 @@ const MenuData: React.FC = () => {
           key: "/additional-fee",
         },
         {
-          label: <Link to="/fee-collection">Collect Fee</Link>,
+          label: <Link to="/collect-fee">Collect Fee</Link>,
           icon: <RiSecurePaymentLine />,
-          key: "/fee-collection",
+          key: "/collect-fee",
         },
       ],
     },
@@ -235,7 +239,7 @@ const MenuData: React.FC = () => {
     {
       key: "/admission",
       label: "Admission",
-      icon: <MdCoPresent />,
+      icon: <FaRegAddressCard />,
       children: [
         {
           key: "/admission",
