@@ -13,7 +13,7 @@ import {
 import { Form } from "../../../../../common/CommonAnt";
 import { useGetAdmissionQuery } from "../../../../general settings/admission/api/admissionEndPoints";
 import { debounce } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import {
   useGetCollectSingleFeesQuery,
@@ -32,11 +32,12 @@ import { MdOutlineArrowRightAlt } from "react-icons/md";
 const { Title, Text } = Typography;
 
 const UpdateCollectFee = () => {
+  const [form] = AntForm.useForm();
   const { collectFeeId } = useParams();
-
+  const [finalDueAmount, setFinalDueAmount] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [selectedFees, setSelectedFees] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState({});
+  // const [selectedStudent, setSelectedStudent] = useState({});
   const [selectedAdditionalFee, setSelectedAdditionalFee] = useState([]);
   const { data: singleData } = useGetCollectSingleFeesQuery(
     Number(collectFeeId)
@@ -47,11 +48,22 @@ const UpdateCollectFee = () => {
     search: search,
   });
 
-  const [form] = AntForm.useForm();
+  const paidAmount = AntForm.useWatch("paid_amount", form);
   const admission = AntForm.useWatch("admission", form);
   const addOns = AntForm.useWatch("add_ons", form);
 
   console.log(addOns, "addons");
+
+  const totalAmountOfAdditionalFees = useMemo(() => {
+    return (
+      selectedAdditionalFee?.reduce(
+        (sum, data: any) => sum + data?.amount,
+        0
+      ) || 0
+    );
+  }, [selectedAdditionalFee]);
+
+console.log(singleData?.data,"ddd") 
 
   useEffect(() => {
     if (singleData?.data) {
@@ -61,6 +73,8 @@ const UpdateCollectFee = () => {
           " " +
           singleData?.data?.admission?.student?.last_name,
         class: singleData?.data?.admission?.grade_level,
+        paid_amount: singleData?.data?.paid_amount,
+        payment_method: singleData?.data?.payment_method,
         session: singleData?.data?.admission?.session?.name,
         month: singleData?.data?.month ? dayjs(singleData?.data?.month) : null,
         payment_date: singleData?.data?.payment_date
@@ -71,6 +85,12 @@ const UpdateCollectFee = () => {
           : [],
       });
       setSelectedFees(singleData?.data?.admission?.fees);
+
+      const calculatedDueAmount =
+        singleData?.data?.due_amount +
+        totalAmountOfAdditionalFees -
+        (paidAmount || 0);
+      setFinalDueAmount(calculatedDueAmount);
     }
 
     if (admission) {
@@ -79,10 +99,18 @@ const UpdateCollectFee = () => {
         additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
 
       console.log(foundAdditionalData, "foundAdditionalData");
-
       setSelectedAdditionalFee(foundAdditionalData);
     }
-  }, [form, singleData?.data, admission, additionalData?.data, addOns]);
+  }, [
+    form,
+    singleData?.data,
+    admission,
+    additionalData?.data,
+    addOns,
+
+    totalAmountOfAdditionalFees,
+    paidAmount,
+  ]);
 
   console.log(selectedFees);
   console.log(selectedAdditionalFee);
@@ -139,7 +167,7 @@ const UpdateCollectFee = () => {
     <div className="p-6">
       <div className="text-center  pb-5">
         <Title level={3} className="">
-          Collect Fees
+          Update Collect Fees
         </Title>
         <Link
           to={"/collect-fee/list"}
@@ -303,9 +331,9 @@ const UpdateCollectFee = () => {
 
             <div className="flex justify-between gap-10 pt-4">
               <div className="flex flex-col gap-3">
-                <Text strong className="text-lg text-slate-600">
+                {/* <Text strong className="text-lg text-slate-600">
                   Total Amount :
-                </Text>
+                </Text> */}
                 <Text strong className="text-lg text-red-600">
                   Total Due :
                 </Text>
@@ -315,14 +343,14 @@ const UpdateCollectFee = () => {
               </div>
 
               <div className="flex flex-col gap-3  ">
-                <div className="flex justify-end">
+                {/* <div className="flex justify-end">
                   <p className="border-slate-600 bg-slate-600 text-white px-6 text-lg font-semibold w-24">
                     {selectedStudent?.total_amount || "0000"}
                   </p>
-                </div>
+                </div> */}
                 <div className="flex justify-end">
                   <p className="border-red-600 bg-red-600 text-white px-6 text-lg font-semibold w-24">
-                    {selectedStudent?.due_amount || "0000"}
+                    { "due need from backend"}
                   </p>
                 </div>
 

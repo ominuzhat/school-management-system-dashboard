@@ -20,6 +20,10 @@ const admissionEndPoint = api.injectEndpoints({
           type: TagTypes.ADMISSION,
           id: TagTypes.ADMISSION + "_ID",
         },
+        {
+          type: TagTypes.COLLECT_FEE,
+          id: TagTypes.COLLECT_FEE + "_ID",
+        },
       ],
     }),
 
