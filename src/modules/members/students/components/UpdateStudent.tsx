@@ -11,7 +11,7 @@ import {
   DatePicker,
   Switch,
 } from "antd";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 
 import { Form } from "../../../../common/CommonAnt";
@@ -20,44 +20,49 @@ import {
   useUpdateStudentMutation,
 } from "../api/studentEndPoints";
 import dayjs from "dayjs";
+import { useNavigate, useParams } from "react-router-dom";
 
-interface Props {
-  record: any;
-}
+const UpdateStudent = () => {
+  const { studentId } = useParams();
+  const navigate = useNavigate();
 
-const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
-  const { data: singleStudent } = useGetSingleStudentQuery(record?.id);
-
-  const [update, { isLoading }] = useUpdateStudentMutation();
+  const { data: singleStudent } = useGetSingleStudentQuery(Number(studentId));
+  const [update, { isLoading, isSuccess }] = useUpdateStudentMutation();
   const [form] = AntForm.useForm();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-
-  const [originalImages, setOriginalImages] = useState<any[]>([]);
-  console.log(originalImages);
-
+  // const [originalImages, setOriginalImages] = useState<any[]>([]);
   useEffect(() => {
     if (singleStudent) {
       const initialImages =
-        singleStudent.data?.images?.map(
-          (image: { id: any; image: string }) => ({
-            uid: image.id,
-            url: image.image,
-            thumbUrl: image.image,
-            name: `Image-${image.id}`,
-          })
-        ) || [];
-      setOriginalImages(initialImages);
+        singleStudent?.data?.image &&
+        typeof singleStudent?.data?.image === "string"
+          ? [
+              {
+                uid: "-1",
+                url: singleStudent.data.image,
+                thumbUrl: singleStudent.data.image,
+                name: "Profile Image",
+              },
+            ]
+          : [];
+
+      // setOriginalImages(initialImages);
+
       form.setFieldsValue({
         ...singleStudent.data,
         username: singleStudent?.data?.user?.username,
         enrollment_date: dayjs(singleStudent?.data?.enrollment_date),
         date_of_birth: dayjs(singleStudent?.data?.date_of_birth),
-        picture: initialImages,
+        image: initialImages,
       });
     }
-  }, [form, singleStudent]);
+
+    if (isSuccess) {
+      navigate("/students");
+    }
+  }, [form, isSuccess, navigate, singleStudent]);
 
   const handlePreview = async (file: any) => {
     setPreviewImage(file.thumbUrl || file.url);
@@ -66,17 +71,15 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-
   const handleCancel = () => setPreviewVisible(false);
 
   const onFinish = (values: any) => {
     const formData: FormData = new FormData();
-
     Object.entries(values).forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        if (key === "picture") {
+        if (key === "image") {
           value.forEach((file) => {
-            if (file?.originFileObj) {
+            if (file?.originFileObj && file.originFileObj instanceof File) {
               formData.append(key, file.originFileObj);
             }
           });
@@ -97,22 +100,12 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
         formData.append(key, value as string | Blob);
       }
     });
-
-    // update(formData);
-    update({ id: record?.id, data: formData });
+    update({ id: Number(studentId), data: formData });
   };
 
   return (
     <div>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        isLoading={isLoading}
-        initialValues={{
-          enrollment_date: dayjs(),
-          is_active: true,
-        }}
-      >
+      <Form form={form} onFinish={onFinish} isLoading={isLoading}>
         <Row gutter={[16, 16]}>
           <Col lg={24}>
             <Badge.Ribbon text="Student Information" placement="start">
@@ -121,8 +114,8 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
                   <Col span={6}>
                     <Card>
                       <Form.Item
-                        label="Picture"
-                        name="picture"
+                        label="Picture "
+                        name="image"
                         valuePropName="fileList"
                         getValueFromEvent={(e) => {
                           if (Array.isArray(e)) {
@@ -133,7 +126,7 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
                       >
                         <Upload
                           beforeUpload={() => false}
-                          maxCount={20}
+                          maxCount={1}
                           listType="picture-card"
                           onPreview={handlePreview}
                           showUploadList={{ showRemoveIcon: true }}
@@ -167,11 +160,6 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
                           <Input placeholder="Last Name." />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
-                        <Form.Item<any> label="Email" name="email">
-                          <Input placeholder="Email" />
-                        </Form.Item>
-                      </Col>
 
                       <Col lg={8}>
                         <Form.Item<any>
@@ -185,25 +173,18 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
                           />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Mobile No for SMS/WhatsApp"
-                          name="phone_number"
-                        >
-                          <Input placeholder="Enter Mobile Number" />
-                        </Form.Item>
-                      </Col>
 
                       <Col lg={8}>
-                        <Form.Item label="Username" name="username">
+                        <Form.Item<any> label="Username" name="username">
                           <Input placeholder="Username." disabled />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <Form.Item label="Password" name="password">
+                        <Form.Item<any> label="Password" name="password">
                           <Input.Password placeholder="Password." />
                         </Form.Item>
                       </Col>
+
                       <Col lg={8}>
                         <Form.Item
                           label="Status"
@@ -222,12 +203,27 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
               </Card>
             </Badge.Ribbon>
           </Col>
-
           <Col lg={24}>
             <Badge.Ribbon text="Other Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={6}>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Email" name="email">
+                      <Input placeholder="Email" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Mobile No for SMS/WhatsApp"
+                      name="phone_number"
+                    >
+                      <Input
+                        addonBefore="+880"
+                        placeholder="Enter Mobile Number"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
                     <Form.Item<any> label="Date of Birth" name="date_of_birth">
                       <DatePicker
                         placeholder="Select Date"
@@ -239,55 +235,195 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
-                    <Form.Item<any>
-                      label="Student Birth ID / NID"
-                      name="registration"
-                    >
-                      <Input placeholder="Student Birth ID / NID" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={6}>
+                  <Col lg={4}>
                     <Form.Item<any> label="Gender" name="gender">
                       <Select placeholder="Gender" className="w-full">
-                        <Select.Option value={"male"}>Male</Select.Option>
-                        <Select.Option value={"female"}>Female</Select.Option>
-                        <Select.Option value={"other"}>Other</Select.Option>
+                        <Select.Option value="M">Male</Select.Option>
+                        <Select.Option value="F">Female</Select.Option>
+                        <Select.Option value="O">Other</Select.Option>
                       </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item label="Religion" name="religion">
+                      <Select placeholder="Select Religion" className="w-full">
+                        <Select.Option value="Islam">Islam</Select.Option>
+                        <Select.Option value="Christianity">
+                          Christianity
+                        </Select.Option>
+                        <Select.Option value="Hinduism">Hinduism</Select.Option>
+                        <Select.Option value="Buddhism">Buddhism</Select.Option>
+                        <Select.Option value="Judaism">Judaism</Select.Option>
+                        <Select.Option value="Sikhism">Sikhism</Select.Option>
+                        <Select.Option value="Other">Other</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Nationality" name="nationality">
+                      <Input placeholder="Nationality" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={12}>
+                    <Form.Item<any>
+                      label="Present Address"
+                      name="present_address"
+                    >
+                      <Input placeholder="Present Address" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={12}>
+                    <Form.Item<any>
+                      label="Permanent Address"
+                      name="permanent_address"
+                    >
+                      <Input placeholder="Permanent Address" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+          <Col lg={24}>
+            <Badge.Ribbon text="Father Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Father Name" name="father_name">
+                      <Input placeholder="Father Name." />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Father Email" name="father_email">
+                      <Input placeholder="Father Email" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Father Phone Number"
+                      name="father_number"
+                    >
+                      <Input placeholder="Father Phone Number" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Father Profession"
+                      name="father_profession"
+                    >
+                      <Input placeholder="Father Profession" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Father Designation"
+                      name="father_designation"
+                    >
+                      <Input placeholder="Father Designation" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Father Education Qualification"
+                      name="father_education_qualification"
+                    >
+                      <Input placeholder="Father Education Qualification" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+          <Col lg={24}>
+            <Badge.Ribbon text="Mother Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Mother Name" name="mother_name">
+                      <Input placeholder="Mother Name." />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Mother Email" name="mother_email">
+                      <Input placeholder="Mother Email" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Mother Phone Number"
+                      name="mother_phone_number"
+                    >
+                      <Input
+                        addonBefore="+880"
+                        placeholder="Mother Phone Number"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Mother Profession"
+                      name="mother_profession"
+                    >
+                      <Input placeholder="Mother Profession" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Mother Designation"
+                      name="mother_designation"
+                    >
+                      <Input placeholder="Mother Designation" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Mother Education Qualification"
+                      name="mother_education_qualification"
+                    >
+                      <Input placeholder="Mother Education Qualification" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+          <Col lg={24}>
+            <Badge.Ribbon text="Local Guardian Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Local Guardian Name"
+                      name="local_guardian_name"
+                    >
+                      <Input placeholder="Local Guardian Name." />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
                     <Form.Item<any>
-                      label="Institution Name"
-                      name="institution_name"
+                      label="Local Guardian Email"
+                      name="local_guardian_email"
                     >
-                      <Input placeholder="Institution Name." />
+                      <Input placeholder="Local Guardian Email" />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
-                    <Form.Item<any> label="Religion" name="religion">
-                      <Input placeholder="Religion" />
+                    <Form.Item<any>
+                      label="Local Guardian Phone Number"
+                      name="local_guardian_phone_number"
+                    >
+                      <Input
+                        addonBefore="+880"
+                        placeholder="Local Guardian Phone Number"
+                      />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
-                    <Form.Item<any> label="Blood Group" name="blood_group">
-                      <Select
-                        placeholder="Select Blood Group"
-                        className="w-full"
-                      >
-                        {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
-                          (group) => (
-                            <Select.Option key={group} value={group}>
-                              {group}
-                            </Select.Option>
-                          )
-                        )}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Address" name="address">
-                      <Input placeholder="Address" />
+                    <Form.Item<any>
+                      label="Local Guardian Relation"
+                      name="local_guardian_relation"
+                    >
+                      <Input placeholder="Local Guardian Relation" />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -298,6 +434,5 @@ const UpdateStudent: React.FC<Props> = React.memo(({ record }) => {
       </Form>
     </div>
   );
-});
-
+};
 export default UpdateStudent;

@@ -13,16 +13,33 @@ export interface IStudents {
 export interface ICreateStudent {
   first_name: string;
   last_name: string;
-  email: string;
+  mother_name: string;
+  father_name: string;
+  mother_email: string;
+  father_email: string;
+  mother_profession: string;
+  mother_designation: string;
+  mother_education_qualification: string;
+  father_profession: string;
+  father_designation: string;
+  father_education_qualification: string;
+  mother_phone_number: string;
   phone_number: string;
-  enrollment_date: Date;
-  date_of_birth: Date;
-  guardian_name: string;
-  guardian_phone_number: string;
-  address: string;
-  grade_levels: number[];
+  father_number: string;
+  enrollment_date: string; // You can change this type based on how you store the date
+  date_of_birth: string; // Same as above
+  local_guardian_name: string;
+  local_guardian_email: string;
+  local_guardian_phone_number: string;
+  local_guardian_relation: string;
+  gender: "Male" | "Female" | "Other"; // You can adjust this based on your app
+  religion: string;
+  nationality: string;
+  present_address: string;
+  permanent_address: string;
   is_active: boolean;
-  user: string;
+  email: string;
+  image: string; // URL or base64 string for the image
 }
 
 export interface IUserStudent {
@@ -48,6 +65,3 @@ export interface IInstitution {
   contact_email: string;
   is_active: boolean;
 }
-
-
-

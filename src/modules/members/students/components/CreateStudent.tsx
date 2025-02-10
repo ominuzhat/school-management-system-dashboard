@@ -12,11 +12,13 @@ import {
 import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 import { Form } from "../../../../common/CommonAnt";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCreateStudentMutation } from "../api/studentEndPoints";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 const CreateStudent = () => {
+  const navigate = useNavigate();
   const [create, { isLoading, isSuccess }] = useCreateStudentMutation();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -31,15 +33,14 @@ const CreateStudent = () => {
   };
 
   const handleCancel = () => setPreviewVisible(false);
-
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
 
     Object.entries(values).forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        if (key === "images") {
+        if (key === "image") {
           value.forEach((file) => {
-            if (file?.originFileObj) {
+            if (file?.originFileObj && file.originFileObj instanceof File) {
               formData.append(key, file.originFileObj);
             }
           });
@@ -66,10 +67,16 @@ const CreateStudent = () => {
       password: values.password,
     };
 
-    formData.append("user", JSON.stringify(user) as any);
+    formData.append("user", JSON.stringify(user));
 
     create(formData);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/students");
+    }
+  }, [isSuccess, navigate]);
 
   return (
     <div>
@@ -91,7 +98,7 @@ const CreateStudent = () => {
                     <Card>
                       <Form.Item
                         label="Picture "
-                        name="picture"
+                        name="image"
                         valuePropName="fileList"
                         getValueFromEvent={(e) => {
                           if (Array.isArray(e)) {
@@ -102,7 +109,7 @@ const CreateStudent = () => {
                       >
                         <Upload
                           beforeUpload={() => false}
-                          maxCount={20}
+                          maxCount={1}
                           listType="picture-card"
                           onPreview={handlePreview}
                           showUploadList={{ showRemoveIcon: true }}
@@ -144,15 +151,6 @@ const CreateStudent = () => {
                           <Input placeholder="Last Name." />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Email"
-                          name="email"
-                          rules={[{ required: true, message: "Email" }]}
-                        >
-                          <Input placeholder="Email" />
-                        </Form.Item>
-                      </Col>
 
                       <Col lg={8}>
                         <Form.Item<any>
@@ -167,20 +165,6 @@ const CreateStudent = () => {
                             format="YYYY-MM-DD"
                             className="w-full"
                           />
-                        </Form.Item>
-                      </Col>
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Mobile No for SMS/WhatsApp"
-                          name="phone_number"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please enter your mobile number",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Enter Mobile Number" />
                         </Form.Item>
                       </Col>
 
@@ -228,7 +212,7 @@ const CreateStudent = () => {
             <Badge.Ribbon text="Other Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={6}>
+                  <Col lg={4}>
                     <Form.Item<any>
                       label="Date of Birth"
                       name="date_of_birth"
@@ -249,55 +233,71 @@ const CreateStudent = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={4}>
                     <Form.Item<any>
-                      label="Student Birth ID / NID"
-                      name="registration"
+                      label="Gender"
+                      name="gender"
+                      rules={[
+                        { required: true, message: "Gender is required!" },
+                      ]}
                     >
-                      <Input placeholder="Student Birth ID / NID" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Gender" name="gender">
                       <Select placeholder="Gender" className="w-full">
-                        <Select.Option value={"male"}>Male</Select.Option>
-                        <Select.Option value={"female"}>Female</Select.Option>
-                        <Select.Option value={"other"}>other</Select.Option>
+                        <Select.Option value="M">Male</Select.Option>
+                        <Select.Option value="F">Female</Select.Option>
+                        <Select.Option value="O">Other</Select.Option>
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={4}>
+                    <Form.Item label="Religion" name="religion">
+                      <Select placeholder="Select Religion" className="w-full">
+                        <Select.Option value="Islam">Islam</Select.Option>
+                        <Select.Option value="Christianity">
+                          Christianity
+                        </Select.Option>
+                        <Select.Option value="Hinduism">Hinduism</Select.Option>
+                        <Select.Option value="Buddhism">Buddhism</Select.Option>
+                        <Select.Option value="Judaism">Judaism</Select.Option>
+                        <Select.Option value="Sikhism">Sikhism</Select.Option>
+                        <Select.Option value="Other">Other</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
                     <Form.Item<any>
-                      label="Institution Name"
-                      name="institution_name"
+                      label="Mobile No for SMS/WhatsApp"
+                      name="phone_number"
                     >
-                      <Input placeholder="Institution Name." />
+                      <Input
+                        addonBefore="+880"
+                        placeholder="Enter Mobile Number"
+                      />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Religion" name="religion">
-                      <Input placeholder="Religion" />
+                  <Col lg={4}>
+                    <Form.Item<any> label="Nationality" name="nationality">
+                      <Input placeholder="Nationality" />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Blood Group" name="blood_group">
-                      <Select
-                        placeholder="Select Blood Group"
-                        className="w-full"
-                      >
-                        {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
-                          (group) => (
-                            <Select.Option key={group} value={group}>
-                              {group}
-                            </Select.Option>
-                          )
-                        )}
-                      </Select>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Email" name="email">
+                      <Input placeholder="Email" />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Address" name="address">
-                      <Input placeholder="Address" />
+                  <Col lg={12}>
+                    <Form.Item<any>
+                      label="Present Address"
+                      name="present_address"
+                    >
+                      <Input placeholder="Present Address" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={12}>
+                    <Form.Item<any>
+                      label="Permanent Address"
+                      name="permanent_address"
+                    >
+                      <Input placeholder="Permanent Address" />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -308,95 +308,142 @@ const CreateStudent = () => {
             <Badge.Ribbon text="Father Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Father Name" name="name">
+                  <Col lg={4}>
+                    <Form.Item<any> label="Father Name" name="father_name">
                       <Input placeholder="Father Name." />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Father Email" name="father_email">
+                      <Input placeholder="Father Email" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
                     <Form.Item<any>
-                      label="Mobile No. "
-                      name="mobile_no"
-                      rules={[
-                        {
-                          pattern: /^[0-9]{11}$/,
-                          message:
-                            "Please enter a valid 10-digit mobile number",
-                        },
-                      ]}
+                      label="Father Phone Number"
+                      name="father_number"
                     >
-                      <Input
-                        type="tel"
-                        placeholder="Enter Mobile Number"
-                        maxLength={11}
-                        pattern="[0-9]*"
-                      />{" "}
+                      <Input placeholder="Father Phone Number" />
                     </Form.Item>
                   </Col>
                   <Col lg={4}>
-                    <Form.Item<any> label="Father NID" name="f_nid">
-                      <Input placeholder="Father NID" />
+                    <Form.Item<any>
+                      label="Father Profession"
+                      name="father_profession"
+                    >
+                      <Input placeholder="Father Profession" />
                     </Form.Item>
                   </Col>
                   <Col lg={4}>
-                    <Form.Item<any> label="Occupation" name="occupation">
-                      <Input placeholder="Occupation" />
+                    <Form.Item<any>
+                      label="Father Designation"
+                      name="father_designation"
+                    >
+                      <Input placeholder="Father Designation" />
                     </Form.Item>
                   </Col>
-
                   <Col lg={4}>
-                    <Form.Item<any> label="Income" name="income">
-                      <Input placeholder="Income" />
+                    <Form.Item<any>
+                      label="Father Education Qualification"
+                      name="father_education_qualification"
+                    >
+                      <Input placeholder="Father Education Qualification" />
                     </Form.Item>
                   </Col>
                 </Row>
               </Card>
             </Badge.Ribbon>
           </Col>
-
           <Col lg={24}>
             <Badge.Ribbon text="Mother Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Mother Name" name="mother_name">
+                      <Input placeholder="Mother Name." />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any> label="Mother Email" name="mother_email">
+                      <Input placeholder="Mother Email" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Mother Phone Number"
+                      name="mother_phone_number"
+                    >
+                      <Input
+                        addonBefore="+880"
+                        placeholder="Mother Phone Number"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Mother Profession"
+                      name="mother_profession"
+                    >
+                      <Input placeholder="Mother Profession" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Mother Designation"
+                      name="mother_designation"
+                    >
+                      <Input placeholder="Mother Designation" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={4}>
+                    <Form.Item<any>
+                      label="Mother Education Qualification"
+                      name="mother_education_qualification"
+                    >
+                      <Input placeholder="Mother Education Qualification" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+          <Col lg={24}>
+            <Badge.Ribbon text="Local Guardian Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
                   <Col lg={6}>
-                    <Form.Item<any> label="Father Name" name="name">
-                      <Input placeholder="Father Name." />
+                    <Form.Item<any>
+                      label="Local Guardian Name"
+                      name="local_guardian_name"
+                    >
+                      <Input placeholder="Local Guardian Name." />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
                     <Form.Item<any>
-                      label="Mobile No. "
-                      name="mobile_no"
-                      rules={[
-                        {
-                          pattern: /^[0-9]{11}$/,
-                          message:
-                            "Please enter a valid 10-digit mobile number",
-                        },
-                      ]}
+                      label="Local Guardian Email"
+                      name="local_guardian_email"
+                    >
+                      <Input placeholder="Local Guardian Email" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Local Guardian Phone Number"
+                      name="local_guardian_phone_number"
                     >
                       <Input
-                        type="tel"
-                        placeholder="Enter Mobile Number"
-                        maxLength={11}
-                        pattern="[0-9]*"
-                      />{" "}
+                        addonBefore="+880"
+                        placeholder="Local Guardian Phone Number"
+                      />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Mother NID" name="m_nid">
-                      <Input placeholder="Mother NID" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Occupation" name="occupation">
-                      <Input placeholder="Occupation" />
-                    </Form.Item>
-                  </Col>
-
-                  <Col lg={4}>
-                    <Form.Item<any> label="Income" name="income">
-                      <Input placeholder="Income" />
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Local Guardian Relation"
+                      name="local_guardian_relation"
+                    >
+                      <Input placeholder="Local Guardian Relation" />
                     </Form.Item>
                   </Col>
                 </Row>

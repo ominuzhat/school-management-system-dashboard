@@ -4,6 +4,7 @@ import { capitalize } from "../../../../common/capitalize/Capitalize";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { useNavigate } from "react-router-dom";
+import { IAdmissionStatus } from "../type/admissionType";
 
 const useAdmissionColumns = (): ColumnsType<any> => {
   const navigate = useNavigate();
@@ -84,6 +85,13 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       render: (title) => (title ? capitalize(title) : "N/A"),
     },
     {
+      key: "5",
+      title: "Shift",
+      dataIndex: "shift",
+      align: "center",
+      render: (title) => (title ? capitalize(title) : "N/A"),
+    },
+    {
       key: "6",
       title: "Fee Type",
       dataIndex: "fee_type",
@@ -106,18 +114,31 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       render: (title) => (title ? title : "N/A"),
     },
     {
+      key: "8",
+      title: "Due",
+      dataIndex: "due_amount",
+      align: "center",
+      render: (title) => (title ? <Tag color="red">{title}</Tag> : "N/A"),
+    },
+    {
       key: "9",
       title: "Status",
-      dataIndex: "student",
+      dataIndex: "status",
       align: "center",
-      render: (title) =>
-        title?.is_active ? (
-          <Tag color="green">Active</Tag>
-        ) : (
-          <Tag color="red">Inactive</Tag>
-        ),
-    },
+      render: (status: IAdmissionStatus) => {
+        const statusColors: Record<IAdmissionStatus, string> = {
+          pending: "blue",
+          approved: "green",
+          rejected: "red",
+          passed: "purple",
+          withdrawn: "orange",
+          failed: "volcano",
+          on_hold: "gold",
+        };
 
+        return <Tag color={statusColors[status]}>{status.toUpperCase()}</Tag>;
+      },
+    },
     {
       title: "Actions",
       align: "center",

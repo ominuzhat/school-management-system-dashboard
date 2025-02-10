@@ -1,29 +1,25 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Button, Card, Col, Row, Select } from "antd";
 import { IoGridOutline } from "react-icons/io5";
 import { PlusOutlined } from "@ant-design/icons";
 
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
-import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import { Table } from "../../../../common/CommonAnt";
 
-import { showModal } from "../../../../app/features/modalSlice";
-
 import { no_img } from "../../../../utilities/images";
 
-import CreateStudent from "../components/CreateStudent";
 import { FaListUl } from "react-icons/fa6";
 import { useGetStudentsQuery } from "../api/studentEndPoints";
-import UpdateStudent from "../components/UpdateStudent";
 import useStudentColumns from "../utils/studentColumns";
+import { Link } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
 
 const StudentsPage = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [layout, setLayout] = useState("grid");
   const [filters, setFilters] = useState({ search: "", is_active: "" });
 
@@ -46,21 +42,11 @@ const StudentsPage = () => {
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() =>
-                dispatch(
-                  showModal({
-                    title: "Add Student",
-                    content: <CreateStudent />,
-                  })
-                )
-              }
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Student
-            </Button>
+            <Link to={"/students/create"}>
+              <Button type="primary" icon={<PlusOutlined />} className="w-full">
+                Add Student
+              </Button>
+            </Link>
           </Col>
           <Col lg={10} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
@@ -138,22 +124,26 @@ const StudentsPage = () => {
                   className="border py-8 px-2 rounded-lg space-y-2"
                 >
                   <img src={no_img} alt="image" className="mx-auto" />
-                  <p> {student?.id}</p>
+
                   <p className="font-serif">
                     {student?.first_name} {student?.last_name}
                   </p>
                   <div className="space-x-2">
                     <ViewButton to={`student-view/${student?.id}`} />
-                    <EditButton
-                      onClick={() =>
-                        dispatch(
-                          showModal({
-                            title: "Update Students",
-                            content: <UpdateStudent record={"record"} />,
-                          })
-                        )
-                      }
-                    />
+
+                    <Link to={`/students/update/${student.id}`}>
+                      <Button
+                        title="Edit"
+                        size="small"
+                        type="default"
+                        style={{
+                          color: "#FFA500",
+                          border: "1px solid #FFA500",
+                        }}
+                      >
+                        <FaEdit />
+                      </Button>
+                    </Link>
                     <DeleteButton
                       onConfirm={() => handleDelete(1)}
                       onCancel={() => console.log("Cancel delete")}

@@ -67,6 +67,8 @@ import CollectFeePage from "../modules/Finance Management/Fees/Collect Fee/page/
 import CreateCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateCollectFee";
 import UpdateCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/UpdateCollectFee";
 import SingleCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/SingleCollectFee";
+import CreateStudent from "../modules/members/students/components/CreateStudent";
+import UpdateStudent from "../modules/members/students/components/UpdateStudent";
 
 const router = createBrowserRouter([
   {
@@ -87,6 +89,14 @@ const router = createBrowserRouter([
           {
             path: "/students",
             element: <StudentsPage />,
+          },
+          {
+            path: "create",
+            element: <CreateStudent />,
+          },
+          {
+            path: "update/:studentId",
+            element: <UpdateStudent />,
           },
           {
             path: "student-view/:studentId",

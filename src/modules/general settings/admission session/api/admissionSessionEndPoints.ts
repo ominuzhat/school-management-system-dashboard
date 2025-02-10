@@ -43,6 +43,46 @@ const admissionSessionEndPoint = api.injectEndpoints({
       ],
     }),
 
+    closedAdmissionSession: builder.mutation<
+      ApiResponse<IAdmissionSession>,
+      FormData
+    >({
+      query: (data) => ({
+        url: "api/v1.0/admissions/sessions/close-sessions/",
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.ADMISSION_SESSION,
+          id: TagTypes.ADMISSION_SESSION + "_ID",
+        },
+      ],
+    }),
+
+    openAdmissionSession: builder.mutation<
+      ApiResponse<IAdmissionSession>,
+      FormData
+    >({
+      query: (data) => ({
+        url: "api/v1.0/admissions/sessions/open-sessions/",
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.ADMISSION_SESSION,
+          id: TagTypes.ADMISSION_SESSION + "_ID",
+        },
+      ],
+    }),
+
     getSingleCAdmissionSession: builder.query<
       ApiResponse<IAdmissionSession>,
       number
@@ -86,4 +126,6 @@ export const {
   useGetAdmissionSessionQuery,
   useGetSingleCAdmissionSessionQuery,
   useUpdateAdmissionSessionMutation,
+  useClosedAdmissionSessionMutation,
+  useOpenAdmissionSessionMutation,
 } = admissionSessionEndPoint;

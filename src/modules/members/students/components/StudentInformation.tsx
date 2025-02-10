@@ -12,26 +12,42 @@ const StudentInformation = ({ data }: { data: any }) => {
     phone_number,
     email,
     date_of_birth,
-    address,
+    enrollment_date,
+    father_designation,
+    father_education_qualification,
+    father_email,
+    father_name,
+    father_number,
+    father_profession,
+    gender,
+    image,
+    local_guardian_email,
+    local_guardian_name,
+    local_guardian_phone_number,
+    local_guardian_relation,
+    mother_designation,
+    mother_education_qualification,
+    mother_email,
+    mother_name,
+    mother_phone_number,
+    mother_profession,
+    nationality,
+    permanent_address,
+    present_address,
+    religion,
   } = data || {};
-
   const information = [
     {
       title: "Student Information",
       data: [
         {
           fieldName: "Gender",
-          text: "Male",
+          text: gender || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Class",
-          text: "1",
-          Icon: MdOutlineSubdirectoryArrowRight,
-        },
-        {
-          fieldName: "Date of Admission",
-          text: "10-12-2024",
+          fieldName: "Date of Birth",
+          text: date_of_birth || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
@@ -45,24 +61,19 @@ const StudentInformation = ({ data }: { data: any }) => {
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Date of Birth",
-          text: date_of_birth || "N/A",
+          fieldName: "Date of Admission",
+          text: enrollment_date || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Nationality",
+          text: nationality || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
 
-          Icon: MdOutlineSubdirectoryArrowRight,
-        },
         {
-          fieldName: "Student Birth ID",
-          text: "0162404050",
-          Icon: MdOutlineSubdirectoryArrowRight,
-        },
-        {
-          fieldName: "Address",
-          text: address || "N/A",
-          Icon: MdOutlineSubdirectoryArrowRight,
-        },
-        {
-          fieldName: "Blood Group",
-          text: "O+",
+          fieldName: "Religion",
+          text: religion || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
@@ -72,27 +83,42 @@ const StudentInformation = ({ data }: { data: any }) => {
       data: [
         {
           fieldName: "Father Name",
-          text: "Mr. Alom",
+          text: father_name || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Father Mobile No",
-          text: "0168520741",
+          text: father_number || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Father NID",
-          text: "0168520741",
+          fieldName: "Father Email",
+          text: father_email || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Occupation",
-          text: "Doctor",
+          fieldName: "Father Occupation",
+          text: father_profession || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Income",
-          text: "52000",
+          fieldName: "Father Education",
+          text: father_education_qualification || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Father Designation",
+          text: father_designation || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Permanent Address",
+          text: permanent_address || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Present Address",
+          text: present_address || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
@@ -102,27 +128,57 @@ const StudentInformation = ({ data }: { data: any }) => {
       data: [
         {
           fieldName: "Mother Name",
-          text: "Mrs. Alom",
+          text: mother_name || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Mother Mobile No",
-          text: "0168520741",
+          text: mother_phone_number || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Mother NID",
-          text: "0168520741",
+          fieldName: "Mother Email",
+          text: mother_email || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Occupation",
-          text: "Doctor",
+          fieldName: "Mother Occupation",
+          text: mother_profession || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Income",
-          text: "52000",
+          fieldName: "Mother Education",
+          text: mother_education_qualification || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Mother Designation",
+          text: mother_designation || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+      ],
+    },
+    {
+      title: "Guardian Information",
+      data: [
+        {
+          fieldName: "Local Guardian Name",
+          text: local_guardian_name || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Local Guardian Phone No",
+          text: local_guardian_phone_number || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Local Guardian Email",
+          text: local_guardian_email || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Local Guardian Relation",
+          text: local_guardian_relation || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
@@ -135,7 +191,7 @@ const StudentInformation = ({ data }: { data: any }) => {
         {/* Student Overview */}
         <Col lg={6}>
           <Card className="text-center">
-            <img src={no_img} className="mx-auto" alt="Profile" />
+            <img src={image || no_img} className="mx-auto" alt="Profile" />
             <p className="text-xl font-semibold uppercase font-serif pt-5">
               {first_name} {last_name}
             </p>

@@ -12,7 +12,6 @@ import { useParams } from "react-router-dom";
 const StudentView = () => {
   const { studentId } = useParams();
   const { data } = useGetSingleStudentQuery(Number(studentId));
-  console.log(data?.data);
 
   return (
     <div>

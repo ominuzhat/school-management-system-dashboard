@@ -19,7 +19,7 @@ const CreateOldStudent = () => {
     is_active: true,
   });
   const { data: sessionData } = useGetAdmissionSessionQuery({
-    status: open,
+    status: "open",
   });
   const [selectedClass, setSelectedClass] = useState<number>();
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
@@ -30,17 +30,7 @@ const CreateOldStudent = () => {
   const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
 
   const onFinish = (values: any): void => {
-    const result: any = {
-      discount_type: values.discount_type,
-      discount_value: values.discount_value,
-      fee_type: values.fee_type,
-      session: values.session,
-      student: values.student,
-      subjects: values.subjects,
-      registration_number: "reg324",
-    };
-
-    create(result);
+    create(values);
   };
 
   const handleClassChange = (value: number) => {
@@ -208,6 +198,34 @@ const CreateOldStudent = () => {
                 </Form.Item>
               </Col>
             )}
+
+            <Col lg={6}>
+              <Form.Item<IAdmission> label="Status" name="status">
+                <Select
+                  placeholder="Status"
+                  options={[
+                    { value: "pending", label: "Pending" },
+                    { value: "approved", label: "Approved" },
+                    { value: "rejected", label: "Rejected" },
+                    { value: "passed", label: "Passed" },
+                    { value: "withdrawn", label: "Withdrawn" },
+                    { value: "failed", label: "Failed" },
+                    { value: "on_hold", label: "On Hold" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col lg={6}>
+              <Form.Item<IAdmission> label="Shift" name="shift">
+                <Select
+                  placeholder="Shift"
+                  options={[
+                    { value: "day", label: "Day" },
+                    { value: "noon", label: "Noon" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
           </Row>
         </Card>
       </Form>

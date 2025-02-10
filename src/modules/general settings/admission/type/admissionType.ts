@@ -13,16 +13,26 @@ export interface Session {
   name: string;
   institution: number;
 }
+export type IAdmissionStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "passed"
+  | "withdrawn"
+  | "failed"
+  | "on_hold";
 
 export interface IAdmission {
   id: number;
   student: number;
   subjects: ISubjects[];
   admission_date: string;
+  status: IAdmissionStatus;
   registration_number: string;
   fee_type: "class" | "other";
   one_time_fee: number;
   monthly_fee: number;
+  shift: "day" | "noon";
   session: Session;
   grade_level: GradeLevel | null;
 }

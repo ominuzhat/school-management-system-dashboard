@@ -9,10 +9,13 @@ import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { useParams } from "react-router-dom";
+import { IAdmission } from "../type/admissionType";
+import { debounce } from "lodash";
 
 const { Option } = Select;
 
 const UpdateOldAdmissionStudent = () => {
+  const [search, setSearch] = useState("");
   const { admissionId } = useParams();
   const { data: singleAdmissionData } = useGetSingleAdmissionQuery(
     Number(admissionId)
@@ -20,7 +23,10 @@ const UpdateOldAdmissionStudent = () => {
   const singleAdmission: any = singleAdmissionData?.data;
 
   const [form] = Form.useForm();
-  const { data: studentData } = useGetStudentsQuery({});
+  const { data: studentData, isFetching } = useGetStudentsQuery({
+    search: search,
+    is_active: true,
+  });
   const { data: sessionData } = useGetAdmissionSessionQuery({});
   const [selectedClass, setSelectedClass] = useState<number>(
     singleAdmission?.subjects?.[0]?.grade_level?.id || 0
@@ -38,6 +44,8 @@ const UpdateOldAdmissionStudent = () => {
         student: singleAdmission?.student?.id,
         session: singleAdmission?.session?.id,
         discount_type: singleAdmission?.discount_type,
+        status: singleAdmission?.status,
+        shift: singleAdmission?.shift,
         discount_value: singleAdmission?.discount_value,
         fee_type: singleAdmission?.fee_type,
         grade_level: singleAdmission?.subjects?.[0]?.grade_level?.id,
@@ -74,6 +82,15 @@ const UpdateOldAdmissionStudent = () => {
                   placeholder="Select Student"
                   allowClear
                   showSearch
+                  onSearch={debounce(setSearch, 500)}
+                  filterOption={false}
+                  loading={isFetching}
+                  notFoundContent={
+                    Array?.isArray(studentData?.data?.results) &&
+                    studentData?.data?.results?.length === 0
+                      ? "No Students found"
+                      : null
+                  }
                 >
                   {studentData?.data?.results?.map((data: any) => (
                     <Option key={data.id} value={data.id}>
@@ -170,6 +187,34 @@ const UpdateOldAdmissionStudent = () => {
                 </Form.Item>
               </Col>
             )}
+
+            <Col lg={6}>
+              <Form.Item<IAdmission> label="Status" name="status">
+                <Select
+                  placeholder="Status"
+                  options={[
+                    { value: "pending", label: "Pending" },
+                    { value: "approved", label: "Approved" },
+                    { value: "rejected", label: "Rejected" },
+                    { value: "passed", label: "Passed" },
+                    { value: "withdrawn", label: "Withdrawn" },
+                    { value: "failed", label: "Failed" },
+                    { value: "on_hold", label: "On Hold" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col lg={6}>
+              <Form.Item<IAdmission> label="Shift" name="shift">
+                <Select
+                  placeholder="Shift"
+                  options={[
+                    { value: "day", label: "Day" },
+                    { value: "noon", label: "Noon" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
           </Row>
 
           {/* Submit Button */}

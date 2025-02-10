@@ -1,22 +1,18 @@
-import { Space, Tag } from "antd";
+import { Button, Popconfirm, Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import UpdateAdmissionSessions from "../components/UpdateAdmissionSessions";
+import {
+  useClosedAdmissionSessionMutation,
+  useOpenAdmissionSessionMutation,
+} from "../api/admissionSessionEndPoints";
 
 const useAdmissionSessionsColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
-  //   const [deleteCartItem] = useDeleteOrderItemMutation();
-
-  //   const handleDelete = async (id: any) => {
-  //     try {
-  //       await deleteCartItem({ id }).unwrap();
-  //       console.log("Item deleted successfully");
-  //     } catch (error) {
-  //       console.error("Failed to delete item:", error);
-  //     }
-  //   };
+  const [openSession] = useOpenAdmissionSessionMutation();
+  const [deleteCartItem] = useClosedAdmissionSessionMutation();
 
   return [
     {
@@ -78,10 +74,48 @@ const useAdmissionSessionsColumns = (): ColumnsType<any> => {
               )
             }
           />
-          {/* <DeleteButton
-          onClick={() => handleDelete(record.id)}>
-            Delete
-          </DeleteButton> */}
+
+          <Popconfirm
+            title="Are you sure to Closed this item?"
+            onConfirm={async () => {
+              try {
+                await deleteCartItem({ session: record?.id } as any).unwrap();
+                console.log("Item Closed successfully");
+              } catch (error) {
+                console.error("Failed to delete item:", error);
+              }
+            }}
+            onCancel={() => console.log("Cancelled")}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="default" size="small" danger>
+              Close
+            </Button>
+          </Popconfirm>
+
+          <Popconfirm
+            title="Are you sure to Open this item?"
+            onConfirm={async () => {
+              try {
+                await openSession({ session: record?.id } as any).unwrap();
+                console.log("Item Opened successfully");
+              } catch (error) {
+                console.error("Failed to Open item:", error);
+              }
+            }}
+            onCancel={() => console.log("Cancelled")}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              type="default"
+              size="small"
+              style={{ color: "green", border: "1px solid green" }}
+            >
+              Open
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },

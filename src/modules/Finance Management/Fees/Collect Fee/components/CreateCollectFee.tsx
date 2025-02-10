@@ -39,6 +39,7 @@ const CreateCollectFee = () => {
   const { data: additionalData } = useGetAdditionalFeesQuery({});
   const { data: admissionData, isFetching } = useGetAdmissionQuery({
     search: search,
+    status: "approved",
   });
   const [form] = AntForm.useForm();
 

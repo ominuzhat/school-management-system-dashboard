@@ -50,13 +50,13 @@ const FeesView = () => {
           </Col>
         )}
 
-        {subject && subject.length > 0 && subject.length > 0 && (
+        {subject && subject.length > 0 && (
           <Col lg={subject && subject.length > 10 ? 24 : 12}>
             <Badge.Ribbon text="Subjects" placement="start">
               <Table
                 loading={isLoading}
                 pagination={false}
-                dataSource={student}
+                dataSource={subject}
                 columns={useSubjectsColumns()}
               />
             </Badge.Ribbon>
