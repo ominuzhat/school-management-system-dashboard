@@ -108,10 +108,10 @@ const SecondLogin: React.FC = () => {
 
                   <Form.Item<LoginTypes>
                     name="password"
-                    rules={[
-                      { required: true },
-                      { validator: passwordValidator },
-                    ]}
+                    // rules={[
+                    //   { required: true },
+                    //   { validator: passwordValidator },
+                    // ]}
                   >
                     <Input.Password
                       onFocus={handleOnFocus}

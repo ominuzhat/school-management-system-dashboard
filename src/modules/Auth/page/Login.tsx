@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Typography } from "antd";
+  import { Card, Col, Input, Row, Typography } from "antd";
 import React, { useEffect } from "react";
 import { ErrorType, LoginTypes } from "../types/authTypes";
 import "../styles/Login.css";

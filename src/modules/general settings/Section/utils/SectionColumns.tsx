@@ -3,9 +3,9 @@ import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
-import UpdateSubjects from "../components/UpdateSubject";
+import UpdateSection from "../components/UpdateSection";
 
-const useSubjectColumns = (): ColumnsType<any> => {
+const useSectionColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
   //   const [deleteCartItem] = useDeleteOrderItemMutation();
 
@@ -27,7 +27,7 @@ const useSubjectColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Subject Name",
+      title: "Section Name",
       dataIndex: "name",
       align: "center",
       render: (title) => (title ? title : "N/A"),
@@ -35,7 +35,7 @@ const useSubjectColumns = (): ColumnsType<any> => {
 
     {
       key: "2",
-      title: "Class ",
+      title: "Class Name",
       dataIndex: "grade_level",
       align: "center",
       render: (grade_level) => (grade_level ? grade_level.name : "N/A"),
@@ -55,10 +55,17 @@ const useSubjectColumns = (): ColumnsType<any> => {
     },
     {
       key: "4",
-      title: "Marks",
-      dataIndex: "marks",
+      title: "Capacity",
+      dataIndex: "capacity",
       align: "center",
-      render: (title) => (title ? <Tag color="green">{title}</Tag> : "N/A"),
+      render: (title) => (title ? title: "N/A"),
+    },
+    {
+      key: "4",
+      title: "Active",
+      dataIndex: "is_active",
+      align: "center",
+      render: (title) => (title ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag> ),
     },
     {
       title: "Actions",
@@ -69,8 +76,8 @@ const useSubjectColumns = (): ColumnsType<any> => {
             onClick={() =>
               dispatch(
                 showModal({
-                  title: "Update Subject",
-                  content: <UpdateSubjects record={record?.id} />,
+                  title: "Update Section",
+                  content: <UpdateSection record={record?.id} />,
                 })
               )
             }
@@ -86,4 +93,4 @@ const useSubjectColumns = (): ColumnsType<any> => {
   ];
 };
 
-export default useSubjectColumns;
+export default useSectionColumns;

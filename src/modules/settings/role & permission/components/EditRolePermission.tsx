@@ -30,14 +30,15 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
   const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
-    const permissionIds = userPermissionData?.data?.permissions?.map(
-      (permission: any) => permission?.id
-    );
+    const permissionIds = (
+      userPermissionData?.data as IGetSingleRolePermission
+    )?.permissions?.map((permission) => permission.id);
+
     form.setFieldsValue({
       name: record?.name,
       permissions: permissionIds,
     });
-  }, [record, form, userPermissionData?.data?.permissions]);
+  }, [record, form, userPermissionData?.data]);
 
   const onFinish = (values: any): void => {
     update({ id: record.id, data: values });
@@ -46,9 +47,9 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
   const handleSelectAll = () => {
     setSelectAll((prev) => !prev);
     if (!selectAll) {
-      const allPermissions = permissionData?.data?.map(
-        (permission: any) => permission.id
-      );
+      const allPermissions =
+        Array.isArray(permissionData?.data) &&
+        permissionData?.data?.map((permission: any) => permission.id);
       form.setFieldsValue({
         permissions: allPermissions,
       });

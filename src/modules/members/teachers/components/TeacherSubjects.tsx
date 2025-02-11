@@ -2,8 +2,6 @@ import { Table } from "../../../../common/CommonAnt";
 import useTeacherSubjectsColumns from "../utils/teacherSubjectsColumns";
 
 const TeacherSubjects = ({ data }: any) => {
-  console.log(data);
-
   return (
     <div>
       <Table

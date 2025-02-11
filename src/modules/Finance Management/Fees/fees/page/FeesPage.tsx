@@ -4,8 +4,6 @@ import { useDispatch } from "react-redux";
 import { showModal } from "../../../../../app/features/modalSlice";
 import CreateFees from "../components/CreateFees";
 import { PlusOutlined } from "@ant-design/icons";
-import { SearchComponent } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
-import { useState } from "react";
 import { Table } from "../../../../../common/CommonAnt";
 import { useGetFeesQuery } from "../api/feesEndpoints";
 import useFeesColumns from "../utils/FeesColumns";
@@ -15,7 +13,7 @@ const FeesPage = () => {
   const dispatch = useDispatch();
   const { data: feesList, isLoading } = useGetFeesQuery({});
   const { data: classData } = useGetClassesQuery({});
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
 
   const dataLength = (feesList?.data as any[] | undefined)?.length ?? 0;
 
@@ -57,12 +55,12 @@ const FeesPage = () => {
                     ))}
                 </Select>
               </Col>
-              <Col lg={12} xs={12}>
+              {/* <Col lg={12} xs={12}>
                 <SearchComponent
                   onSearch={(value) => setSearch(value)}
                   placeholder="Search students"
                 />
-              </Col>
+              </Col> */}
             </Row>
           </Col>
         </Row>

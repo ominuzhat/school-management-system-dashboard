@@ -1,18 +1,8 @@
+import { ISession } from "../../../Finance Management/Fees/Collect Fee/type/collectFeeType";
 import { IStudents } from "../../../members/students/types/studentsType";
-import { ISubjects } from "../../subjects/type/subjectsType";
+import { IGetSection } from "../../Section/types/sectionTypes";
+import { IGrade_Level, ISubjects } from "../../subjects/type/subjectsType";
 
-export interface GradeLevel {
-  id: number;
-  name: string;
-  description: string;
-  class_teacher: string | null;
-}
-
-export interface Session {
-  id: number;
-  name: string;
-  institution: number;
-}
 export type IAdmissionStatus =
   | "pending"
   | "approved"
@@ -33,8 +23,9 @@ export interface IAdmission {
   one_time_fee: number;
   monthly_fee: number;
   shift: "day" | "noon";
-  session: Session;
-  grade_level: GradeLevel | null;
+  session: ISession;
+  section: IGetSection;
+  grade_level: IGrade_Level | null;
 }
 
 export interface ISingleAdmission {
@@ -49,6 +40,6 @@ export interface ISingleAdmission {
   discount_value: number;
   one_time_fee: number;
   monthly_fee: number;
-  session: Session;
+  session: ISession;
   grade_level: string;
 }

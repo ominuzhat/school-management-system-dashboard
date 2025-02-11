@@ -20,26 +20,19 @@ import {
   MdOutlinePayments,
   MdPayment,
 } from "react-icons/md";
-import {
-  FaPiggyBank,
-  FaRegAddressCard,
-  FaRegNoteSticky,
-} from "react-icons/fa6";
-import { TbCoinTaka, TbFileInvoice } from "react-icons/tb";
+import { FaPiggyBank, FaRegAddressCard } from "react-icons/fa6";
+import { TbCoinTaka, TbSection } from "react-icons/tb";
 import { GiExpense } from "react-icons/gi";
 import { BiSolidInstitution, BiSolidUserAccount } from "react-icons/bi";
 import {
   AiOutlineAccountBook,
-  AiOutlineSafetyCertificate,
+  // AiOutlineSafetyCertificate,
 } from "react-icons/ai";
 import { HiOutlineCash } from "react-icons/hi";
-import { FcRules } from "react-icons/fc";
-import { CiBookmarkCheck, CiSettings } from "react-icons/ci";
-import { GrCertificate } from "react-icons/gr";
-import {
-  LiaCertificateSolid,
-  LiaChalkboardTeacherSolid,
-} from "react-icons/lia";
+// import { FcRules } from "react-icons/fc";
+// import { CiBookmarkCheck, CiSettings } from "react-icons/ci";
+// import { GrCertificate } from "react-icons/gr";
+import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { IoMdPersonAdd } from "react-icons/io";
 import { VscGoToEditingSession } from "react-icons/vsc";
 import { RiLuggageDepositLine, RiSecurePaymentLine } from "react-icons/ri";
@@ -234,6 +227,11 @@ const MenuData: React.FC = () => {
       key: "/subjects",
       label: <Link to="/subjects">Subjects</Link>,
       icon: <IoBookOutline />,
+    },
+    {
+      key: "/section",
+      label: <Link to="/section">Section</Link>,
+      icon: <TbSection />,
     },
 
     {

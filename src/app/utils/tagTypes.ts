@@ -16,6 +16,7 @@ export const TagTypes = {
   EMPLOYEE: "Employee",
   ClASSES: "Classes",
   SUBJECTS: "Subjects",
+  SECTION: "Section",
   PROFILE: "Profile",
   FESS: "Fees",
   ADDITIONAL_FEE: "Additional_fees",

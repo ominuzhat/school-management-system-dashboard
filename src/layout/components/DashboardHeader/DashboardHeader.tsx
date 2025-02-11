@@ -147,7 +147,9 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                     pointerEvents: "none",
                   }}
                 />
-                <Typography.Text strong>Code Canvas Creation</Typography.Text>
+                <Typography.Text strong>
+                  {data?.data?.username}{" "}
+                </Typography.Text>
                 <Typography.Text type="secondary" style={{ fontSize: "11px" }}>
                   info.codecanvascreation
                 </Typography.Text>

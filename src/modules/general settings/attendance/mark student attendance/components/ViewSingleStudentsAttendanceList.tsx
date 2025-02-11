@@ -142,7 +142,7 @@ const ViewSingleStudentsAttendanceList = () => {
         <Table
           bordered
           loading={isLoading}
-          dataSource={singleAttendanceData?.data?.records || []}
+          dataSource={singleAttendanceData?.data?.records ?? []}
           columns={columns}
           rowKey="id"
           pagination={{ pageSize: 5 }}

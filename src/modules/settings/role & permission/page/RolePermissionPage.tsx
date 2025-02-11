@@ -7,10 +7,16 @@ import CreateRole from "../components/CreateRole";
 import { Table } from "../../../../common/CommonAnt";
 import RolePermissionColumn from "../utils/RolePermissionColumn";
 import { useGetRolePermissionQuery } from "../api/rolePermissionEndPoints";
+import { IRole } from "../type/rolePermissionTypes";
 
 const RolePermissionPage = () => {
   const dispatch = useDispatch();
-  const { data, isLoading } = useGetRolePermissionQuery({});
+  const { data: rolePermissionData, isLoading } = useGetRolePermissionQuery({});
+
+  const dataLength =
+    (rolePermissionData?.data as IRole[] | undefined)?.length ?? 0;
+
+  const dataSource = (rolePermissionData?.data as IRole[] | undefined) ?? [];
 
   return (
     <div>
@@ -42,8 +48,8 @@ const RolePermissionPage = () => {
       <Card>
         <Table
           loading={isLoading}
-          total={0}
-          dataSource={data?.data}
+          total={dataLength}
+          dataSource={dataSource}
           columns={RolePermissionColumn()}
         />
       </Card>

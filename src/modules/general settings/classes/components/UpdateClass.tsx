@@ -5,6 +5,7 @@ import {
   useUpdateClassesMutation,
 } from "../api/classesEndPoints";
 import { useGetTeacherQuery } from "../../../members/teachers/api/teachersEndPoints";
+import { IClasses } from "../type/classesType";
 
 const UpdateClass = ({ record }: any) => {
   const [form] = Form.useForm();
@@ -12,14 +13,13 @@ const UpdateClass = ({ record }: any) => {
   const [updateClass, { isLoading }] = useUpdateClassesMutation();
   const { data: teacherData } = useGetTeacherQuery({});
 
-  console.log(singleData?.data);
-
   useEffect(() => {
     if (singleData?.data) {
+      const classData = singleData?.data as unknown as IClasses;
       form.setFieldsValue({
-        name: singleData.data.name,
-        description: singleData.data.description,
-        class_teacher: singleData.data.class_teacher?.id,
+        name: classData.name,
+        description: classData.description,
+        class_teacher: classData.class_teacher?.id,
       });
     }
   }, [singleData, form]);
@@ -35,10 +35,6 @@ const UpdateClass = ({ record }: any) => {
           <Input placeholder="Enter Class Name" />
         </Form.Item>
 
-        <Form.Item label="Description" name="description">
-          <Input.TextArea placeholder="Enter Description" rows={4} />
-        </Form.Item>
-
         <Form.Item label="Select Class Teacher" name="class_teacher">
           <Select placeholder="Select Class Teacher" className="w-full">
             {teacherData?.data?.results?.map((teacher: any) => (
@@ -47,6 +43,9 @@ const UpdateClass = ({ record }: any) => {
               </Select.Option>
             ))}
           </Select>
+        </Form.Item>
+        <Form.Item label="Description" name="description">
+          <Input.TextArea placeholder="Enter Description" rows={4} />
         </Form.Item>
 
         <Form.Item>

@@ -4,13 +4,16 @@ import { Badge, Col, Row, Table } from "antd";
 import usersRoleColumn from "../utils/usersRoleColumn";
 import permissionColumn from "../utils/permissionsColumn";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
+import { IGetSingleRolePermission } from "../type/rolePermissionTypes";
 
 const ViewRolePermission = () => {
   const { roleId } = useParams();
 
   const { data, isLoading } = useGetSingleRolePermissionQuery(Number(roleId));
 
-  const { name, users, permissions } = data?.data || {};
+  const roleData = data?.data as IGetSingleRolePermission | undefined;
+
+  const { name, users, permissions } = roleData || {};
 
   return (
     <div>

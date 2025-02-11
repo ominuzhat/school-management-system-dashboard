@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { Card, Col, Form, Input, Row, Select, Button } from "antd";
+import {
+  Card,
+  Col,
+  Form,
+  Input,
+  Row,
+  Select,
+  Button,
+  Form as AntForm,
+} from "antd";
 import {
   useGetSingleAdmissionQuery,
   useUpdateAdmissionMutation,
@@ -11,21 +20,29 @@ import { useGetAdmissionSessionQuery } from "../../admission session/api/admissi
 import { useParams } from "react-router-dom";
 import { IAdmission } from "../type/admissionType";
 import { debounce } from "lodash";
+import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
 
 const { Option } = Select;
 
 const UpdateOldAdmissionStudent = () => {
+  const [form] = AntForm.useForm();
   const [search, setSearch] = useState("");
+  const gradeLevel = AntForm.useWatch("grade_level", form);
+
   const { admissionId } = useParams();
   const { data: singleAdmissionData } = useGetSingleAdmissionQuery(
     Number(admissionId)
   );
   const singleAdmission: any = singleAdmissionData?.data;
 
-  const [form] = Form.useForm();
+  console.log("singleAdmission", singleAdmission);
+
   const { data: studentData, isFetching } = useGetStudentsQuery({
     search: search,
     is_active: true,
+  });
+  const { data: sectionData } = useGetSectionQuery({
+    grade_level: gradeLevel,
   });
   const { data: sessionData } = useGetAdmissionSessionQuery({});
   const [selectedClass, setSelectedClass] = useState<number>(
@@ -33,7 +50,7 @@ const UpdateOldAdmissionStudent = () => {
   );
 
   const { data: subjectData } = useGetSubjectsQuery({
-    grade_level: selectedClass,
+    grade_level: gradeLevel,
   });
   const { data: classData } = useGetClassesQuery({});
   const [updateAdmission] = useUpdateAdmissionMutation();
@@ -48,6 +65,7 @@ const UpdateOldAdmissionStudent = () => {
         shift: singleAdmission?.shift,
         discount_value: singleAdmission?.discount_value,
         fee_type: singleAdmission?.fee_type,
+        section: singleAdmission?.section?.id,
         grade_level: singleAdmission?.subjects?.[0]?.grade_level?.id,
         subjects: singleAdmission?.subjects?.map((sub: any) => sub.id),
       });
@@ -157,7 +175,6 @@ const UpdateOldAdmissionStudent = () => {
                 <Select
                   className="w-full"
                   placeholder="Select Class"
-                  value={selectedClass}
                   onChange={handleClassChange}
                 >
                   {Array.isArray(classData?.data) &&
@@ -169,6 +186,26 @@ const UpdateOldAdmissionStudent = () => {
                 </Select>
               </Form.Item>
             </Col>
+
+            {gradeLevel && (
+              <Col lg={8}>
+                <Form.Item<IAdmission> label="Section" name="section">
+                  <Select
+                    className="w-full"
+                    placeholder="Select Section"
+                    allowClear
+                    showSearch
+                  >
+                    {Array.isArray(sectionData?.data) &&
+                      sectionData?.data?.map((data: any) => (
+                        <Option key={data.id} value={data.id}>
+                          {data?.name}
+                        </Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
 
             {selectedClass !== 0 && (
               <Col lg={8}>
@@ -188,7 +225,7 @@ const UpdateOldAdmissionStudent = () => {
               </Col>
             )}
 
-            <Col lg={6}>
+            <Col lg={8}>
               <Form.Item<IAdmission> label="Status" name="status">
                 <Select
                   placeholder="Status"
@@ -204,7 +241,7 @@ const UpdateOldAdmissionStudent = () => {
                 />
               </Form.Item>
             </Col>
-            <Col lg={6}>
+            <Col lg={8}>
               <Form.Item<IAdmission> label="Shift" name="shift">
                 <Select
                   placeholder="Shift"

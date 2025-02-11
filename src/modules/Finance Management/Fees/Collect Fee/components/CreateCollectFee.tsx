@@ -71,7 +71,7 @@ const CreateCollectFee = () => {
         (paidAmount || 0);
       setFinalDueAmount(calculatedDueAmount);
 
-      const foundAdditionalData =
+      const foundAdditionalData: any =
         Array.isArray(additionalData?.data) &&
         additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
 

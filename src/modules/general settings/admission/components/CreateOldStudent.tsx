@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Select } from "antd";
+import { Card, Col, Input, Row, Select, Form as AntForm } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateAdmissionMutation } from "../api/admissionEndPoints";
 import { IAdmission } from "../type/admissionType";
@@ -9,11 +9,14 @@ import { useState } from "react";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { debounce } from "lodash";
+import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
 
 const { Option } = Select;
 
 const CreateOldStudent = () => {
+  const [form] = AntForm.useForm();
   const [search, setSearch] = useState("");
+  const gradeLevel = AntForm.useWatch("grade_level", form);
   const { data: studentData, isFetching } = useGetStudentsQuery({
     search: search,
     is_active: true,
@@ -21,21 +24,18 @@ const CreateOldStudent = () => {
   const { data: sessionData } = useGetAdmissionSessionQuery({
     status: "open",
   });
-  const [selectedClass, setSelectedClass] = useState<number>();
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const { data: subjectData } = useGetSubjectsQuery({
-    grade_level: selectedClass,
+    grade_level: gradeLevel,
+  });
+  const { data: sectionData } = useGetSectionQuery({
+    grade_level: gradeLevel,
   });
   const { data: classData } = useGetClassesQuery({});
   const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
 
   const onFinish = (values: any): void => {
     create(values);
-  };
-
-  const handleClassChange = (value: number) => {
-    setSelectedClass(value);
-    setSelectedSubjects([]);
   };
 
   const handleSubjectsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -46,6 +46,7 @@ const CreateOldStudent = () => {
   return (
     <div>
       <Form
+        form={form}
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
@@ -145,6 +146,7 @@ const CreateOldStudent = () => {
                 </Select>
               </Form.Item>
             </Col>
+
             <Col lg={8}>
               <Form.Item<IAdmission>
                 label="Class"
@@ -155,8 +157,6 @@ const CreateOldStudent = () => {
                   className="w-full"
                   placeholder="Select Class"
                   allowClear
-                  value={selectedClass}
-                  onChange={handleClassChange}
                 >
                   {Array.isArray(classData?.data) &&
                     classData.data.map((data: IClasses) => (
@@ -168,7 +168,31 @@ const CreateOldStudent = () => {
               </Form.Item>
             </Col>
 
-            {selectedClass && (
+            {gradeLevel && (
+              <Col lg={8}>
+                <Form.Item<IAdmission>
+                  label="Section"
+                  name="section"
+                  rules={[{ required: true, message: "Section" }]}
+                >
+                  <Select
+                    className="w-full"
+                    placeholder="Select Section"
+                    allowClear
+                    showSearch
+                  >
+                    {Array.isArray(sectionData?.data) &&
+                      sectionData?.data?.map((data: any) => (
+                        <Option key={data.id} value={data.id}>
+                          {data?.name}
+                        </Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
+
+            {gradeLevel && (
               <Col lg={8}>
                 <Form.Item<IAdmission>
                   label="Subject"
@@ -199,7 +223,7 @@ const CreateOldStudent = () => {
               </Col>
             )}
 
-            <Col lg={6}>
+            <Col lg={8}>
               <Form.Item<IAdmission> label="Status" name="status">
                 <Select
                   placeholder="Status"
@@ -215,7 +239,7 @@ const CreateOldStudent = () => {
                 />
               </Form.Item>
             </Col>
-            <Col lg={6}>
+            <Col lg={8}>
               <Form.Item<IAdmission> label="Shift" name="shift">
                 <Select
                   placeholder="Shift"
