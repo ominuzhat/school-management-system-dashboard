@@ -48,6 +48,8 @@ const UpdateCollectFee = () => {
     search: search,
   });
 
+  console.log(finalDueAmount);
+
   const paidAmount = AntForm.useWatch("paid_amount", form);
   const admission = AntForm.useWatch("admission", form);
   const addOns = AntForm.useWatch("add_ons", form);
@@ -63,7 +65,7 @@ const UpdateCollectFee = () => {
     );
   }, [selectedAdditionalFee]);
 
-console.log(singleData?.data,"ddd") 
+  console.log(singleData?.data, "ddd");
 
   useEffect(() => {
     if (singleData?.data) {
@@ -94,7 +96,7 @@ console.log(singleData?.data,"ddd")
     }
 
     if (admission) {
-      const foundAdditionalData =
+      const foundAdditionalData: any =
         Array.isArray(additionalData?.data) &&
         additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
 
@@ -350,7 +352,7 @@ console.log(singleData?.data,"ddd")
                 </div> */}
                 <div className="flex justify-end">
                   <p className="border-red-600 bg-red-600 text-white px-6 text-lg font-semibold w-24">
-                    { "due need from backend"}
+                    {"due need from backend"}
                   </p>
                 </div>
 

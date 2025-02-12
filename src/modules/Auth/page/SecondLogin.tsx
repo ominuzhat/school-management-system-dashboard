@@ -14,7 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { TOKEN_NAME } from "../../../utilities/baseQuery";
 import { openNotification } from "../../../app/features/notificationSlice";
-import { passwordValidator } from "../../../utilities/validator";
+// import { passwordValidator } from "../../../utilities/validator";
 import { RootState } from "../../../app/store";
 
 import { logo, welcome } from "../../../utilities/images";
@@ -33,7 +33,7 @@ const SecondLogin: React.FC = () => {
         ...values,
         password: "StrongPassword123!",
       }).unwrap();
-      const { success, data } = response;
+      const { success, data } = response as any;
       dispatch(
         openNotification({
           type: "success",

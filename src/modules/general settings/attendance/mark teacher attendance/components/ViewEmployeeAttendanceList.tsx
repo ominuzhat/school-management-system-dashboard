@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { Card, Col, DatePicker, Row, Select } from "antd";
+import { Card, Col, DatePicker, Row } from "antd";
 import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { Table } from "../../../../../common/CommonAnt";
 import { useGetTeacherAttendanceListQuery } from "../api/teacherAttendanceEndPoints";
 import useEmployeeAttendanceListColumns from "../utils/employeeAttendanceListColumns";
-
-const { Option } = Select;
 
 const ViewEmployeeAttendanceList = () => {
   const [formData, setFormData] = useState({

@@ -9,7 +9,7 @@ const ViewSingleStudentsAttendanceList = () => {
     data: singleAttendanceData,
     isLoading,
     error,
-  } = useGetSingleStudentAttendanceListQuery(Number(attendanceId));
+  } = useGetSingleStudentAttendanceListQuery<any>(Number(attendanceId));
 
   const columns = [
     {

@@ -35,7 +35,7 @@ const MarkStudentsAttendance = () => {
   const { data: sessionData } = useGetAdmissionSessionQuery({});
   const { data: classData } = useGetClassesQuery({});
   const [fetchAdmissionData, { data: attendanceData, isLoading }] =
-    useLazyGetMarkStudentAttendanceQuery({});
+    useLazyGetMarkStudentAttendanceQuery<any>({});
 
   const handleChange = (key: string, value: any) => {
     setFormData((prev) => ({

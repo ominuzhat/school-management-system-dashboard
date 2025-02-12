@@ -32,7 +32,7 @@ const CreateCollectFee = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [selectedFees, setSelectedFees] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState({});
+  const [selectedStudent, setSelectedStudent] = useState<any>({});
   const [finalDueAmount, setFinalDueAmount] = useState<number | null>(null);
   const [selectedAdditionalFee, setSelectedAdditionalFee] = useState([]);
   const [create, { isLoading, isSuccess }] = useCreateCollectFeesMutation();
@@ -61,7 +61,7 @@ const CreateCollectFee = () => {
 
   useEffect(() => {
     if (admission) {
-      const foundAdmission = admissionData?.data?.results.find(
+      const foundAdmission: any = admissionData?.data?.results.find(
         (data: any) => data?.id === admission
       );
 

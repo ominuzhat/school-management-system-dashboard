@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, notification, Row } from "antd";
+import { Button, Card, Col, DatePicker, notification, Row, Table } from "antd";
 import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import {
   useCreateTeacherAttendanceMutation,
   useLazyGetMarkTeacherAttendanceQuery,
 } from "../api/teacherAttendanceEndPoints";
-import { Table } from "../../../../../common/CommonAnt";
+// import { Table } from "../../../../../common/CommonAnt";
 import useMarkTeacherAttendanceColumns from "../utils/MarkTeacherAttendanceColumn";
 import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
 
@@ -20,7 +20,7 @@ const MarkTeachersAttendance = () => {
   const [create] = useCreateTeacherAttendanceMutation();
 
   const [fetchAttendanceData, { data: attendanceData, isLoading }] =
-    useLazyGetMarkTeacherAttendanceQuery({});
+    useLazyGetMarkTeacherAttendanceQuery<any>({});
 
   const handleSearch = () => {
     if (formData) {
@@ -119,7 +119,7 @@ const MarkTeachersAttendance = () => {
             setResult,
           })}
           pagination={false}
-          rowKey={Math.random()}
+          rowKey={(record) => record.teacher?.id || record.employee?.id}
         />
         <Button
           className="mt-5"
