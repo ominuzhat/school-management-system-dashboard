@@ -41,28 +41,27 @@ const CreateEmployee = () => {
     const formData: FormData = new FormData();
 
     Object.entries(values).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        if (key === "images") {
+      if (key === "image") {
+        // Handle image field separately
+        if (Array.isArray(value) && value.length > 0) {
           value.forEach((file) => {
-            if (file?.originFileObj) {
-              formData.append(key, file.originFileObj);
+            if (file?.originFileObj && file.originFileObj instanceof File) {
+              formData.append(key, file.originFileObj); // Append the file
             }
-          });
-        } else {
-          value.forEach((item) => {
-            formData.append(key, item);
           });
         }
       } else if (key === "hire_date" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
+      } else if (key === "date_of_birth" && value) {
+        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
+        formData.append(key, formattedDate);
       } else if (value instanceof File || value instanceof Blob) {
         formData.append(key, value);
-      } else {
+      } else if (value !== null && value !== undefined) {
         formData.append(key, value as string | Blob);
       }
     });
-
     const user = {
       username: values.username,
       password: values.password,
@@ -94,7 +93,7 @@ const CreateEmployee = () => {
                     <Card>
                       <Form.Item
                         label="Picture"
-                        name="picture"
+                        name="image"
                         valuePropName="fileList"
                         getValueFromEvent={(e) => {
                           if (Array.isArray(e)) {
@@ -176,7 +175,11 @@ const CreateEmployee = () => {
                           name="phone_number"
                           rules={[{ required: true, message: "Phone Number" }]}
                         >
-                          <Input placeholder="Phone Number" type="tel" />
+                          <Input
+                            addonBefore="+880"
+                            placeholder="Phone Number"
+                            type="tel"
+                          />
                         </Form.Item>
                       </Col>
 
@@ -222,6 +225,7 @@ const CreateEmployee = () => {
                                 .filter(
                                   (role: any) =>
                                     role.name !== "Student" &&
+                                    role.name !== "Admin" &&
                                     role.name !== "Teacher"
                                 )
                                 .map((role: any) => (
@@ -272,6 +276,103 @@ const CreateEmployee = () => {
                         </Form.Item>
                       </Col>
                     </Row>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+
+          <Col lg={24}>
+            <Badge.Ribbon text="Other Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Date of Birth"
+                      name="date_of_birth"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Date of Birth is required!",
+                        },
+                      ]}
+                    >
+                      <DatePicker
+                        placeholder="Select Date"
+                        format="YYYY-MM-DD"
+                        className="w-full"
+                        disabledDate={(current) =>
+                          current && current > dayjs().endOf("day")
+                        }
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Teacher Birth ID / NID"
+                      name="national_id"
+                    >
+                      <Input placeholder="Teacher Birth ID / NID" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Education Qualification"
+                      name="education"
+                    >
+                      <Input placeholder="Education" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Experience" name="experience">
+                      <Input placeholder="Experience" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Gender" name="gender">
+                      <Select placeholder="Gender" className="w-full">
+                        <Select.Option value="M">Male</Select.Option>
+                        <Select.Option value="F">Female</Select.Option>
+                        <Select.Option value="O">Other</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+
+                  <Col lg={6}>
+                    <Form.Item label="Religion" name="religion">
+                      <Select placeholder="Select Religion" className="w-full">
+                        <Select.Option value="Islam">Islam</Select.Option>
+                        <Select.Option value="Christianity">
+                          Christianity
+                        </Select.Option>
+                        <Select.Option value="Hinduism">Hinduism</Select.Option>
+                        <Select.Option value="Buddhism">Buddhism</Select.Option>
+                        <Select.Option value="Judaism">Judaism</Select.Option>
+                        <Select.Option value="Sikhism">Sikhism</Select.Option>
+                        <Select.Option value="Other">Other</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Blood Group" name="blood_group">
+                      <Select
+                        placeholder="Select Blood Group"
+                        className="w-full"
+                      >
+                        {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
+                          (group) => (
+                            <Select.Option key={group} value={group}>
+                              {group}
+                            </Select.Option>
+                          )
+                        )}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Address" name="home_address">
+                      <Input placeholder="Address" />
+                    </Form.Item>
                   </Col>
                 </Row>
               </Card>

@@ -14,6 +14,8 @@ const Table = <T extends object>({ total, ...restProps }: Props<T>) => {
 
   const dispatch = useDispatch();
 
+  console.log(page_size, skip, total, "ssssssssssss");
+
   return (
     <AntTable
       {...restProps}

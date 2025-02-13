@@ -29,7 +29,6 @@ const TeacherPage = () => {
 
   const { data: teacherData, isLoading } = useGetTeacherQuery(filters);
 
-
   const handleDelete = async (id: any) => {
     console.log(id);
     try {
@@ -167,7 +166,7 @@ const TeacherPage = () => {
         ) : (
           <Table
             loading={isLoading}
-            total={teacherData?.data?.results.length}
+            total={teacherData?.data?.results?.length}
             dataSource={teacherData?.data?.results}
             columns={useTeacherColumns()}
           />

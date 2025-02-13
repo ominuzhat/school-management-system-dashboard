@@ -34,21 +34,24 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
-  const [originalImages, setOriginalImages] = useState<any[]>([]);
-  console.log(originalImages);
+  // const [originalImages, setOriginalImages] = useState<any[]>([]);
+  // console.log(originalImages);
 
   useEffect(() => {
     if (singleTeacher) {
       const initialImages =
-        singleTeacher.data?.images?.map(
-          (image: { id: any; image: string }) => ({
-            uid: image.id,
-            url: image.image,
-            thumbUrl: image.image,
-            name: `Image-${image.id}`,
-          })
-        ) || [];
-      setOriginalImages(initialImages);
+        singleTeacher?.data?.image &&
+        typeof singleTeacher?.data?.image === "string"
+          ? [
+              {
+                uid: "-1",
+                url: singleTeacher.data.image,
+                thumbUrl: singleTeacher.data.image,
+                name: "Profile Image",
+              },
+            ]
+          : [];
+      // setOriginalImages(initialImages);
       form.setFieldsValue({
         ...singleTeacher.data,
         username: singleTeacher?.data?.user?.username,
@@ -73,16 +76,13 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
     const formData: FormData = new FormData();
 
     Object.entries(values).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        if (key === "picture") {
+      if (key === "image") {
+        // Handle image field separately
+        if (Array.isArray(value) && value.length > 0) {
           value.forEach((file) => {
-            if (file?.originFileObj) {
-              formData.append(key, file.originFileObj);
+            if (file?.originFileObj && file.originFileObj instanceof File) {
+              formData.append(key, file.originFileObj); // Append the file
             }
-          });
-        } else {
-          value.forEach((item) => {
-            formData.append(key, item);
           });
         }
       } else if (key === "hire_date" && value) {
@@ -232,45 +232,70 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
                   <Col lg={6}>
-                    <Form.Item<any> label="Date of Birth" name="date_of_birth">
+                    <Form.Item<any>
+                      label="Date of Birth"
+                      name="date_of_birth"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Date of Birth is required!",
+                        },
+                      ]}
+                    >
                       <DatePicker
                         placeholder="Select Date"
                         format="YYYY-MM-DD"
                         className="w-full"
-                        disabledDate={(current) => {
-                          return current && current > dayjs().endOf("day");
-                        }}
+                        disabledDate={(current) =>
+                          current && current > dayjs().endOf("day")
+                        }
                       />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
                     <Form.Item<any>
                       label="Teacher Birth ID / NID"
-                      name="registration"
+                      name="national_id"
                     >
                       <Input placeholder="Teacher Birth ID / NID" />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
+                    <Form.Item<any>
+                      label="Education Qualification"
+                      name="education"
+                    >
+                      <Input placeholder="Education" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Experience" name="experience">
+                      <Input placeholder="Experience" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
                     <Form.Item<any> label="Gender" name="gender">
                       <Select placeholder="Gender" className="w-full">
-                        <Select.Option value={"male"}>Male</Select.Option>
-                        <Select.Option value={"female"}>Female</Select.Option>
-                        <Select.Option value={"other"}>Other</Select.Option>
+                        <Select.Option value="M">Male</Select.Option>
+                        <Select.Option value="F">Female</Select.Option>
+                        <Select.Option value="O">Other</Select.Option>
                       </Select>
                     </Form.Item>
                   </Col>
+
                   <Col lg={6}>
-                    <Form.Item<any>
-                      label="Institution Name"
-                      name="institution_name"
-                    >
-                      <Input placeholder="Institution Name." />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Religion" name="religion">
-                      <Input placeholder="Religion" />
+                    <Form.Item label="Religion" name="religion">
+                      <Select placeholder="Select Religion" className="w-full">
+                        <Select.Option value="Islam">Islam</Select.Option>
+                        <Select.Option value="Christianity">
+                          Christianity
+                        </Select.Option>
+                        <Select.Option value="Hinduism">Hinduism</Select.Option>
+                        <Select.Option value="Buddhism">Buddhism</Select.Option>
+                        <Select.Option value="Judaism">Judaism</Select.Option>
+                        <Select.Option value="Sikhism">Sikhism</Select.Option>
+                        <Select.Option value="Other">Other</Select.Option>
+                      </Select>
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
@@ -290,7 +315,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
-                    <Form.Item<any> label="Address" name="address">
+                    <Form.Item<any> label="Address" name="home_address">
                       <Input placeholder="Address" />
                     </Form.Item>
                   </Col>

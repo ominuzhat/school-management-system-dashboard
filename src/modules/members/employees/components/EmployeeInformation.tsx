@@ -2,7 +2,6 @@ import { Badge, Card, Col, Row, Tag } from "antd";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { no_img } from "../../../../utilities/images";
 import TextView from "../../../../common/components/TextView";
-import dayjs from "dayjs";
 
 const EmployeeInformation = ({ data }: any) => {
   const {
@@ -17,6 +16,14 @@ const EmployeeInformation = ({ data }: any) => {
     position,
     department,
     user,
+    image,
+    national_id,
+    education,
+    experience,
+    father_or_husband_name,
+    religion,
+    blood_group,
+    home_address,
   } = data || {};
 
   const information = [
@@ -36,6 +43,11 @@ const EmployeeInformation = ({ data }: any) => {
         {
           fieldName: "Mobile No",
           text: phone_number || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Employee Birth /NID",
+          text: national_id || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
@@ -69,37 +81,33 @@ const EmployeeInformation = ({ data }: any) => {
       title: "Other Information",
       data: [
         {
-          fieldName: "Role",
-          text: user?.role?.name || "N/A",
+          fieldName: "Education Qualification",
+          text: education || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Institution",
-          text: user?.role?.institution?.name || "N/A",
+          fieldName: "Experience",
+          text: experience || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "City",
-          text: user?.role?.institution?.city || "N/A",
+          fieldName: "Father / Husband Name",
+          text: father_or_husband_name || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Institution Email",
-          text: user?.role?.institution?.contact_email || "N/A",
+          fieldName: "Religion",
+          text: religion || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Date Joined",
-          text: user?.date_joined
-            ? dayjs(user.date_joined).format("DD MMM YYYY")
-            : "N/A",
+          fieldName: "Blood Group",
+          text: blood_group || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Last Login",
-          text: user?.last_login
-            ? dayjs(user?.last_login).format("DD MMM YYYY, hh:mm A")
-            : "N/A",
+          fieldName: "Home Address",
+          text: home_address || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
@@ -112,7 +120,7 @@ const EmployeeInformation = ({ data }: any) => {
         {/* Employee Overview */}
         <Col lg={6}>
           <Card className="text-center">
-            <img src={no_img} className="mx-auto" alt="Profile" />
+            <img src={image || no_img} className="mx-auto" alt="Profile" />
             <p className="text-xl font-semibold uppercase font-serif pt-5">
               {first_name} {last_name}
             </p>

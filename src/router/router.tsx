@@ -53,6 +53,8 @@ import SingleCollectFee from "../modules/Finance Management/Fees/Collect Fee/com
 import CreateStudent from "../modules/members/students/components/CreateStudent";
 import UpdateStudent from "../modules/members/students/components/UpdateStudent";
 import SectionPage from "../modules/general settings/Section/pages/SectionPage";
+import RoutinePages from "../modules/general settings/Routine/pages/RoutinePages";
+import CreateRoutine from "../modules/general settings/Routine/components/CreateRoutine";
 
 const router = createBrowserRouter([
   {
@@ -162,6 +164,23 @@ const router = createBrowserRouter([
           },
         ],
       },
+
+      // routine
+      {
+        path: "/routine",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <RoutinePages />,
+          },
+          {
+            path: "/routine/create-routine",
+            element: <CreateRoutine />,
+          },
+        ],
+      },
+
       // admission
       {
         path: "/admission",
@@ -253,6 +272,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+
       // Tuition Fees Payment
       {
         path: "/tuition-fees-payment",
@@ -316,6 +336,7 @@ const router = createBrowserRouter([
           // },
         ],
       },
+
       // Role & permissions
       {
         path: "/role-permission",

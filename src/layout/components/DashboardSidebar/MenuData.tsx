@@ -12,6 +12,7 @@ import { SiGoogleclassroom } from "react-icons/si";
 import {
   IoAccessibilityOutline,
   IoBookOutline,
+  IoCalendarOutline,
   IoPeopleOutline,
 } from "react-icons/io5";
 import {
@@ -20,7 +21,7 @@ import {
   MdOutlinePayments,
   MdPayment,
 } from "react-icons/md";
-import { FaPiggyBank, FaRegAddressCard } from "react-icons/fa6";
+import { FaPeopleGroup, FaPiggyBank, FaRegAddressCard } from "react-icons/fa6";
 import { TbCoinTaka, TbSection } from "react-icons/tb";
 import { GiExpense } from "react-icons/gi";
 import { BiSolidInstitution, BiSolidUserAccount } from "react-icons/bi";
@@ -116,14 +117,14 @@ const MenuData: React.FC = () => {
     },
 
     {
-      key: "/employees",
-      label: "employees",
+      key: "/employees-module",
+      label: "Employees",
       icon: <IoPeopleOutline />,
       children: [
         {
           key: "/employees",
           label: <Link to="/employees">Employees</Link>,
-          icon: <IoPeopleOutline />,
+          icon: <FaPeopleGroup />,
         },
         {
           key: "/department",
@@ -136,7 +137,7 @@ const MenuData: React.FC = () => {
 
   const payroll = [
     {
-      key: "/payroll",
+      key: "/payroll-module",
       label: "Salary",
       icon: <MdPayment />,
       children: [
@@ -153,7 +154,7 @@ const MenuData: React.FC = () => {
       ],
     },
     {
-      key: "/fees",
+      key: "/fees-module",
       label: "Fees",
       icon: <TbCoinTaka />,
       children: [
@@ -233,9 +234,14 @@ const MenuData: React.FC = () => {
       label: <Link to="/section">Section</Link>,
       icon: <TbSection />,
     },
+    {
+      key: "/routine",
+      label: <Link to="/routine">Routine</Link>,
+      icon: <IoCalendarOutline />,
+    },
 
     {
-      key: "/admission",
+      key: "/admission-module",
       label: "Admission",
       icon: <FaRegAddressCard />,
       children: [

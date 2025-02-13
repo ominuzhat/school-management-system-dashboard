@@ -7,7 +7,27 @@ export interface ICreateTeacher {
   hire_date: Date;
   is_active: boolean;
   user: IUser;
+  father_or_husband_name: string;
+  national_id: string;
+  education: string;
+  gender: "Male" | "Female" | "Other";
+  religion: string;
+  bloodGroup?: TBloodGroup;
+  experience: string;
+  dateOfBirth: Date;
+  home_address: string;
+  image: string;
 }
+
+export type TBloodGroup =
+  | "A+"
+  | "A-"
+  | "B+"
+  | "B-"
+  | "O+"
+  | "O-"
+  | "AB+"
+  | "AB-";
 
 export interface IGetTeacher {
   id: number;

@@ -3,8 +3,6 @@ import { IGrade_Level } from "../../subjects/type/subjectsType";
 
 export interface ICreateSection {
   name: string;
-  session: number;
-  grade_level: number;
   capacity: number;
   is_active: boolean;
 }

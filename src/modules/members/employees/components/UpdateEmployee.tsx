@@ -32,27 +32,30 @@ const UpdateEmployee = ({ records }: any) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [originalImages, setOriginalImages] = useState<any[]>([]);
+  // const [originalImages, setOriginalImages] = useState<any[]>([]);
 
-  console.log(originalImages);
+  // console.log(originalImages);
 
   useEffect(() => {
     if (singleEmployeeData?.data) {
       const initialImages =
-        singleEmployeeData.data?.images?.map(
-          (image: { id: any; image: string }) => ({
-            uid: image.id,
-            url: image.image,
-            thumbUrl: image.image,
-            name: `Image-${image.id}`,
-          })
-        ) || [];
-
-      setOriginalImages(initialImages);
+        singleEmployeeData?.data?.image &&
+        typeof singleEmployeeData?.data?.image === "string"
+          ? [
+              {
+                uid: "-1",
+                url: singleEmployeeData.data.image,
+                thumbUrl: singleEmployeeData.data.image,
+                name: "Profile Image",
+              },
+            ]
+          : [];
+      // setOriginalImages(initialImages);
 
       form.setFieldsValue({
         ...singleEmployeeData.data,
         hire_date: dayjs(singleEmployeeData.data.hire_date),
+        date_of_birth: dayjs(singleEmployeeData.data.date_of_birth),
         username: singleEmployeeData.data?.user?.username,
         role: singleEmployeeData.data?.user?.role?.id,
         department: singleEmployeeData.data?.department?.id,
@@ -88,6 +91,9 @@ const UpdateEmployee = ({ records }: any) => {
           });
         }
       } else if (key === "hire_date" && value) {
+        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
+        formData.append(key, formattedDate);
+      } else if (key === "date_of_birth" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (value instanceof File || value instanceof Blob) {
@@ -259,6 +265,105 @@ const UpdateEmployee = ({ records }: any) => {
                         </Form.Item>
                       </Col>
                     </Row>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+
+          {/* ---------------- */}
+
+          <Col lg={24}>
+            <Badge.Ribbon text="Other Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Date of Birth"
+                      name="date_of_birth"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Date of Birth is required!",
+                        },
+                      ]}
+                    >
+                      <DatePicker
+                        placeholder="Select Date"
+                        format="YYYY-MM-DD"
+                        className="w-full"
+                        disabledDate={(current) =>
+                          current && current > dayjs().endOf("day")
+                        }
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Teacher Birth ID / NID"
+                      name="national_id"
+                    >
+                      <Input placeholder="Teacher Birth ID / NID" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Education Qualification"
+                      name="education"
+                    >
+                      <Input placeholder="Education" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Experience" name="experience">
+                      <Input placeholder="Experience" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Gender" name="gender">
+                      <Select placeholder="Gender" className="w-full">
+                        <Select.Option value="M">Male</Select.Option>
+                        <Select.Option value="F">Female</Select.Option>
+                        <Select.Option value="O">Other</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+
+                  <Col lg={6}>
+                    <Form.Item label="Religion" name="religion">
+                      <Select placeholder="Select Religion" className="w-full">
+                        <Select.Option value="Islam">Islam</Select.Option>
+                        <Select.Option value="Christianity">
+                          Christianity
+                        </Select.Option>
+                        <Select.Option value="Hinduism">Hinduism</Select.Option>
+                        <Select.Option value="Buddhism">Buddhism</Select.Option>
+                        <Select.Option value="Judaism">Judaism</Select.Option>
+                        <Select.Option value="Sikhism">Sikhism</Select.Option>
+                        <Select.Option value="Other">Other</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Blood Group" name="blood_group">
+                      <Select
+                        placeholder="Select Blood Group"
+                        className="w-full"
+                      >
+                        {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
+                          (group) => (
+                            <Select.Option key={group} value={group}>
+                              {group}
+                            </Select.Option>
+                          )
+                        )}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Address" name="home_address">
+                      <Input placeholder="Address" />
+                    </Form.Item>
                   </Col>
                 </Row>
               </Card>

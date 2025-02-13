@@ -37,16 +37,13 @@ const CreateStudent = () => {
     const formData: FormData = new FormData();
 
     Object.entries(values).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        if (key === "image") {
+      if (key === "image") {
+        // Handle image field separately
+        if (Array.isArray(value) && value.length > 0) {
           value.forEach((file) => {
             if (file?.originFileObj && file.originFileObj instanceof File) {
-              formData.append(key, file.originFileObj);
+              formData.append(key, file.originFileObj); // Append the file
             }
-          });
-        } else {
-          value.forEach((item) => {
-            formData.append(key, item);
           });
         }
       } else if (key === "enrollment_date" && value) {

@@ -91,7 +91,7 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
                 <Col span={24}>
                   <Button
                     type="text"
-                    className="w-100"
+                    className="w-100 border border-blue-500"
                     shape="round"
                     onClick={handleSelectAll}
                   >

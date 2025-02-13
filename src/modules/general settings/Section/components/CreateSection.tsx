@@ -1,16 +1,10 @@
-import { Col, Input, Row, Select, Switch } from "antd";
+import { Col, Input, Row, Switch } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 
-import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { useCreateSectionMutation } from "../api/sectionEndPoints";
 import { ICreateSection } from "../types/sectionTypes";
-import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 
 const CreateSection = () => {
-  const { data: GetClassData } = useGetClassesQuery({});
-  const { data: GetSessionData } = useGetAdmissionSessionQuery({
-    status: "open",
-  });
   const [create, { isLoading, isSuccess }] = useCreateSectionMutation();
 
   const onFinish = (values: any): void => {
@@ -33,40 +27,6 @@ const CreateSection = () => {
               rules={[{ required: true, message: "Section Name" }]}
             >
               <Input placeholder="Section Name" />
-            </Form.Item>
-          </Col>
-
-          <Col lg={8}>
-            <Form.Item<ICreateSection>
-              label="Session "
-              name="session"
-              rules={[{ required: true, message: "Select Session " }]}
-            >
-              <Select placeholder="Select Session" className="w-full">
-                {Array.isArray(GetSessionData?.data) &&
-                  GetSessionData?.data?.map((data: any, index: number) => (
-                    <Select.Option key={index} value={data?.id}>
-                      {data?.name}
-                    </Select.Option>
-                  ))}
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col lg={8}>
-            <Form.Item<ICreateSection>
-              label="Class "
-              name="grade_level"
-              rules={[{ required: true, message: "Select Class " }]}
-            >
-              <Select placeholder="Select Class" className="w-full">
-                {Array.isArray(GetClassData?.data) &&
-                  GetClassData?.data?.map((data: any, index: number) => (
-                    <Select.Option key={index} value={data?.id}>
-                      {data?.name}
-                    </Select.Option>
-                  ))}
-              </Select>
             </Form.Item>
           </Col>
 

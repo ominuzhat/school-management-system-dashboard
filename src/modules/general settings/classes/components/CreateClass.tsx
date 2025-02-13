@@ -8,9 +8,6 @@ const CreateClass = () => {
   const { data: teacherData } = useGetTeacherQuery({});
 
   const onFinish = (values: any): void => {
-
-
-
     create(values);
   };
 

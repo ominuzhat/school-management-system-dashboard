@@ -47,10 +47,10 @@ const useSectionColumns = (): ColumnsType<any> => {
       dataIndex: "grade_level",
       align: "center",
       render: (grade_level) =>
-        grade_level.class_teacher
-          ? grade_level.class_teacher?.first_name +
+        grade_level?.class_teacher
+          ? grade_level?.class_teacher?.first_name +
             " " +
-            grade_level.class_teacher?.last_name
+            grade_level?.class_teacher?.last_name
           : "N/A",
     },
     {
@@ -58,14 +58,19 @@ const useSectionColumns = (): ColumnsType<any> => {
       title: "Capacity",
       dataIndex: "capacity",
       align: "center",
-      render: (title) => (title ? title: "N/A"),
+      render: (title) => (title ? title : "N/A"),
     },
     {
       key: "4",
       title: "Active",
       dataIndex: "is_active",
       align: "center",
-      render: (title) => (title ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag> ),
+      render: (title) =>
+        title ? (
+          <Tag color="green">Active</Tag>
+        ) : (
+          <Tag color="red">Inactive</Tag>
+        ),
     },
     {
       title: "Actions",

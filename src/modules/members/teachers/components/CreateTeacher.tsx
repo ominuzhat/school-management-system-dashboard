@@ -35,17 +35,15 @@ const CreateTeacher = () => {
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
 
+    // Append non-file fields
     Object.entries(values).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        if (key === "images") {
+      if (key === "image") {
+        // Handle image field separately
+        if (Array.isArray(value) && value.length > 0) {
           value.forEach((file) => {
-            if (file?.originFileObj) {
-              formData.append(key, file.originFileObj);
+            if (file?.originFileObj && file.originFileObj instanceof File) {
+              formData.append(key, file.originFileObj); // Append the file
             }
-          });
-        } else {
-          value.forEach((item) => {
-            formData.append(key, item);
           });
         }
       } else if (key === "hire_date" && value) {
@@ -56,18 +54,19 @@ const CreateTeacher = () => {
         formData.append(key, formattedDate);
       } else if (value instanceof File || value instanceof Blob) {
         formData.append(key, value);
-      } else {
+      } else if (value !== null && value !== undefined) {
         formData.append(key, value as string | Blob);
       }
     });
 
+    // Append user object as JSON
     const user = {
       username: values.username,
       password: values.password,
     };
+    formData.append("user", JSON.stringify(user));
 
-    formData.append("user", JSON.stringify(user) as any);
-
+    // Submit the form data
     create(formData);
   };
 
@@ -90,8 +89,8 @@ const CreateTeacher = () => {
                   <Col span={6}>
                     <Card>
                       <Form.Item
-                        label="Picture "
-                        name="picture"
+                        label="Picture"
+                        name="image"
                         valuePropName="fileList"
                         getValueFromEvent={(e) => {
                           if (Array.isArray(e)) {
@@ -233,6 +232,7 @@ const CreateTeacher = () => {
               </Card>
             </Badge.Ribbon>
           </Col>
+
           <Col lg={24}>
             <Badge.Ribbon text="Other Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
@@ -252,40 +252,56 @@ const CreateTeacher = () => {
                         placeholder="Select Date"
                         format="YYYY-MM-DD"
                         className="w-full"
-                        disabledDate={(current) => {
-                          return current && current > dayjs().endOf("day");
-                        }}
+                        disabledDate={(current) =>
+                          current && current > dayjs().endOf("day")
+                        }
                       />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
                     <Form.Item<any>
                       label="Teacher Birth ID / NID"
-                      name="registration"
+                      name="national_id"
                     >
                       <Input placeholder="Teacher Birth ID / NID" />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
+                    <Form.Item<any>
+                      label="Education Qualification"
+                      name="education"
+                    >
+                      <Input placeholder="Education" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any> label="Experience" name="experience">
+                      <Input placeholder="Experience" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
                     <Form.Item<any> label="Gender" name="gender">
                       <Select placeholder="Gender" className="w-full">
-                        <Select.Option value={"male"}>Male</Select.Option>
-                        <Select.Option value={"female"}>Female</Select.Option>
-                        <Select.Option value={"other"}>other</Select.Option>
+                        <Select.Option value="M">Male</Select.Option>
+                        <Select.Option value="F">Female</Select.Option>
+                        <Select.Option value="O">Other</Select.Option>
                       </Select>
                     </Form.Item>
                   </Col>
+
                   <Col lg={6}>
-                    <Form.Item<any>
-                      label="Institution Name"
-                      name="institution_name"
-                    >
-                      <Input placeholder="Institution Name." />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Religion" name="religion">
-                      <Input placeholder="Religion" />
+                    <Form.Item label="Religion" name="religion">
+                      <Select placeholder="Select Religion" className="w-full">
+                        <Select.Option value="Islam">Islam</Select.Option>
+                        <Select.Option value="Christianity">
+                          Christianity
+                        </Select.Option>
+                        <Select.Option value="Hinduism">Hinduism</Select.Option>
+                        <Select.Option value="Buddhism">Buddhism</Select.Option>
+                        <Select.Option value="Judaism">Judaism</Select.Option>
+                        <Select.Option value="Sikhism">Sikhism</Select.Option>
+                        <Select.Option value="Other">Other</Select.Option>
+                      </Select>
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
@@ -305,107 +321,8 @@ const CreateTeacher = () => {
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
-                    <Form.Item<any> label="Address" name="address">
+                    <Form.Item<any> label="Address" name="home_address">
                       <Input placeholder="Address" />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
-            </Badge.Ribbon>
-          </Col>
-          <Col lg={24}>
-            <Badge.Ribbon text="Father Information" placement="start">
-              <Card style={{ paddingTop: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Father Name" name="name">
-                      <Input placeholder="Father Name." />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={6}>
-                    <Form.Item<any>
-                      label="Mobile No. "
-                      name="mobile_no"
-                      rules={[
-                        {
-                          pattern: /^[0-9]{11}$/,
-                          message:
-                            "Please enter a valid 10-digit mobile number",
-                        },
-                      ]}
-                    >
-                      <Input
-                        type="tel"
-                        placeholder="Enter Mobile Number"
-                        maxLength={11}
-                        pattern="[0-9]*"
-                      />{" "}
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Father NID" name="f_nid">
-                      <Input placeholder="Father NID" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Occupation" name="occupation">
-                      <Input placeholder="Occupation" />
-                    </Form.Item>
-                  </Col>
-
-                  <Col lg={4}>
-                    <Form.Item<any> label="Income" name="income">
-                      <Input placeholder="Income" />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
-            </Badge.Ribbon>
-          </Col>
-
-          <Col lg={24}>
-            <Badge.Ribbon text="Mother Information" placement="start">
-              <Card style={{ paddingTop: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col lg={6}>
-                    <Form.Item<any> label="Father Name" name="name">
-                      <Input placeholder="Father Name." />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={6}>
-                    <Form.Item<any>
-                      label="Mobile No. "
-                      name="mobile_no"
-                      rules={[
-                        {
-                          pattern: /^[0-9]{11}$/,
-                          message:
-                            "Please enter a valid 10-digit mobile number",
-                        },
-                      ]}
-                    >
-                      <Input
-                        type="tel"
-                        placeholder="Enter Mobile Number"
-                        maxLength={11}
-                        pattern="[0-9]*"
-                      />{" "}
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Mother NID" name="m_nid">
-                      <Input placeholder="Mother NID" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Occupation" name="occupation">
-                      <Input placeholder="Occupation" />
-                    </Form.Item>
-                  </Col>
-
-                  <Col lg={4}>
-                    <Form.Item<any> label="Income" name="income">
-                      <Input placeholder="Income" />
                     </Form.Item>
                   </Col>
                 </Row>

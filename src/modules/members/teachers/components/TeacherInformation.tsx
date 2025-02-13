@@ -14,6 +14,16 @@ const TeacherInformation = ({ data }: { data: any }) => {
     date_of_birth,
     address,
     base_salary,
+    gender,
+    hire_date,
+    image,
+    national_id,
+    education,
+    experience,
+    father_or_husband_name,
+    religion,
+    blood_group,
+    home_address,
   } = data || {};
 
   const information = [
@@ -22,17 +32,12 @@ const TeacherInformation = ({ data }: { data: any }) => {
       data: [
         {
           fieldName: "Gender",
-          text: "Male",
-          Icon: MdOutlineSubdirectoryArrowRight,
-        },
-        {
-          fieldName: "Class",
-          text: "1",
+          text: gender || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Date of Admission",
-          text: "10-12-2024",
+          text: hire_date ? new Date(hire_date).toLocaleDateString() : "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
@@ -48,12 +53,11 @@ const TeacherInformation = ({ data }: { data: any }) => {
         {
           fieldName: "Date of Birth",
           text: date_of_birth || "N/A",
-
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Teacher Birth ID",
-          text: "0162404050",
+          fieldName: "Teacher Birth /NID",
+          text: national_id || "N/A", // Replace if available
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
@@ -69,31 +73,36 @@ const TeacherInformation = ({ data }: { data: any }) => {
       ],
     },
     {
-      title: "Father Information",
+      title: "Other Information",
       data: [
         {
-          fieldName: "Father Name",
-          text: "Mr. Alom",
+          fieldName: "Education Qualification",
+          text: education || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Father Mobile No",
-          text: "0168520741",
+          fieldName: "Experience",
+          text: experience || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Father NID",
-          text: "0168520741",
+          fieldName: "Father / Husband Name",
+          text: father_or_husband_name || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Occupation",
-          text: "Doctor",
+          fieldName: "Religion",
+          text: religion || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Income",
-          text: "52000",
+          fieldName: "Blood Group",
+          text: blood_group || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Home Address",
+          text: home_address || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
@@ -106,7 +115,12 @@ const TeacherInformation = ({ data }: { data: any }) => {
         {/* Teacher Overview */}
         <Col lg={6}>
           <Card className="text-center">
-            <img src={no_img} className="mx-auto" alt="Profile" />
+            <img
+              src={image || no_img}
+              className="mx-auto"
+              alt="Profile"
+              style={{ maxWidth: "150px", borderRadius: "50%" }}
+            />
             <p className="text-xl font-semibold uppercase font-serif pt-5">
               {first_name} {last_name}
             </p>
