@@ -1,17 +1,38 @@
-import { Button, Card, Col, Row } from "antd";
+import { Button, Card, Col, Row, Select } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import { useGetRoutineQuery } from "../api/routineEndPoints";
 import { IGetRoutine } from "../type/routineTypes";
 import { Link } from "react-router-dom";
-
+import useRoutineColumns from "../utils/routineColumns";
+import { useState } from "react";
+import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
+import { debounce } from "lodash";
+import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
+import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
+import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
+const { Option } = Select;
 const RoutinePages = () => {
-  const { data: classList, isLoading } = useGetRoutineQuery({});
+  const [search, setSearch] = useState("");
+
+  const [filters, setFilters] = useState({
+    search: "",
+    session: "",
+    section: "",
+    grade_level: "",
+  });
+
+  const { data: classList, isFetching } = useGetClassesQuery({
+    search: search,
+  });
+  const { data: getSection } = useGetSectionQuery({});
+  const { data: getSession } = useGetAdmissionSessionQuery({});
+  const { data: routineList, isLoading } = useGetRoutineQuery(filters);
 
   const dataLength =
-    (classList?.data as IGetRoutine[] | undefined)?.length ?? 0;
-  const dataSource = (classList?.data as IGetRoutine[] | undefined) ?? [];
+    (routineList?.data as IGetRoutine[] | undefined)?.length ?? 0;
+  const dataSource = (routineList?.data as IGetRoutine[] | undefined) ?? [];
 
   return (
     <div className="space-y-5">
@@ -27,6 +48,91 @@ const RoutinePages = () => {
               </Button>
             </Link>
           </Col>
+
+          <Col lg={14} xs={24}>
+            <Row justify="space-between" gutter={[16, 0]}>
+              <Col lg={6} xs={12}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Section"
+                  allowClear
+                  showSearch
+                  onSearch={debounce(setSearch, 500)}
+                  filterOption={false}
+                  loading={isFetching}
+                  notFoundContent={
+                    Array?.isArray(getSection?.data) &&
+                    getSection?.data?.results?.length === 0
+                      ? "No Section found"
+                      : null
+                  }
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, section: value }))
+                  }
+                >
+                  {Array?.isArray(getSection?.data) &&
+                    getSection?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data?.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+              <Col lg={6} xs={12}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Class"
+                  allowClear
+                  showSearch
+                  onSearch={debounce(setSearch, 500)}
+                  filterOption={false}
+                  loading={isFetching}
+                  notFoundContent={
+                    Array?.isArray(classList?.data) &&
+                    classList?.data?.results?.length === 0
+                      ? "No Class found"
+                      : null
+                  }
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, grade_level: value }))
+                  }
+                >
+                  {Array?.isArray(classList?.data) &&
+                    classList?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data?.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+              <Col lg={6} xs={12}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Session"
+                  allowClear
+                  showSearch
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, session: value }))
+                  }
+                >
+                  {Array.isArray(getSession?.data) &&
+                    getSession?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data?.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+              <Col lg={6} xs={12}>
+                <SearchComponent
+                  onSearch={(value) =>
+                    setFilters((prev) => ({ ...prev, search: value }))
+                  }
+                  placeholder="Search Routine"
+                />
+              </Col>
+            </Row>
+          </Col>
         </Row>
       </Card>
 
@@ -34,7 +140,7 @@ const RoutinePages = () => {
         loading={isLoading}
         total={dataLength}
         dataSource={dataSource}
-        // columns={useClassesColumns()}
+        columns={useRoutineColumns()}
       />
     </div>
   );

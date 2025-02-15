@@ -55,6 +55,8 @@ import UpdateStudent from "../modules/members/students/components/UpdateStudent"
 import SectionPage from "../modules/general settings/Section/pages/SectionPage";
 import RoutinePages from "../modules/general settings/Routine/pages/RoutinePages";
 import CreateRoutine from "../modules/general settings/Routine/components/CreateRoutine";
+import ViewRoutine from "../modules/general settings/Routine/components/ViewRoutine";
+import UpdateRoutine from "../modules/general settings/Routine/components/UpdateRoutine";
 
 const router = createBrowserRouter([
   {
@@ -177,6 +179,14 @@ const router = createBrowserRouter([
           {
             path: "/routine/create-routine",
             element: <CreateRoutine />,
+          },
+          {
+            path: "/routine/view/:routineID",
+            element: <ViewRoutine />,
+          },
+          {
+            path: "/routine/update/:routineID",
+            element: <UpdateRoutine />,
           },
         ],
       },

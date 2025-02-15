@@ -123,6 +123,12 @@ const SingleCollectFee = () => {
               <Descriptions.Item label="Fee Type">
                 {feeData?.admission?.fee_type}
               </Descriptions.Item>
+              <Descriptions.Item label="Discount Type">
+                {feeData?.discount_type}
+              </Descriptions.Item>
+              <Descriptions.Item label="Discount Amount">
+                ৳ {feeData?.discount_value}
+              </Descriptions.Item>
               <Descriptions.Item label="Monthly Fee">
                 ৳ {feeData?.admission?.monthly_fee}
               </Descriptions.Item>

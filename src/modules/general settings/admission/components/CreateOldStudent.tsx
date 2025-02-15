@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Select, Form as AntForm } from "antd";
+import { Card, Col, Row, Select, Form as AntForm } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateAdmissionMutation } from "../api/admissionEndPoints";
 import { IAdmission } from "../type/admissionType";
@@ -102,35 +102,6 @@ const CreateOldStudent = () => {
                       </Option>
                     ))}
                 </Select>
-              </Form.Item>
-            </Col>
-            <Col lg={8}>
-              <Form.Item
-                label="Discount Type"
-                name="discount_type"
-                initialValue="amount"
-              >
-                <Select
-                  placeholder="Select Discount Type"
-                  className="w-full"
-                  defaultValue="amount"
-                >
-                  <Option value="amount">Amount</Option>
-                  <Option value="percent">Percent</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col lg={8}>
-              <Form.Item
-                label="Discount Value"
-                name="discount_value"
-                initialValue={0}
-              >
-                <Input
-                  placeholder="Discount Value"
-                  defaultValue={0}
-                  type="number"
-                />
               </Form.Item>
             </Col>
 

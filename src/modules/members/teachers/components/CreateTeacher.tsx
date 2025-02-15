@@ -15,9 +15,14 @@ import { Form } from "../../../../common/CommonAnt";
 import { useState } from "react";
 import { useCreateTeacherMutation } from "../api/teachersEndPoints";
 import dayjs from "dayjs";
+import { useGetSubjectsQuery } from "../../../general settings/subjects/api/subjectsEndPoints";
 
 const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
+  const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery(
+    {}
+  );
+
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -320,6 +325,40 @@ const CreateTeacher = () => {
                       </Select>
                     </Form.Item>
                   </Col>
+
+                  <Col lg={6}>
+                    <Form.Item
+                      label="Subject Specialization"
+                      name="subject_specialization"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Subject Specialization is required!",
+                        },
+                      ]}
+                    >
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        showSearch
+                        style={{ width: "100%" }}
+                        placeholder={
+                          subjectLoading
+                            ? "Loading Subjects..."
+                            : "Please Select Specialization"
+                        }
+                        options={
+                          subjectData?.data?.results?.map(
+                            (subjectItem: any) => ({
+                              label: `${subjectItem.name} (${subjectItem?.grade_level?.name})`,
+                              value: subjectItem.id,
+                            })
+                          ) || []
+                        }
+                      />
+                    </Form.Item>
+                  </Col>
+
                   <Col lg={6}>
                     <Form.Item<any> label="Address" name="home_address">
                       <Input placeholder="Address" />

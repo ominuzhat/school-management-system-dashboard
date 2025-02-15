@@ -1,11 +1,17 @@
 import { Badge, Card, Col, Row, Select, Form as AntForm } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { Form } from "../../../../common/CommonAnt";
-import { useCreateRoutineMutation } from "../api/routineEndPoints";
+import {
+  useGetSingleRoutineQuery,
+  useUpdateRoutineMutation,
+} from "../api/routineEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
-import MultipleSelectRoutine from "./MultipleSelectRoutine";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import UpdateMultipleSelectRoutine from "./UpdateMultipleSelectRoutine";
+import dayjs from "dayjs";
 
 // const daysOfWeek = [
 //   "Sunday",
@@ -17,10 +23,15 @@ import MultipleSelectRoutine from "./MultipleSelectRoutine";
 //   "Saturday",
 // ];
 
-const CreateRoutine = () => {
+const UpdateRoutine = () => {
   const [form] = AntForm.useForm();
+  const { routineID } = useParams();
+  const navigate = useNavigate();
+  const { data: singleData } = useGetSingleRoutineQuery(Number(routineID));
+  const singleRoutine: any = singleData?.data;
+
   // const today = dayjs().format("dddd");
-  const [create, { isLoading, isSuccess }] = useCreateRoutineMutation();
+  const [update, { isLoading, isSuccess }] = useUpdateRoutineMutation();
   // const [selectedDay, setSelectedDay] = useState<string | null>(today);
   const { data: sessionData } = useGetAdmissionSessionQuery({ status: "open" });
   const { data: classData } = useGetClassesQuery({});
@@ -28,6 +39,23 @@ const CreateRoutine = () => {
 
   const specificClass = AntForm.useWatch("grade_level", form);
   const specificSection = AntForm.useWatch("section", form);
+
+  useEffect(() => {
+    if (singleRoutine) {
+      form.setFieldsValue({
+        session: singleRoutine?.session?.id,
+        section: singleRoutine?.section?.id,
+        grade_level: singleRoutine?.grade_level?.id,
+        slots: singleRoutine?.slots?.map((slot: any) => ({
+          day: slot.day,
+          start_time: dayjs(slot.start_time, "HH:mm:ss"),
+          end_time: dayjs(slot.end_time, "HH:mm:ss"),
+          teacher: slot.teacher.id,
+          subject: slot.subject.id,
+        })),
+      });
+    }
+  }, [form, singleRoutine]);
 
   const onFinish = (values: any): void => {
     const formattedValues = {
@@ -43,8 +71,14 @@ const CreateRoutine = () => {
       })),
     };
 
-    create(formattedValues);
+    update({ id: Number(routineID), data: formattedValues });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate(`/routine/view/${routineID}`);
+    }
+  }, [isSuccess, navigate, routineID]);
 
   return (
     <div>
@@ -151,7 +185,9 @@ const CreateRoutine = () => {
                   placement="start"
                 >
                   <Card className="pt-5">
-                    <MultipleSelectRoutine specificClass={specificClass} />
+                    <UpdateMultipleSelectRoutine
+                      specificClass={specificClass}
+                    />
                   </Card>
                 </Badge.Ribbon>
               </Col>
@@ -163,4 +199,4 @@ const CreateRoutine = () => {
   );
 };
 
-export default CreateRoutine;
+export default UpdateRoutine;

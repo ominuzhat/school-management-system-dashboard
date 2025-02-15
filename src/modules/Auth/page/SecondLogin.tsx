@@ -18,6 +18,7 @@ import { openNotification } from "../../../app/features/notificationSlice";
 import { RootState } from "../../../app/store";
 
 import { logo, welcome } from "../../../utilities/images";
+import { passwordValidator } from "../../../utilities/validator";
 
 const SecondLogin: React.FC = () => {
   const [login, { isLoading }] = useLoginMutation();
@@ -31,7 +32,6 @@ const SecondLogin: React.FC = () => {
     try {
       const response = await login({
         ...values,
-        password: "StrongPassword123!",
       }).unwrap();
       const { success, data } = response as any;
       dispatch(
@@ -108,10 +108,10 @@ const SecondLogin: React.FC = () => {
 
                   <Form.Item<LoginTypes>
                     name="password"
-                    // rules={[
-                    //   { required: true },
-                    //   { validator: passwordValidator },
-                    // ]}
+                    rules={[
+                      { required: true },
+                      { validator: passwordValidator },
+                    ]}
                   >
                     <Input.Password
                       onFocus={handleOnFocus}

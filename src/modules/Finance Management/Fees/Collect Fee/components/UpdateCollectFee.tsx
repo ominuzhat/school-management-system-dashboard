@@ -36,9 +36,8 @@ const UpdateCollectFee = () => {
   const { collectFeeId } = useParams();
   const [finalDueAmount, setFinalDueAmount] = useState<number | null>(null);
   const [search, setSearch] = useState("");
-  const [selectedFees, setSelectedFees] = useState([]);
-  // const [selectedStudent, setSelectedStudent] = useState({});
-  const [selectedAdditionalFee, setSelectedAdditionalFee] = useState([]);
+  const [selectedFees, setSelectedFees] = useState<any[]>([]); // Initialize as an empty array
+  const [selectedAdditionalFee, setSelectedAdditionalFee] = useState<any[]>([]); // Initialize as an empty array
   const { data: singleData } = useGetCollectSingleFeesQuery(
     Number(collectFeeId)
   );
@@ -48,34 +47,24 @@ const UpdateCollectFee = () => {
     search: search,
   });
 
-  console.log(finalDueAmount);
-
   const paidAmount = AntForm.useWatch("paid_amount", form);
   const admission = AntForm.useWatch("admission", form);
   const addOns = AntForm.useWatch("add_ons", form);
 
-  console.log(addOns, "addons");
-
   const totalAmountOfAdditionalFees = useMemo(() => {
-    return (
-      selectedAdditionalFee?.reduce(
-        (sum, data: any) => sum + data?.amount,
-        0
-      ) || 0
-    );
+    return Array.isArray(selectedAdditionalFee)
+      ? selectedAdditionalFee.reduce((sum, data: any) => sum + data?.amount, 0)
+      : 0;
   }, [selectedAdditionalFee]);
-
-  console.log(singleData?.data, "ddd");
 
   useEffect(() => {
     if (singleData?.data) {
       form.setFieldsValue({
         admission:
-          singleData?.data?.admission?.student?.first_name +
-          " " +
-          singleData?.data?.admission?.student?.last_name,
+          singleData?.data?.admission?.id,
         class: singleData?.data?.admission?.grade_level,
         paid_amount: singleData?.data?.paid_amount,
+        discount_value: singleData?.data?.discount_value,
         payment_method: singleData?.data?.payment_method,
         session: singleData?.data?.admission?.session?.name,
         month: singleData?.data?.month ? dayjs(singleData?.data?.month) : null,
@@ -86,13 +75,13 @@ const UpdateCollectFee = () => {
           ? singleData?.data?.add_ons.map((data: any) => data.id)
           : [],
       });
-      setSelectedFees(singleData?.data?.admission?.fees);
+      setSelectedFees(singleData?.data?.admission?.fees || []); // Ensure it's an array
 
       const calculatedDueAmount =
         singleData?.data?.due_amount +
         totalAmountOfAdditionalFees -
         (paidAmount || 0);
-      setFinalDueAmount(calculatedDueAmount);
+      setFinalDueAmount(calculatedDueAmount );
     }
 
     if (admission) {
@@ -100,8 +89,7 @@ const UpdateCollectFee = () => {
         Array.isArray(additionalData?.data) &&
         additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
 
-      console.log(foundAdditionalData, "foundAdditionalData");
-      setSelectedAdditionalFee(foundAdditionalData);
+      setSelectedAdditionalFee(foundAdditionalData || []); // Ensure it's an array
     }
   }, [
     form,
@@ -109,41 +97,10 @@ const UpdateCollectFee = () => {
     admission,
     additionalData?.data,
     addOns,
-
     totalAmountOfAdditionalFees,
     paidAmount,
+
   ]);
-
-  console.log(selectedFees);
-  console.log(selectedAdditionalFee);
-
-  //   useEffect(() => {
-  //     if (admission) {
-  //       const foundAdmission = admissionData?.data?.results.find(
-  //         (data: any) => data?.id === admission
-  //       );
-
-  //       const foundAdditionalData =
-  //         Array.isArray(additionalData?.data) &&
-  //         additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
-
-  //       if (foundAdmission) {
-  //         form.setFieldsValue({
-  //           class: foundAdmission?.grade_level,
-  //           session: foundAdmission?.session?.name,
-  //         });
-  //         setSelectedFees(foundAdmission?.fees);
-  //         setSelectedStudent(foundAdmission);
-  //         setSelectedAdditionalFee(foundAdditionalData);
-  //       }
-  //     }
-  //   }, [
-  //     addOns,
-  //     additionalData?.data,
-  //     admission,
-  //     admissionData?.data?.results,
-  //     form,
-  //   ]);
 
   const onFinish = (values: any): void => {
     const results = {
@@ -158,10 +115,10 @@ const UpdateCollectFee = () => {
     update({ id: singleData?.data?.id, data: results })
       .unwrap()
       .then(() => {
-        message.success("Fee collected successfully!");
+        message.success("Fee updated successfully!");
       })
       .catch(() => {
-        message.error("Failed to collect fee. Please try again.");
+        message.error("Failed to update fee. Please try again.");
       });
   };
 
@@ -184,7 +141,7 @@ const UpdateCollectFee = () => {
         isLoading={isLoading}
         isSuccess={isSuccess}
         layout="horizontal"
-        buttonLabel="Collect Fee"
+        buttonLabel="Update Fee"
       >
         <Card className="mb-6 shadow-lg rounded-lg">
           <Row gutter={[16, 16]}>
@@ -192,9 +149,10 @@ const UpdateCollectFee = () => {
               <Form.Item
                 label="Select Student"
                 name="admission"
-                rules={[{ required: true, message: "Please select a student" }]}
+                
               >
                 <Select
+                disabled
                   placeholder="Select Student"
                   className="w-full"
                   allowClear
@@ -242,6 +200,37 @@ const UpdateCollectFee = () => {
                   picker="month"
                   className="w-full"
                   suffixIcon={<CalendarOutlined />}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col lg={6}>
+              <Form.Item
+                label="Discount Type"
+                name="discount_type"
+                initialValue="amount"
+              >
+                <Select
+                  placeholder="Select Discount Type"
+                  className="w-full"
+                  defaultValue="amount"
+                >
+                  <Select.Option value="amount">Amount</Select.Option>
+                  <Select.Option value="percent">Percent</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col lg={6}>
+              <Form.Item
+                label="Discount Value"
+                name="discount_value"
+                initialValue={0}
+              >
+                <Input
+                  placeholder="Discount Value"
+                  defaultValue={0}
+                  type="number"
                 />
               </Form.Item>
             </Col>
@@ -333,9 +322,6 @@ const UpdateCollectFee = () => {
 
             <div className="flex justify-between gap-10 pt-4">
               <div className="flex flex-col gap-3">
-                {/* <Text strong className="text-lg text-slate-600">
-                  Total Amount :
-                </Text> */}
                 <Text strong className="text-lg text-red-600">
                   Total Due :
                 </Text>
@@ -345,14 +331,9 @@ const UpdateCollectFee = () => {
               </div>
 
               <div className="flex flex-col gap-3  ">
-                {/* <div className="flex justify-end">
-                  <p className="border-slate-600 bg-slate-600 text-white px-6 text-lg font-semibold w-24">
-                    {selectedStudent?.total_amount || "0000"}
-                  </p>
-                </div> */}
                 <div className="flex justify-end">
                   <p className="border-red-600 bg-red-600 text-white px-6 text-lg font-semibold w-24">
-                    {"due need from backend"}
+                    {finalDueAmount || "0000"}
                   </p>
                 </div>
 

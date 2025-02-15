@@ -20,6 +20,7 @@ import {
   useUpdateTeacherMutation,
 } from "../api/teachersEndPoints";
 import dayjs from "dayjs";
+import { useGetSubjectsQuery } from "../../../general settings/subjects/api/subjectsEndPoints";
 
 interface Props {
   record: any;
@@ -27,6 +28,9 @@ interface Props {
 
 const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
   const { data: singleTeacher } = useGetSingleSTeacherQuery(record?.id);
+  const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery(
+    {}
+  );
 
   const [update, { isLoading }] = useUpdateTeacherMutation();
   const [form] = AntForm.useForm();
@@ -36,6 +40,8 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
 
   // const [originalImages, setOriginalImages] = useState<any[]>([]);
   // console.log(originalImages);
+
+  console.log(singleTeacher);
 
   useEffect(() => {
     if (singleTeacher) {
@@ -57,6 +63,9 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
         username: singleTeacher?.data?.user?.username,
         hire_date: dayjs(singleTeacher?.data?.hire_date),
         date_of_birth: dayjs(singleTeacher?.data?.date_of_birth),
+        subject_specialization: singleTeacher?.data?.subject?.map(
+          (level: any) => level?.id
+        ),
         picture: initialImages,
       });
     }
@@ -312,6 +321,33 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                           )
                         )}
                       </Select>
+                    </Form.Item>
+                  </Col>
+
+                  <Col lg={6}>
+                    <Form.Item
+                      label="Subject Specialization"
+                      name="subject_specialization"
+                    >
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        showSearch
+                        style={{ width: "100%" }}
+                        placeholder={
+                          subjectLoading
+                            ? "Loading Subjects..."
+                            : "Please Select Specialization"
+                        }
+                        options={
+                          subjectData?.data?.results?.map(
+                            (subjectItem: any) => ({
+                              label: `${subjectItem.name} (${subjectItem?.grade_level?.name})`,
+                              value: subjectItem.id,
+                            })
+                          ) || []
+                        }
+                      />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>

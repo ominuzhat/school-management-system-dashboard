@@ -37,7 +37,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
     },
     {
       key: "11111",
-      title: "Registration No.",
+      title: "REG No.",
       dataIndex: "admission",
       align: "center",
       render: (title) => (title ? title?.registration_number : "N/A"),
@@ -105,13 +105,20 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
     },
     {
       key: "9",
+      title: "Discount Amount",
+      dataIndex: "discount_value",
+      align: "center",
+      render: (title) => (title ? title : "N/A"),
+    },
+    {
+      key: "10",
       title: "Payment Date",
       dataIndex: "payment_date",
       align: "center",
       render: (month) => (month ? dayjs(month).format("DD MMM YYYY") : "N/A"),
     },
     {
-      key: "10",
+      key: "11",
       title: "Due Amount",
       dataIndex: "admission",
       align: "center",

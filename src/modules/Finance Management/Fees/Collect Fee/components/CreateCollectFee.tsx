@@ -34,7 +34,7 @@ const CreateCollectFee = () => {
   const [selectedFees, setSelectedFees] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState<any>({});
   const [finalDueAmount, setFinalDueAmount] = useState<number | null>(null);
-  const [selectedAdditionalFee, setSelectedAdditionalFee] = useState([]);
+  const [selectedAdditionalFee, setSelectedAdditionalFee] = useState<any[]>([]);
   const [create, { isLoading, isSuccess }] = useCreateCollectFeesMutation();
   const { data: additionalData } = useGetAdditionalFeesQuery({});
   const { data: admissionData, isFetching } = useGetAdmissionQuery({
@@ -46,17 +46,16 @@ const CreateCollectFee = () => {
   const admission = AntForm.useWatch("admission", form);
   const addOns = AntForm.useWatch("add_ons", form);
   const paidAmount = AntForm.useWatch("paid_amount", form);
+  const discountType = AntForm.useWatch("discount_type", form);
+  const discountAmount = AntForm.useWatch("discount_value", form);
 
-  console.log(selectedFees);
-  console.log(selectedAdditionalFee);
+  console.log(discountType);
+  console.log(selectedStudent?.due_amount);
 
   const totalAmountOfAdditionalFees = useMemo(() => {
-    return (
-      selectedAdditionalFee?.reduce(
-        (sum, data: any) => sum + data?.amount,
-        0
-      ) || 0
-    );
+    return Array.isArray(selectedAdditionalFee)
+      ? selectedAdditionalFee.reduce((sum, data: any) => sum + data?.amount, 0)
+      : 0;
   }, [selectedAdditionalFee]);
 
   useEffect(() => {
@@ -64,25 +63,36 @@ const CreateCollectFee = () => {
       const foundAdmission: any = admissionData?.data?.results.find(
         (data: any) => data?.id === admission
       );
-
-      const calculatedDueAmount =
-        selectedStudent?.due_amount +
-        totalAmountOfAdditionalFees -
-        (paidAmount || 0);
-      setFinalDueAmount(calculatedDueAmount);
-
+  
+      // Calculate the total due amount including additional fees
+      const totalDueAmount = (selectedStudent?.due_amount || 0) + totalAmountOfAdditionalFees;
+  
+      // Calculate the discounted amount based on the discount type
+      let discountedAmount = 0;
+      if (discountType === "amount") {
+        discountedAmount = discountAmount || 0;
+      } else if (discountType === "percent") {
+        discountedAmount = (totalDueAmount * (discountAmount || 0)) / 100;
+      }
+  
+      // Calculate the final due amount after discount and paid amount
+      const calculatedDueAmount = totalDueAmount - discountedAmount - (paidAmount || 0);
+  
+      // Ensure the final due amount is not negative
+      setFinalDueAmount(Math.max(calculatedDueAmount, 0));
+  
       const foundAdditionalData: any =
         Array.isArray(additionalData?.data) &&
         additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
-
+  
       if (foundAdmission) {
         form.setFieldsValue({
           class: foundAdmission?.grade_level,
           session: foundAdmission?.session?.name,
         });
-        setSelectedFees(foundAdmission?.fees);
+        setSelectedFees(foundAdmission?.fees || []);
         setSelectedStudent(foundAdmission);
-        setSelectedAdditionalFee(foundAdditionalData);
+        setSelectedAdditionalFee(foundAdditionalData || []);
       }
     }
   }, [
@@ -90,16 +100,19 @@ const CreateCollectFee = () => {
     additionalData?.data,
     admission,
     admissionData?.data?.results,
+    discountAmount,
+    discountType,
     form,
     paidAmount,
     selectedStudent?.due_amount,
     totalAmountOfAdditionalFees,
   ]);
-
   const onFinish = (values: any): void => {
     const results = {
       admission: values?.admission,
       add_ons: values?.add_ons,
+      discount_type: values?.discount_type,
+      discount_value: values?.discount_value,
       payment_method: values?.payment_method,
       paid_amount: values?.paid_amount,
       payment_date: dayjs(values?.payment_date).format("YYYY-MM-DD"),
@@ -163,7 +176,8 @@ const CreateCollectFee = () => {
                 >
                   {admissionData?.data?.results?.map((data: any) => (
                     <Select.Option key={data?.id} value={data?.id}>
-                      {data?.student?.first_name} {data?.student?.last_name}
+                      {data?.student?.first_name} {data?.student?.last_name} (
+                      {data?.registration_number}) - {data?.session?.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -197,6 +211,38 @@ const CreateCollectFee = () => {
                 />
               </Form.Item>
             </Col>
+
+            <Col lg={6}>
+              <Form.Item
+                label="Discount Type"
+                name="discount_type"
+                initialValue="amount"
+              >
+                <Select
+                  placeholder="Select Discount Type"
+                  className="w-full"
+                  defaultValue="amount"
+                >
+                  <Select.Option value="amount">Amount</Select.Option>
+                  <Select.Option value="percent">Percent</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col lg={6}>
+              <Form.Item
+                label="Discount Value"
+                name="discount_value"
+                initialValue={0}
+              >
+                <Input
+                  placeholder="Discount Value"
+                  defaultValue={0}
+                  type="number"
+                />
+              </Form.Item>
+            </Col>
+
             <Col lg={6} md={12}>
               <AntForm.Item
                 label="Payment Date"
@@ -285,9 +331,6 @@ const CreateCollectFee = () => {
 
             <div className="flex justify-end gap-10 pt-4">
               <div className="flex flex-col gap-3">
-                {/* <Text strong className="text-lg text-slate-600">
-                  Total Amount :
-                </Text> */}
                 <Text strong className="text-lg text-red-600">
                   Total Due :
                 </Text>
@@ -297,11 +340,6 @@ const CreateCollectFee = () => {
               </div>
 
               <div className="flex flex-col gap-3  ">
-                {/* <div className="flex justify-end">
-                  <p className="border-slate-600 bg-slate-600 text-white px-6 text-lg font-semibold w-24">
-                    {selectedStudent?.total_amount || "0000"}
-                  </p>
-                </div> */}
                 <div className="flex justify-end">
                   <p className="border-red-600 border shadow-lg rounded px-6 text-lg font-semibold w-24">
                     {finalDueAmount || "0000"}

@@ -13,7 +13,7 @@ const daysOfWeek = [
   "Saturday",
 ];
 
-const MultipleSelectRoutine = ({
+const UpdateMultipleSelectRoutine = ({
   specificClass,
 }: {
   specificClass: number;
@@ -142,4 +142,4 @@ const MultipleSelectRoutine = ({
   );
 };
 
-export default MultipleSelectRoutine;
+export default UpdateMultipleSelectRoutine;

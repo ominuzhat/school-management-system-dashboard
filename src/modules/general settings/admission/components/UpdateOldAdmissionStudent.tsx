@@ -1,14 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Card,
-  Col,
-  Form,
-  Input,
-  Row,
-  Select,
-  Button,
-  Form as AntForm,
-} from "antd";
+import { Card, Col, Form, Row, Select, Button, Form as AntForm } from "antd";
 import {
   useGetSingleAdmissionQuery,
   useUpdateAdmissionMutation,
@@ -60,10 +51,8 @@ const UpdateOldAdmissionStudent = () => {
       form.setFieldsValue({
         student: singleAdmission?.student?.id,
         session: singleAdmission?.session?.id,
-        discount_type: singleAdmission?.discount_type,
         status: singleAdmission?.status,
         shift: singleAdmission?.shift,
-        discount_value: singleAdmission?.discount_value,
         fee_type: singleAdmission?.fee_type,
         section: singleAdmission?.section?.id,
         grade_level: singleAdmission?.subjects?.[0]?.grade_level?.id,
@@ -135,29 +124,6 @@ const UpdateOldAdmissionStudent = () => {
                       </Option>
                     ))}
                 </Select>
-              </Form.Item>
-            </Col>
-
-            <Col lg={8}>
-              <Form.Item
-                label="Discount Type"
-                name="discount_type"
-                initialValue="amount"
-              >
-                <Select placeholder="Select Discount Type" className="w-full">
-                  <Option value="amount">Amount</Option>
-                  <Option value="percent">Percent</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col lg={8}>
-              <Form.Item
-                label="Discount Value"
-                name="discount_value"
-                initialValue={0}
-              >
-                <Input placeholder="Discount Value" type="number" />
               </Form.Item>
             </Col>
 

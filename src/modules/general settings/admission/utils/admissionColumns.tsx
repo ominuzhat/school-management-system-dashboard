@@ -48,7 +48,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     },
     {
       key: "2",
-      title: "Admission Number",
+      title: "REG No.",
       dataIndex: "registration_number",
       align: "center",
       sorter: (a, b) =>
@@ -104,24 +104,39 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "One Time Fee",
       dataIndex: "one_time_fee",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : 0),
     },
     {
       key: "8",
       title: "Monthly Fee",
       dataIndex: "monthly_fee",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
-    },
-    {
-      key: "8",
-      title: "Due",
-      dataIndex: "due_amount",
-      align: "center",
-      render: (title) => (title ? <Tag color="red">{title}</Tag> : "N/A"),
+      render: (title) => (title ? title : 0),
     },
     {
       key: "9",
+      title: "Total Paid Amount",
+      dataIndex: "total_paid_amount",
+      align: "center",
+      render: (title) => (title ? <Tag color="green">{title}</Tag> : 0),
+    },
+    {
+      key: "10",
+      title: "Due",
+      dataIndex: "due_amount",
+      align: "center",
+      render: (title) => (title ? <Tag color="red">{title}</Tag> : 0),
+    },
+
+    {
+      key: "11",
+      title: "Total Discount Amount",
+      dataIndex: "total_discounted_amount",
+      align: "center",
+      render: (title) => (title ? <Tag color="orange">{title}</Tag> : 0),
+    },
+    {
+      key: "12",
       title: "Status",
       dataIndex: "status",
       align: "center",
