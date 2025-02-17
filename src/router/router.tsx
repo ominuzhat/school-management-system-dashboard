@@ -236,7 +236,7 @@ const router = createBrowserRouter([
           },
 
           {
-            path: "fees-view/:feesId",
+            path: "view/:feesId",
             element: <FeesView />,
           },
         ],

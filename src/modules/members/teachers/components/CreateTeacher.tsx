@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useCreateTeacherMutation } from "../api/teachersEndPoints";
 import dayjs from "dayjs";
 import { useGetSubjectsQuery } from "../../../general settings/subjects/api/subjectsEndPoints";
+import PasswordInput from "../../../../common/Password/input";
 
 const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
@@ -42,12 +43,15 @@ const CreateTeacher = () => {
 
     // Append non-file fields
     Object.entries(values).forEach(([key, value]) => {
+      if (value === undefined || value === null) {
+        value = "";
+      }
+
       if (key === "image") {
-        // Handle image field separately
         if (Array.isArray(value) && value.length > 0) {
           value.forEach((file) => {
             if (file?.originFileObj && file.originFileObj instanceof File) {
-              formData.append(key, file.originFileObj); // Append the file
+              formData.append(key, file.originFileObj);
             }
           });
         }
@@ -183,7 +187,7 @@ const CreateTeacher = () => {
                           ]}
                         >
                           <Input
-                            addonBefore="+088"
+                            addonBefore="+880"
                             placeholder="Enter Mobile Number"
                           />
                         </Form.Item>
@@ -207,13 +211,7 @@ const CreateTeacher = () => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <Form.Item<any>
-                          label="Password"
-                          name="password"
-                          rules={[{ required: true, message: "Password!" }]}
-                        >
-                          <Input.Password placeholder="Password." />
-                        </Form.Item>
+                        <PasswordInput />
                       </Col>
 
                       <Col lg={8}>
@@ -269,6 +267,14 @@ const CreateTeacher = () => {
                       name="national_id"
                     >
                       <Input placeholder="Teacher Birth ID / NID" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Father / Husband Name"
+                      name="father_or_husband_name"
+                    >
+                      <Input placeholder="Father / Husband Name" />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>

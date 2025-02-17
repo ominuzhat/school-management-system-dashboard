@@ -11,10 +11,11 @@ const useClassesColumns = (): ColumnsType<any> => {
     },
     {
       key: "2",
-      title: "Description",
-      dataIndex: "description",
+      title: "Class Teacher",
+      dataIndex: "class_teacher",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (title) =>
+        title ? title.first_name + " " + title.last_name : "N/A",
     },
   ];
 };

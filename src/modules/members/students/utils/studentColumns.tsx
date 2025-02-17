@@ -5,6 +5,7 @@ import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import dayjs from "dayjs";
 
 const useStudentColumns = (): ColumnsType<any> => {
   // const dispatch = useDispatch();
@@ -65,7 +66,8 @@ const useStudentColumns = (): ColumnsType<any> => {
       sorter: (a, b) =>
         new Date(a.enrollment_date || 0).getTime() -
         new Date(b.enrollment_date || 0).getTime(),
-      render: (enrollment_date) => (enrollment_date ? enrollment_date : "N/A"),
+      render: (enrollment_date) =>
+        enrollment_date ? dayjs(enrollment_date).format("DD MMM YYYY") : "N/A",
     },
     {
       key: "6",

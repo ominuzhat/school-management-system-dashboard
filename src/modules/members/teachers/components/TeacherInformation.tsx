@@ -57,7 +57,7 @@ const TeacherInformation = ({ data }: { data: any }) => {
         },
         {
           fieldName: "Teacher Birth /NID",
-          text: national_id || "N/A", // Replace if available
+          text: national_id || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
@@ -110,18 +110,18 @@ const TeacherInformation = ({ data }: { data: any }) => {
   ];
 
   return (
-    <div>
+    <div className="p-4">
       <Row gutter={[16, 16]} align="middle" justify="center">
         {/* Teacher Overview */}
-        <Col lg={6}>
+        <Col xs={24} sm={24} md={8} lg={6}>
           <Card className="text-center">
             <img
               src={image || no_img}
-              className="mx-auto"
               alt="Profile"
-              style={{ maxWidth: "150px", borderRadius: "50%" }}
+              className="mx-auto"
+              style={{ width: "100%", maxWidth: "150px", borderRadius: "50%" }}
             />
-            <p className="text-xl font-semibold uppercase font-serif pt-5">
+            <p className="text-lg font-semibold uppercase font-serif pt-5">
               {first_name} {last_name}
             </p>
             <p className="py-2">
@@ -134,20 +134,18 @@ const TeacherInformation = ({ data }: { data: any }) => {
         </Col>
 
         {/* Detailed Information */}
-        <Col lg={18} className="space-y-1">
+        <Col xs={24} sm={24} md={16} lg={18}>
           {information.map((section, index) => (
             <Badge.Ribbon text={section.title} placement="start" key={index}>
               <Card className="pt-2">
                 <Row gutter={[16, 16]}>
                   {section.data.map((item, idx) => (
-                    <Col span={8} key={idx}>
-                      <div>
-                        <TextView
-                          fieldName={item.fieldName}
-                          text={item.text}
-                          Icon={item.Icon}
-                        />
-                      </div>
+                    <Col xs={24} sm={12} md={8} key={idx}>
+                      <TextView
+                        fieldName={item.fieldName}
+                        text={item.text}
+                        Icon={item.Icon}
+                      />
                     </Col>
                   ))}
                 </Row>

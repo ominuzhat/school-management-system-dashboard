@@ -26,7 +26,6 @@ export interface ICreateStudent {
   mother_phone_number: string;
   phone_number: string;
   father_number: string;
-  enrollment_date: string; // You can change this type based on how you store the date
   date_of_birth: string; // Same as above
   local_guardian_name: string;
   local_guardian_email: string;

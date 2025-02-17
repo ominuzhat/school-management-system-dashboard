@@ -10,6 +10,7 @@ import useSingleFeesColumns from "../utils/FessColumns";
 
 const FeesView = () => {
   const { feesId } = useParams();
+
   const { data, isLoading } = useGetSingleFeesQuery(Number(feesId));
 
   const { fee_type, grade_level, student, subject, fees } = data?.data || {};

@@ -1,11 +1,8 @@
 import {
-  Badge,
   Button,
   Flex,
   Image,
-  Input,
   Layout,
-  List,
   Popover,
   Space,
   Tooltip,
@@ -22,7 +19,6 @@ import { RootState } from "../../../app/store";
 import { toggleThemes } from "../../../app/features/themeSlice";
 import { flight } from "../../../utilities/images";
 import { useGetProfileQuery } from "../../../modules/Profile/api/profileEndpoint";
-import { CiSearch } from "react-icons/ci";
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -77,16 +73,16 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
             </Typography.Text>
           </div>
         </Flex>
-        <Flex align="center" justify="center">
+        {/* <Flex align="center" justify="center">
           <Input
             placeholder="Search"
             prefix={<CiSearch />}
             style={{ width: "300px" }}
             className="search-section"
           />
-        </Flex>
+        </Flex> */}
         <Flex align="center" justify="center" gap={20}>
-          <Badge count={17}>
+          {/* <Badge count={17}>
             <Popover
               content={
                 <List
@@ -103,7 +99,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                 icon={<Iconify name="ant-design:bell-outlined" />}
               />
             </Popover>
-          </Badge>
+          </Badge> */}
 
           <Tooltip
             title={themes === "light" ? "Dark Mode" : "Light Mode"}

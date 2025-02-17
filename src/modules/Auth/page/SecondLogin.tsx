@@ -82,7 +82,7 @@ const SecondLogin: React.FC = () => {
                   level={3}
                   style={{ margin: 0, display: "block" }}
                 >
-                  WelCome To Education
+                  Welcome To Education
                 </Typography.Title>
                 <br />
                 <Typography.Text type="secondary" style={{ display: "block" }}>

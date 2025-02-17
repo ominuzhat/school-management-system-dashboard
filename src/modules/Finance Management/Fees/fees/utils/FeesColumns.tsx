@@ -6,6 +6,7 @@ import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../../app/features/modalSlice";
 import UpdateFees from "../components/UpdateFees";
 import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
+import { capitalize } from "../../../../../common/capitalize/Capitalize";
 
 const useFeesColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ const useFeesColumns = (): ColumnsType<any> => {
       title: "Fees Type",
       dataIndex: "fee_type",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? capitalize(title) : "N/A"),
     },
     {
       key: "2",
@@ -40,24 +41,23 @@ const useFeesColumns = (): ColumnsType<any> => {
       dataIndex: "grade_level",
       align: "center",
       render: (title) =>
-        title ? title.map((data: any) => `${data.name}, `) : "N/A",
+        title ? title.map((data: any) => data.name).join(", ") : "N/A",
     },
-
-    {
-      key: "3",
-      title: "Students",
-      dataIndex: "student",
-      align: "center",
-      render: (title) =>
-        title ? title.map((data: any) => `${data.user.username}, `) : "N/A",
-    },
+    // {
+    //   key: "3",
+    //   title: "Students",
+    //   dataIndex: "student",
+    //   align: "center",
+    //   render: (title) =>
+    //     title ? title.map((data: any) => data.user.username).join(", ") : "N/A",
+    // },
     {
       key: "4",
       title: "Subject",
       dataIndex: "subject",
       align: "center",
       render: (title) =>
-        title ? title.map((data: any) => `${data.name}, `) : "N/A",
+        title ? title.map((data: any) => data.name).join(", ") : "N/A",
     },
 
     {
@@ -75,7 +75,7 @@ const useFeesColumns = (): ColumnsType<any> => {
               )
             }
           />
-          <ViewButton to={`fees-view/${record?.id} `} />
+          <ViewButton to={`view/${record?.id}`} />
           {/* <DeleteButton onClick={() => handleDelete(record.id)}>
             Delete
           </DeleteButton> */}

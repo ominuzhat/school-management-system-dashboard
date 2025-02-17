@@ -20,7 +20,7 @@ import {
 import { useUpdateInstituteProfileMutation } from "../api/instituteProfileEndPoint";
 import Upload from "antd/es/upload/Upload";
 import { PlusOutlined } from "@ant-design/icons";
-import moment from "moment";
+import dayjs from "dayjs";
 
 interface Props {
   record: IInstituteProfileWrapper;
@@ -56,7 +56,7 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
         latitude: record?.data?.latitude || "",
         longitude: record?.data?.longitude || "",
         established_date: record?.data?.established_date
-          ? moment(record?.data?.established_date)
+          ? dayjs(record?.data?.established_date)
           : null,
       });
     }
@@ -90,7 +90,6 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
       }
     });
 
-    console.log(Object.fromEntries(formData));
     update({ data: formData });
   };
 
@@ -208,8 +207,14 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
                           name="institution_type"
                         >
                           <Select placeholder="Select institution type">
-                            <Option value="school">School</Option>
-                            <Option value="coaching">Coaching</Option>
+                            <Option value="University">University</Option>
+                            <Option value="College">College</Option>
+                            <Option value="Coaching">Coaching</Option>
+                            <Option value="School">School</Option>
+                            <Option value="Research Institute">
+                              Research Institute
+                            </Option>
+                            <Option value="Other">Other</Option>
                           </Select>
                         </Form.Item>
                       </Col>

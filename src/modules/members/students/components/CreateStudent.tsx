@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useCreateStudentMutation } from "../api/studentEndPoints";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import PasswordInput from "../../../../common/Password/input";
 
 const CreateStudent = () => {
   const navigate = useNavigate();
@@ -33,32 +34,32 @@ const CreateStudent = () => {
   };
 
   const handleCancel = () => setPreviewVisible(false);
+
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
 
     Object.entries(values).forEach(([key, value]) => {
+      if (value === undefined || value === null) {
+        value = "";
+      }
+
       if (key === "image") {
-        // Handle image field separately
         if (Array.isArray(value) && value.length > 0) {
           value.forEach((file) => {
             if (file?.originFileObj && file.originFileObj instanceof File) {
-              formData.append(key, file.originFileObj); // Append the file
+              formData.append(key, file.originFileObj);
             }
           });
         }
       } else if (key === "enrollment_date" && value) {
-        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
-        formData.append(key, formattedDate);
+        formData.append(key, dayjs(value as any).format("YYYY-MM-DD"));
       } else if (key === "date_of_birth" && value) {
-        const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
-        formData.append(key, formattedDate);
-      } else if (value instanceof File || value instanceof Blob) {
-        formData.append(key, value);
+        formData.append(key, dayjs(value as any).format("YYYY-MM-DD"));
       } else {
         formData.append(key, value as string | Blob);
       }
     });
-
+    formData.append("enrollment_date", "2020-02-01");
     const user = {
       username: values.username,
       password: values.password,
@@ -151,22 +152,6 @@ const CreateStudent = () => {
 
                       <Col lg={8}>
                         <Form.Item<any>
-                          label="Date of Admission"
-                          name="enrollment_date"
-                          rules={[
-                            { required: true, message: "Date of Admission" },
-                          ]}
-                        >
-                          <DatePicker
-                            placeholder="Select Date"
-                            format="YYYY-MM-DD"
-                            className="w-full"
-                          />
-                        </Form.Item>
-                      </Col>
-
-                      <Col lg={8}>
-                        <Form.Item<any>
                           label="Username"
                           name="username"
                           rules={[{ required: true, message: "Username!" }]}
@@ -175,13 +160,7 @@ const CreateStudent = () => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <Form.Item<any>
-                          label="Password"
-                          name="password"
-                          rules={[{ required: true, message: "Password!" }]}
-                        >
-                          <Input.Password placeholder="Password." />
-                        </Form.Item>
+                      <PasswordInput />
                       </Col>
 
                       <Col lg={8}>
@@ -301,109 +280,116 @@ const CreateStudent = () => {
               </Card>
             </Badge.Ribbon>
           </Col>
-          <Col lg={24}>
+          <Col span={24}>
             <Badge.Ribbon text="Father Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Father Name" name="father_name">
-                      <Input placeholder="Father Name." />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Father Email" name="father_email">
-                      <Input placeholder="Father Email" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Father Phone Number"
-                      name="father_number"
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item
+                      label="Father Name"
+                      name="father_name"
+                      rules={[{ required: true, message: "Father Name!" }]}
                     >
-                      <Input placeholder="Father Phone Number" />
+                      <Input placeholder="Enter Father Name" />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Father Profession"
-                      name="father_profession"
-                    >
-                      <Input placeholder="Father Profession" />
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item label="Father Email" name="father_email">
+                      <Input placeholder="Enter Father Email" />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Father Designation"
-                      name="father_designation"
-                    >
-                      <Input placeholder="Father Designation" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Father Education Qualification"
-                      name="father_education_qualification"
-                    >
-                      <Input placeholder="Father Education Qualification" />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
-            </Badge.Ribbon>
-          </Col>
-          <Col lg={24}>
-            <Badge.Ribbon text="Mother Information" placement="start">
-              <Card style={{ paddingTop: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Mother Name" name="mother_name">
-                      <Input placeholder="Mother Name." />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Mother Email" name="mother_email">
-                      <Input placeholder="Mother Email" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Mother Phone Number"
-                      name="mother_phone_number"
-                    >
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item label="Phone Number" name="father_number">
                       <Input
                         addonBefore="+880"
-                        placeholder="Mother Phone Number"
+                        placeholder="Enter Father Phone Number"
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Mother Profession"
-                      name="mother_profession"
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item
+                      label="Father Profession"
+                      name="father_profession"
                     >
-                      <Input placeholder="Mother Profession" />
+                      <Input placeholder="Enter Father Profession" />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Mother Designation"
-                      name="mother_designation"
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item
+                      label="Father Designation"
+                      name="father_designation"
                     >
-                      <Input placeholder="Mother Designation" />
+                      <Input placeholder="Enter Father Designation" />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Mother Education Qualification"
-                      name="mother_education_qualification"
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item
+                      label="Education Qualification"
+                      name="father_education_qualification"
                     >
-                      <Input placeholder="Mother Education Qualification" />
+                      <Input placeholder="Enter Education Qualification" />
                     </Form.Item>
                   </Col>
                 </Row>
               </Card>
             </Badge.Ribbon>
           </Col>
+
+          <Col span={24}>
+            <Badge.Ribbon text="Mother Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item
+                      label="Mother Name"
+                      name="mother_name"
+                      rules={[{ required: true, message: "Mother Name!" }]}
+                    >
+                      <Input placeholder="Enter Mother Name" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item label="Mother Email" name="mother_email">
+                      <Input placeholder="Enter Mother Email" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item label="Phone Number" name="mother_phone_number">
+                      <Input
+                        addonBefore="+880"
+                        placeholder="Enter Phone Number"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item
+                      label="Mother Profession"
+                      name="mother_profession"
+                    >
+                      <Input placeholder="Enter Mother Profession" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item
+                      label="Mother Designation"
+                      name="mother_designation"
+                    >
+                      <Input placeholder="Enter Mother Designation" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                    <Form.Item
+                      label="Education Qualification"
+                      name="mother_education_qualification"
+                    >
+                      <Input placeholder="Enter Education Qualification" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+
           <Col lg={24}>
             <Badge.Ribbon text="Local Guardian Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>

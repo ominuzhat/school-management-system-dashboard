@@ -21,6 +21,7 @@ import {
 } from "../api/teachersEndPoints";
 import dayjs from "dayjs";
 import { useGetSubjectsQuery } from "../../../general settings/subjects/api/subjectsEndPoints";
+import PasswordInput from "../../../../common/Password/input";
 
 interface Props {
   record: any;
@@ -41,8 +42,6 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
   // const [originalImages, setOriginalImages] = useState<any[]>([]);
   // console.log(originalImages);
 
-  console.log(singleTeacher);
-
   useEffect(() => {
     if (singleTeacher) {
       const initialImages =
@@ -51,8 +50,8 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
           ? [
               {
                 uid: "-1",
-                url: singleTeacher.data.image,
-                thumbUrl: singleTeacher.data.image,
+                url: singleTeacher?.data?.image,
+                thumbUrl: singleTeacher?.data?.image,
                 name: "Profile Image",
               },
             ]
@@ -66,7 +65,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
         subject_specialization: singleTeacher?.data?.subject?.map(
           (level: any) => level?.id
         ),
-        picture: initialImages,
+        image: initialImages,
       });
     }
   }, [form, singleTeacher]);
@@ -117,10 +116,11 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
         form={form}
         onFinish={onFinish}
         isLoading={isLoading}
-        initialValues={{
-          hire_date: dayjs(),
-          is_active: true,
-        }}
+        initialValues={
+          {
+            // is_active: true,
+          }
+        }
       >
         <Row gutter={[16, 16]}>
           <Col lg={24}>
@@ -131,7 +131,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                     <Card>
                       <Form.Item
                         label="Picture"
-                        name="picture"
+                        name="image"
                         valuePropName="fileList"
                         getValueFromEvent={(e) => {
                           if (Array.isArray(e)) {
@@ -213,9 +213,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <Form.Item label="Password" name="password">
-                          <Input.Password placeholder="Password." />
-                        </Form.Item>
+                      <PasswordInput />
                       </Col>
                       <Col lg={8}>
                         <Form.Item
@@ -267,6 +265,14 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                       name="national_id"
                     >
                       <Input placeholder="Teacher Birth ID / NID" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Father / Husband Name"
+                      name="father_or_husband_name"
+                    >
+                      <Input placeholder="Father / Husband Name" />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>

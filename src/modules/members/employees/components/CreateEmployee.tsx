@@ -17,6 +17,7 @@ import { useCreateEmployeeMutation } from "../api/employeeEndPoints";
 import { useGetRolePermissionQuery } from "../../../settings/role & permission/api/rolePermissionEndPoints";
 import { useGetDepartmentQuery } from "../../../general settings/Department/api/departmentEndPoints";
 import dayjs from "dayjs";
+import PasswordInput from "../../../../common/Password/input";
 
 const CreateEmployee = () => {
   const [create, { isLoading, isSuccess }] = useCreateEmployeeMutation();
@@ -41,6 +42,10 @@ const CreateEmployee = () => {
     const formData: FormData = new FormData();
 
     Object.entries(values).forEach(([key, value]) => {
+      if (value === undefined || value === null) {
+        value = "";
+      }
+
       if (key === "image") {
         // Handle image field separately
         if (Array.isArray(value) && value.length > 0) {
@@ -256,13 +261,7 @@ const CreateEmployee = () => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <Form.Item<any>
-                          label="Password"
-                          name="password"
-                          rules={[{ required: true, message: "Password!" }]}
-                        >
-                          <Input.Password placeholder="Password." />
-                        </Form.Item>
+                      <PasswordInput />
                       </Col>
 
                       <Col lg={8}>
@@ -313,6 +312,14 @@ const CreateEmployee = () => {
                       name="national_id"
                     >
                       <Input placeholder="Teacher Birth ID / NID" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Father / Husband Name"
+                      name="father_or_husband_name"
+                    >
+                      <Input placeholder="Father / Husband Name" />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>

@@ -117,7 +117,6 @@ const useMarkStudentsAttendanceColumns = ({
       key: "session",
       align: "center",
       render: () => <span>{session?.name}</span>,
-
     },
     {
       title: (
@@ -125,10 +124,11 @@ const useMarkStudentsAttendanceColumns = ({
           <Button onClick={() => handleSetAllStatus("present")}>
             All Present
           </Button>
-          <Button onClick={() => handleSetAllStatus("late")}>All Late</Button>
+          <Button onClick={() => handleSetAllStatus("late")}>All Delay</Button>
           <Button onClick={() => handleSetAllStatus("absent")}>
             All Absent
           </Button>
+          <Button onClick={() => handleSetAllStatus("leave")}>All Leave</Button>
         </div>
       ),
       width: 400,
@@ -140,8 +140,9 @@ const useMarkStudentsAttendanceColumns = ({
             value={statusMap[record.admission?.id] || "present"}
           >
             <Radio value="present">P</Radio>
-            <Radio value="late">L</Radio>
+            <Radio value="late">D</Radio>
             <Radio value="absent">A</Radio>
+            <Radio value="leave">L</Radio>
           </Radio.Group>
         </Space>
       ),

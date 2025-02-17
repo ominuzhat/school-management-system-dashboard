@@ -21,6 +21,7 @@ import {
 } from "../api/studentEndPoints";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
+import PasswordInput from "../../../../common/Password/input";
 
 const UpdateStudent = () => {
   const { studentId } = useParams();
@@ -33,6 +34,7 @@ const UpdateStudent = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   // const [originalImages, setOriginalImages] = useState<any[]>([]);
+
   useEffect(() => {
     if (singleStudent) {
       const initialImages =
@@ -180,9 +182,7 @@ const UpdateStudent = () => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <Form.Item<any> label="Password" name="password">
-                          <Input.Password placeholder="Password." />
-                        </Form.Item>
+                      <PasswordInput />
                       </Col>
 
                       <Col lg={8}>

@@ -23,7 +23,11 @@ const useSingleFeesColumns = (): ColumnsType<any> => {
       dataIndex: "one_time",
       align: "center",
       render: (title) =>
-        title ? <Tag color="green">True</Tag> : <Tag color="purple">False</Tag>,
+        title ? (
+          <Tag color="green">One Time</Tag>
+        ) : (
+          <Tag color="purple">Regular</Tag>
+        ),
     },
   ];
 };

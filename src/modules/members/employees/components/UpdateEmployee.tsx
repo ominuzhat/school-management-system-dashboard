@@ -21,6 +21,7 @@ import {
 import { useGetRolePermissionQuery } from "../../../settings/role & permission/api/rolePermissionEndPoints";
 import { useGetDepartmentQuery } from "../../../general settings/Department/api/departmentEndPoints";
 import dayjs from "dayjs";
+import PasswordInput from "../../../../common/Password/input";
 
 const UpdateEmployee = ({ records }: any) => {
   const [update, { isLoading, isSuccess }] = useUpdateEmployeeMutation();
@@ -32,13 +33,13 @@ const UpdateEmployee = ({ records }: any) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  // const [originalImages, setOriginalImages] = useState<any[]>([]);
+  // const [originalimage, setOriginalimage] = useState<any[]>([]);
 
-  // console.log(originalImages);
+  // console.log(originalimage);
 
   useEffect(() => {
     if (singleEmployeeData?.data) {
-      const initialImages =
+      const initialimage =
         singleEmployeeData?.data?.image &&
         typeof singleEmployeeData?.data?.image === "string"
           ? [
@@ -50,7 +51,7 @@ const UpdateEmployee = ({ records }: any) => {
               },
             ]
           : [];
-      // setOriginalImages(initialImages);
+      // setOriginalimage(initialimage);
 
       form.setFieldsValue({
         ...singleEmployeeData.data,
@@ -59,7 +60,7 @@ const UpdateEmployee = ({ records }: any) => {
         username: singleEmployeeData.data?.user?.username,
         role: singleEmployeeData.data?.user?.role?.id,
         department: singleEmployeeData.data?.department?.id,
-        images: initialImages,
+        image: initialimage,
       });
     }
   }, [form, singleEmployeeData]);
@@ -79,7 +80,7 @@ const UpdateEmployee = ({ records }: any) => {
 
     Object.entries(values).forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        if (key === "images") {
+        if (key === "image") {
           value.forEach((file) => {
             if (file?.originFileObj) {
               formData.append(key, file.originFileObj);
@@ -125,8 +126,8 @@ const UpdateEmployee = ({ records }: any) => {
           //   first_name: singleEmployeeData?.data?.first_name || "",
           last_name: singleEmployeeData?.data?.last_name || "",
           email: singleEmployeeData?.data?.email || "",
-          hire_date: dayjs(),
-          is_active: true,
+          // hire_date: dayjs(),
+          // is_active: true,
         }}
       >
         <Row gutter={[16, 16]}>
@@ -138,7 +139,7 @@ const UpdateEmployee = ({ records }: any) => {
                     <Card>
                       <Form.Item
                         label="Picture"
-                        name="images"
+                        name="image"
                         valuePropName="fileList"
                         getValueFromEvent={(e) => {
                           if (Array.isArray(e)) {
@@ -251,9 +252,7 @@ const UpdateEmployee = ({ records }: any) => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <Form.Item<any> label="Password" name="password">
-                          <Input.Password placeholder="Password." />
-                        </Form.Item>
+                      <PasswordInput />
                       </Col>
 
                       <Col lg={8}>
@@ -304,6 +303,14 @@ const UpdateEmployee = ({ records }: any) => {
                       name="national_id"
                     >
                       <Input placeholder="Teacher Birth ID / NID" />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={6}>
+                    <Form.Item<any>
+                      label="Father / Husband Name"
+                      name="father_or_husband_name"
+                    >
+                      <Input placeholder="Father / Husband Name" />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>

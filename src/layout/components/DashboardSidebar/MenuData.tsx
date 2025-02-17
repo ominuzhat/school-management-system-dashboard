@@ -112,7 +112,7 @@ const MenuData: React.FC = () => {
     },
     {
       key: "/teacher",
-      label: <Link to="/teacher">Teacher</Link>,
+      label: <Link to="/teacher">Teachers</Link>,
       icon: <LiaChalkboardTeacherSolid />,
     },
 

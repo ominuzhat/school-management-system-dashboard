@@ -3,12 +3,11 @@ import { Form } from "../../../../../common/CommonAnt";
 import { useCreateFeesMutation } from "../api/feesEndpoints";
 import { useState } from "react";
 import { useGetClassesQuery } from "../../../../general settings/classes/api/classesEndPoints";
-import { useGetStudentsQuery } from "../../../../members/students/api/studentEndPoints";
 import { useGetSubjectsQuery } from "../../../../general settings/subjects/api/subjectsEndPoints";
 import MultipleFeesItemForm from "./MultipleFeesItemForm";
 
 const guidelineContentBn = (
-  <>
+  <div>
     <h3 style={{ margin: "0 0 8px", fontWeight: "bold" }}>নির্দেশিকা</h3>
     <p style={{ margin: 0 }}>
       <strong>সকলের জন্য নিয়ম:</strong>
@@ -29,24 +28,18 @@ const guidelineContentBn = (
       জন্য কার্যকর হবে।
     </p>
     <p style={{ margin: "8px 0 0" }}>
-      <strong>ছাত্র ভিত্তিক নিয়ম:</strong>
-      এই নিয়মগুলো <em>নির্দিষ্ট ছাত্রছাত্রীদের</em> জন্য প্রযোজ্য। এটি তখন
-      ব্যবহার করুন যখন নিয়মটি গ্রুপের পরিবর্তে ব্যক্তিদের লক্ষ্য করে কার্যকর
-      করতে চান।
-    </p>
-    <p style={{ margin: "8px 0 0" }}>
       <em>মন্তব্য:</em> নির্বাচন করা টাইপ অনুযায়ী নিয়ম কার্যকর করার পরিধি এবং
       লক্ষ্য নির্ধারিত হয়।
     </p>
-  </>
+  </div>
 );
 
 const CreateFees = () => {
   const [create, { isLoading, isSuccess }] = useCreateFeesMutation();
   const { data: classData, isLoading: classLoading } = useGetClassesQuery({});
-  const { data: studentData, isLoading: studentLoading } = useGetStudentsQuery(
-    {}
-  );
+  // const { data: studentData, isLoading: studentLoading } = useGetStudentsQuery(
+  //   {}
+  // );
   const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery(
     {}
   );
@@ -84,7 +77,7 @@ const CreateFees = () => {
               >
                 <Select.Option value="all">All</Select.Option>
                 <Select.Option value="class">Class</Select.Option>
-                <Select.Option value="student">Student</Select.Option>
+                {/* <Select.Option value="student">Student</Select.Option> */}
                 <Select.Option value="subject">Subjects</Select.Option>
               </Select>
             </Form.Item>
@@ -117,7 +110,7 @@ const CreateFees = () => {
               </Form.Item>
             </Col>
           )}
-
+          {/* 
           {feeType === "student" && (
             <Col lg={8}>
               <Form.Item
@@ -142,7 +135,7 @@ const CreateFees = () => {
                 />
               </Form.Item>
             </Col>
-          )}
+          )} */}
 
           {feeType === "subject" && (
             <Col lg={8}>
@@ -178,7 +171,7 @@ const CreateFees = () => {
             <Tooltip
               className="text-black"
               placement="bottom"
-              color={"rgba( 35, 117, 245, 0.50 )"}
+              // color={"rgba( 35, 117, 245, 0.50 )"}
               title={guidelineContentBn}
             >
               <Button>Guideline</Button>

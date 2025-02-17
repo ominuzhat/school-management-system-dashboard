@@ -2,12 +2,12 @@ import { Badge, Card, Col, Row, Tag } from "antd";
 import { no_img } from "../../../../utilities/images";
 import TextView from "../../../../common/components/TextView";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
+import dayjs from "dayjs";
 
 const StudentInformation = ({ data }: { data: any }) => {
   const {
     first_name,
     last_name,
-    id,
     is_active,
     phone_number,
     email,
@@ -47,7 +47,7 @@ const StudentInformation = ({ data }: { data: any }) => {
         },
         {
           fieldName: "Date of Birth",
-          text: date_of_birth || "N/A",
+          text: dayjs(date_of_birth).format("DD MMM YYYY") || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
@@ -62,7 +62,7 @@ const StudentInformation = ({ data }: { data: any }) => {
         },
         {
           fieldName: "Date of Admission",
-          text: enrollment_date || "N/A",
+          text: dayjs(enrollment_date).format("DD MMM YYYY") || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
@@ -187,7 +187,7 @@ const StudentInformation = ({ data }: { data: any }) => {
 
   return (
     <div>
-      <Row gutter={[16, 16]} align="middle" justify="center">
+      <Row gutter={[16, 16]}>
         {/* Student Overview */}
         <Col lg={6}>
           <Card className="text-center">
@@ -195,9 +195,7 @@ const StudentInformation = ({ data }: { data: any }) => {
             <p className="text-xl font-semibold uppercase font-serif pt-5">
               {first_name} {last_name}
             </p>
-            <p className="py-2">
-              <span className="font-semibold">Registration No:</span> {id}
-            </p>
+            <br />
             <Tag color={is_active ? "green" : "red"}>
               {is_active ? "Active" : "Inactive"}
             </Tag>
