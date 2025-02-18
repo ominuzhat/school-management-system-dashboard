@@ -34,35 +34,35 @@ const StudentFeeReport = ({ data }: any) => {
                     <span className="font-medium text-gray-600 flex items-center gap-2">
                       <FaMoneyBillWave className="text-green-500" /> One-time Fee:
                     </span>
-                    <span className="text-lg font-bold text-gray-800">${student.one_time_fee}</span>
+                    <span className="text-lg font-bold text-gray-800">৳{student.one_time_fee}</span>
                   </div>
                   {/* Monthly Fee */}
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-gray-600 flex items-center gap-2">
                       <FaRegCreditCard className="text-purple-500" /> Monthly Fee:
                     </span>
-                    <span className="text-lg font-bold text-gray-800">${student.monthly_fee}</span>
+                    <span className="text-lg font-bold text-gray-800">৳{student.monthly_fee}</span>
                   </div>
                   {/* Due Amount */}
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-gray-600 flex items-center gap-2">
                       <FaExclamationCircle className="text-red-500" /> Due Amount:
                     </span>
-                    <span className="text-lg font-bold text-red-500">${student.due_amount}</span>
+                    <span className="text-lg font-bold text-red-500">৳{student.due_amount}</span>
                   </div>
                   {/* Total Paid */}
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-gray-600 flex items-center gap-2">
                       <FaCheckCircle className="text-green-500" /> Total Paid:
                     </span>
-                    <span className="text-lg font-bold text-green-500">${student.total_paid_amount}</span>
+                    <span className="text-lg font-bold text-green-500">৳{student.total_paid_amount}</span>
                   </div>
                   {/* Discount Applied */}
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-gray-600 flex items-center gap-2">
                       <FaTags className="text-blue-500" /> Discount Applied:
                     </span>
-                    <span className="text-lg font-bold text-blue-500">${student.total_discounted_amount}</span>
+                    <span className="text-lg font-bold text-blue-500">৳{student.total_discounted_amount}</span>
                   </div>
                 </div>
               </div>

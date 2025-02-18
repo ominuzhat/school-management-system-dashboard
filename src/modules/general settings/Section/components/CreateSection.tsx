@@ -1,4 +1,4 @@
-import { Col, Input, Row, Switch } from "antd";
+import { Col, Input, Row } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 
 import { useCreateSectionMutation } from "../api/sectionEndPoints";
@@ -17,7 +17,7 @@ const CreateSection = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={{ is_active: true }}
+        // initialValues={{ is_active: true }}
       >
         <Row gutter={[16, 16]}>
           <Col lg={8}>
@@ -40,7 +40,7 @@ const CreateSection = () => {
             </Form.Item>
           </Col>
 
-          <Col>
+          {/* <Col>
             <Form.Item<ICreateSection>
               label="Active"
               name="is_active"
@@ -48,7 +48,7 @@ const CreateSection = () => {
             >
               <Switch />
             </Form.Item>
-          </Col>
+          </Col> */}
         </Row>
       </Form>
     </div>

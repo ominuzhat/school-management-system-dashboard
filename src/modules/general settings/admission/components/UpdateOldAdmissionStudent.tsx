@@ -101,7 +101,7 @@ const UpdateOldAdmissionStudent = () => {
                 >
                   {studentData?.data?.results?.map((data: any) => (
                     <Option key={data.id} value={data.id}>
-                      {data?.user?.username}
+                      {data?.first_name} {data?.last_name}
                     </Option>
                   ))}
                 </Select>

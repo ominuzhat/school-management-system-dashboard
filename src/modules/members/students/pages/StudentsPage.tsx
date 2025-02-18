@@ -3,37 +3,48 @@ import { useState } from "react";
 import { Button, Card, Col, Row, Select } from "antd";
 import { IoGridOutline } from "react-icons/io5";
 import { PlusOutlined } from "@ant-design/icons";
+import { FaListUl } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
-import { Table } from "../../../../common/CommonAnt";
-
+import Table from "../../../../common/CommonAnt/Table";
+import { RootState } from "../../../../app/store";
 import { no_img } from "../../../../utilities/images";
 
-import { FaListUl } from "react-icons/fa6";
 import { useGetStudentsQuery } from "../api/studentEndPoints";
 import useStudentColumns from "../utils/studentColumns";
-import { Link } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
 
 const StudentsPage = () => {
   // const dispatch = useDispatch();
   const [layout, setLayout] = useState("grid");
   const [filters, setFilters] = useState({ search: "", is_active: "" });
 
-  const { data: studentData, isLoading } = useGetStudentsQuery(filters);
+  const { page_size = 10, skip = 0 } = useSelector(
+    (state: RootState) => state.filter
+  );
+
+  // Fetch students data with pagination
+  const { data: studentData, isLoading } = useGetStudentsQuery({
+    search: filters.search,
+    is_active: filters.is_active,
+    limit: page_size,
+    offset: skip, // Offset for pagination
+  });
 
   const handleDelete = async (id: any) => {
     console.log(id);
     try {
-      // await deleteCartItem({ id }).unwrap();
       console.log("Item deleted successfully");
     } catch (error) {
       console.error("Failed to delete item:", error);
     }
   };
+
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -77,21 +88,9 @@ const StudentsPage = () => {
       </Card>
       <Card
         title={
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className="flex justify-between items-center">
             <span>All Students</span>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
+            <div className="flex items-center">
               <FaListUl
                 className={`w-9 h-9 border px-2 cursor-pointer ${
                   layout === "grid"
@@ -100,7 +99,6 @@ const StudentsPage = () => {
                 }`}
                 onClick={() => setLayout("grid")}
               />
-
               <IoGridOutline
                 className={`w-9 h-9 border px-2 cursor-pointer ${
                   layout === "column"
@@ -117,20 +115,13 @@ const StudentsPage = () => {
           <Row gutter={[16, 16]}>
             {studentData?.data?.results?.map((student: any, index) => (
               <Col key={index} span={3} xs={12} lg={8} xxl={3}>
-                <div
-                  style={{
-                    textAlign: "center",
-                  }}
-                  className="border py-8 px-2 rounded-lg space-y-2"
-                >
-                  <img src={no_img} alt="image" className="mx-auto" />
-
+                <div className="border py-8 px-2 rounded-lg space-y-2 text-center">
+                  <img src={no_img} alt="student" className="mx-auto" />
                   <p className="font-serif">
                     {student?.first_name} {student?.last_name}
                   </p>
                   <div className="space-x-2">
                     <ViewButton to={`student-view/${student?.id}`} />
-
                     <Link to={`/students/update/${student.id}`}>
                       <Button
                         title="Edit"
@@ -145,9 +136,9 @@ const StudentsPage = () => {
                       </Button>
                     </Link>
                     <DeleteButton
-                      onConfirm={() => handleDelete(1)}
+                      onConfirm={() => handleDelete(student?.id)}
                       onCancel={() => console.log("Cancel delete")}
-                    ></DeleteButton>
+                    />
                   </div>
                 </div>
               </Col>
@@ -156,7 +147,7 @@ const StudentsPage = () => {
         ) : (
           <Table
             loading={isLoading}
-            total={studentData?.data?.results?.length}
+            total={studentData?.data?.count}
             dataSource={studentData?.data?.results}
             columns={useStudentColumns()}
           />

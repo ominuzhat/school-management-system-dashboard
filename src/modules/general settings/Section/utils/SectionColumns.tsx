@@ -1,4 +1,4 @@
-import { Space, Tag } from "antd";
+import { Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
@@ -33,26 +33,26 @@ const useSectionColumns = (): ColumnsType<any> => {
       render: (title) => (title ? title : "N/A"),
     },
 
-    {
-      key: "2",
-      title: "Class Name",
-      dataIndex: "grade_level",
-      align: "center",
-      render: (grade_level) => (grade_level ? grade_level.name : "N/A"),
-    },
+    // {
+    //   key: "2",
+    //   title: "Class Name",
+    //   dataIndex: "grade_level",
+    //   align: "center",
+    //   render: (grade_level) => (grade_level ? grade_level.name : "N/A"),
+    // },
 
-    {
-      key: "3",
-      title: "Class Teacher ",
-      dataIndex: "grade_level",
-      align: "center",
-      render: (grade_level) =>
-        grade_level?.class_teacher
-          ? grade_level?.class_teacher?.first_name +
-            " " +
-            grade_level?.class_teacher?.last_name
-          : "N/A",
-    },
+    // {
+    //   key: "3",
+    //   title: "Class Teacher ",
+    //   dataIndex: "grade_level",
+    //   align: "center",
+    //   render: (grade_level) =>
+    //     grade_level?.class_teacher
+    //       ? grade_level?.class_teacher?.first_name +
+    //         " " +
+    //         grade_level?.class_teacher?.last_name
+    //       : "N/A",
+    // },
     {
       key: "4",
       title: "Capacity",
@@ -60,18 +60,18 @@ const useSectionColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? title : "N/A"),
     },
-    {
-      key: "4",
-      title: "Active",
-      dataIndex: "is_active",
-      align: "center",
-      render: (title) =>
-        title ? (
-          <Tag color="green">Active</Tag>
-        ) : (
-          <Tag color="red">Inactive</Tag>
-        ),
-    },
+    // {
+    //   key: "4",
+    //   title: "Active",
+    //   dataIndex: "is_active",
+    //   align: "center",
+    //   render: (title) =>
+    //     title ? (
+    //       <Tag color="green">Active</Tag>
+    //     ) : (
+    //       <Tag color="red">Inactive</Tag>
+    //     ),
+    // },
     {
       title: "Actions",
       align: "center",

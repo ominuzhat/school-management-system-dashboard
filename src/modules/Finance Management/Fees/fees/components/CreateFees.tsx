@@ -5,6 +5,9 @@ import { useState } from "react";
 import { useGetClassesQuery } from "../../../../general settings/classes/api/classesEndPoints";
 import { useGetSubjectsQuery } from "../../../../general settings/subjects/api/subjectsEndPoints";
 import MultipleFeesItemForm from "./MultipleFeesItemForm";
+import { useGetStudentsQuery } from "../../../../members/students/api/studentEndPoints";
+import { debounce } from "lodash";
+const { Option } = Select;
 
 const guidelineContentBn = (
   <div>
@@ -35,11 +38,13 @@ const guidelineContentBn = (
 );
 
 const CreateFees = () => {
+  const [search, setSearch] = useState("");
+
   const [create, { isLoading, isSuccess }] = useCreateFeesMutation();
   const { data: classData, isLoading: classLoading } = useGetClassesQuery({});
-  // const { data: studentData, isLoading: studentLoading } = useGetStudentsQuery(
-  //   {}
-  // );
+  const { data: getStudent, isFetching } = useGetStudentsQuery({
+    search: search,
+  });
   const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery(
     {}
   );
@@ -77,7 +82,7 @@ const CreateFees = () => {
               >
                 <Select.Option value="all">All</Select.Option>
                 <Select.Option value="class">Class</Select.Option>
-                {/* <Select.Option value="student">Student</Select.Option> */}
+                <Select.Option value="student">Student</Select.Option>
                 <Select.Option value="subject">Subjects</Select.Option>
               </Select>
             </Form.Item>
@@ -110,7 +115,7 @@ const CreateFees = () => {
               </Form.Item>
             </Col>
           )}
-          {/* 
+
           {feeType === "student" && (
             <Col lg={8}>
               <Form.Item
@@ -119,23 +124,30 @@ const CreateFees = () => {
                 rules={[{ required: true, message: "Student is required!" }]}
               >
                 <Select
-                  mode="multiple"
+                  className="w-full"
+                  placeholder="Select Student"
                   allowClear
                   showSearch
-                  style={{ width: "100%" }}
-                  placeholder={
-                    studentLoading ? "Loading Students..." : "Please select"
+                  onSearch={debounce(setSearch, 500)}
+                  filterOption={false}
+                  loading={isFetching}
+                  notFoundContent={
+                    Array?.isArray(getStudent?.data?.results) &&
+                    getStudent?.data?.results?.length === 0
+                      ? "No Students found"
+                      : null
                   }
-                  options={
-                    studentData?.data?.results?.map((studentItem: any) => ({
-                      label: studentItem.user.username,
-                      value: studentItem.id,
-                    })) || []
-                  }
-                />
+                  onChange={(value) => setSearch(value)}
+                >
+                  {getStudent?.data?.results?.map((data: any) => (
+                    <Option key={data.id} value={data.id}>
+                      {data?.first_name} {data?.last_name}
+                    </Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
-          )} */}
+          )}
 
           {feeType === "subject" && (
             <Col lg={8}>
@@ -171,7 +183,7 @@ const CreateFees = () => {
             <Tooltip
               className="text-black"
               placement="bottom"
-              // color={"rgba( 35, 117, 245, 0.50 )"}
+              color={"rgba( 35, 117, 245, 0.50 )"}
               title={guidelineContentBn}
             >
               <Button>Guideline</Button>

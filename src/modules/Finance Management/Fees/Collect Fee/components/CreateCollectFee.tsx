@@ -49,9 +49,6 @@ const CreateCollectFee = () => {
   const discountType = AntForm.useWatch("discount_type", form);
   const discountAmount = AntForm.useWatch("discount_value", form);
 
-  console.log(discountType);
-  console.log(selectedStudent?.due_amount);
-
   const totalAmountOfAdditionalFees = useMemo(() => {
     return Array.isArray(selectedAdditionalFee)
       ? selectedAdditionalFee.reduce((sum, data: any) => sum + data?.amount, 0)
@@ -63,10 +60,11 @@ const CreateCollectFee = () => {
       const foundAdmission: any = admissionData?.data?.results.find(
         (data: any) => data?.id === admission
       );
-  
+
       // Calculate the total due amount including additional fees
-      const totalDueAmount = (selectedStudent?.due_amount || 0) + totalAmountOfAdditionalFees;
-  
+      const totalDueAmount =
+        (selectedStudent?.due_amount || 0) + totalAmountOfAdditionalFees;
+
       // Calculate the discounted amount based on the discount type
       let discountedAmount = 0;
       if (discountType === "amount") {
@@ -74,17 +72,18 @@ const CreateCollectFee = () => {
       } else if (discountType === "percent") {
         discountedAmount = (totalDueAmount * (discountAmount || 0)) / 100;
       }
-  
+
       // Calculate the final due amount after discount and paid amount
-      const calculatedDueAmount = totalDueAmount - discountedAmount - (paidAmount || 0);
-  
+      const calculatedDueAmount =
+        totalDueAmount - discountedAmount - (paidAmount || 0);
+
       // Ensure the final due amount is not negative
       setFinalDueAmount(Math.max(calculatedDueAmount, 0));
-  
+
       const foundAdditionalData: any =
         Array.isArray(additionalData?.data) &&
         additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
-  
+
       if (foundAdmission) {
         form.setFieldsValue({
           class: foundAdmission?.grade_level,
@@ -334,6 +333,9 @@ const CreateCollectFee = () => {
                 <Text strong className="text-lg text-red-600">
                   Total Due :
                 </Text>
+                <Text strong className="text-lg text-yellow-600">
+                  Total Discount :
+                </Text>
                 <Text strong className="text-lg text-green-600">
                   Paid :
                 </Text>
@@ -341,8 +343,13 @@ const CreateCollectFee = () => {
 
               <div className="flex flex-col gap-3  ">
                 <div className="flex justify-end">
-                  <p className="border-red-600 border shadow-lg rounded px-6 text-lg font-semibold w-24">
-                    {finalDueAmount || "0000"}
+                  <p className="border-red-600 border shadow-lg rounded text-center text-lg font-semibold w-24">
+                    {finalDueAmount || 0}
+                  </p>
+                </div>
+                <div className="flex justify-end">
+                  <p className="border-yellow-600 border shadow-lg rounded text-center text-lg font-semibold w-24">
+                    {discountAmount || 0}
                   </p>
                 </div>
 
@@ -364,7 +371,7 @@ const CreateCollectFee = () => {
                     <Input
                       type="number"
                       placeholder="000"
-                      className="border border-green-600 w-full md:w-[7rem] rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="border border-green-600 w-full md:w-[7rem] text-center rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                       prefix={<DollarOutlined />}
                     />
                   </Form.Item>

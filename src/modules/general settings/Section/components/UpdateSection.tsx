@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Form, Input, Button, Row, Col, Switch } from "antd";
+import { Form, Input, Button, Row, Col } from "antd";
 import {
   useGetSingleSectionQuery,
   useUpdateSectionMutation,
@@ -17,7 +17,7 @@ const UpdateSection = ({ record }: any) => {
       form.setFieldsValue({
         name: sectionData.name,
         capacity: sectionData.capacity,
-        is_active: sectionData.is_active,
+        // is_active: sectionData.is_active,
       });
     }
   }, [singleData, form]);
@@ -50,7 +50,7 @@ const UpdateSection = ({ record }: any) => {
             </Form.Item>
           </Col>
 
-          <Col>
+          {/* <Col>
             <Form.Item<ICreateSection>
               label="Active"
               name="is_active"
@@ -58,7 +58,7 @@ const UpdateSection = ({ record }: any) => {
             >
               <Switch />
             </Form.Item>
-          </Col>
+          </Col> */}
         </Row>
 
         <Form.Item>

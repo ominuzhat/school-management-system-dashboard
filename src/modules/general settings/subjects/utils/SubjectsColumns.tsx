@@ -30,29 +30,39 @@ const useSubjectColumns = (): ColumnsType<any> => {
       title: "Subject Name",
       dataIndex: "name",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (name) => (name ? name : "N/A"),
+      sorter: (a, b) => (a.name || "").localeCompare(b.name || ""),
     },
-
     {
       key: "2",
-      title: "Class ",
+      title: "Class",
       dataIndex: "grade_level",
       align: "center",
       render: (grade_level) => (grade_level ? grade_level.name : "N/A"),
+      sorter: (a, b) =>
+        (a.grade_level?.name || "").localeCompare(b.grade_level?.name || ""),
     },
 
     {
       key: "3",
-      title: "Class Teacher ",
+      title: "Class Teacher",
       dataIndex: "grade_level",
       align: "center",
       render: (grade_level) =>
-        grade_level.class_teacher
-          ? grade_level.class_teacher?.first_name +
-            " " +
-            grade_level.class_teacher?.last_name
+        grade_level?.class_teacher
+          ? `${grade_level.class_teacher?.first_name} ${grade_level.class_teacher?.last_name}`
           : "N/A",
+      sorter: (a, b) => {
+        const teacherA = a.grade_level?.class_teacher
+          ? `${a.grade_level.class_teacher?.first_name} ${a.grade_level.class_teacher?.last_name}`
+          : "";
+        const teacherB = b.grade_level?.class_teacher
+          ? `${b.grade_level.class_teacher?.first_name} ${b.grade_level.class_teacher?.last_name}`
+          : "";
+        return teacherA.localeCompare(teacherB);
+      },
     },
+
     {
       key: "4",
       title: "Marks",
