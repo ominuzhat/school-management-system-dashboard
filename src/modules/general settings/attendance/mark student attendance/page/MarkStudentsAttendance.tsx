@@ -27,7 +27,7 @@ import { MdOutlineArrowRightAlt } from "react-icons/md";
 const { Option } = Select;
 
 const MarkStudentsAttendance = () => {
-  const [result, setResult] = useState<Record<string, any> | null>(null); 
+  const [result, setResult] = useState<Record<string, any> | null>(null);
   const [formData, setFormData] = useState({
     date: dayjs().format("YYYY-MM-DD"),
     grade_level: undefined,
@@ -150,7 +150,7 @@ const MarkStudentsAttendance = () => {
               className="w-full"
               onClick={handleSearch}
             >
-              Search Students
+              Search Student
             </Button>
           </Col>
         </Row>

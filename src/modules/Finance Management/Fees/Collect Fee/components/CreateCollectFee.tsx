@@ -18,13 +18,10 @@ import dayjs from "dayjs";
 import { useCreateCollectFeesMutation } from "../api/collectFeeEndPoints";
 import { CommonPaymentMethod } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useGetAdditionalFeesQuery } from "../../Additional Fee/api/additionalFeeEndPoints";
-import {
-  UserOutlined,
-  CalendarOutlined,
-  DollarOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
+import { TbCoinTaka } from "react-icons/tb";
 
 const { Title, Text } = Typography;
 
@@ -211,7 +208,7 @@ const CreateCollectFee = () => {
               </Form.Item>
             </Col>
 
-            <Col lg={6}>
+            {/* <Col lg={6}>
               <Form.Item
                 label="Discount Type"
                 name="discount_type"
@@ -226,9 +223,9 @@ const CreateCollectFee = () => {
                   <Select.Option value="percent">Percent</Select.Option>
                 </Select>
               </Form.Item>
-            </Col>
+            </Col> */}
 
-            <Col lg={6}>
+            {/* <Col lg={6}>
               <Form.Item
                 label="Discount Value"
                 name="discount_value"
@@ -240,7 +237,7 @@ const CreateCollectFee = () => {
                   type="number"
                 />
               </Form.Item>
-            </Col>
+            </Col> */}
 
             <Col lg={6} md={12}>
               <AntForm.Item
@@ -347,16 +344,44 @@ const CreateCollectFee = () => {
                     {finalDueAmount || 0}
                   </p>
                 </div>
-                <div className="flex justify-end">
-                  <p className="border-yellow-600 border shadow-lg rounded text-center text-lg font-semibold w-24">
-                    {discountAmount || 0}
-                  </p>
-                </div>
 
                 <div className="flex items-center gap-5">
                   <Form.Item
+                    name="discount_type"
+                    className="mb-0 w-[150px]"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter Discount Type",
+                      },
+                    ]}
+                    initialValue="amount"
+                  >
+                    <Select
+                      placeholder="Select Discount Type"
+                      defaultValue="amount"
+                    >
+                      <Select.Option value="amount">Amount</Select.Option>
+                      <Select.Option value="percent">Percent</Select.Option>
+                    </Select>
+                  </Form.Item>
+
+                  <Form.Item name="discount_value" className="mb-0">
+                    <Input
+                      placeholder="000"
+                      type="number"
+                      defaultValue={0}
+                      className="border border-yellow-600 w-full md:w-[7rem] text-center rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      prefix={<TbCoinTaka />}
+                    />
+                  </Form.Item>
+                </div>
+
+                
+                <div className="flex items-center gap-5">
+                  <Form.Item
                     name="payment_method"
-                    className="mb-0"
+                    className="mb-0 w-[150px]"
                     rules={[
                       {
                         required: true,
@@ -372,7 +397,7 @@ const CreateCollectFee = () => {
                       type="number"
                       placeholder="000"
                       className="border border-green-600 w-full md:w-[7rem] text-center rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                      prefix={<DollarOutlined />}
+                      prefix={<TbCoinTaka />}
                     />
                   </Form.Item>
                 </div>

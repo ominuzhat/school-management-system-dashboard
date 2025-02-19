@@ -429,11 +429,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/login-second",
-    element: <Login />,
+    element: <SecondLogin />,
   },
   {
     path: "/login",
-    element: <SecondLogin />,
+    element: <Login />,
   },
   {
     path: "/verification",

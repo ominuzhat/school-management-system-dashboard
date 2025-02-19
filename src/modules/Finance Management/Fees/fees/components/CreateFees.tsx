@@ -80,9 +80,9 @@ const CreateFees = () => {
                 className="w-full"
                 onChange={(value) => setFeeType(value)}
               >
-                <Select.Option value="all">All</Select.Option>
+                {/* <Select.Option value="all">All</Select.Option> */}
                 <Select.Option value="class">Class</Select.Option>
-                <Select.Option value="student">Student</Select.Option>
+                {/* <Select.Option value="student">Student</Select.Option> */}
                 <Select.Option value="subject">Subjects</Select.Option>
               </Select>
             </Form.Item>

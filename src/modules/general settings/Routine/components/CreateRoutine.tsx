@@ -7,16 +7,6 @@ import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
 import MultipleSelectRoutine from "./MultipleSelectRoutine";
 
-// const daysOfWeek = [
-//   "Sunday",
-//   "Monday",
-//   "Tuesday",
-//   "Wednesday",
-//   "Thursday",
-//   "Friday",
-//   "Saturday",
-// ];
-
 const CreateRoutine = () => {
   const [form] = AntForm.useForm();
   // const today = dayjs().format("dddd");

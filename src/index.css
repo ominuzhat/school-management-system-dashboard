@@ -54,7 +54,7 @@ tr:nth-child(even) {
   background-color: #8888881c;
 }
 
-/* ____0 */
+/* ____login________ */
 
 .glassy-card {
   background: rgba(255, 255, 255, 0.356); /* Light transparency */
@@ -67,14 +67,14 @@ tr:nth-child(even) {
 }
 
 .glassy-card:hover {
-  transform: scale(1.02);
+  /* transform: scale(1.02); */
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
 }
 
 .input-style {
   border-radius: 10px !important;
   padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(138, 84, 84, 0.2);
   background: rgba(255, 255, 255, 0.2);
   color: black;
 }

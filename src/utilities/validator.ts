@@ -34,7 +34,7 @@ export const passwordValidator = (_: unknown, value: string): Promise<void> => {
 
   if (value.length < 8) {
     return Promise.reject(
-      new Error("Password must be at least 8 characters long")
+      new Error("Password must be at least 8 characters long, at least one uppercase letter, ")
     );
   }
 
