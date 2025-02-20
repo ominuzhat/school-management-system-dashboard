@@ -57,6 +57,8 @@ import RoutinePages from "../modules/general settings/Routine/pages/RoutinePages
 import CreateRoutine from "../modules/general settings/Routine/components/CreateRoutine";
 import ViewRoutine from "../modules/general settings/Routine/components/ViewRoutine";
 import UpdateRoutine from "../modules/general settings/Routine/components/UpdateRoutine";
+import NoticePage from "../modules/settings/notice/pages/NoticePage";
+import RulesPage from "../modules/settings/rules & regulations/pages/RulesPage";
 
 const router = createBrowserRouter([
   {
@@ -340,11 +342,17 @@ const router = createBrowserRouter([
             path: "/institute-profile",
             element: <InstituteProfile />,
           },
-          // {
-          //   path: "mark-teacher-attendance",
-          //   element: <MarkTeachersAttendance />,
-          // },
         ],
+      },
+      // Notice
+      {
+        path: "/notice",
+        element: <NoticePage />,
+      },
+      // Rules
+      {
+        path: "/rules",
+        element: <RulesPage />,
       },
 
       // Role & permissions

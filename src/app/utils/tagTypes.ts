@@ -25,6 +25,8 @@ export const TagTypes = {
   TUITION_FEES_PAYMENT: "Tuition_fees_Payment",
   PAYROLL: "Payroll",
   PAYMENT: "Payment",
+  NOTICE: "Notice",
+  RULES: "Rules",
   ADMISSION: "Admission",
   DEPARTMENT: "Department",
   ADMISSION_SESSION: "Admission_Session",

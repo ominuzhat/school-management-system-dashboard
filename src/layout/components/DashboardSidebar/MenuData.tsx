@@ -37,6 +37,8 @@ import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { IoMdPersonAdd } from "react-icons/io";
 import { VscGoToEditingSession } from "react-icons/vsc";
 import { RiLuggageDepositLine, RiSecurePaymentLine } from "react-icons/ri";
+import { TfiAnnouncement } from "react-icons/tfi";
+import { BsFillFileRuledFill } from "react-icons/bs";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -58,11 +60,6 @@ const MenuData: React.FC = () => {
 
     // {
     //   key: "",
-    //   label: <Link to="">Accounts For Fee Invoice</Link>,
-    //   icon: <TbFileInvoice />,
-    // },
-    // {
-    //   key: "",
     //   label: <Link to="">Rules & Regulations</Link>,
     //   icon: <FcRules />,
     // },
@@ -81,27 +78,16 @@ const MenuData: React.FC = () => {
       label: <Link to="/role-permission">Role & Permissions</Link>,
       icon: <IoAccessibilityOutline />,
     },
-
-    // {
-    //   key: "/attendance",
-    //   label: "Certificates",
-    //   icon: <GrCertificate />,
-    //   children: [
-    //     {
-    //       label: <Link to="/mark-student-attendance">Leave Certificate</Link>,
-    //       icon: <AiOutlineSafetyCertificate />,
-    //       key: "/mark-student-attendance",
-    //     },
-
-    //     {
-    //       label: (
-    //         <Link to="/mark-teacher-attendance">Character Certificate</Link>
-    //       ),
-    //       icon: <LiaCertificateSolid />,
-    //       key: "/mark-teacher-attendance",
-    //     },
-    //   ],
-    // },
+    {
+      key: "/notice",
+      label: <Link to="/notice">Notice</Link>,
+      icon: <TfiAnnouncement />,
+    },
+    {
+      key: "/rules",
+      label: <Link to="/rules">Rules & Regulation</Link>,
+      icon: <BsFillFileRuledFill />,
+    },
   ];
 
   const members = [
