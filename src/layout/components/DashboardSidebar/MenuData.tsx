@@ -168,22 +168,14 @@ const MenuData: React.FC = () => {
       icon: <MdAccountBalanceWallet />,
       children: [
         {
-          label: (
-            <Link to="/attendance/mark-student-attendance">
-              Chart of Account
-            </Link>
-          ),
+          label: <Link to="/account">Chart of Account</Link>,
           icon: <BiSolidUserAccount />,
-          key: "/attendance/mark-student-attendance",
+          key: "/account",
         },
         {
-          label: (
-            <Link to="/attendance/mark-student-attendance">
-              Account Statement
-            </Link>
-          ),
+          label: <Link to="/account/transactions">Account Transaction</Link>,
           icon: <AiOutlineAccountBook />,
-          key: "/attendance/mark-student-attendance",
+          key: "/account/transactions",
         },
 
         {

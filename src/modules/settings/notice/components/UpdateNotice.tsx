@@ -100,9 +100,9 @@ const UpdateNotice = ({ record }: { record: number }) => {
               <Select placeholder="Select Target Audience">
                 {(
                   [
-                    "Student",
-                    "Teacher",
-                    "Employee",
+                    "Students",
+                    "Teachers",
+                    "Parents",
                     "All",
                   ] as NoticeBoardTargetAudience[]
                 ).map((audience) => (

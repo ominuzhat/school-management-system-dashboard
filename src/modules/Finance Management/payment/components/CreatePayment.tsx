@@ -7,12 +7,15 @@ import { CommonPaymentMethod } from "../../../../common/CommonAnt/CommonSearch/C
 import dayjs from "dayjs";
 import debounce from "lodash/debounce";
 import { useState } from "react";
+import { useGetAccountQuery } from "../../Accounts/account/api/accountEndPoints";
 
 const CreatePayment = () => {
   const [search, setSearch] = useState("");
   const { data: GetPayrollData, isFetching } = useGetPayrollQuery({
     search: search,
   });
+  const { data: accountList } = useGetAccountQuery({});
+
   const [create, { isLoading, isSuccess }] = useCreatePaymentMutation();
 
   const onFinish = (values: any): void => {
@@ -30,7 +33,7 @@ const CreatePayment = () => {
         <Row gutter={[16, 16]}>
           <Col lg={8}>
             <Form.Item<ICreatePayment>
-              label="Payroll "
+              label="Payroll"
               name="payroll"
               rules={[{ required: true, message: "Select Payroll " }]}
             >
@@ -67,28 +70,24 @@ const CreatePayment = () => {
               <CommonPaymentMethod />
             </Form.Item>
           </Col>
-          {/* <Col lg={8}>
-            <Form.Item<ICreatePayment>
-              label="Accounts"
+
+          <Col lg={8}>
+            <Form.Item
+              label="Select Account Type"
               name="account"
-              rules={[{ required: true, message: "Input your Accounts!" }]}
+              rules={[{ required: true, message: "Account Type is required!" }]}
             >
-              <Select
-                showSearch
-                placeholder="Accounts"
-                filterOption={(input, option) =>
-                  (option?.label ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-                options={[
-                  { value: "1", label: "Jack" },
-                  { value: "2", label: "Lucy" },
-                  { value: "3", label: "Tom" },
-                ]}
-              />
+              <Select placeholder="Select Account Type" className="w-full">
+                {Array.isArray(accountList?.data) &&
+                  accountList?.data?.map((account: any) => (
+                    <Select.Option key={account?.id} value={account?.id}>
+                      {account?.account_type} - {account?.balance}
+                    </Select.Option>
+                  ))}
+              </Select>
             </Form.Item>
-          </Col> */}
+          </Col>
+
           {/* <Col lg={8}>
             <Form.Item<any> label="Available Balance" name="available_balance">
               <Input placeholder="Available Balance" type="number" />

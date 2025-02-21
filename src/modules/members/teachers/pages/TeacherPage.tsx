@@ -106,7 +106,7 @@ const TeacherPage = () => {
                 alignItems: "center",
               }}
             >
-              <IoGridOutline
+              <FaListUl
                 className={`w-9 h-9 border px-2 cursor-pointer ${
                   layout === "grid"
                     ? "text-blue-500 border-blue-500"
@@ -114,8 +114,7 @@ const TeacherPage = () => {
                 }`}
                 onClick={() => setLayout("grid")}
               />
-
-              <FaListUl
+              <IoGridOutline
                 className={`w-9 h-9 border px-2 cursor-pointer ${
                   layout === "column"
                     ? "text-blue-500 border-blue-500"

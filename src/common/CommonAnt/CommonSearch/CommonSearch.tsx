@@ -168,6 +168,7 @@ export const CommonPaymentMethod = ({
       filterOption={(input, option: any) =>
         (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
       }
+      defaultValue="cash"
       options={[
         {
           value: "cash",

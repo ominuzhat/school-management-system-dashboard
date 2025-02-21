@@ -336,12 +336,6 @@ const CreateTeacher = () => {
                     <Form.Item
                       label="Subject Specialization"
                       name="subject_specialization"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Subject Specialization is required!",
-                        },
-                      ]}
                     >
                       <Select
                         mode="multiple"

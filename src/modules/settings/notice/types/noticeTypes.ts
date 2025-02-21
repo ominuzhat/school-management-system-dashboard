@@ -1,7 +1,7 @@
 export type NoticeBoardTargetAudience =
-  | "Student"
-  | "Teacher"
-  | "Employee"
+  | "Students"
+  | "Teachers"
+  | "Parents"
   | "All";
 
 export type NoticeBoardCategory =

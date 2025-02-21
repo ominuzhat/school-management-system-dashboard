@@ -1,4 +1,5 @@
 import { IRole } from "../../../members/students/types/studentsType";
+import { IGetAccount } from "../../Accounts/account/types/accountTypes";
 
 interface User {
   id: number;
@@ -88,4 +89,5 @@ export interface ICreatePayment {
   payment_method: string;
   amount_paid: number;
   payment_date: string;
+  account: IGetAccount;
 }

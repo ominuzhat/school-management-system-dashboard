@@ -47,19 +47,13 @@ const UpdateRules = ({ record }: any) => {
         <Row gutter={[16, 16]}>
           {/* Title */}
           <Col lg={8}>
-            <Form.Item
-              label="Title"
-              name="title"
-            >
+            <Form.Item label="Title" name="title">
               <Input placeholder="Enter Notice Title" />
             </Form.Item>
           </Col>
           {/* Category */}
           <Col lg={6}>
-            <Form.Item
-              label="Category"
-              name="category"
-            >
+            <Form.Item label="Category" name="category">
               <Select placeholder="Select Category">
                 {(
                   [
@@ -80,17 +74,13 @@ const UpdateRules = ({ record }: any) => {
           </Col>
           {/* Target Audience */}
           <Col lg={6}>
-            <Form.Item
-              label="Target Audience"
-              name="target_audience"
-         
-            >
+            <Form.Item label="Target Audience" name="target_audience">
               <Select placeholder="Select Target Audience">
                 {(
                   [
-                    "Student",
-                    "Teacher",
-                    "Employee",
+                    "Students",
+                    "Teachers",
+                    "Parents",
                     "All",
                   ] as NoticeBoardTargetAudience[]
                 ).map((audience) => (
@@ -109,10 +99,7 @@ const UpdateRules = ({ record }: any) => {
           </Col>
           {/* Description */}
           <Col lg={24}>
-            <Form.Item
-              label="Description"
-              name="description"
-            >
+            <Form.Item label="Description" name="description">
               <TextArea placeholder="Enter Description" rows={4} />
             </Form.Item>
           </Col>

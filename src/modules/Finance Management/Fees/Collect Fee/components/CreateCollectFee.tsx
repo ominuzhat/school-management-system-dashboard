@@ -22,6 +22,7 @@ import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import { TbCoinTaka } from "react-icons/tb";
+import { useGetAccountQuery } from "../../../Accounts/account/api/accountEndPoints";
 
 const { Title, Text } = Typography;
 
@@ -39,6 +40,7 @@ const CreateCollectFee = () => {
     status: "approved",
   });
   const [form] = AntForm.useForm();
+  const { data: accountList } = useGetAccountQuery({});
 
   const admission = AntForm.useWatch("admission", form);
   const addOns = AntForm.useWatch("add_ons", form);
@@ -110,6 +112,7 @@ const CreateCollectFee = () => {
       discount_type: values?.discount_type,
       discount_value: values?.discount_value,
       payment_method: values?.payment_method,
+      account: values?.account,
       paid_amount: values?.paid_amount,
       payment_date: dayjs(values?.payment_date).format("YYYY-MM-DD"),
       month: dayjs(values?.month).format("YYYY-MM-DD"),
@@ -254,7 +257,7 @@ const CreateCollectFee = () => {
                 />
               </AntForm.Item>
             </Col>
-            <Col lg={10}>
+            <Col lg={6}>
               <Form.Item label="Additional" name="add_ons">
                 <Select
                   mode="multiple"
@@ -276,6 +279,23 @@ const CreateCollectFee = () => {
                     additionalData?.data?.map((data: any) => (
                       <Select.Option key={data?.id} value={data?.id}>
                         {data?.name} - ৳ {data?.amount}
+                      </Select.Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col lg={6}>
+              <Form.Item
+                label="Select Account"
+                name="account"
+                rules={[{ required: true, message: "Account  is required!" }]}
+              >
+                <Select placeholder="Select Account" className="w-full">
+                  {Array.isArray(accountList?.data) &&
+                    accountList?.data?.map((account: any) => (
+                      <Select.Option key={account?.id} value={account?.id}>
+                        {account?.account_type} - {account?.balance}
                       </Select.Option>
                     ))}
                 </Select>
@@ -377,17 +397,11 @@ const CreateCollectFee = () => {
                   </Form.Item>
                 </div>
 
-                
                 <div className="flex items-center gap-5">
                   <Form.Item
                     name="payment_method"
                     className="mb-0 w-[150px]"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter payment Method",
-                      },
-                    ]}
+              
                   >
                     <CommonPaymentMethod />
                   </Form.Item>

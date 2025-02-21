@@ -5,8 +5,6 @@ import Login from "../modules/Auth/page/Login";
 import Dashboard from "../modules/Dashboard/page/Dashboard";
 import Profile from "../modules/Profile/page/Profile";
 import Accounts from "../modules/Accounts/pages/Accounts";
-import TransactionsHistory from "../modules/Accounts/components/TransactionsHistory/TransactionsHistory";
-import BalanceAdjustment from "../modules/Accounts/components/BalanceAdjustment/BalanceAdjustment";
 import BalanceStatus from "../modules/Accounts/components/BalanceStatus/BalanceStatus";
 import ClientAccount from "../modules/Accounts/components/ClientAccount/ClientAccount";
 import SendOTP from "../modules/Auth/components/SendOTP";
@@ -59,6 +57,8 @@ import ViewRoutine from "../modules/general settings/Routine/components/ViewRout
 import UpdateRoutine from "../modules/general settings/Routine/components/UpdateRoutine";
 import NoticePage from "../modules/settings/notice/pages/NoticePage";
 import RulesPage from "../modules/settings/rules & regulations/pages/RulesPage";
+import AccountPage from "../modules/Finance Management/Accounts/account/pages/AccountPages";
+import TransactionPage from "../modules/Finance Management/Accounts/Transaction/pages/TransactionPage";
 
 const router = createBrowserRouter([
   {
@@ -160,13 +160,7 @@ const router = createBrowserRouter([
       // Section
       {
         path: "/section",
-        element: <Accounts />,
-        children: [
-          {
-            path: "/section",
-            element: <SectionPage />,
-          },
-        ],
+        element: <SectionPage />,
       },
 
       // routine
@@ -406,16 +400,16 @@ const router = createBrowserRouter([
       // new for education
 
       {
-        path: "/accounts",
+        path: "/account",
         element: <Accounts />,
         children: [
           {
-            path: "transactions-history",
-            element: <TransactionsHistory />,
+            path: "/account",
+            element: <AccountPage />,
           },
           {
-            path: "balance-adjustment",
-            element: <BalanceAdjustment />,
+            path: "/account/transactions",
+            element: <TransactionPage />,
           },
           {
             path: "balance-status",

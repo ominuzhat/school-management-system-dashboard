@@ -17,9 +17,12 @@ import { useGetPayrollQuery } from "../../payroll/api/payrollEndPoints";
 import { CommonPaymentMethod } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import dayjs from "dayjs";
 import debounce from "lodash/debounce";
+import { useGetAccountQuery } from "../../Accounts/account/api/accountEndPoints";
 
 const UpdatePayment = ({ record }: any) => {
   const { data: paymentData } = useGetSinglePaymentQuery(Number(record));
+  const { data: accountList } = useGetAccountQuery({});
+
   const [update] = useUpdatePaymentMutation();
   const [search, setSearch] = useState("");
   const { data: GetPayrollData, isFetching: isFetchingPayroll } =
@@ -33,6 +36,7 @@ const UpdatePayment = ({ record }: any) => {
     if (paymentData?.data) {
       form.setFieldsValue({
         payroll: paymentData?.data?.payroll?.id,
+        account: paymentData?.data?.account?.id,
         payment_method: paymentData?.data?.payment_method,
         amount_paid: paymentData?.data?.amount_paid,
         payment_date: dayjs(paymentData?.data?.payment_date),
@@ -90,6 +94,22 @@ const UpdatePayment = ({ record }: any) => {
               rules={[{ required: true, message: "Input your Method!" }]}
             >
               <CommonPaymentMethod />
+            </AntForm.Item>
+          </Col>
+          <Col>
+            <AntForm.Item<ICreatePayment>
+              label="Select Account Type"
+              name="account"
+              rules={[{ required: true, message: "Account Type is required!" }]}
+            >
+              <Select placeholder="Select Account Type" className="w-full">
+                {Array.isArray(accountList?.data) &&
+                  accountList?.data?.map((account: any) => (
+                    <Select.Option key={account?.id} value={account?.id}>
+                      {account?.account_type} - {account?.balance}
+                    </Select.Option>
+                  ))}
+              </Select>
             </AntForm.Item>
           </Col>
 
