@@ -17,7 +17,7 @@ import { openNotification } from "../../../app/features/notificationSlice";
 // import { passwordValidator } from "../../../utilities/validator";
 import { RootState } from "../../../app/store";
 
-import { logo, welcome } from "../../../utilities/images";
+import { mainLogo, welcome } from "../../../utilities/images";
 import { passwordValidator } from "../../../utilities/validator";
 
 const SecondLogin: React.FC = () => {
@@ -72,8 +72,8 @@ const SecondLogin: React.FC = () => {
           >
             <div>
               <img
-                src={logo}
-                alt="main logo"
+                src={mainLogo}
+                alt="main mainLogo"
                 style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />
 
@@ -142,7 +142,7 @@ const SecondLogin: React.FC = () => {
         <Col span={24} lg={14} xs={0}>
           <img
             src={welcome}
-            alt="main logo"
+            alt="main mainLogo"
             style={{ width: "60%", height: "100%", objectFit: "contain" }}
             className="mx-auto"
           />

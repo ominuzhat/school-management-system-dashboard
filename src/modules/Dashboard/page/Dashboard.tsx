@@ -5,11 +5,14 @@ import WelcomeCalendarSection from "../components/Welcome&CalendarSection";
 import StudentsAttendance from "../components/StudentsAttendance";
 import { Col, Row } from "antd";
 import EstimatedMonth from "../components/EstimatedMonth";
+import { useGetDashboardDataQuery } from "../api/dashoboardEndPoints";
 
 const Dashboard: React.FC = () => {
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
   return (
     <React.Fragment>
-      <OverallStatistic />
+      <OverallStatistic dashboardInfo={dashboardData} />
       <br />
       <WelcomeCalendarSection />
 

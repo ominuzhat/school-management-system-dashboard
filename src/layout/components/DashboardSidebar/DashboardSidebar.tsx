@@ -15,7 +15,7 @@ const DashboardSidebar: React.FC = () => {
       id="dashboard-sidebar"
       width={250}
       style={{
-        background: themes === "light" ? color1 : darkColor, 
+        background: themes === "light" ? color1 : darkColor,
       }}
     >
       <MenuData />

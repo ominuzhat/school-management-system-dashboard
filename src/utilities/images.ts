@@ -8,6 +8,7 @@ import welcome from "../../public/welcome.svg";
 import no_img from "../../public/no-image.png";
 import helloImg from "../../public/Hello.svg";
 import schoolBag from "../../public/school-bag.png";
+import mainLogo from "../../public/main-logo.png";
 
 export const image_url: string =
   "https://m360ict.s3.ap-south-1.amazonaws.com/performance/";
@@ -26,4 +27,5 @@ export {
   no_img,
   helloImg,
   schoolBag,
+  mainLogo,
 };

@@ -58,21 +58,6 @@ const MenuData: React.FC = () => {
       icon: <BiSolidInstitution />,
     },
 
-    // {
-    //   key: "",
-    //   label: <Link to="">Rules & Regulations</Link>,
-    //   icon: <FcRules />,
-    // },
-    // {
-    //   key: "",
-    //   label: <Link to="">Marks Grading</Link>,
-    //   icon: <CiBookmarkCheck />,
-    // },
-    // {
-    //   key: "",
-    //   label: <Link to="">Account Settings</Link>,
-    //   icon: <CiSettings />,
-    // },
     {
       key: "/role-permission",
       label: <Link to="/role-permission">Role & Permissions</Link>,
@@ -236,12 +221,6 @@ const MenuData: React.FC = () => {
         },
       ],
     },
-
-    // {
-    //   key: "/Class-tests",
-    //   label: <Link to="/Class-tests">Class Test</Link>,
-    //   icon: <FaRegNoteSticky />,
-    // },
 
     {
       key: "/attendance",

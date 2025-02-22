@@ -10,7 +10,7 @@ import {
 import { openNotification } from "../../../app/features/notificationSlice";
 import { passwordValidator } from "../../../utilities/validator";
 import { RootState } from "../../../app/store";
-import { schoolBag, logo } from "../../../utilities/images";
+import { schoolBag, mainLogo } from "../../../utilities/images";
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import "../styles/Login.css";
 import { LoginTypes } from "../types/authTypes";
@@ -63,9 +63,9 @@ const Login: React.FC = () => {
 
           <Col lg={12}>
             <div className="text-center">
-              <img src={logo} alt="Logo" className="w-40 mx-auto mb-4" />
+              <img src={mainLogo} alt="Logo" className="w-40 mx-auto mb-4" />
               <Typography.Title level={3} className="">
-                Welcome Code Canvas Creation!
+                Welcome PatthoShala
               </Typography.Title>
               <Typography.Text className="">
                 Login to your account below

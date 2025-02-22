@@ -1,11 +1,8 @@
 import { Col, Input, Row, Select, Switch, DatePicker } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateNoticeMutation } from "../api/noticeEndPoints";
-import dayjs from "dayjs"; // Import dayjs
-import {
-  NoticeBoardCategory,
-  NoticeBoardTargetAudience,
-} from "../types/noticeTypes";
+import dayjs from "dayjs";
+import { NoticeBoardCategory } from "../types/noticeTypes";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -89,18 +86,13 @@ const CreateNotice = () => {
               ]}
             >
               <Select placeholder="Select Target Audience">
-                {(
-                  [
-                    "Students",
-                    "Teachers",
-                    "Parents",
-                    "All",
-                  ] as NoticeBoardTargetAudience[]
-                ).map((audience) => (
-                  <Option key={audience} value={audience}>
-                    {audience}
-                  </Option>
-                ))}
+                {(["Student", "Teacher", "Employee", "All"] as any[]).map(
+                  (audience) => (
+                    <Option key={audience} value={audience}>
+                      {audience}
+                    </Option>
+                  )
+                )}
               </Select>
             </Form.Item>
           </Col>
