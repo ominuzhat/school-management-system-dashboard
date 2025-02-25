@@ -7,11 +7,8 @@ interface Props<T> extends TableProps<T> {
   total: number | undefined;
 }
 
-const Table = <T extends object>({
-  total,
-  ...restProps
-}: Props<T>) => {
-  const { page_size = 10, skip = 0 } = useSelector(
+const Table = <T extends object>({ total, ...restProps }: Props<T>) => {
+  const { page_size = 50, skip = 0 } = useSelector(
     (state: RootState) => state.filter
   );
 

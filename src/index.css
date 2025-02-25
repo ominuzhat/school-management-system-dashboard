@@ -93,5 +93,5 @@ tr:nth-child(even) {
 }
 
 .login-btn:hover {
-  background: linear-gradient(to right, #4338ca, #5b21b6);
+  background: linear-gradient(to right, #4338ca, #5b21b6) !important;
 }

@@ -8,7 +8,6 @@ import {
   setMessage,
 } from "../../../app/features/authSlice";
 import { openNotification } from "../../../app/features/notificationSlice";
-import { passwordValidator } from "../../../utilities/validator";
 import { RootState } from "../../../app/store";
 import { schoolBag, mainLogo } from "../../../utilities/images";
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
@@ -57,16 +56,16 @@ const Login: React.FC = () => {
     <div className="flex justify-center items-center min-h-screen  px-4">
       <Card className=" shadow-2xl p-8 rounded-xl glassy-card">
         <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col lg={12}>
-            <img src={schoolBag} alt="bag" />
+          <Col lg={12} className="w-full ">
+            <img src={schoolBag} alt="bag" className="mx-auto" />
           </Col>
 
-          <Col lg={12}>
+          <Col lg={12} sm={24} className=" w-full">
             <div className="text-center">
               <img src={mainLogo} alt="Logo" className="w-40 mx-auto mb-4" />
-              <Typography.Title level={3} className="">
-                Welcome PatthoShala
-              </Typography.Title>
+              {/* <Typography.Title level={3} className="">
+                Welcome Patthoshala
+              </Typography.Title> */}
               <Typography.Text className="">
                 Login to your account below
               </Typography.Text>
@@ -83,10 +82,7 @@ const Login: React.FC = () => {
                   />
                 </Form.Item>
 
-                <Form.Item
-                  name="password"
-                  rules={[{ required: true }, { validator: passwordValidator }]}
-                >
+                <Form.Item name="password" rules={[{ required: true }]}>
                   <Input.Password
                     onFocus={handleOnFocus}
                     prefix={<Iconify name="ant-design:lock-outlined" />}

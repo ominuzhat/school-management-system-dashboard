@@ -30,6 +30,8 @@ const Profile: React.FC = () => {
 
   const { username, teacher, student, employee } = profileData?.data || {};
 
+  console.log(profileData?.data);
+
   const renderDescriptions = () => {
     if (teacher) {
       return [

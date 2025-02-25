@@ -13,7 +13,7 @@ import { openNotification } from "../../../app/features/notificationSlice";
 import { RootState } from "../../../app/store";
 import { enqueueSnackbar } from "notistack";
 import axios from "axios";
-import { logo, welcome } from "../../../utilities/images";
+import {  mainLogo, welcome } from "../../../utilities/images";
 
 // const sharedProps: OTPProps = {
 //   onChange,
@@ -132,7 +132,7 @@ const Verification: React.FC = () => {
           >
             <div>
               <img
-                src={logo}
+                src={mainLogo}
                 alt="main logo"
                 style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />

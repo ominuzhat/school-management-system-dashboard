@@ -21,7 +21,12 @@ import {
   MdOutlinePayments,
   MdPayment,
 } from "react-icons/md";
-import { FaPeopleGroup, FaPiggyBank, FaRegAddressCard } from "react-icons/fa6";
+import {
+  FaCommentSms,
+  FaPeopleGroup,
+  FaPiggyBank,
+  FaRegAddressCard,
+} from "react-icons/fa6";
 import { TbCoinTaka, TbSection } from "react-icons/tb";
 import { GiExpense } from "react-icons/gi";
 import { BiSolidInstitution, BiSolidUserAccount } from "react-icons/bi";
@@ -72,6 +77,11 @@ const MenuData: React.FC = () => {
       key: "/rules",
       label: <Link to="/rules">Rules & Regulation</Link>,
       icon: <BsFillFileRuledFill />,
+    },
+    {
+      key: "/sms",
+      label: <Link to="/sms">SMS Configuration</Link>,
+      icon: <FaCommentSms />,
     },
   ];
 

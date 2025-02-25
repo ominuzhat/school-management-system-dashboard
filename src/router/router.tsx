@@ -59,6 +59,7 @@ import NoticePage from "../modules/settings/notice/pages/NoticePage";
 import RulesPage from "../modules/settings/rules & regulations/pages/RulesPage";
 import AccountPage from "../modules/Finance Management/Accounts/account/pages/AccountPages";
 import TransactionPage from "../modules/Finance Management/Accounts/Transaction/pages/TransactionPage";
+import SmsPage from "../modules/settings/sms configuration/pages/SmsPage";
 
 const router = createBrowserRouter([
   {
@@ -347,6 +348,11 @@ const router = createBrowserRouter([
       {
         path: "/rules",
         element: <RulesPage />,
+      },
+      // SMS
+      {
+        path: "/sms",
+        element: <SmsPage />,
       },
 
       // Role & permissions

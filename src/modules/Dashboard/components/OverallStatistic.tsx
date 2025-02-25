@@ -4,7 +4,6 @@ import { IoPersonAddSharp } from "react-icons/io5";
 import { PiStudent, PiChalkboardTeacher } from "react-icons/pi";
 
 const OverallStatistic = ({ dashboardInfo }: any) => {
-  console.log(dashboardInfo?.data, "dd");
 
   const { total_admissions, total_employees, total_students, total_teachers } =
     dashboardInfo?.data || {};

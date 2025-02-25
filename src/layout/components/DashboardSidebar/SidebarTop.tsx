@@ -1,6 +1,6 @@
 import { Image } from "antd";
 
-import { logo } from "../../../utilities/images";
+import { mainLogo } from "../../../utilities/images";
 import React from "react";
 import { useGetDashboardDataQuery } from "../../../modules/Dashboard/api/dashoboardEndPoints";
 
@@ -23,7 +23,7 @@ const SidebarTop: React.FC = () => {
         {/* <h1 style={{ fontSize: "24px", fontFamily: "Arial" }}>{time}</h1> */}
 
         <Image
-          src={dashboardData?.data?.institution?.logo || logo}
+          src={dashboardData?.data?.institution?.logo || mainLogo}
           preview={false}
           style={{
             width: "20%",
@@ -31,7 +31,7 @@ const SidebarTop: React.FC = () => {
             objectFit: "contain",
           }}
           className="mx-auto"
-        /> 
+        />
       </div>
       <hr />
     </React.Fragment>

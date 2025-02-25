@@ -1,4 +1,4 @@
-import logo from "../../public/logo.png";
+// import logo from "../../public/logo.png";
 import login_image from "../assets/login-image.png";
 import login_bg from "../assets/login-bg.svg";
 import forgot_password_image from "../assets/reset-password.png";
@@ -17,7 +17,7 @@ export const image_url: string =
 //   "https://i.pinimg.com/564x/18/10/42/1810421e11625d08c2a909fd5fca7e28.jpg";
 
 export {
-  logo,
+  // logo,
   login_image,
   login_bg,
   forgot_password_image,

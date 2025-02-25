@@ -33,7 +33,7 @@ const StudentsPage = () => {
     search: filters.search,
     is_active: filters.is_active,
     limit: page_size,
-    offset: skip, // Offset for pagination
+    offset: skip,
   });
 
   const handleDelete = async (id: any) => {
