@@ -23,8 +23,7 @@ const StudentsPage = () => {
   // const dispatch = useDispatch();
   const [layout, setLayout] = useState("grid");
   const [filters, setFilters] = useState({ search: "", is_active: "" });
-
-  const { page_size = 10, skip = 0 } = useSelector(
+  const { page_size, currentPage } = useSelector(
     (state: RootState) => state.filter
   );
 
@@ -32,8 +31,8 @@ const StudentsPage = () => {
   const { data: studentData, isLoading } = useGetStudentsQuery({
     search: filters.search,
     is_active: filters.is_active,
-    limit: page_size,
-    offset: skip,
+    page_size: page_size,
+    page: currentPage,
   });
 
   const handleDelete = async (id: any) => {

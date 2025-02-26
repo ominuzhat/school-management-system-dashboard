@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { Card, Col, Form, Row, Select, Button, Form as AntForm } from "antd";
+import {
+  Card,
+  Col,
+  Form,
+  Row,
+  Select,
+  Button,
+  Form as AntForm,
+  Input,
+} from "antd";
 import {
   useGetSingleAdmissionQuery,
   useUpdateAdmissionMutation,
@@ -50,6 +59,7 @@ const UpdateOldAdmissionStudent = () => {
     if (singleAdmission) {
       form.setFieldsValue({
         student: singleAdmission?.student?.id,
+        roll: singleAdmission?.roll,
         session: singleAdmission?.session?.id,
         status: singleAdmission?.status,
         shift: singleAdmission?.shift,
@@ -150,6 +160,12 @@ const UpdateOldAdmissionStudent = () => {
                       </Option>
                     ))}
                 </Select>
+              </Form.Item>
+            </Col>
+
+            <Col lg={8}>
+              <Form.Item<IAdmission> label="Roll" name="roll">
+                <Input placeholder="Enter Roll" />
               </Form.Item>
             </Col>
 

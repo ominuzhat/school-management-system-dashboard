@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, Col, Row } from "antd";
 import { IoGridOutline } from "react-icons/io5";
 import { PlusOutlined } from "@ant-design/icons";
@@ -21,14 +21,21 @@ import { useGetEmployeeQuery } from "../api/employeeEndPoints";
 import useEmployeeColumns from "../utils/employeeColumns";
 import CreateEmployee from "../components/CreateEmployee";
 import UpdateEmployee from "../components/UpdateEmployee";
+import { RootState } from "../../../../app/store";
 
 const EmployeePage = () => {
   const [layout, setLayout] = useState("grid");
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
 
+  const { page_size, currentPage } = useSelector(
+    (state: RootState) => state.filter
+  );
+
   const { data: employeeData, isLoading } = useGetEmployeeQuery({
     search: search,
+    page_size: page_size,
+    page: currentPage,
   });
 
   const employeeColumns = useEmployeeColumns();

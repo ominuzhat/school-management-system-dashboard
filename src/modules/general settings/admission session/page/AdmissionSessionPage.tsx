@@ -1,18 +1,24 @@
 import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import { useGetAdmissionSessionQuery } from "../api/admissionSessionEndPoints";
 import useAdmissionSessionsColumns from "../utils/admissionSessionColumns";
 import CreateAdmissionSessions from "../components/CreateAdmissionSessions";
 import { IAdmissionSession } from "../type/admissionSessionType";
+import { RootState } from "../../../../app/store";
 
 const AdmissionSessionPage = () => {
   const dispatch = useDispatch();
+
+  const { page_size, currentPage } = useSelector(
+    (state: RootState) => state.filter
+  );
+
   const { data: getAdmissionSessions, isLoading } = useGetAdmissionSessionQuery(
-    {}
+    { page_size: page_size, page: currentPage }
   );
 
   const dataLength =

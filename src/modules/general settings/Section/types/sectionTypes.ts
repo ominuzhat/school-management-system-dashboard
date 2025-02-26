@@ -2,6 +2,7 @@ import { ISession } from "../../../Finance Management/Fees/Collect Fee/type/coll
 import { IGrade_Level } from "../../subjects/type/subjectsType";
 
 export interface ICreateSection {
+  grade_level: IGrade_Level;
   name: string;
   capacity: number;
   is_active: boolean;

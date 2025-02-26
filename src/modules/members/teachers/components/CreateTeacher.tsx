@@ -186,10 +186,7 @@ const CreateTeacher = () => {
                             },
                           ]}
                         >
-                          <Input
-                            addonBefore="+880"
-                            placeholder="Enter Mobile Number"
-                          />
+                          <Input placeholder="Enter Mobile Number" />
                         </Form.Item>
                       </Col>
                       <Col lg={8}>

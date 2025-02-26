@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, Col, Row, Select } from "antd";
 import { IoGridOutline } from "react-icons/io5";
 import { PlusOutlined } from "@ant-design/icons";
@@ -21,13 +21,22 @@ import CreateTeacher from "../components/CreateTeacher";
 import useTeacherColumns from "../utils/teacherColumns";
 import { useGetTeacherQuery } from "../api/teachersEndPoints";
 import UpdateTeacher from "../components/UpdateTeacher";
+import { RootState } from "../../../../app/store";
 
 const TeacherPage = () => {
   const dispatch = useDispatch();
   const [layout, setLayout] = useState("grid");
   const [filters, setFilters] = useState({ search: "", is_active: "" });
+  const { page_size, currentPage } = useSelector(
+    (state: RootState) => state.filter
+  );
 
-  const { data: teacherData, isLoading } = useGetTeacherQuery(filters);
+  const { data: teacherData, isLoading } = useGetTeacherQuery({
+    search: filters.search,
+    is_active: filters.is_active,
+    page_size: page_size,
+    page: currentPage,
+  });
 
   const handleDelete = async (id: any) => {
     console.log(id);

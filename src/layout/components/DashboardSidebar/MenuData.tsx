@@ -21,14 +21,8 @@ import {
   MdOutlinePayments,
   MdPayment,
 } from "react-icons/md";
-import {
-  FaCommentSms,
-  FaPeopleGroup,
-  FaPiggyBank,
-  FaRegAddressCard,
-} from "react-icons/fa6";
+import { FaCommentSms, FaPeopleGroup, FaRegAddressCard } from "react-icons/fa6";
 import { TbCoinTaka, TbSection } from "react-icons/tb";
-import { GiExpense } from "react-icons/gi";
 import { BiSolidInstitution, BiSolidUserAccount } from "react-icons/bi";
 import {
   AiOutlineAccountBook,
@@ -44,6 +38,8 @@ import { VscGoToEditingSession } from "react-icons/vsc";
 import { RiLuggageDepositLine, RiSecurePaymentLine } from "react-icons/ri";
 import { TfiAnnouncement } from "react-icons/tfi";
 import { BsFillFileRuledFill } from "react-icons/bs";
+
+
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -173,20 +169,20 @@ const MenuData: React.FC = () => {
           key: "/account/transactions",
         },
 
-        {
-          label: (
-            <Link to="/attendance/mark-teacher-attendance">Add Income</Link>
-          ),
-          icon: <FaPiggyBank />,
-          key: "/attendance/mark-teacher-attendance",
-        },
-        {
-          label: (
-            <Link to="/attendance/mark-teacher-attendance">Add Expense</Link>
-          ),
-          icon: <GiExpense />,
-          key: "/attendance/mark-teacher-attendance",
-        },
+        // {
+        //   label: (
+        //     <Link to="/attendance/mark-teacher-attendance">Add Income</Link>
+        //   ),
+        //   icon: <FaPiggyBank />,
+        //   key: "/attendance/mark-teacher-attendance",
+        // },
+        // {
+        //   label: (
+        //     <Link to="/attendance/mark-teacher-attendance">Add Expense</Link>
+        //   ),
+        //   icon: <GiExpense />,
+        //   key: "/attendance/mark-teacher-attendance",
+        // },
       ],
     },
   ];

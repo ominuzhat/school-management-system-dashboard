@@ -182,7 +182,23 @@ const UpdateStudent = () => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                      <PasswordInput />
+                        <PasswordInput />
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Mobile No for SMS/WhatsApp"
+                          name="contact_phone_number"
+                        >
+                          <Input type="tel" placeholder="Enter Mobile Number" />
+                        </Form.Item>
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Secondary Phone Number"
+                          name="contact_phone_number_relation "
+                        >
+                          <Input type="tel" placeholder="Enter Mobile Number" />
+                        </Form.Item>
                       </Col>
 
                       <Col lg={8}>
@@ -218,7 +234,7 @@ const UpdateStudent = () => {
                       name="phone_number"
                     >
                       <Input
-                        addonBefore="+880"
+                        
                         placeholder="Enter Mobile Number"
                       />
                     </Form.Item>
@@ -354,7 +370,7 @@ const UpdateStudent = () => {
                       name="mother_phone_number"
                     >
                       <Input
-                        addonBefore="+880"
+                        
                         placeholder="Mother Phone Number"
                       />
                     </Form.Item>
@@ -413,7 +429,7 @@ const UpdateStudent = () => {
                       name="local_guardian_phone_number"
                     >
                       <Input
-                        addonBefore="+880"
+                        
                         placeholder="Local Guardian Phone Number"
                       />
                     </Form.Item>

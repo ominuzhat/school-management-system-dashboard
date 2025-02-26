@@ -1,18 +1,25 @@
 import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import { useGetSectionQuery } from "../api/sectionEndPoints";
 import CreateSection from "../components/CreateSection";
 import useSectionColumns from "../utils/SectionColumns";
 import { IGetSection } from "../types/sectionTypes";
+import { RootState } from "../../../../app/store";
 
 const SectionPage = () => {
   const dispatch = useDispatch();
-  const { data: getSectionData, isLoading } = useGetSectionQuery({});
-  
+  const { page_size, currentPage } = useSelector(
+    (state: RootState) => state.filter
+  );
+  const { data: getSectionData, isLoading } = useGetSectionQuery({
+    page_size: page_size,
+    page: currentPage,
+  });
+
   const dataLength =
     (getSectionData?.data as IGetSection[] | undefined)?.length ?? 0;
 

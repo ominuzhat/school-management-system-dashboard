@@ -13,11 +13,14 @@ import { RootState } from "../../../../../app/store";
 const CollectFeePage = () => {
   const [search, setSearch] = useState("");
 
-  const { page_size } = useSelector((state: RootState) => state.filter);
+  const { page_size, currentPage } = useSelector(
+    (state: RootState) => state.filter
+  );
+
   const { data: collectFee, isLoading } = useGetCollectFeesQuery({
     search: search,
     page_size: page_size,
-    // page: 1,
+    page: currentPage,
   });
 
   return (

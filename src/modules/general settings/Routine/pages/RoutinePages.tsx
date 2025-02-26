@@ -12,6 +12,8 @@ import { debounce } from "lodash";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../app/store";
 const { Option } = Select;
 const RoutinePages = () => {
   const [search, setSearch] = useState("");
@@ -23,8 +25,14 @@ const RoutinePages = () => {
     grade_level: "",
   });
 
+  const { page_size, currentPage } = useSelector(
+    (state: RootState) => state.filter
+  );
+
   const { data: classList, isFetching } = useGetClassesQuery({
     search: search,
+    page_size: page_size,
+    page: currentPage,
   });
   const { data: getSection } = useGetSectionQuery({});
   const { data: getSession } = useGetAdmissionSessionQuery({});

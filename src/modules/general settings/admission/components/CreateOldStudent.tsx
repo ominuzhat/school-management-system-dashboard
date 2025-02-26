@@ -1,11 +1,11 @@
-import { Card, Col, Row, Select, Form as AntForm } from "antd";
+import { Card, Col, Row, Select, Form as AntForm, Input } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateAdmissionMutation } from "../api/admissionEndPoints";
 import { IAdmission } from "../type/admissionType";
 import { useGetStudentsQuery } from "../../../members/students/api/studentEndPoints";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { IClasses } from "../../classes/type/classesType";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { debounce } from "lodash";
@@ -43,6 +43,12 @@ const CreateOldStudent = () => {
     setSelectedSubjects(options.map((option) => option.value));
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      form.resetFields();
+    }
+  }, [isSuccess, form]);
+
   return (
     <div>
       <Form
@@ -50,7 +56,7 @@ const CreateOldStudent = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={{ subjects: selectedSubjects }}
+        initialValues={{ subjects: selectedSubjects, status: "approved" }}
       >
         <Card>
           <Row gutter={[16, 16]}>
@@ -136,6 +142,12 @@ const CreateOldStudent = () => {
                       </Option>
                     ))}
                 </Select>
+              </Form.Item>
+            </Col>
+
+            <Col lg={8}>
+              <Form.Item<IAdmission> label="Roll" name="roll">
+                <Input placeholder="Enter Roll" />
               </Form.Item>
             </Col>
 

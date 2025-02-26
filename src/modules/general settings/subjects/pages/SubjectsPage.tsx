@@ -1,16 +1,24 @@
 import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import CreateSubjects from "../components/CreateSubjects";
 import { useGetSubjectsQuery } from "../api/subjectsEndPoints";
 import useSubjectColumns from "../utils/SubjectsColumns";
+import { RootState } from "../../../../app/store";
 
 const SubjectsPage = () => {
   const dispatch = useDispatch();
-  const { data: getSubjectsData, isLoading } = useGetSubjectsQuery({});
+
+  const { page_size, currentPage } = useSelector(
+    (state: RootState) => state.filter
+  );
+  const { data: getSubjectsData, isLoading } = useGetSubjectsQuery({
+    page_size: page_size,
+    page: currentPage,
+  });
   return (
     <div className="space-y-5">
       <div className="my-5">

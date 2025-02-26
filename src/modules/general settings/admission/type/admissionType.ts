@@ -15,6 +15,7 @@ export type IAdmissionStatus =
 export interface IAdmission {
   id: number;
   student: number;
+  roll: number;
   subjects: ISubjects[];
   admission_date: string;
   status: IAdmissionStatus;
@@ -30,6 +31,7 @@ export interface IAdmission {
 
 export interface ISingleAdmission {
   id: number;
+  roll: number;
   student: IStudents;
   subjects: ISubjects[];
   admission_date: string;

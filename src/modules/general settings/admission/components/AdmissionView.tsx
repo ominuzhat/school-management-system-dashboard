@@ -13,6 +13,7 @@ import {
 } from "antd";
 import { ISingleAdmission } from "../type/admissionType";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
+import { capitalize } from "../../../../common/capitalize/Capitalize";
 
 const { Title, Text } = Typography;
 
@@ -45,14 +46,14 @@ const AdmissionView = () => {
   }
 
   const {
-    id,
+ 
     student,
     subjects = [],
     admission_date,
     fee_type,
     registration_number,
     previous_registration_number,
-
+    roll,
     one_time_fee,
     monthly_fee,
     session,
@@ -117,12 +118,11 @@ const AdmissionView = () => {
             layout="vertical"
             column={{ xs: 1, sm: 2, lg: 3 }}
           >
-            <Descriptions.Item label="Admission ID">{id}</Descriptions.Item>
             <Descriptions.Item label="Admission Date">
               {admission_date}
             </Descriptions.Item>
             <Descriptions.Item label="Fee Type">
-              <Tag color="blue">{fee_type}</Tag>
+              <Tag color="blue">{capitalize(fee_type)}</Tag>
             </Descriptions.Item>
             <Descriptions.Item label="Registration Number">
               {registration_number}
@@ -139,6 +139,7 @@ const AdmissionView = () => {
             <Descriptions.Item label="Session">
               {session?.name}
             </Descriptions.Item>
+            <Descriptions.Item label="Roll">{roll}</Descriptions.Item>
           </Descriptions>
         </Card>
 

@@ -1,17 +1,24 @@
 import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import { useGetDepartmentQuery } from "../api/departmentEndPoints";
 import CreateDepartmentModal from "../components/CreateDepartmentModal";
 import useDepartmentColumns from "../utils/departmentColumns";
 import { IGetDepartment } from "../types/departmentType";
+import { RootState } from "../../../../app/store";
 
 const DepartmentPage = () => {
   const dispatch = useDispatch();
-  const { data: departmentData, isLoading } = useGetDepartmentQuery({});
+  const { page_size, currentPage } = useSelector(
+    (state: RootState) => state.filter
+  );
+  const { data: departmentData, isLoading } = useGetDepartmentQuery({
+    page_size: page_size,
+    page: currentPage,
+  });
 
   const dataLength =
     (departmentData?.data as IGetDepartment[] | undefined)?.length ?? 0;

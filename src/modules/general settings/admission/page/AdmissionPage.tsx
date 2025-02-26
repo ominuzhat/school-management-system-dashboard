@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { useGetStudentsQuery } from "../../../members/students/api/studentEndPoints";
 import { debounce } from "lodash";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../app/store";
 const { Option } = Select;
 
 const AdmissionPage = () => {
@@ -21,8 +23,18 @@ const AdmissionPage = () => {
     session: "",
     student: "",
   });
+
+  const { page_size ,currentPage} = useSelector((state: RootState) => state.filter);
+
   const navigate = useNavigate();
-  const { data: getAdmission, isLoading } = useGetAdmissionQuery(filters);
+  const { data: getAdmission, isLoading } = useGetAdmissionQuery({
+    search: filters.search,
+    is_active: filters.is_active,
+    session: filters.session,
+    student: filters.student,
+    page_size: page_size,
+    page: currentPage,
+  });
   const { data: getSession } = useGetAdmissionSessionQuery({});
   const { data: getStudent, isFetching } = useGetStudentsQuery({
     search: search,

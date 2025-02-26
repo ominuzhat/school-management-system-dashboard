@@ -180,11 +180,7 @@ const CreateEmployee = () => {
                           name="phone_number"
                           rules={[{ required: true, message: "Phone Number" }]}
                         >
-                          <Input
-                            addonBefore="+880"
-                            placeholder="Phone Number"
-                            type="tel"
-                          />
+                          <Input placeholder="Phone Number" type="tel" />
                         </Form.Item>
                       </Col>
 
@@ -261,7 +257,7 @@ const CreateEmployee = () => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                      <PasswordInput />
+                        <PasswordInput />
                       </Col>
 
                       <Col lg={8}>

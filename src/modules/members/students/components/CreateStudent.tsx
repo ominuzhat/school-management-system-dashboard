@@ -160,7 +160,30 @@ const CreateStudent = () => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                      <PasswordInput />
+                        <PasswordInput />
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Mobile No for SMS/WhatsApp"
+                          name="contact_phone_number"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Enter Mobile No for SMS/WhatsApp ",
+                            },
+                          ]}
+                        >
+                          <Input type="tel" placeholder="Enter Mobile Number" />
+                        </Form.Item>
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Secondary Phone Number"
+                          name="contact_phone_number_relation "
+                        >
+                          <Input type="tel" placeholder="Enter Mobile Number" />
+                        </Form.Item>
                       </Col>
 
                       <Col lg={8}>
@@ -240,14 +263,8 @@ const CreateStudent = () => {
                     </Form.Item>
                   </Col>
                   <Col lg={4}>
-                    <Form.Item<any>
-                      label="Mobile No for SMS/WhatsApp"
-                      name="phone_number"
-                    >
-                      <Input
-                        addonBefore="+880"
-                        placeholder="Enter Mobile Number"
-                      />
+                    <Form.Item<any> label="Phone Number" name="phone_number">
+                      <Input placeholder="Enter Mobile Number" />
                     </Form.Item>
                   </Col>
                   <Col lg={4}>
@@ -300,10 +317,7 @@ const CreateStudent = () => {
                   </Col>
                   <Col xs={24} sm={12} md={12} lg={8} xl={4}>
                     <Form.Item label="Phone Number" name="father_number">
-                      <Input
-                        addonBefore="+880"
-                        placeholder="Enter Father Phone Number"
-                      />
+                      <Input placeholder="Enter Father Phone Number" />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12} md={12} lg={8} xl={4}>
@@ -355,10 +369,7 @@ const CreateStudent = () => {
                   </Col>
                   <Col xs={24} sm={12} md={12} lg={8} xl={4}>
                     <Form.Item label="Phone Number" name="mother_phone_number">
-                      <Input
-                        addonBefore="+880"
-                        placeholder="Enter Phone Number"
-                      />
+                      <Input placeholder="Enter Phone Number" />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12} md={12} lg={8} xl={4}>
@@ -415,10 +426,7 @@ const CreateStudent = () => {
                       label="Local Guardian Phone Number"
                       name="local_guardian_phone_number"
                     >
-                      <Input
-                        addonBefore="+880"
-                        placeholder="Local Guardian Phone Number"
-                      />
+                      <Input placeholder="Local Guardian Phone Number" />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
