@@ -18,6 +18,11 @@ import { useGetRolePermissionQuery } from "../../../settings/role & permission/a
 import { useGetDepartmentQuery } from "../../../general settings/Department/api/departmentEndPoints";
 import dayjs from "dayjs";
 import PasswordInput from "../../../../common/Password/input";
+import { phoneValidator } from "../../../../utilities/validator";
+import GenderSelect, {
+  BloodGroupSelect,
+  ReligionSelect,
+} from "../../../../common/commonField/commonFeild";
 
 const CreateEmployee = () => {
   const [create, { isLoading, isSuccess }] = useCreateEmployeeMutation();
@@ -61,6 +66,8 @@ const CreateEmployee = () => {
       } else if (key === "date_of_birth" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
+      } else if (key === "phone_number") {
+        formData.append(key, `880${value}`);
       } else if (value instanceof File || value instanceof Blob) {
         formData.append(key, value);
       } else if (value !== null && value !== undefined) {
@@ -178,9 +185,16 @@ const CreateEmployee = () => {
                         <Form.Item<any>
                           label="Phone Number"
                           name="phone_number"
-                          rules={[{ required: true, message: "Phone Number" }]}
+                          rules={[
+                            { required: true, message: "Phone Number" },
+                            { validator: phoneValidator },
+                          ]}
                         >
-                          <Input placeholder="Phone Number" type="tel" />
+                          <Input
+                            addonBefore="880"
+                            placeholder="Phone Number"
+                            type="tel"
+                          />
                         </Form.Item>
                       </Col>
 
@@ -332,45 +346,14 @@ const CreateEmployee = () => {
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
-                    <Form.Item<any> label="Gender" name="gender">
-                      <Select placeholder="Gender" className="w-full">
-                        <Select.Option value="M">Male</Select.Option>
-                        <Select.Option value="F">Female</Select.Option>
-                        <Select.Option value="O">Other</Select.Option>
-                      </Select>
-                    </Form.Item>
+                    <GenderSelect />
                   </Col>
 
                   <Col lg={6}>
-                    <Form.Item label="Religion" name="religion">
-                      <Select placeholder="Select Religion" className="w-full">
-                        <Select.Option value="Islam">Islam</Select.Option>
-                        <Select.Option value="Christianity">
-                          Christianity
-                        </Select.Option>
-                        <Select.Option value="Hinduism">Hinduism</Select.Option>
-                        <Select.Option value="Buddhism">Buddhism</Select.Option>
-                        <Select.Option value="Judaism">Judaism</Select.Option>
-                        <Select.Option value="Sikhism">Sikhism</Select.Option>
-                        <Select.Option value="Other">Other</Select.Option>
-                      </Select>
-                    </Form.Item>
+                    <ReligionSelect />
                   </Col>
                   <Col lg={6}>
-                    <Form.Item<any> label="Blood Group" name="blood_group">
-                      <Select
-                        placeholder="Select Blood Group"
-                        className="w-full"
-                      >
-                        {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
-                          (group) => (
-                            <Select.Option key={group} value={group}>
-                              {group}
-                            </Select.Option>
-                          )
-                        )}
-                      </Select>
-                    </Form.Item>
+                    <BloodGroupSelect />
                   </Col>
                   <Col lg={6}>
                     <Form.Item<any> label="Address" name="home_address">

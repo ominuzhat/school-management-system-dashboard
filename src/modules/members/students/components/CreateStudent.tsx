@@ -6,8 +6,8 @@ import {
   Input,
   Modal,
   Row,
-  Select,
   Switch,
+  Form as AntForm,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
@@ -17,6 +17,10 @@ import { useCreateStudentMutation } from "../api/studentEndPoints";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import PasswordInput from "../../../../common/Password/input";
+import { phoneValidator } from "../../../../utilities/validator";
+import GenderSelect, {
+  ReligionSelect,
+} from "../../../../common/commonField/commonFeild";
 
 const CreateStudent = () => {
   const navigate = useNavigate();
@@ -24,6 +28,7 @@ const CreateStudent = () => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [form] = AntForm.useForm();
 
   const handlePreview = async (file: any) => {
     setPreviewImage(file.thumbUrl || file.url);
@@ -33,10 +38,20 @@ const CreateStudent = () => {
     );
   };
 
+  const canLogin = AntForm.useWatch("can_login", form);
+
   const handleCancel = () => setPreviewVisible(false);
 
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
+
+    const phoneFields = [
+      "contact_phone_number",
+      "phone_number",
+      "mother_phone_number",
+      "local_guardian_phone_number",
+      "father_number",
+    ];
 
     Object.entries(values).forEach(([key, value]) => {
       if (value === undefined || value === null) {
@@ -55,6 +70,8 @@ const CreateStudent = () => {
         formData.append(key, dayjs(value as any).format("YYYY-MM-DD"));
       } else if (key === "date_of_birth" && value) {
         formData.append(key, dayjs(value as any).format("YYYY-MM-DD"));
+      } else if (phoneFields.includes(key)) {
+        formData.append(key, `880${value}`);
       } else {
         formData.append(key, value as string | Blob);
       }
@@ -79,12 +96,14 @@ const CreateStudent = () => {
   return (
     <div>
       <Form
+        form={form}
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
         initialValues={{
           enrollment_date: dayjs(),
           is_active: true,
+          can_login: true,
         }}
       >
         <Row gutter={[16, 16]}>
@@ -150,42 +169,38 @@ const CreateStudent = () => {
                         </Form.Item>
                       </Col>
 
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Username"
-                          name="username"
-                          rules={[{ required: true, message: "Username!" }]}
-                        >
-                          <Input placeholder="Username." />
-                        </Form.Item>
-                      </Col>
-                      <Col lg={8}>
-                        <PasswordInput />
-                      </Col>
+                      {canLogin === true && (
+                        <>
+                          {" "}
+                          <Col lg={8}>
+                            <Form.Item<any> label="Username" name="username">
+                              <Input placeholder="Username." />
+                            </Form.Item>
+                          </Col>
+                          <Col lg={8}>
+                            <PasswordInput />
+                          </Col>
+                        </>
+                      )}
 
                       <Col lg={8}>
-                        <Form.Item<any>
-                          label="Mobile No for SMS/WhatsApp"
-                          name="contact_phone_number"
+                        <Form.Item
+                          label="Can LogIn"
+                          name="can_login"
+                          valuePropName="checked"
                           rules={[
                             {
                               required: true,
-                              message: "Enter Mobile No for SMS/WhatsApp ",
+                              message: "Can LogIn is required!",
                             },
                           ]}
                         >
-                          <Input type="tel" placeholder="Enter Mobile Number" />
+                          <Switch
+                            checkedChildren="Active"
+                            unCheckedChildren="Inactive"
+                          />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Secondary Phone Number"
-                          name="contact_phone_number_relation "
-                        >
-                          <Input type="tel" placeholder="Enter Mobile Number" />
-                        </Form.Item>
-                      </Col>
-
                       <Col lg={8}>
                         <Form.Item
                           label="Status"
@@ -202,6 +217,41 @@ const CreateStudent = () => {
                         </Form.Item>
                       </Col>
                     </Row>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+          <Col lg={24}>
+            <Badge.Ribbon text="Contact Information" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Row gutter={[16, 16]}>
+                  <Col lg={12}>
+                    <Form.Item<any>
+                      label="Mobile No for SMS"
+                      name="contact_phone_number"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Enter Mobile No for SMS",
+                        },
+                        { validator: phoneValidator },
+                      ]}
+                    >
+                      <Input
+                        addonBefore="880"
+                        type="tel"
+                        placeholder="Enter Mobile Number"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col lg={12}>
+                    <Form.Item<any>
+                      label="Relation Name"
+                      name="contact_phone_number_relation"
+                    >
+                      <Input placeholder="Relation Name" />
+                    </Form.Item>
                   </Col>
                 </Row>
               </Card>
@@ -233,38 +283,21 @@ const CreateStudent = () => {
                     </Form.Item>
                   </Col>
                   <Col lg={4}>
+                    <GenderSelect />
+                  </Col>
+                  <Col lg={4}>
+                    <ReligionSelect />
+                  </Col>
+                  <Col lg={4}>
                     <Form.Item<any>
-                      label="Gender"
-                      name="gender"
-                      rules={[
-                        { required: true, message: "Gender is required!" },
-                      ]}
+                      label="Phone Number"
+                      name="phone_number"
+                      rules={[{ validator: phoneValidator }]}
                     >
-                      <Select placeholder="Gender" className="w-full">
-                        <Select.Option value="M">Male</Select.Option>
-                        <Select.Option value="F">Female</Select.Option>
-                        <Select.Option value="O">Other</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item label="Religion" name="religion">
-                      <Select placeholder="Select Religion" className="w-full">
-                        <Select.Option value="Islam">Islam</Select.Option>
-                        <Select.Option value="Christianity">
-                          Christianity
-                        </Select.Option>
-                        <Select.Option value="Hinduism">Hinduism</Select.Option>
-                        <Select.Option value="Buddhism">Buddhism</Select.Option>
-                        <Select.Option value="Judaism">Judaism</Select.Option>
-                        <Select.Option value="Sikhism">Sikhism</Select.Option>
-                        <Select.Option value="Other">Other</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Phone Number" name="phone_number">
-                      <Input placeholder="Enter Mobile Number" />
+                      <Input
+                        addonBefore="880"
+                        placeholder="Enter Mobile Number"
+                      />
                     </Form.Item>
                   </Col>
                   <Col lg={4}>
@@ -316,8 +349,15 @@ const CreateStudent = () => {
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                    <Form.Item label="Phone Number" name="father_number">
-                      <Input placeholder="Enter Father Phone Number" />
+                    <Form.Item
+                      label="Phone Number"
+                      name="father_number"
+                      rules={[{ validator: phoneValidator }]}
+                    >
+                      <Input
+                        addonBefore="880"
+                        placeholder="Enter Father Phone Number"
+                      />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12} md={12} lg={8} xl={4}>
@@ -368,8 +408,15 @@ const CreateStudent = () => {
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                    <Form.Item label="Phone Number" name="mother_phone_number">
-                      <Input placeholder="Enter Phone Number" />
+                    <Form.Item
+                      label="Phone Number"
+                      name="mother_phone_number"
+                      rules={[{ validator: phoneValidator }]}
+                    >
+                      <Input
+                        addonBefore="880"
+                        placeholder="Enter Phone Number"
+                      />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12} md={12} lg={8} xl={4}>
@@ -425,8 +472,12 @@ const CreateStudent = () => {
                     <Form.Item<any>
                       label="Local Guardian Phone Number"
                       name="local_guardian_phone_number"
+                      rules={[{ validator: phoneValidator }]}
                     >
-                      <Input placeholder="Local Guardian Phone Number" />
+                      <Input
+                        addonBefore="880"
+                        placeholder="Local Guardian Phone Number"
+                      />
                     </Form.Item>
                   </Col>
                   <Col lg={6}>

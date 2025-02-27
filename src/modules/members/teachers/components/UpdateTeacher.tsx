@@ -22,6 +22,11 @@ import {
 import dayjs from "dayjs";
 import { useGetSubjectsQuery } from "../../../general settings/subjects/api/subjectsEndPoints";
 import PasswordInput from "../../../../common/Password/input";
+import { phoneValidator } from "../../../../utilities/validator";
+import GenderSelect, {
+  BloodGroupSelect,
+  ReligionSelect,
+} from "../../../../common/commonField/commonFeild";
 
 interface Props {
   record: any;
@@ -96,6 +101,8 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
       } else if (key === "hire_date" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
+      } else if (key === "phone_number") {
+        formData.append(key, `880${value}`);
       } else if (key === "date_of_birth" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
@@ -193,12 +200,13 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                       </Col>
                       <Col lg={8}>
                         <Form.Item<any>
-                          label="Mobile No for SMS/WhatsApp"
+                          label="Phone Number"
                           name="phone_number"
+                          rules={[{ validator: phoneValidator }]}
                         >
                           <Input
                             addonBefore="+088"
-                            placeholder="Enter Mobile Number"
+                            placeholder="Enter Phone Number"
                           />
                         </Form.Item>
                       </Col>
@@ -213,7 +221,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                      <PasswordInput />
+                        <PasswordInput />
                       </Col>
                       <Col lg={8}>
                         <Form.Item
@@ -289,45 +297,14 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                     </Form.Item>
                   </Col>
                   <Col lg={6}>
-                    <Form.Item<any> label="Gender" name="gender">
-                      <Select placeholder="Gender" className="w-full">
-                        <Select.Option value="M">Male</Select.Option>
-                        <Select.Option value="F">Female</Select.Option>
-                        <Select.Option value="O">Other</Select.Option>
-                      </Select>
-                    </Form.Item>
+                    <GenderSelect />
                   </Col>
 
                   <Col lg={6}>
-                    <Form.Item label="Religion" name="religion">
-                      <Select placeholder="Select Religion" className="w-full">
-                        <Select.Option value="Islam">Islam</Select.Option>
-                        <Select.Option value="Christianity">
-                          Christianity
-                        </Select.Option>
-                        <Select.Option value="Hinduism">Hinduism</Select.Option>
-                        <Select.Option value="Buddhism">Buddhism</Select.Option>
-                        <Select.Option value="Judaism">Judaism</Select.Option>
-                        <Select.Option value="Sikhism">Sikhism</Select.Option>
-                        <Select.Option value="Other">Other</Select.Option>
-                      </Select>
-                    </Form.Item>
+                    <ReligionSelect />
                   </Col>
                   <Col lg={6}>
-                    <Form.Item<any> label="Blood Group" name="blood_group">
-                      <Select
-                        placeholder="Select Blood Group"
-                        className="w-full"
-                      >
-                        {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
-                          (group) => (
-                            <Select.Option key={group} value={group}>
-                              {group}
-                            </Select.Option>
-                          )
-                        )}
-                      </Select>
-                    </Form.Item>
+                    <BloodGroupSelect />
                   </Col>
 
                   <Col lg={6}>

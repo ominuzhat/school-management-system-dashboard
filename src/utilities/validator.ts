@@ -34,7 +34,9 @@ export const passwordValidator = (_: unknown, value: string): Promise<void> => {
 
   if (value.length < 8) {
     return Promise.reject(
-      new Error("Password must be at least 8 characters long, at least one uppercase letter, ")
+      new Error(
+        "Password must be at least 8 characters long, at least one uppercase letter, "
+      )
     );
   }
 
@@ -71,9 +73,9 @@ export const phoneValidator = (_: unknown, value: string) => {
   if (!value) {
     return Promise.reject(new Error());
   }
-  if (value.length !== 11 || !value.startsWith("01")) {
+  if (value.length !== 10 || !value.startsWith("1")) {
     return Promise.reject(
-      "Please enter a valid Bangladesh phone number starting with 01"
+      "Please enter a valid Bangladesh phone number starting with 1 & max length is 10 characters"
     );
   }
   return Promise.resolve();
