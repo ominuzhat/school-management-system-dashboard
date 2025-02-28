@@ -55,7 +55,7 @@ const CreateStudent = () => {
 
     Object.entries(values).forEach(([key, value]) => {
       if (value === undefined || value === null) {
-        value = "";
+        return; // Skip empty values (prevents pushing empty data)
       }
 
       if (key === "image") {
@@ -66,17 +66,19 @@ const CreateStudent = () => {
             }
           });
         }
-      } else if (key === "enrollment_date" && value) {
+      } else if (key === "date_of_birth") {
         formData.append(key, dayjs(value as any).format("YYYY-MM-DD"));
-      } else if (key === "date_of_birth" && value) {
-        formData.append(key, dayjs(value as any).format("YYYY-MM-DD"));
-      } else if (phoneFields.includes(key)) {
-        formData.append(key, `880${value}`);
+      } else if (phoneFields.includes(key) && value) {
+        // Add "880" prefix ONLY IF value exists
+        const phoneNumber = value.toString().trim();
+        if (phoneNumber) {
+          formData.append(key, `880${phoneNumber}`);
+        }
       } else {
         formData.append(key, value as string | Blob);
       }
     });
-    formData.append("enrollment_date", "2020-02-01");
+
     const user = {
       username: values.username,
       password: values.password,
@@ -86,7 +88,6 @@ const CreateStudent = () => {
 
     create(formData);
   };
-
   useEffect(() => {
     if (isSuccess) {
       navigate("/students");
@@ -101,7 +102,6 @@ const CreateStudent = () => {
         isLoading={isLoading}
         isSuccess={isSuccess}
         initialValues={{
-          enrollment_date: dayjs(),
           is_active: true,
           can_login: true,
         }}

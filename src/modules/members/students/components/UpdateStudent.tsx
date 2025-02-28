@@ -321,13 +321,13 @@ const UpdateStudent = () => {
                   </Col>
                   <Col lg={4}>
                     <Form.Item<any>
-                      label="Father Phone Number"
+                      label="Phone Number"
                       name="father_number"
                       rules={[{ validator: phoneValidator }]}
                     >
                       <Input
                         addonBefore="880"
-                        placeholder="Father Phone Number"
+                        placeholder="Phone Number"
                       />
                     </Form.Item>
                   </Col>
@@ -349,10 +349,10 @@ const UpdateStudent = () => {
                   </Col>
                   <Col lg={4}>
                     <Form.Item<any>
-                      label="Father Education Qualification"
+                      label="Education Qualification"
                       name="father_education_qualification"
                     >
-                      <Input placeholder="Father Education Qualification" />
+                      <Input placeholder="Education Qualification" />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -375,13 +375,13 @@ const UpdateStudent = () => {
                   </Col>
                   <Col lg={4}>
                     <Form.Item<any>
-                      label="Mother Phone Number"
+                      label="Phone Number"
                       name="mother_phone_number"
                       rules={[{ validator: phoneValidator }]}
                     >
                       <Input
                         addonBefore="880"
-                        placeholder="Mother Phone Number"
+                        placeholder="Phone Number"
                       />
                     </Form.Item>
                   </Col>
@@ -403,10 +403,10 @@ const UpdateStudent = () => {
                   </Col>
                   <Col lg={4}>
                     <Form.Item<any>
-                      label="Mother Education Qualification"
+                      label="Education Qualification"
                       name="mother_education_qualification"
                     >
-                      <Input placeholder="Mother Education Qualification" />
+                      <Input placeholder="Education Qualification" />
                     </Form.Item>
                   </Col>
                 </Row>

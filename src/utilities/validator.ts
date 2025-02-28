@@ -71,7 +71,7 @@ export const otpValidator = (_: unknown, value: string): Promise<void> => {
 // ===================== BD Phone Number Validator =====================
 export const phoneValidator = (_: unknown, value: string) => {
   if (!value) {
-    return Promise.reject(new Error());
+    return Promise.resolve(); // Allow empty value (not required)
   }
   if (value.length !== 10 || !value.startsWith("1")) {
     return Promise.reject(

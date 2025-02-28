@@ -10,7 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { useGetStudentsQuery } from "../../../members/students/api/studentEndPoints";
 import { debounce } from "lodash";
-import { RootState, useAppSelector } from "../../../../app/store";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 const { Option } = Select;
 
 const AdmissionPage = () => {
@@ -23,25 +24,21 @@ const AdmissionPage = () => {
     student: "",
   });
 
-  const { limit, skip = 1 } = useAppSelector(
-    (state: RootState) => state.filter as { limit: number; skip: number }
-  );
-
-  console.log(limit, skip);
+  const { page_size, page } = useAppSelector(FilterState);
 
   const navigate = useNavigate();
   const {
     data: getAdmission,
     isLoading,
-    // refetch,
+    refetch,
     isFetching,
   } = useGetAdmissionQuery({
     search: filters.search,
     is_active: filters.is_active,
     session: filters.session,
     student: filters.student,
-    page_size: 50,
-    // page: skip,
+    page_size: page_size,
+    page: page || undefined,
   });
   const { data: getSession } = useGetAdmissionSessionQuery({});
   const { data: getStudent } = useGetStudentsQuery({
@@ -143,7 +140,7 @@ const AdmissionPage = () => {
           // loading={isLoading}
           rowKey={"id"}
           loading={isLoading || isFetching}
-          // refetch={refetch}
+          refetch={refetch}
           total={getAdmission?.data?.count}
           dataSource={getAdmission?.data?.results}
           columns={useAdmissionColumns()}

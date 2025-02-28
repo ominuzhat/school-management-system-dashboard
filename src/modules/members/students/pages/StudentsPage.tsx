@@ -6,34 +6,38 @@ import { PlusOutlined } from "@ant-design/icons";
 import { FaListUl } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import Table from "../../../../common/CommonAnt/Table";
-import { RootState } from "../../../../app/store";
+import { useAppSelector } from "../../../../app/store";
 import { no_img } from "../../../../utilities/images";
 
 import { useGetStudentsQuery } from "../api/studentEndPoints";
 import useStudentColumns from "../utils/studentColumns";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const StudentsPage = () => {
   // const dispatch = useDispatch();
   const [layout, setLayout] = useState("grid");
   const [filters, setFilters] = useState({ search: "", is_active: "" });
-  const { page_size, currentPage } = useSelector(
-    (state: RootState) => state.filter
-  );
+  const { page_size, page } = useAppSelector(FilterState);
 
   // Fetch students data with pagination
-  const { data: studentData, isLoading } = useGetStudentsQuery({
+  const {
+    data: studentData,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useGetStudentsQuery({
     search: filters.search,
     is_active: filters.is_active,
     page_size: page_size,
-    page: currentPage,
+    page: page || undefined,
   });
+
+  console.log(studentData?.data?.results);
 
   const handleDelete = async (id: any) => {
     console.log(id);
@@ -145,7 +149,9 @@ const StudentsPage = () => {
           </Row>
         ) : (
           <Table
-            loading={isLoading}
+            rowKey={"id"}
+            loading={isLoading || isFetching}
+            refetch={refetch}
             total={studentData?.data?.count}
             dataSource={studentData?.data?.results}
             columns={useStudentColumns()}

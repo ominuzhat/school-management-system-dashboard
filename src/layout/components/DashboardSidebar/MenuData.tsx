@@ -18,6 +18,7 @@ import {
 import {
   MdAccountBalanceWallet,
   MdCoPresent,
+  MdFilterTiltShift,
   MdOutlinePayments,
   MdPayment,
 } from "react-icons/md";
@@ -38,8 +39,6 @@ import { VscGoToEditingSession } from "react-icons/vsc";
 import { RiLuggageDepositLine, RiSecurePaymentLine } from "react-icons/ri";
 import { TfiAnnouncement } from "react-icons/tfi";
 import { BsFillFileRuledFill } from "react-icons/bs";
-
-
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -202,6 +201,12 @@ const MenuData: React.FC = () => {
       key: "/section",
       label: <Link to="/section">Section</Link>,
       icon: <TbSection />,
+    },
+
+    {
+      key: "/shift",
+      label: <Link to="/shift">Shift</Link>,
+      icon: <MdFilterTiltShift />,
     },
     {
       key: "/routine",
