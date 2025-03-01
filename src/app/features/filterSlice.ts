@@ -38,6 +38,10 @@ const filterSlice = createSlice({
       }
     },
 
+    setKey: (state, { payload }: PayloadAction<string | undefined>) => {
+      state.key = payload;
+    },
+
     resetFilter: (state) => {
       state.page_size = 50;
       state.page = 0;
@@ -47,7 +51,7 @@ const filterSlice = createSlice({
 });
 
 export const FilterState = (state: RootState) => state.filter;
-export const { addFilter, resetFilter } = filterSlice.actions;
+export const { addFilter, resetFilter, setKey } = filterSlice.actions;
 export default filterSlice.reducer;
 
 // import { PayloadAction, createSlice } from "@reduxjs/toolkit";

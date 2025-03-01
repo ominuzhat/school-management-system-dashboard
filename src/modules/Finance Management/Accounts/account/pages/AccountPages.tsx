@@ -8,10 +8,23 @@ import useAccountColumns from "../utils/accountColumns";
 import { IGetAccount } from "../types/accountTypes";
 import CreateAccount from "../components/CreateAccount";
 import { Table } from "../../../../../common/CommonAnt";
+import { useAppSelector } from "../../../../../app/store";
+import { FilterState } from "../../../../../app/features/filterSlice";
 
 const AccountPage = () => {
   const dispatch = useDispatch();
-  const { data: accountList, isLoading } = useGetAccountQuery({});
+
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: accountList,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetAccountQuery({
+    page_size: page_size,
+    page: Number(page) || undefined,
+  });
 
   const dataLength = (accountList?.data as IGetAccount[] | any)?.length ?? 0;
 
@@ -45,7 +58,9 @@ const AccountPage = () => {
       </Card>
 
       <Table
-        loading={isLoading}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
         total={dataLength}
         dataSource={dataSource}
         columns={useAccountColumns()}

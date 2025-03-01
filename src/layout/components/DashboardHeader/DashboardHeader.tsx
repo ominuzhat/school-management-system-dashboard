@@ -147,7 +147,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                   {data?.data?.username}{" "}
                 </Typography.Text>
                 <Typography.Text type="secondary" style={{ fontSize: "11px" }}>
-                  info.codecanvascreation
+                  {/* info.codecanvascreation */}
                 </Typography.Text>
                 <Space>
                   <Link to="/profile">

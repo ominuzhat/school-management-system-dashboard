@@ -7,10 +7,23 @@ import { Table } from "../../../../common/CommonAnt";
 import { useGetTuitionFeePaymentQuery } from "../api/tuitionPaymentEndPoints";
 import useTuitionFeePaymentColumns from "../utils/tuitionFeePaymentColumns";
 import CreateTuitionFeePayment from "../components/CreateTuitionFeePayment";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const TuitionFeePaymentPage = () => {
   const dispatch = useDispatch();
-  const { data: paymentData, isLoading } = useGetTuitionFeePaymentQuery({});
+
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: paymentData,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetTuitionFeePaymentQuery({
+    page_size: page_size,
+    page: Number(page) || undefined,
+  });
 
   return (
     <div className="space-y-5">
@@ -40,8 +53,10 @@ const TuitionFeePaymentPage = () => {
       </Card>
       <Card>
         <Table
-          loading={isLoading}
-          total={paymentData?.data?.results?.length}
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={paymentData?.data?.count}
           dataSource={paymentData?.data?.results}
           columns={useTuitionFeePaymentColumns()}
         />

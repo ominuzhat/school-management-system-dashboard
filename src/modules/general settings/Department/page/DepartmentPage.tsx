@@ -1,23 +1,27 @@
 import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import { useGetDepartmentQuery } from "../api/departmentEndPoints";
 import CreateDepartmentModal from "../components/CreateDepartmentModal";
 import useDepartmentColumns from "../utils/departmentColumns";
 import { IGetDepartment } from "../types/departmentType";
-import { RootState } from "../../../../app/store";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const DepartmentPage = () => {
   const dispatch = useDispatch();
-  const { page_size, currentPage } = useSelector(
-    (state: RootState) => state.filter
-  );
-  const { data: departmentData, isLoading } = useGetDepartmentQuery({
+  const { page_size, page } = useAppSelector(FilterState);
+  const {
+    data: departmentData,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetDepartmentQuery({
     page_size: page_size,
-    page: currentPage,
+    page: Number(page) || undefined,
   });
 
   const dataLength =
@@ -54,7 +58,9 @@ const DepartmentPage = () => {
       </Card>
       <Card>
         <Table
-          loading={isLoading}
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
           total={dataLength}
           dataSource={dataSource}
           columns={useDepartmentColumns()}

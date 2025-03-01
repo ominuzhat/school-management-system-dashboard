@@ -8,10 +8,23 @@ import { Table } from "../../../../common/CommonAnt";
 import RolePermissionColumn from "../utils/RolePermissionColumn";
 import { useGetRolePermissionQuery } from "../api/rolePermissionEndPoints";
 import { IRole } from "../type/rolePermissionTypes";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const RolePermissionPage = () => {
   const dispatch = useDispatch();
-  const { data: rolePermissionData, isLoading } = useGetRolePermissionQuery({});
+
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: rolePermissionData,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetRolePermissionQuery({
+    page_size: page_size,
+    page: Number(page) || undefined,
+  });
 
   const dataLength =
     (rolePermissionData?.data as IRole[] | undefined)?.length ?? 0;
@@ -47,7 +60,9 @@ const RolePermissionPage = () => {
 
       <Card>
         <Table
-          loading={isLoading}
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
           total={dataLength}
           dataSource={dataSource}
           columns={RolePermissionColumn()}

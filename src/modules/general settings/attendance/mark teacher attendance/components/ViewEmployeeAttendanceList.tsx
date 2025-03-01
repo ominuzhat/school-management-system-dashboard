@@ -13,8 +13,12 @@ const ViewEmployeeAttendanceList = () => {
     date: dayjs().format("YYYY-MM-DD"),
   });
 
-  const { data: employeeAttendanceList, isLoading } =
-    useGetTeacherAttendanceListQuery({ date: formData.date });
+  const {
+    data: employeeAttendanceList,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useGetTeacherAttendanceListQuery({ date: formData.date });
 
   const handleChange = (key: string, value: any) => {
     setFormData((prev) => ({
@@ -63,8 +67,10 @@ const ViewEmployeeAttendanceList = () => {
 
       <Card>
         <Table
-          loading={isLoading}
-          total={employeeAttendanceList?.data?.results?.length}
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={employeeAttendanceList?.data?.count}
           dataSource={employeeAttendanceList?.data?.results}
           columns={useEmployeeAttendanceListColumns()}
         />

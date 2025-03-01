@@ -12,8 +12,8 @@ import { debounce } from "lodash";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 const { Option } = Select;
 const RoutinePages = () => {
   const [search, setSearch] = useState("");
@@ -25,14 +25,16 @@ const RoutinePages = () => {
     grade_level: "",
   });
 
-  const { page_size, currentPage } = useSelector(
-    (state: RootState) => state.filter
-  );
+  const { page_size, page } = useAppSelector(FilterState);
 
-  const { data: classList, isFetching } = useGetClassesQuery({
+  const {
+    data: classList,
+    isFetching,
+    refetch,
+  } = useGetClassesQuery({
     search: search,
     page_size: page_size,
-    page: currentPage,
+    page: Number(page) || undefined,
   });
   const { data: getSection } = useGetSectionQuery({});
   const { data: getSession } = useGetAdmissionSessionQuery({});
@@ -145,7 +147,9 @@ const RoutinePages = () => {
       </Card>
 
       <Table
-        loading={isLoading}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
         total={dataLength}
         dataSource={dataSource}
         columns={useRoutineColumns()}

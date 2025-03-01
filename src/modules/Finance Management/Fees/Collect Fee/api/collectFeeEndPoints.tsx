@@ -50,6 +50,21 @@ const collectFeeEndPoints = api.injectEndpoints({
       ],
     }),
 
+    getCollectSingleFeesForm: builder.query<Blob, number>({
+      query: (collectFeeId) => ({
+        url: `/api/v1.0/admissions/collect-fees/generate-fee-invoice/?collect_fee=${collectFeeId}`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.COLLECT_FEE,
+          id: TagTypes.COLLECT_FEE + "_ID",
+        },
+      ],
+    }),
+
     deleteCollectItem: builder.mutation<
       ApiResponse<ICreateCollectFee>,
       { id: ICreateCollectFee }
@@ -94,4 +109,5 @@ export const {
   useGetCollectFeesQuery,
   useGetCollectSingleFeesQuery,
   useUpdateCollectFeesMutation,
+  useGetCollectSingleFeesFormQuery,
 } = collectFeeEndPoints;

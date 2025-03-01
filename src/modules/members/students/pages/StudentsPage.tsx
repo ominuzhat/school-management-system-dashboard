@@ -34,10 +34,8 @@ const StudentsPage = () => {
     search: filters.search,
     is_active: filters.is_active,
     page_size: page_size,
-    page: page || undefined,
+    page: Number(page) || undefined,
   });
-
-  console.log(studentData?.data?.results);
 
   const handleDelete = async (id: any) => {
     console.log(id);

@@ -1,25 +1,27 @@
 import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import { useGetAdmissionSessionQuery } from "../api/admissionSessionEndPoints";
 import useAdmissionSessionsColumns from "../utils/admissionSessionColumns";
 import CreateAdmissionSessions from "../components/CreateAdmissionSessions";
 import { IAdmissionSession } from "../type/admissionSessionType";
-import { RootState } from "../../../../app/store";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const AdmissionSessionPage = () => {
   const dispatch = useDispatch();
 
-  const { page_size, currentPage } = useSelector(
-    (state: RootState) => state.filter
-  );
+  const { page_size, page } = useAppSelector(FilterState);
 
-  const { data: getAdmissionSessions, isLoading } = useGetAdmissionSessionQuery(
-    { page_size: page_size, page: currentPage }
-  );
+  const {
+    data: getAdmissionSessions,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetAdmissionSessionQuery({ page_size: page_size, page: Number(page) || undefined });
 
   const dataLength =
     (getAdmissionSessions?.data as IAdmissionSession[] | undefined)?.length ??
@@ -56,7 +58,9 @@ const AdmissionSessionPage = () => {
       </Card>
       <Card>
         <Table
-          loading={isLoading}
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
           total={dataLength}
           dataSource={dataSource}
           columns={useAdmissionSessionsColumns()}

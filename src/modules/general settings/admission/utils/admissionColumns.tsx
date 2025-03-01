@@ -1,13 +1,44 @@
-import { Space, Tag } from "antd";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Button, Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { useNavigate } from "react-router-dom";
 import { IAdmissionStatus } from "../type/admissionType";
+import { FaFilePdf } from "react-icons/fa6";
+import { useGetSingleAdmissionFormQuery } from "../api/admissionEndPoints";
+import { useEffect, useState } from "react";
 
 const useAdmissionColumns = (): ColumnsType<any> => {
   const navigate = useNavigate();
+  const [admissionId, setAdmissionId] = useState<number | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
+  const { data: singleAdmissionForm  } = useGetSingleAdmissionFormQuery(
+    admissionId as number,
+    {
+      skip: admissionId === null,
+    }
+  );
+
+  useEffect(() => {
+    if (singleAdmissionForm) {
+      const url = URL.createObjectURL(singleAdmissionForm);
+      setPdfUrl(url);
+
+      // Open PDF in a new tab
+      window.open(url, "_blank");
+    }
+
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [singleAdmissionForm]);
+
+  const handleForm = (id: number) => {
+    setAdmissionId(id);
+  };
 
   //   const [deleteCartItem] = useDeleteOrderItemMutation();
 
@@ -162,6 +193,19 @@ const useAdmissionColumns = (): ColumnsType<any> => {
           <EditButton onClick={() => navigate(`/admission/${record?.id}`)} />
 
           <ViewButton to={`/admission/admission-view/${record?.id}`} />
+          <Button
+            title="Admission Form"
+            size="small"
+            type="default"
+            style={{
+              color: "#c20a0a",
+              // background: "#3892E3",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleForm(record.id)}
+          >
+            <FaFilePdf />
+          </Button>
 
           {/* <DeleteButton
           onClick={() => handleDelete(record.id)}>

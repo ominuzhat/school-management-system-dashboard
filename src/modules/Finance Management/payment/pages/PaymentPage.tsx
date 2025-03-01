@@ -7,10 +7,20 @@ import { Table } from "../../../../common/CommonAnt";
 import { useGetPaymentQuery } from "../api/paymentEndPoints";
 import usePaymentColumns from "../utils/paymentColumns";
 import CreatePayment from "../components/CreatePayment";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const PaymentPage = () => {
   const dispatch = useDispatch();
-  const { data: paymentData, isLoading } = useGetPaymentQuery({});
+
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: paymentData,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetPaymentQuery({ page_size: page_size, page: Number(page) || undefined });
 
   return (
     <div className="space-y-5">
@@ -40,8 +50,10 @@ const PaymentPage = () => {
       </Card>
       <Card>
         <Table
-          loading={isLoading}
-          total={paymentData?.data?.results?.length}
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={paymentData?.data?.count}
           dataSource={paymentData?.data?.results}
           columns={usePaymentColumns()}
         />

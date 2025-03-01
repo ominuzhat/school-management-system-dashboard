@@ -10,12 +10,23 @@ import { Table } from "../../../../common/CommonAnt";
 import usePayrollColumns from "../utils/payrollColumns";
 import { useGetPayrollQuery } from "../api/payrollEndPoints";
 import { useState } from "react";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const PayrollPage = () => {
   const [search, setSearch] = useState();
 
-  const { data: payrollData, isLoading } = useGetPayrollQuery({
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: payrollData,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetPayrollQuery({
     search: search,
+    page_size: page_size,
+    page: Number(page) || undefined,
   });
   const dispatch = useDispatch();
   return (
@@ -52,8 +63,10 @@ const PayrollPage = () => {
       </Card>
 
       <Table
-        loading={isLoading}
-        total={payrollData?.data?.results?.length}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
+        total={payrollData?.data?.count}
         dataSource={payrollData?.data?.results}
         columns={usePayrollColumns()}
       />

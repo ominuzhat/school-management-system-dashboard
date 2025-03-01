@@ -10,7 +10,9 @@ import TeacherSubjects from "./TeacherSubjects";
 
 const TeacherView = () => {
   const { teacherId } = useParams();
-  const { data } = useGetSingleSTeacherQuery(Number(teacherId));
+  const { data, isFetching, isLoading, refetch } = useGetSingleSTeacherQuery(
+    Number(teacherId)
+  );
 
   return (
     <div>
@@ -23,7 +25,12 @@ const TeacherView = () => {
             <TeacherInformation data={data?.data && data?.data} />
             <Row>
               <Col span={24} className="my-2">
-                <TeacherSubjects data={data?.data && data?.data} />
+                <TeacherSubjects
+                  data={data?.data && data?.data}
+                  isFetching={isFetching}
+                  isLoading={isLoading}
+                  refetch={refetch}
+                />
               </Col>
             </Row>
           </Col>

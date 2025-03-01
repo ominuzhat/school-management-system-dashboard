@@ -83,7 +83,7 @@ const ViewRoutine = () => {
                 <span className="text-md">{routine?.session?.name}</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="font-semibold text-lg">Grade</span>
+                <span className="font-semibold text-lg">Class</span>
                 <span className="text-md">{routine?.grade_level?.name}</span>
               </div>
               <div className="flex flex-col items-center">

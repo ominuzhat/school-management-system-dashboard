@@ -38,7 +38,7 @@ const AdmissionPage = () => {
     session: filters.session,
     student: filters.student,
     page_size: page_size,
-    page: page || undefined,
+    page:Number(page) || undefined,
   });
   const { data: getSession } = useGetAdmissionSessionQuery({});
   const { data: getStudent } = useGetStudentsQuery({

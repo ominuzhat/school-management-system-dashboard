@@ -9,13 +9,24 @@ import { useState } from "react";
 import { useGetRuleQuery } from "../api/rulesEndPoints";
 import useRulesColumns from "../utils/rulesColumns";
 import CreateRules from "../components/CreateRules";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const RulesPage = () => {
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({ search: "" });
 
-  const { data: rulesList, isLoading } = useGetRuleQuery({
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: rulesList,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetRuleQuery({
     search: filters.search,
+    page_size: page_size,
+    page: Number(page) || undefined,
   });
 
   return (
@@ -54,8 +65,10 @@ const RulesPage = () => {
       </Card>
 
       <Table
-        loading={isLoading}
-        total={rulesList?.data?.results?.length}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
+        total={rulesList?.data?.count}
         dataSource={rulesList?.data?.results || []}
         columns={useRulesColumns()}
       />

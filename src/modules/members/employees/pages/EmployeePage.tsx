@@ -39,7 +39,7 @@ const EmployeePage = () => {
   } = useGetEmployeeQuery({
     search: search,
     page_size: page_size,
-    page: page,
+    page: Number(page) || undefined,
   });
 
   const employeeColumns = useEmployeeColumns();

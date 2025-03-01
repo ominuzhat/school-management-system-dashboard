@@ -1,15 +1,48 @@
-import { Space } from "antd";
+import { Button, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 import DeleteButton from "../../../../../common/CommonAnt/Button/DeleteButton";
-import { useDeleteCollectItemMutation } from "../api/collectFeeEndPoints";
+import {
+  useDeleteCollectItemMutation,
+  useGetCollectSingleFeesFormQuery,
+} from "../api/collectFeeEndPoints";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
+import { useEffect, useState } from "react";
+import { FaFilePdf } from "react-icons/fa6";
 
 const useCollectFeeColumns = (): ColumnsType<any> => {
   //   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [collectFeeId, setCollectFeeId] = useState<number | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
+  const { data: singleFeeForm } = useGetCollectSingleFeesFormQuery(
+    collectFeeId as number,
+    {
+      skip: collectFeeId === null,
+    }
+  );
+
+  useEffect(() => {
+    if (singleFeeForm) {
+      const url = URL.createObjectURL(singleFeeForm);
+      setPdfUrl(url);
+
+      // Open PDF in a new tab
+      window.open(url, "_blank");
+    }
+
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [singleFeeForm]);
+
+  const handleForm = (id: number) => {
+    setCollectFeeId(id);
+  };
 
   const [deleteItem] = useDeleteCollectItemMutation();
 
@@ -136,6 +169,19 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
             onConfirm={() => handleDelete(record.id)}
             onCancel={() => ""}
           />
+          <Button
+            title="Invoice "
+            size="small"
+            type="default"
+            style={{
+              color: "#c20a0a",
+              // background: "#3892E3",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleForm(record.id)}
+          >
+            <FaFilePdf />
+          </Button>
         </Space>
       ),
     },

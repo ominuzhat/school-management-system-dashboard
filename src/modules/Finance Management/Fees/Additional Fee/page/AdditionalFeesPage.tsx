@@ -10,12 +10,24 @@ import { useGetAdditionalFeesQuery } from "../api/additionalFeeEndPoints";
 import useAdditionalFeesColumns from "../utils/additionalFeesColumns";
 import CreateAdditionalFees from "../component/CreateAdditionalFees";
 import { IGetAdditionalFee } from "../type/additionalFeeTypes";
+import { useAppSelector } from "../../../../../app/store";
+import { FilterState } from "../../../../../app/features/filterSlice";
 
 const AdditionalFeesPage = () => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
-  const { data: additionalFee, isLoading } = useGetAdditionalFeesQuery({
+
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: additionalFee,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetAdditionalFeesQuery({
     search: search,
+    page_size: page_size,
+    page: Number(page) || undefined,
   });
 
   const dataLength =
@@ -58,7 +70,9 @@ const AdditionalFeesPage = () => {
       </Card>
 
       <Table
-        loading={isLoading}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
         total={dataLength}
         dataSource={dataSource}
         columns={useAdditionalFeesColumns()}

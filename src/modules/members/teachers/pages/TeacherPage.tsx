@@ -40,7 +40,7 @@ const TeacherPage = () => {
     search: filters.search,
     is_active: filters.is_active,
     page_size: page_size,
-    page: page,
+    page: Number(page) || undefined,
   });
 
   const handleDelete = async (id: any) => {

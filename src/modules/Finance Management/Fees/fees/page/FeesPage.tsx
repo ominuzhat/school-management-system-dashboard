@@ -7,11 +7,20 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../../common/CommonAnt";
 import { useGetFeesQuery } from "../api/feesEndpoints";
 import useFeesColumns from "../utils/FeesColumns";
+import { useAppSelector } from "../../../../../app/store";
+import { FilterState } from "../../../../../app/features/filterSlice";
 
 const FeesPage = () => {
   const dispatch = useDispatch();
-  const { data: feesList, isLoading } = useGetFeesQuery({});
-  // const [search, setSearch] = useState("");
+
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: feesList,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetFeesQuery({ page_size: page_size, page: Number(page) || undefined });
 
   const dataLength = (feesList?.data as any[] | undefined)?.length ?? 0;
 
@@ -45,7 +54,9 @@ const FeesPage = () => {
       </Card>
 
       <Table
-        loading={isLoading}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
         total={dataLength}
         dataSource={dataSource}
         columns={useFeesColumns()}

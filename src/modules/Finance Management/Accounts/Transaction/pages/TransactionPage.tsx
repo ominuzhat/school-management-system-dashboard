@@ -9,10 +9,23 @@ import { IGetTransaction } from "../types/transactionTypes";
 import useTransactionColumns from "../utils/transactionColumns";
 import CreateTransaction from "../components/CreateTransaction";
 import { Table } from "../../../../../common/CommonAnt";
+import { useAppSelector } from "../../../../../app/store";
+import { FilterState } from "../../../../../app/features/filterSlice";
 
 const TransactionPage = () => {
   const dispatch = useDispatch();
-  const { data: transactionList, isLoading } = useGetTransactionQuery({});
+
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: transactionList,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetTransactionQuery({
+    page_size: page_size,
+    page: Number(page) || undefined,
+  });
 
   const dataLength =
     (transactionList?.data?.results as IGetTransaction[] | undefined)?.length ??
@@ -49,7 +62,9 @@ const TransactionPage = () => {
       </Card>
 
       <Table
-        loading={isLoading}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
         total={dataLength}
         dataSource={dataSource}
         columns={useTransactionColumns()}

@@ -1,23 +1,30 @@
 import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import CreateClass from "../components/CreateClass";
 import { useGetClassesQuery } from "../api/classesEndPoints";
 import useClassesColumns from "../utils/ClassesColumns";
 import { IClasses } from "../type/classesType";
-import { RootState } from "../../../../app/store";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const ClassesPage = () => {
   const dispatch = useDispatch();
-  const { page_size, currentPage } = useSelector(
-    (state: RootState) => state.filter
-  );
-  const { data: classList, isLoading } = useGetClassesQuery({
+  const { page_size, page } = useAppSelector(FilterState);
+
+
+  
+  const {
+    data: classList,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetClassesQuery({
     page_size: page_size,
-    page: currentPage,
+    page: Number(page) || undefined,
   });
 
   const dataLength = (classList?.data as IClasses[] | undefined)?.length ?? 0;
@@ -52,7 +59,9 @@ const ClassesPage = () => {
       </Card>
 
       <Table
-        loading={isLoading}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
         total={dataLength}
         dataSource={dataSource}
         columns={useClassesColumns()}

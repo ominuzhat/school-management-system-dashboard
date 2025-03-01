@@ -7,20 +7,22 @@ import { Table } from "../../../../../common/CommonAnt";
 import { useGetCollectFeesQuery } from "../api/collectFeeEndPoints";
 import useCollectFeeColumns from "../utils/collectFeeColumns";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
+import { useAppSelector } from "../../../../../app/store";
+import { FilterState } from "../../../../../app/features/filterSlice";
 
 const CollectFeePage = () => {
   const [search, setSearch] = useState("");
+  const { page_size, page } = useAppSelector(FilterState);
 
-  const { page_size, currentPage } = useSelector(
-    (state: RootState) => state.filter
-  );
-
-  const { data: collectFee, isLoading } = useGetCollectFeesQuery({
+  const {
+    data: collectFee,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetCollectFeesQuery({
     search: search,
     page_size: page_size,
-    page: currentPage,
+    page: Number(page) || undefined,
   });
 
   return (
@@ -47,7 +49,9 @@ const CollectFeePage = () => {
       </Card>
 
       <Table
-        loading={isLoading}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
         total={collectFee?.data?.count}
         dataSource={collectFee?.data?.results}
         columns={useCollectFeeColumns()}

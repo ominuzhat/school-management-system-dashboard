@@ -73,11 +73,7 @@ const MultipleSelectRoutine = ({
                       { required: true, message: "Please select end time!" },
                     ]}
                   >
-                    <TimePicker
-                      format="HH:mm A"
-                      use12Hours
-                      className="w-full"
-                    />
+                    <TimePicker format="h:mm A" use12Hours className="w-full" />
                   </Form.Item>
                 </Col>
 

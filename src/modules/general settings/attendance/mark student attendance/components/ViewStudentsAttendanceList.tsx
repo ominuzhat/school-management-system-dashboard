@@ -15,15 +15,17 @@ const { Option } = Select;
 
 const ViewStudentsAttendanceList = () => {
   const { data: sessionData } = useGetAdmissionSessionQuery({});
-  const { data: classData } = useGetClassesQuery({});
+  const { data: classData, refetch } = useGetClassesQuery({});
   const [formData, setFormData] = useState({
     date: dayjs().format("YYYY-MM-DD"),
     grade_level: undefined,
     session: undefined,
   });
 
-  const [fetchAttendance, { data: studentsAttendanceList, isLoading }] =
-    useLazyGetStudentAttendanceQuery();
+  const [
+    fetchAttendance,
+    { data: studentsAttendanceList, isLoading, isFetching },
+  ] = useLazyGetStudentAttendanceQuery();
 
   const handleChange = (key: string, value: any) => {
     setFormData((prev) => ({
@@ -114,8 +116,10 @@ const ViewStudentsAttendanceList = () => {
 
       <Card>
         <Table
-          loading={isLoading}
-          total={studentsAttendanceList?.data?.results?.length}
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={studentsAttendanceList?.data?.count}
           dataSource={studentsAttendanceList?.data?.results}
           columns={useStudentsAttendanceListColumns()}
         />

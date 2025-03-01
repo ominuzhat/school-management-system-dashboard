@@ -16,7 +16,6 @@ import { debounce } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { useCreateCollectFeesMutation } from "../api/collectFeeEndPoints";
-import { CommonPaymentMethod } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useGetAdditionalFeesQuery } from "../../Additional Fee/api/additionalFeeEndPoints";
 import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -111,7 +110,7 @@ const CreateCollectFee = () => {
       add_ons: values?.add_ons,
       discount_type: values?.discount_type,
       discount_value: values?.discount_value,
-      payment_method: values?.payment_method,
+      payment_method: "cash",
       account: values?.account,
       paid_amount: values?.paid_amount,
       payment_date: dayjs(values?.payment_date).format("YYYY-MM-DD"),
@@ -397,14 +396,14 @@ const CreateCollectFee = () => {
                   </Form.Item>
                 </div>
 
-                <div className="flex items-center gap-5">
-                  <Form.Item
+                <div className="flex justify-end">
+                  {/* <Form.Item
                     name="payment_method"
                     className="mb-0 w-[150px]"
               
                   >
                     <CommonPaymentMethod />
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <Form.Item name="paid_amount" className="mb-0">
                     <Input

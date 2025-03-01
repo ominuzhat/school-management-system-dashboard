@@ -57,6 +57,20 @@ const admissionEndPoint = api.injectEndpoints({
       ],
     }),
 
+    getSingleAdmissionForm: builder.query<Blob, number>({
+      query: (admissionId) => ({
+        url: `/api/v1.0/admissions/generate-admission-form/?admission_id=${admissionId}`,
+        responseHandler: async (response) => response.blob(), // Convert to Blob
+        cache: "no-cache", // Ensures fresh data
+      }),
+      providesTags: [
+        {
+          type: TagTypes.ADMISSION,
+          id: TagTypes.ADMISSION + "_ID",
+        },
+      ],
+    }),
+
     updateAdmission: builder.mutation<
       ApiResponse<IAdmission>,
       { id: number | undefined; data: any }
@@ -85,4 +99,5 @@ export const {
   useLazyGetAdmissionQuery,
   useGetSingleAdmissionQuery,
   useUpdateAdmissionMutation,
+  useGetSingleAdmissionFormQuery,
 } = admissionEndPoint;

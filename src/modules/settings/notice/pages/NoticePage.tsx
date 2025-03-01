@@ -1,7 +1,7 @@
 import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 import { useGetNoticeQuery } from "../api/noticeEndPoints";
@@ -9,18 +9,23 @@ import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/Commo
 import { useState } from "react";
 import useNoticeColumns from "../utils/noticeColumns";
 import CreateNotice from "../components/CreateNotice";
-import { RootState } from "../../../../app/store";
+import { useAppSelector } from "../../../../app/store";
+import { FilterState } from "../../../../app/features/filterSlice";
 
 const NoticePage = () => {
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({ search: "" });
-  const { page_size, currentPage } = useSelector(
-    (state: RootState) => state.filter
-  );
-  const { data: noticeList, isLoading } = useGetNoticeQuery({
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const {
+    data: noticeList,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetNoticeQuery({
     search: filters.search,
     page_size: page_size,
-    page: currentPage,
+    page: Number(page) || undefined,
   });
 
   return (
@@ -59,8 +64,10 @@ const NoticePage = () => {
       </Card>
 
       <Table
-        loading={isLoading}
-        total={noticeList?.data?.results?.length}
+        rowKey={"id"}
+        loading={isLoading || isFetching}
+        refetch={refetch}
+        total={noticeList?.data?.count}
         dataSource={noticeList?.data?.results || []}
         columns={useNoticeColumns()}
       />
