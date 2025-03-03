@@ -4,30 +4,31 @@ import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
-import CreateClass from "../components/CreateClass";
-import { useGetClassesQuery } from "../api/classesEndPoints";
-import useClassesColumns from "../utils/ClassesColumns";
-import { IClasses } from "../type/classesType";
+
 import { useAppSelector } from "../../../../app/store";
 import { FilterState } from "../../../../app/features/filterSlice";
+import { useGetExamQuery } from "../api/examEndPoints";
+import { IGetExam } from "../type/examType";
+import useExamColumns from "../utils/ExamColumns";
+import CreateExam from "../components/CreateExam";
 
-const ClassesPage = () => {
+const ExamPage = () => {
   const dispatch = useDispatch();
   const { page_size, page } = useAppSelector(FilterState);
 
   const {
-    data: classList,
+    data: examList,
     isLoading,
     isFetching,
     refetch,
-  } = useGetClassesQuery({
+  } = useGetExamQuery({
     page_size: page_size,
     page: Number(page) || undefined,
   });
 
-  const dataLength = (classList?.data as IClasses[] | undefined)?.length ?? 0;
+  const dataLength = (examList?.data as IGetExam[] | undefined)?.length ?? 0;
 
-  const dataSource = (classList?.data as IClasses[] | undefined) ?? [];
+  const dataSource = (examList?.data as IGetExam[] | undefined) ?? [];
 
   return (
     <div className="space-y-5">
@@ -42,15 +43,15 @@ const ClassesPage = () => {
               onClick={() =>
                 dispatch(
                   showModal({
-                    title: "Add Class",
-                    content: <CreateClass />,
+                    title: "Add Exam",
+                    content: <CreateExam />,
                   })
                 )
               }
               icon={<PlusOutlined />}
               className="w-full"
             >
-              Add Class
+              Add Exam
             </Button>
           </Col>
         </Row>
@@ -62,10 +63,10 @@ const ClassesPage = () => {
         refetch={refetch}
         total={dataLength}
         dataSource={dataSource}
-        columns={useClassesColumns()}
+        columns={useExamColumns()}
       />
     </div>
   );
 };
 
-export default ClassesPage;
+export default ExamPage;

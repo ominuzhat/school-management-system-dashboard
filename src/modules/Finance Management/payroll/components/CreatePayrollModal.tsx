@@ -291,46 +291,6 @@ const CreatePayrollModal = () => {
                 <Input placeholder="Attendance (Days)" type="number" disabled />
               </Form.Item>
             </Col>
-
-            {/* <Col lg={6}>
-              <Form.Item<any>
-                label="Method"
-                name="method"
-                rules={[{ required: true, message: "Input your Method!" }]}
-              >
-                <CommonPaymentMethod />
-              </Form.Item>
-            </Col>
-            <Col lg={6}>
-              <Form.Item<any>
-                label="Accounts"
-                name="account"
-                rules={[{ required: true, message: "Input your Accounts!" }]}
-              >
-                <Select
-                  showSearch
-                  placeholder="Accounts"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={[
-                    { value: "1", label: "Jack" },
-                    { value: "2", label: "Lucy" },
-                    { value: "3", label: "Tom" },
-                  ]}
-                />
-              </Form.Item>
-            </Col>
-            <Col lg={6}>
-              <Form.Item<any>
-                label="Available Balance"
-                name="available_balance"
-              >
-                <Input placeholder="Available Balance" type="number" />
-              </Form.Item>
-            </Col> */}
           </Row>
 
           <Divider plain>Deductions</Divider>

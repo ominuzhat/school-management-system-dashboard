@@ -61,6 +61,7 @@ import AccountPage from "../modules/Finance Management/Accounts/account/pages/Ac
 import TransactionPage from "../modules/Finance Management/Accounts/Transaction/pages/TransactionPage";
 import SmsPage from "../modules/settings/sms configuration/pages/SmsPage";
 import ShiftPage from "../modules/general settings/shift/page/ShiftPage";
+import ExamPage from "../modules/general settings/Exam/page/ExamPage";
 
 const router = createBrowserRouter([
   {
@@ -164,9 +165,16 @@ const router = createBrowserRouter([
         path: "/section",
         element: <SectionPage />,
       },
+      // shift
       {
         path: "/shift",
         element: <ShiftPage />,
+      },
+      
+      // exam
+      {
+        path: "/exam",
+        element: <ExamPage />,
       },
 
       // routine

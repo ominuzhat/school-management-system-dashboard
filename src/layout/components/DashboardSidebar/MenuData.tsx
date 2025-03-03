@@ -39,6 +39,7 @@ import { VscGoToEditingSession } from "react-icons/vsc";
 import { RiLuggageDepositLine, RiSecurePaymentLine } from "react-icons/ri";
 import { TfiAnnouncement } from "react-icons/tfi";
 import { BsFillFileRuledFill } from "react-icons/bs";
+import { FiPenTool } from "react-icons/fi";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -212,6 +213,11 @@ const MenuData: React.FC = () => {
       key: "/routine",
       label: <Link to="/routine">Routine</Link>,
       icon: <IoCalendarOutline />,
+    },
+    {
+      key: "/exam",
+      label: <Link to="/exam">Exam</Link>,
+      icon: <FiPenTool />,
     },
 
     {
