@@ -7,9 +7,12 @@ const DashboardFooter: React.FC = () => {
   return (
     <Layout.Footer>
       <Typography.Text style={{ textAlign: "center", display: "block" }}>
-        © {year}. All Rights Reserved by HB Aviation and Design & Developed by{" "}
-        <Typography.Link target="_blank" href="https://m360ict.com/">
-          M360ICT.
+        © {year}. All Rights and Design & Developed by{" "}
+        <Typography.Link
+          target="_blank"
+          href="https://www.codecanvascreation.com/"
+        >
+          Code Canvas Creation.
         </Typography.Link>
       </Typography.Text>
     </Layout.Footer>

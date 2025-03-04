@@ -62,11 +62,13 @@ import TransactionPage from "../modules/Finance Management/Accounts/Transaction/
 import SmsPage from "../modules/settings/sms configuration/pages/SmsPage";
 import ShiftPage from "../modules/general settings/shift/page/ShiftPage";
 import ExamPage from "../modules/general settings/Exam/page/ExamPage";
+import CreateExam from "../modules/general settings/Exam/components/CreateExam";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <PrivateRouter children={<DashboardLayout />} />,
+    element: <DashboardLayout />,
+    // element: <PrivateRouter children={<DashboardLayout />} />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -170,11 +172,29 @@ const router = createBrowserRouter([
         path: "/shift",
         element: <ShiftPage />,
       },
-      
+
       // exam
       {
         path: "/exam",
-        element: <ExamPage />,
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <ExamPage />,
+          },
+          {
+            path: "create",
+            element: <CreateExam />,
+          },
+          // {
+          //   path: "update/:studentId",
+          //   element: <UpdateStudent />,
+          // },
+          // {
+          //   path: "student-view/:studentId",
+          //   element: <StudentView />,
+          // },
+        ],
       },
 
       // routine

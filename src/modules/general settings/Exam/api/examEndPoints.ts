@@ -12,7 +12,7 @@ const examEndpoint = api.injectEndpoints({
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/institutions/grade-levels/",
+        url: "/api/v1.0/institutions/grade-level/",
         params,
       }),
       providesTags: [

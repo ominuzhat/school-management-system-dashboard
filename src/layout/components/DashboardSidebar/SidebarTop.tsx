@@ -20,7 +20,7 @@ const SidebarTop: React.FC = () => {
   return (
     <React.Fragment>
       <div className="sidebar-top-style flex items-center justify-center">
-        {/* <h1 style={{ fontSize: "24px", fontFamily: "Arial" }}>{time}</h1> */}
+        {/* <h1 style={{ fontSize: "24px", fontFamily: "Arial" }}>{time .}</h1> */}
 
         <Image
           src={dashboardData?.data?.institution?.logo || mainLogo}

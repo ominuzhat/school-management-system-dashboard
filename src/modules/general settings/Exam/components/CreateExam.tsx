@@ -1,4 +1,4 @@
-import { Col, Input, Row, Select } from "antd";
+import { Card, Col, Input, Row, Select } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateExamMutation } from "../api/examEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
@@ -35,7 +35,7 @@ const CreateExam = () => {
   };
 
   return (
-    <div>
+    <Card>
       <Form onFinish={onFinish} isLoading={isLoading} isSuccess={isSuccess}>
         <Row gutter={[16, 16]}>
           <Col lg={4}>
@@ -138,7 +138,7 @@ const CreateExam = () => {
           </Col>
         </Row>
       </Form>
-    </div>
+    </Card>
   );
 };
 

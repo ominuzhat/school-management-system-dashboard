@@ -25,14 +25,9 @@ import {
 import { FaCommentSms, FaPeopleGroup, FaRegAddressCard } from "react-icons/fa6";
 import { TbCoinTaka, TbSection } from "react-icons/tb";
 import { BiSolidInstitution, BiSolidUserAccount } from "react-icons/bi";
-import {
-  AiOutlineAccountBook,
-  // AiOutlineSafetyCertificate,
-} from "react-icons/ai";
+import { AiOutlineAccountBook } from "react-icons/ai";
 import { HiOutlineCash } from "react-icons/hi";
-// import { FcRules } from "react-icons/fc";
-// import { CiBookmarkCheck, CiSettings } from "react-icons/ci";
-// import { GrCertificate } from "react-icons/gr";
+
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { IoMdPersonAdd } from "react-icons/io";
 import { VscGoToEditingSession } from "react-icons/vsc";

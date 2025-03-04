@@ -34,7 +34,7 @@ const useExamColumns = (): ColumnsType<any> => {
     {
       key: "2",
       title: "Description",
-      dataIndex: "description",
+      dataIndex: "comment",
       align: "center",
       render: (title) => (title ? title : "N/A"),
     },

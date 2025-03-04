@@ -1,4 +1,5 @@
 export interface IGetExam {
+  id: number;
   name: string;
 }
 export interface ICreateExam {
@@ -7,17 +8,17 @@ export interface ICreateExam {
   grade_level: number;
   section: number[];
   term: number;
-  start_date: string; // Format: YYYY-MM-DD
-  end_date: string; // Format: YYYY-MM-DD
+  start_date: string;
+  end_date: string;
   comment: string;
   timetables: IExamTimetable[];
 }
 
 export interface IExamTimetable {
   subject: number;
-  exam_date: string; // Format: YYYY-MM-DD
-  start_time: string; // Format: HH:mm:ss
-  end_time: string; // Format: HH:mm:ss
+  exam_date: string;
+  start_time: string;
+  end_time: string;
   mcq_marks: number;
   written_marks: number;
   total_marks: number;

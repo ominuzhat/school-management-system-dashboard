@@ -28,7 +28,7 @@ const SidebarButtom: React.FC = () => {
         </Typography.Text>
         <br />
         <Typography.Text>support@codecanvascreation.com</Typography.Text>
-        <Typography.Text>Cell: 09638-336699</Typography.Text>
+        <Typography.Text>Cell: 09638-3366999</Typography.Text>
       </div>
     </React.Fragment>
   );

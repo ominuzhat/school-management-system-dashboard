@@ -1,7 +1,5 @@
 import { Button, Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
-import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 
@@ -10,10 +8,9 @@ import { FilterState } from "../../../../app/features/filterSlice";
 import { useGetExamQuery } from "../api/examEndPoints";
 import { IGetExam } from "../type/examType";
 import useExamColumns from "../utils/ExamColumns";
-import CreateExam from "../components/CreateExam";
+import { Link } from "react-router-dom";
 
 const ExamPage = () => {
-  const dispatch = useDispatch();
   const { page_size, page } = useAppSelector(FilterState);
 
   const {
@@ -38,21 +35,11 @@ const ExamPage = () => {
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() =>
-                dispatch(
-                  showModal({
-                    title: "Add Exam",
-                    content: <CreateExam />,
-                  })
-                )
-              }
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Exam
-            </Button>
+            <Link to={"/exam/create"}>
+              <Button type="primary" icon={<PlusOutlined />} className="w-full">
+                Add Exam
+              </Button>
+            </Link>
           </Col>
         </Row>
       </Card>
