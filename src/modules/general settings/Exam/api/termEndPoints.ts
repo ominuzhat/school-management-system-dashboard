@@ -3,29 +3,29 @@ import { FilterTypes } from "../../../../app/features/filterSlice";
 import { ApiResponse, PaginatedResponse } from "../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../app/utils/tagTypes";
-import { ICreateExam, IGetExam } from "../type/examType";
+import { ICreateTerm, IGetTerm } from "../type/termType";
 
-const examEndpoint = api.injectEndpoints({
+const termEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
-    getExam: builder.query<
-      ApiResponse<PaginatedResponse<IGetExam[]>>,
+    getTerm: builder.query<
+      ApiResponse<PaginatedResponse<IGetTerm[]>>,
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/exams/",
+        url: "/api/v1.0/exams/terms/",
         params,
       }),
       providesTags: [
         {
-          type: TagTypes.EXAM,
-          id: TagTypes.EXAM + "_ID",
+          type: TagTypes.TERM,
+          id: TagTypes.TERM + "_ID",
         },
       ],
     }),
 
-    createExam: builder.mutation<ApiResponse<ICreateExam>, any>({
+    createTerm: builder.mutation<ApiResponse<ICreateTerm>, any>({
       query: (data) => ({
-        url: "/api/v1.0/exams/",
+        url: "/api/v1.0/exams/terms/",
         method: "POST",
         body: data,
       }),
@@ -34,34 +34,34 @@ const examEndpoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.EXAM,
-          id: TagTypes.EXAM + "_ID",
+          type: TagTypes.TERM,
+          id: TagTypes.TERM + "_ID",
         },
       ],
     }),
 
-    getSingleExam: builder.query<
-      ApiResponse<PaginatedResponse<IGetExam>>,
+    getSingleTerm: builder.query<
+      ApiResponse<PaginatedResponse<IGetTerm>>,
       number
     >({
       query: (roleId) => ({
-        url: `/api/v1.0/exams/${roleId}/`,
+        url: `/api/v1.0/exams/terms/${roleId}/`,
       }),
 
       providesTags: [
         {
-          type: TagTypes.EXAM,
-          id: TagTypes.EXAM + "_ID",
+          type: TagTypes.TERM,
+          id: TagTypes.TERM + "_ID",
         },
       ],
     }),
 
-    updateExam: builder.mutation<
-      ApiResponse<IGetExam>,
+    updateTerm: builder.mutation<
+      ApiResponse<IGetTerm>,
       { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/exams/${id}/`,
+        url: `/api/v1.0/exams/terms/${id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -70,8 +70,8 @@ const examEndpoint = api.injectEndpoints({
       },
       invalidatesTags: [
         {
-          type: TagTypes.EXAM,
-          id: TagTypes.EXAM + "_ID",
+          type: TagTypes.TERM,
+          id: TagTypes.TERM + "_ID",
         },
       ],
     }),
@@ -79,8 +79,8 @@ const examEndpoint = api.injectEndpoints({
 });
 
 export const {
-  useGetExamQuery,
-  useCreateExamMutation,
-  useUpdateExamMutation,
-  useGetSingleExamQuery,
-} = examEndpoint;
+  useGetTermQuery,
+  useCreateTermMutation,
+  useUpdateTermMutation,
+  useGetSingleTermQuery,
+} = termEndpoint;

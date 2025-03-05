@@ -67,8 +67,8 @@ import CreateExam from "../modules/general settings/Exam/components/CreateExam";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <DashboardLayout />,
-    // element: <PrivateRouter children={<DashboardLayout />} />,
+    // element: <DashboardLayout />,
+    element: <PrivateRouter children={<DashboardLayout />} />,
     errorElement: <ErrorPage />,
     children: [
       {

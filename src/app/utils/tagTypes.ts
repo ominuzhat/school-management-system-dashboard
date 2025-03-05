@@ -20,6 +20,7 @@ export const TagTypes = {
   PROFILE: "Profile",
   ROUTINE: "Routine",
   FESS: "Fees",
+  TERM: "Term",
   ACCOUNT: "Account",
   DASHBOARD: "Dashboard",
   TRANSACTION: "Transaction",

@@ -53,7 +53,14 @@ export const RangePickerComponent = ({
     onChange(dates);
   };
 
-  return <RangePicker {...props} format={format} onChange={handleChange} />;
+  return (
+    <RangePicker
+      {...props}
+      format={format}
+      onChange={handleChange}
+      className="w-full"
+    />
+  );
 };
 
 // export const RangePickerComponent = ({
