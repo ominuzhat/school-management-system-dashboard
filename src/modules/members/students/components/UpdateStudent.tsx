@@ -325,10 +325,7 @@ const UpdateStudent = () => {
                       name="father_number"
                       rules={[{ validator: phoneValidator }]}
                     >
-                      <Input
-                        addonBefore="880"
-                        placeholder="Phone Number"
-                      />
+                      <Input addonBefore="880" placeholder="Phone Number" />
                     </Form.Item>
                   </Col>
                   <Col lg={4}>
@@ -379,10 +376,7 @@ const UpdateStudent = () => {
                       name="mother_phone_number"
                       rules={[{ validator: phoneValidator }]}
                     >
-                      <Input
-                        addonBefore="880"
-                        placeholder="Phone Number"
-                      />
+                      <Input addonBefore="880" placeholder="Phone Number" />
                     </Form.Item>
                   </Col>
                   <Col lg={4}>

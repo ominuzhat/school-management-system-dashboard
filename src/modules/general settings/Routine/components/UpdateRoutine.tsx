@@ -13,15 +13,7 @@ import { useEffect } from "react";
 import UpdateMultipleSelectRoutine from "./UpdateMultipleSelectRoutine";
 import dayjs from "dayjs";
 
-// const daysOfWeek = [
-//   "Sunday",
-//   "Monday",
-//   "Tuesday",
-//   "Wednesday",
-//   "Thursday",
-//   "Friday",
-//   "Saturday",
-// ];
+
 
 const UpdateRoutine = () => {
   const [form] = AntForm.useForm();
@@ -30,9 +22,7 @@ const UpdateRoutine = () => {
   const { data: singleData } = useGetSingleRoutineQuery(Number(routineID));
   const singleRoutine: any = singleData?.data;
 
-  // const today = dayjs().format("dddd");
   const [update, { isLoading, isSuccess }] = useUpdateRoutineMutation();
-  // const [selectedDay, setSelectedDay] = useState<string | null>(today);
   const { data: sessionData } = useGetAdmissionSessionQuery({ status: "open" });
   const { data: classData } = useGetClassesQuery({});
   const { data: sectionData } = useGetSectionQuery({});

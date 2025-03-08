@@ -17,17 +17,9 @@ import dayjs from "dayjs";
 
 const { Option } = Select;
 
-// interface PeriodDate {
-//   start_date: string;
-//   end_date: string;
-// }
-
 const CreateExam = () => {
   const dispatch = useDispatch();
-  // const [examDate, setExamDate] = useState<PeriodDate>({
-  //   start_date: "",
-  //   end_date: "",
-  // });
+
   const [create, { isLoading, isSuccess }] = useCreateExamMutation();
   const { data: sessionData } = useGetAdmissionSessionQuery({ status: "open" });
   const { data: classData, isLoading: classLoading } = useGetClassesQuery({});
@@ -55,16 +47,9 @@ const CreateExam = () => {
         passing_marks: timetable.passing_marks,
       })),
     };
-    console.log(results, "result");
 
     create(results);
   };
-
-  // const handleRangeChange = (dates: [Moment | null, Moment | null] | null) => {
-  //   const start = dates?.[0]?.format("YYYY-MM-DD") || "";
-  //   const end = dates?.[1]?.format("YYYY-MM-DD") || "";
-  //   setExamDate({ start_date: start, end_date: end });
-  // };
 
   return (
     <div>
@@ -156,25 +141,19 @@ const CreateExam = () => {
                 name="exam_date"
                 rules={[{ required: true, message: "Choose date" }]}
               >
-                <RangePickerComponent
-                  // onChange={handleRangeChange}
-                  format="YYYY-MM-DD"
-                />
+                <RangePickerComponent format="YYYY-MM-DD" />
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={12} lg={8}>
-              <Form.Item
-                label="Term"
-                name="term"
-                // rules={[{ required: true, message: "Please select a term!" }]}
-              >
-                <div className="flex items-center w-full">
-                  <Select
-                    className="w-full mr-2"
-                    placeholder="Select Term"
-                    allowClear
-                  >
+            <Col xs={24} sm={12} lg={6}>
+              <div className="flex items-center w-full">
+                <Form.Item
+                  label="Term"
+                  name="term"
+                  rules={[{ required: true, message: "Please select a term!" }]}
+                  className="w-full"
+                >
+                  <Select placeholder="Select Term" allowClear>
                     {Array.isArray(termData?.data) &&
                       termData?.data?.map((term: any) => (
                         <Select.Option key={term.id} value={term.id}>
@@ -182,22 +161,22 @@ const CreateExam = () => {
                         </Select.Option>
                       ))}
                   </Select>
-                  <Button
-                    type="link"
-                    onClick={() =>
-                      dispatch(
-                        showModal({
-                          title: "Add New Term",
-                          content: <CreateTerm />,
-                        })
-                      )
-                    }
-                    icon={<PlusOutlined />}
-                  >
-                    Add Term
-                  </Button>
-                </div>
-              </Form.Item>
+                </Form.Item>
+                <Button
+                  type="link"
+                  onClick={() =>
+                    dispatch(
+                      showModal({
+                        title: "Add New Term",
+                        content: <CreateTerm />,
+                      })
+                    )
+                  }
+                  icon={<PlusOutlined />}
+                >
+                  Add Term
+                </Button>
+              </div>
             </Col>
 
             <Col xs={24}>

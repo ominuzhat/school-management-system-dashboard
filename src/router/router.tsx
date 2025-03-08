@@ -63,6 +63,9 @@ import SmsPage from "../modules/settings/sms configuration/pages/SmsPage";
 import ShiftPage from "../modules/general settings/shift/page/ShiftPage";
 import ExamPage from "../modules/general settings/Exam/page/ExamPage";
 import CreateExam from "../modules/general settings/Exam/components/CreateExam";
+import ViewExam from "../modules/general settings/Exam/components/ViewExam";
+import UpdateExam from "../modules/general settings/Exam/components/UpdateExam";
+import ExamHallPage from "../modules/general settings/Exam/Exam-hall/page/ExamHall";
 
 const router = createBrowserRouter([
   {
@@ -186,14 +189,38 @@ const router = createBrowserRouter([
             path: "create",
             element: <CreateExam />,
           },
-          // {
-          //   path: "update/:studentId",
-          //   element: <UpdateStudent />,
-          // },
-          // {
-          //   path: "student-view/:studentId",
-          //   element: <StudentView />,
-          // },
+          {
+            path: ":examId",
+            element: <UpdateExam />,
+          },
+          {
+            path: "view/:examId",
+            element: <ViewExam />,
+          },
+        ],
+      },
+
+      // exam Hall
+      {
+        path: "/exam-hall",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <ExamHallPage />,
+          },
+          {
+            path: "create",
+            element: <CreateExam />,
+          },
+          {
+            path: ":examId",
+            element: <UpdateExam />,
+          },
+          {
+            path: "view/:examId",
+            element: <ViewExam />,
+          },
         ],
       },
 

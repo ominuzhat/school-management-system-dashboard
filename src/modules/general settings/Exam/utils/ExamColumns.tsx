@@ -1,11 +1,12 @@
-import { Space } from "antd";
+import { Button, Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import EditButton from "../../../../common/CommonAnt/Button/EditButton";
-import { showModal } from "../../../../app/features/modalSlice";
-import { useDispatch } from "react-redux";
+
+import dayjs from "dayjs";
+import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
+import { Link } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
 
 const useExamColumns = (): ColumnsType<any> => {
-  const dispatch = useDispatch();
   // const [deleteCartItem] = useDeleteOrderItemMutation();
 
   // const handleDelete = async (id: any) => {
@@ -26,43 +27,60 @@ const useExamColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Class Name",
+      title: "Exam Name",
       dataIndex: "name",
       align: "center",
       render: (title) => (title ? title : "N/A"),
     },
     {
       key: "2",
-      title: "Description",
-      dataIndex: "comment",
+      title: "Class",
+      dataIndex: "grade_level",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title?.name : "N/A"),
+    },
+    {
+      key: "2",
+      title: "Term",
+      dataIndex: "term",
+      align: "center",
+      render: (title) => (title ? title?.name : "N/A"),
     },
 
     {
       key: "3",
-      title: "Class Teacher Name",
-      dataIndex: "class_teacher",
+      title: "Start Date",
+      dataIndex: "start_date",
       align: "center",
-      render: (title) => (title ? title?.first_name : "N/A"),
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
+    },
+    {
+      key: "3",
+      title: "End Date",
+      dataIndex: "end_date",
+      align: "center",
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
     },
     {
       title: "Actions",
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Exam",
-                  content: "<UpdateClass record={record?.id} />",
-                })
-              )
-            }
-          />
-          {/* <ViewButton to={`student-view/1`} />
-          <DeleteButton
+          <Link to={`${record.id}`}>
+            <Button
+              title="Edit"
+              size="small"
+              type="default"
+              style={{
+                color: "#FFA500",
+                border: "1px solid #FFA500",
+              }}
+            >
+              <FaEdit />
+            </Button>
+          </Link>
+          <ViewButton to={`view/${record?.id}`} />
+          {/* <DeleteButton
           onClick={() => handleDelete(record.id)}>
             Delete
           </DeleteButton> */}

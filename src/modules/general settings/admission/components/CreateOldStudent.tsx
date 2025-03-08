@@ -10,6 +10,7 @@ import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { debounce } from "lodash";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
+import { useGetShiftQuery } from "../../shift/api/shiftEndPoints";
 
 const { Option } = Select;
 
@@ -24,6 +25,7 @@ const CreateOldStudent = () => {
   const { data: sessionData } = useGetAdmissionSessionQuery({
     status: "open",
   });
+  const { data: shiftData } = useGetShiftQuery({});
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const { data: subjectData } = useGetSubjectsQuery({
     grade_level: gradeLevel,
@@ -222,15 +224,25 @@ const CreateOldStudent = () => {
                 />
               </Form.Item>
             </Col>
+
             <Col lg={8}>
-              <Form.Item<IAdmission> label="Shift" name="shift">
+              <Form.Item<IAdmission>
+                label="Shift"
+                name="shift"
+                rules={[{ required: true, message: "Shift" }]}
+              >
                 <Select
-                  placeholder="Shift"
-                  options={[
-                    { value: "day", label: "Day" },
-                    { value: "noon", label: "Noon" },
-                  ]}
-                />
+                  className="w-full"
+                  placeholder="Select Shift"
+                  allowClear
+                >
+                  {Array.isArray(shiftData?.data) &&
+                    shiftData.data.map((data: IClasses) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.name}
+                      </Option>
+                    ))}
+                </Select>
               </Form.Item>
             </Col>
           </Row>

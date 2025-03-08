@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { ThemesTypes } from "../../../app/features/themeSlice";
 import SidebarButtom from "./SidebarButtom";
-import { PiContactlessPaymentBold, PiStudent } from "react-icons/pi";
+import { PiContactlessPaymentBold, PiExamLight, PiStudent } from "react-icons/pi";
 import { SiGoogleclassroom } from "react-icons/si";
 import {
   IoAccessibilityOutline,
@@ -209,12 +209,25 @@ const MenuData: React.FC = () => {
       label: <Link to="/routine">Routine</Link>,
       icon: <IoCalendarOutline />,
     },
-    {
-      key: "/exam",
-      label: <Link to="/exam">Exam</Link>,
-      icon: <FiPenTool />,
-    },
 
+    {
+      key: "/exam-module",
+      label: "Exam",
+      icon: <FiPenTool />,
+      children: [
+        {
+          key: "/exam",
+          label: <Link to="/exam">Exam</Link>,
+          icon: <PiExamLight />,
+        },
+
+        {
+          key: "/exam-hall",
+          label: <Link to="/exam-hall">Exam Hall</Link>,
+          icon: <SiGoogleclassroom />,
+        },
+      ],
+    },
     {
       key: "/admission-module",
       label: "Admission",

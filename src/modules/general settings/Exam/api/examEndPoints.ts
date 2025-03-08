@@ -44,8 +44,8 @@ const examEndpoint = api.injectEndpoints({
       ApiResponse<PaginatedResponse<IGetExam>>,
       number
     >({
-      query: (roleId) => ({
-        url: `/api/v1.0/exams/${roleId}/`,
+      query: (examId) => ({
+        url: `/api/v1.0/exams/${examId}/`,
       }),
 
       providesTags: [
