@@ -1,18 +1,25 @@
-import { Col, Input, Row, Select } from "antd";
+import { Col, Input, Row, Select, TimePicker } from "antd";
 import { Form } from "../../../../common/CommonAnt";
-
 import { useCreateSectionMutation } from "../api/sectionEndPoints";
 import { ICreateSection } from "../types/sectionTypes";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { IClasses } from "../../classes/type/classesType";
+import moment from "moment";
 
 const { Option } = Select;
+
 const CreateSection = () => {
   const { data: classData } = useGetClassesQuery({});
   const [create, { isLoading, isSuccess }] = useCreateSectionMutation();
 
   const onFinish = (values: any): void => {
-    create(values);
+    // Convert moment objects to a desired format (e.g., string) before submitting
+    const formattedValues = {
+      ...values,
+      start_time: values.start_time ? values.start_time.format("h:mm A") : null,
+      end_time: values.end_time ? values.end_time.format("h:mm A") : null,
+    };
+    create(formattedValues);
   };
 
   return (
@@ -61,15 +68,39 @@ const CreateSection = () => {
             </Form.Item>
           </Col>
 
-          {/* <Col>
+          <Col lg={8}>
             <Form.Item<ICreateSection>
-              label="Active"
-              name="is_active"
-              valuePropName="checked"
+              label="Start Time"
+              name="start_time"
+              rules={[{ required: true, message: "Start Time" }]}
             >
-              <Switch />
+              <TimePicker
+                use12Hours
+                format="h:mm A"
+                placeholder="Select Start Time"
+                showNow={false}
+                minuteStep={5} // Optional: Adjust minute steps
+                popupClassName="time-picker-popup" // Optional: Customize the popup style
+              />
             </Form.Item>
-          </Col> */}
+          </Col>
+
+          <Col lg={8}>
+            <Form.Item<ICreateSection>
+              label="End Time"
+              name="end_time"
+              rules={[{ required: true, message: "End Time" }]}
+            >
+              <TimePicker
+                use12Hours
+                format="h:mm A"
+                placeholder="Select End Time"
+                showNow={false}
+                minuteStep={5} // Optional: Adjust minute steps
+                popupClassName="time-picker-popup" // Optional: Customize the popup style
+              />
+            </Form.Item>
+          </Col>
         </Row>
       </Form>
     </div>

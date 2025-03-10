@@ -35,6 +35,8 @@ export const TagTypes = {
   SHIFT: "Shift",
   EXAM: "Exam",
   EXAM_Hall: "Exam_Hall",
+  EXAM_Receipts: "Exam_RECEIPTS",
+  EXAM_MARK: "Exam_Mark",
   ADMISSION: "Admission",
   DEPARTMENT: "Department",
   ADMISSION_SESSION: "Admission_Session",

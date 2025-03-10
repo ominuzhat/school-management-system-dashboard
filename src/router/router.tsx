@@ -66,6 +66,8 @@ import CreateExam from "../modules/general settings/Exam/components/CreateExam";
 import ViewExam from "../modules/general settings/Exam/components/ViewExam";
 import UpdateExam from "../modules/general settings/Exam/components/UpdateExam";
 import ExamHallPage from "../modules/general settings/Exam/Exam-hall/page/ExamHall";
+import ExamReceiptsPage from "../modules/general settings/Exam/Exam-receipt/page/ExamReceiptsPage";
+import MarkExamPage from "../modules/general settings/Exam/mark-exam/page/MarkExamPage";
 
 const router = createBrowserRouter([
   {
@@ -220,6 +222,28 @@ const router = createBrowserRouter([
           {
             path: "view/:examId",
             element: <ViewExam />,
+          },
+        ],
+      },
+      // mark exam
+      {
+        path: "/mark-exam",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <MarkExamPage />,
+          },
+        ],
+      },
+      // exam Receipts
+      {
+        path: "/exam-receipts",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <ExamReceiptsPage />,
           },
         ],
       },

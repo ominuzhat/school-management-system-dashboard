@@ -120,7 +120,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Shift",
       dataIndex: "shift",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      render: (title) => (title && title?.name ? capitalize(title?.name ) : "N/A"),
     },
     {
       key: "6",

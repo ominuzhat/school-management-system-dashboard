@@ -116,7 +116,6 @@ const TimeTableForm = () => {
                       {...restField}
                       label="MCQ Marks"
                       name={[name, "mcq_marks"]}
-                      rules={[{ required: true, message: "Enter MCQ marks!" }]}
                     >
                       <InputNumber
                         min={0}
@@ -133,9 +132,7 @@ const TimeTableForm = () => {
                       {...restField}
                       label="Written Marks"
                       name={[name, "written_marks"]}
-                      rules={[
-                        { required: true, message: "Enter Written marks!" },
-                      ]}
+                    
                     >
                       <InputNumber
                         min={0}
@@ -152,9 +149,7 @@ const TimeTableForm = () => {
                       {...restField}
                       label="Total Marks"
                       name={[name, "total_marks"]}
-                      rules={[
-                        { required: true, message: "Enter Total marks!" },
-                      ]}
+                   
                     >
                       <InputNumber
                         min={0}
@@ -171,9 +166,7 @@ const TimeTableForm = () => {
                       {...restField}
                       label="Passing Marks"
                       name={[name, "passing_marks"]}
-                      rules={[
-                        { required: true, message: "Enter Passing marks!" },
-                      ]}
+                     
                     >
                       <InputNumber
                         min={0}

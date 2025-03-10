@@ -7,13 +7,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { ThemesTypes } from "../../../app/features/themeSlice";
 import SidebarButtom from "./SidebarButtom";
-import { PiContactlessPaymentBold, PiExamLight, PiStudent } from "react-icons/pi";
+import {
+  PiContactlessPaymentBold,
+  PiExamLight,
+  PiStudent,
+} from "react-icons/pi";
 import { SiGoogleclassroom } from "react-icons/si";
 import {
   IoAccessibilityOutline,
   IoBookOutline,
   IoCalendarOutline,
   IoPeopleOutline,
+  IoReceiptOutline,
 } from "react-icons/io5";
 import {
   MdAccountBalanceWallet,
@@ -33,7 +38,7 @@ import { IoMdPersonAdd } from "react-icons/io";
 import { VscGoToEditingSession } from "react-icons/vsc";
 import { RiLuggageDepositLine, RiSecurePaymentLine } from "react-icons/ri";
 import { TfiAnnouncement } from "react-icons/tfi";
-import { BsFillFileRuledFill } from "react-icons/bs";
+import { BsBookmarks, BsFillFileRuledFill } from "react-icons/bs";
 import { FiPenTool } from "react-icons/fi";
 
 const MenuData: React.FC = () => {
@@ -225,6 +230,16 @@ const MenuData: React.FC = () => {
           key: "/exam-hall",
           label: <Link to="/exam-hall">Exam Hall</Link>,
           icon: <SiGoogleclassroom />,
+        },
+        {
+          key: "/exam-receipts",
+          label: <Link to="/exam-receipts">Assign Exam Hall</Link>,
+          icon: <IoReceiptOutline />,
+        },
+        {
+          key: "/mark-exam",
+          label: <Link to="/mark-exam">Mark Exam</Link>,
+          icon: <BsBookmarks />,
         },
       ],
     },

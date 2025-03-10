@@ -43,10 +43,10 @@ export const api = createApi({
       "TIMEOUT_ERROR",
     ];
 
-    if (response.error && errorStatus.includes(response.error?.status)) {
-      api.dispatch(loggedOut());
-      localStorage.removeItem(TOKEN_NAME);
-    }
+    // if (response.error && errorStatus.includes(response.error?.status)) {
+    //   api.dispatch(loggedOut());
+    //   localStorage.removeItem(TOKEN_NAME);
+    // }
 
     return response;
   },
