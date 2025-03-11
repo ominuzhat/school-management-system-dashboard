@@ -72,7 +72,6 @@ import MarkExamPage from "../modules/general settings/Exam/mark-exam/page/MarkEx
 const router = createBrowserRouter([
   {
     path: "/",
-    // element: <DashboardLayout />,
     element: <PrivateRouter children={<DashboardLayout />} />,
     errorElement: <ErrorPage />,
     children: [

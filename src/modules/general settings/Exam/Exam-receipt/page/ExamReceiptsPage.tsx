@@ -138,7 +138,7 @@ const ExamReceiptsPage = () => {
                   {Array.isArray(examHallData?.data) &&
                     examHallData?.data?.map((hall: any) => (
                       <Select.Option key={hall.id} value={hall.id}>
-                        {hall?.name}
+                        {hall?.name} - (Capacity : {hall?.capacity})
                       </Select.Option>
                     ))}
                 </Select>

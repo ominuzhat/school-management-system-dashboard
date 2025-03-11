@@ -168,7 +168,7 @@ const MenuData: React.FC = () => {
           icon: <AiOutlineAccountBook />,
           key: "/account/transactions",
         },
-
+        // Comment
         // {
         //   label: (
         //     <Link to="/attendance/mark-teacher-attendance">Add Income</Link>

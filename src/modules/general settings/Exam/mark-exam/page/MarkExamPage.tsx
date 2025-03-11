@@ -1,10 +1,8 @@
 import { Card, Col, Row, Select, Form as AntForm } from "antd";
-import {
-  useGetExamQuery,
-  useGetSingleExamQuery,
-} from "../../api/examEndPoints";
+import { useGetExamQuery } from "../../api/examEndPoints";
 import { Form } from "../../../../../common/CommonAnt";
 import { useCreateExamMarkMutation } from "../api/markExamEndPoints";
+import CreateExamMark from "../components/CreateExamMark";
 
 const MarkExamPage = () => {
   const [form] = AntForm.useForm();
@@ -13,9 +11,9 @@ const MarkExamPage = () => {
   const [create, { isLoading, isSuccess }] = useCreateExamMarkMutation();
   const { data: examData } = useGetExamQuery({});
 
-//   const { data: exaDetails } = useGetSingleExamQuery(exam && Number(exam));
+  //   const { data: exaDetails } = useGetSingleExamQuery(exam && Number(exam));
 
-//   console.log("exam", examData);
+    // console.log("exam", examData);
 
   const onFinish = (values: any): void => {
     const results = {
@@ -29,6 +27,7 @@ const MarkExamPage = () => {
 
   return (
     <div>
+      <CreateExamMark />
       <Card title="Exam Receipts">
         <Card className="rounded-lg shadow-lg p-6">
           <Form

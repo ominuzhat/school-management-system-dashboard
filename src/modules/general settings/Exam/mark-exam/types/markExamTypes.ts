@@ -8,5 +8,5 @@ export interface ICreateExamMark {
 }
 
 export interface IGetExamMark {
-    id: number
+  id: number;
 }
