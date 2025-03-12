@@ -1,4 +1,14 @@
-import { Badge, Button, Card, Col, Input, Row, Select } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Input,
+  Row,
+  Select,
+  Form as AntForm,
+  Tabs,
+  TabsProps,
+} from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateExamMutation } from "../api/examEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
@@ -14,17 +24,34 @@ import { PlusOutlined } from "@ant-design/icons";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { useGetTermQuery } from "../api/termEndPoints";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { capitalize } from "../../../../common/capitalize/Capitalize";
 
 const { Option } = Select;
 
 const CreateExam = () => {
   const dispatch = useDispatch();
+  const [form] = AntForm.useForm();
 
   const [create, { isLoading, isSuccess }] = useCreateExamMutation();
   const { data: sessionData } = useGetAdmissionSessionQuery({ status: "open" });
   const { data: classData, isLoading: classLoading } = useGetClassesQuery({});
   const { data: sectionData } = useGetSectionQuery({});
   const { data: termData } = useGetTermQuery({});
+
+  const [selectedClass, setSelectedClass] = useState([]);
+  const [formData, setFormData] = useState<Record<string, any>>([]);
+
+  const gradeLevel = AntForm.useWatch("grade_level", form);
+
+  useEffect(() => {
+    if (Array.isArray(gradeLevel) && Array.isArray(classData?.data)) {
+      const filteredClasses: any = classData.data.filter((classItem) =>
+        gradeLevel.includes(classItem.id)
+      );
+      setSelectedClass(filteredClasses);
+    }
+  }, [gradeLevel, classData]);
 
   const onFinish = (values: any): void => {
     const results = {
@@ -36,19 +63,46 @@ const CreateExam = () => {
       start_date: dayjs(values.start_date).format("YYYY-MM-DD"),
       end_date: dayjs(values.end_date).format("YYYY-MM-DD"),
       comment: values.comment,
-      timetables: values.timetables.map((timetable: any) => ({
-        subject: timetable.subject,
-        exam_date: dayjs(timetable.exam_date).format("YYYY-MM-DD"),
-        start_time: dayjs(timetable.start_time).format("HH:mm:ss"),
-        end_time: dayjs(timetable.end_time).format("HH:mm:ss"),
-        mcq_marks: timetable.mcq_marks,
-        written_marks: timetable.written_marks,
-        total_marks: timetable.total_marks,
-        passing_marks: timetable.passing_marks,
-      })),
+      timetables: Object.keys(formData).map((key: string) => {
+        const timetable = formData[key].timetables[0]; // Assuming you're taking the first timetable for each subject
+        return {
+          subject: timetable.subject,
+          exam_date: dayjs(timetable.exam_date).format("YYYY-MM-DD"),
+          start_time: timetable.start_time
+            ? dayjs(timetable.start_time).format("HH:mm:ss")
+            : undefined,
+          end_time: timetable.end_time
+            ? dayjs(timetable.end_time).format("HH:mm:ss")
+            : undefined,
+          mcq_marks: timetable.mcq_marks,
+          written_marks: timetable.written_marks,
+          passing_marks: timetable.passing_marks,
+        };
+      }),
     };
 
     create(results);
+  };
+
+  const items: TabsProps["items"] = selectedClass.map((classItem: any) => ({
+    key: classItem.id.toString(),
+    label: capitalize(classItem.name),
+    children: (
+      <TimeTableForm
+        selectedTab={classItem.id.toString()}
+        formData={formData[classItem.id.toString()] || {}}
+        setFormData={(data: any) =>
+          setFormData((prev) => ({
+            ...prev,
+            [classItem.id.toString()]: data,
+          }))
+        }
+      />
+    ),
+  }));
+
+  const onChange = (key: any) => {
+    console.log(key);
   };
 
   return (
@@ -58,6 +112,7 @@ const CreateExam = () => {
       </div>
       <Card className="rounded-lg shadow-lg p-6">
         <Form
+          form={form}
           onFinish={onFinish}
           isLoading={isLoading}
           isSuccess={isSuccess}
@@ -86,7 +141,6 @@ const CreateExam = () => {
                 </Select>
               </Form.Item>
             </Col>
-
             <Col xs={24} sm={12} lg={6}>
               <Form.Item
                 label="Class"
@@ -94,6 +148,7 @@ const CreateExam = () => {
                 rules={[{ required: true, message: "Class is required!" }]}
               >
                 <Select
+                  mode="multiple"
                   allowClear
                   showSearch
                   style={{ width: "100%" }}
@@ -184,13 +239,13 @@ const CreateExam = () => {
                 <Input.TextArea placeholder="Enter Comment" rows={4} />
               </Form.Item>
             </Col>
-
             <Col xs={24}>
-              <Badge.Ribbon text="Exam Schedule" color="blue" placement="start">
-                <Card className="pt-5">
-                  <TimeTableForm />
-                </Card>
-              </Badge.Ribbon>
+              <Tabs
+                // defaultActiveKey={selectedTab}
+                // activeKey={selectedTab}
+                items={items}
+                onChange={onChange}
+              />
             </Col>
           </Row>
         </Form>
