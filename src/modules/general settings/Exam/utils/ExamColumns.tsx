@@ -32,13 +32,7 @@ const useExamColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? title : "N/A"),
     },
-    {
-      key: "2",
-      title: "Class",
-      dataIndex: "grade_level",
-      align: "center",
-      render: (title) => (title ? title?.name : "N/A"),
-    },
+
     {
       key: "2",
       title: "Term",
@@ -55,7 +49,7 @@ const useExamColumns = (): ColumnsType<any> => {
       render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
     },
     {
-      key: "3",
+      key: "4",
       title: "End Date",
       dataIndex: "end_date",
       align: "center",

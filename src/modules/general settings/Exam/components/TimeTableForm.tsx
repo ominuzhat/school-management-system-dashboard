@@ -25,35 +25,17 @@ const TimeTableForm = ({
   const { data: subjectData } = useGetSubjectsQuery({
     grade_level: selectedTab,
   });
+
   const [form] = Form.useForm();
 
   useEffect(() => {
     form.setFieldsValue(formData);
   }, [formData, form]);
 
-  const onValuesChange = (changedValues: any, allValues: any) => {
+  const onValuesChange = (_changedValues: any, allValues: any) => {
     setFormData(allValues);
   };
 
-  // const subjectNames = formData.timetables?.map((timetable: any) => {
-  //   const subject = subjectData?.data?.results?.find(
-  //     (sub: any) => sub.id === timetable.subject
-  //   );
-
-  //   console.log("subject", subject);
-  //   // return subject ? subject.name : null;
-  // });
-  // //   .filter(Boolean);
-
-  // const subjectNames = formData.timetables?.map((timetable: any) => {
-  //   const subject = subjectData?.data?.results?.find(
-  //     (sub: any) => sub.id === timetable.subject
-  //   );
-  //   return subject ? subject.name : null;
-  // });
-
-  console.log(formData, "formData");
-  // console.log(subjectNames, "Subject Names");
 
   return (
     <div className="p-4">
@@ -66,159 +48,205 @@ const TimeTableForm = ({
         <Form.List name="timetables">
           {(fields, { add, remove }) => (
             <>
-              {fields.map(({ key, name, ...restField }, index) => (
-                <Card
-                  key={key}
-                  className="mb-4"
-                  title={
-                    <div className="flex justify-between">
-                      <p className="text-sm text-green-600">
-                        Schedule No. {index + 1}
-                      </p>
-                      <MinusCircleOutlined
-                        onClick={() => remove(name)}
-                        style={{ cursor: "pointer", color: "red" }}
-                      />
-                    </div>
-                  }
-                  bordered={false}
-                >
-                  <Row gutter={[16, 16]} align="middle">
-                    {/* Exam Date */}
-                    <Col xs={24} sm={12} md={8} lg={6}>
-                      <Form.Item
-                        {...restField}
-                        label="Exam Date"
-                        name={[name, "exam_date"]}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please select Exam Date!",
-                          },
-                        ]}
-                      >
-                        <DatePicker format="YYYY-MM-DD" className="w-full" />
-                      </Form.Item>
-                    </Col>
+              {fields.map(({ key, name, ...restField }, index) => {
+                // ✅ Ensure selectedSubjects is always an array
+                const selectedSubjects =
+                  form
+                    .getFieldValue("timetables")
+                    ?.map((timetable: any) => timetable?.subject) || [];
 
-                    {/* Start Time */}
-                    <Col xs={24} sm={12} md={8} lg={6}>
-                      <Form.Item
-                        {...restField}
-                        label="Start Time"
-                        name={[name, "start_time"]}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please select Start time!",
-                          },
-                        ]}
-                      >
-                        <TimePicker
-                          format="h:mm A"
-                          use12Hours
-                          className="w-full"
+                return (
+                  <Card
+                    key={key}
+                    className="mb-4"
+                    title={
+                      <div className="flex justify-between">
+                        <p className="text-sm text-green-600">
+                          Schedule No. {index + 1}
+                        </p>
+                        <MinusCircleOutlined
+                          onClick={() => remove(name)}
+                          style={{ cursor: "pointer", color: "red" }}
                         />
-                      </Form.Item>
-                    </Col>
+                      </div>
+                    }
+                    bordered={false}
+                  >
+                    <Row gutter={[16, 16]} align="middle">
+                      {/* Exam Date */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="Exam Date"
+                          name={[name, "exam_date"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please select Exam Date!",
+                            },
+                          ]}
+                        >
+                          <DatePicker format="YYYY-MM-DD" className="w-full" />
+                        </Form.Item>
+                      </Col>
 
-                    {/* End Time */}
-                    <Col xs={24} sm={12} md={8} lg={6}>
-                      <Form.Item
-                        {...restField}
-                        label="End Time"
-                        name={[name, "end_time"]}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please select End time!",
-                          },
-                        ]}
-                      >
-                        <TimePicker
-                          format="h:mm A"
-                          use12Hours
-                          className="w-full"
-                        />
-                      </Form.Item>
-                    </Col>
+                      {/* Start Time */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="Start Time"
+                          name={[name, "start_time"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please select Start time!",
+                            },
+                          ]}
+                        >
+                          <TimePicker
+                            format="h:mm A"
+                            use12Hours
+                            className="w-full"
+                          />
+                        </Form.Item>
+                      </Col>
 
-                    {/* Select Subject */}
-                    <Col xs={24} sm={12} md={8} lg={6}>
-                      <Form.Item
-                        label="Subject"
-                        name={[name, "subject"]}
-                        {...restField}
-                        rules={[
-                          { required: true, message: "Please select Subject!" },
-                        ]}
-                      >
-                        <Select placeholder="Select Subject" className="w-full">
-                          {subjectData?.data?.results?.map((subject: any) => (
-                            <Select.Option key={subject.id} value={subject.id}>
-                              {subject?.name}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                      {/* End Time */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="End Time"
+                          name={[name, "end_time"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please select End time!",
+                            },
+                          ]}
+                        >
+                          <TimePicker
+                            format="h:mm A"
+                            use12Hours
+                            className="w-full"
+                          />
+                        </Form.Item>
+                      </Col>
 
-                    {/* MCQ Marks */}
-                    <Col xs={24} sm={12} md={8} lg={6}>
-                      <Form.Item
-                        {...restField}
-                        label="MCQ Marks"
-                        name={[name, "mcq_marks"]}
-                      >
-                        <InputNumber
-                          min={0}
-                          max={100}
-                          className="w-full"
-                          placeholder="MCQ Marks"
-                        />
-                      </Form.Item>
-                    </Col>
+                      {/* Select Subject */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          label="Subject"
+                          name={[name, "subject"]}
+                          {...restField}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please select Subject!",
+                            },
+                          ]}
+                        >
+                          <Select
+                            placeholder="Select Subject"
+                            className="w-full"
+                          >
+                            {subjectData?.data?.results?.length ? (
+                              subjectData.data.results
+                                .filter(
+                                  (subject: any) =>
+                                    !selectedSubjects.includes(subject?.id) ||
+                                    form.getFieldValue([
+                                      "timetables",
+                                      name,
+                                      "subject",
+                                    ]) === subject?.id
+                                )
+                                .map((subject: any) => (
+                                  <Select.Option
+                                    key={subject.id}
+                                    value={subject.id}
+                                  >
+                                    {subject.name}
+                                  </Select.Option>
+                                ))
+                            ) : (
+                              <Select.Option disabled>
+                                No subjects available
+                              </Select.Option>
+                            )}
+                          </Select>
+                        </Form.Item>
+                      </Col>
 
-                    {/* Written Marks */}
-                    <Col xs={24} sm={12} md={8} lg={6}>
-                      <Form.Item
-                        {...restField}
-                        label="Written Marks"
-                        name={[name, "written_marks"]}
-                      >
-                        <InputNumber
-                          min={0}
-                          max={100}
-                          className="w-full"
-                          placeholder="Written Marks"
-                        />
-                      </Form.Item>
-                    </Col>
+                      {/* MCQ Marks */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="MCQ Marks"
+                          name={[name, "mcq_marks"]}
+                        >
+                          <InputNumber
+                            min={0}
+                            max={100}
+                            className="w-full"
+                            placeholder="MCQ Marks"
+                          />
+                        </Form.Item>
+                      </Col>
 
-                    {/* Passing Marks */}
-                    <Col xs={24} sm={12} md={8} lg={6}>
-                      <Form.Item
-                        {...restField}
-                        label="Passing Marks"
-                        name={[name, "passing_marks"]}
-                      >
-                        <InputNumber
-                          min={0}
-                          max={100}
-                          className="w-full"
-                          placeholder="Passing Marks"
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Card>
-              ))}
+                      {/* Written Marks */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="Written Marks"
+                          name={[name, "written_marks"]}
+                        >
+                          <InputNumber
+                            min={0}
+                            max={100}
+                            className="w-full"
+                            placeholder="Written Marks"
+                          />
+                        </Form.Item>
+                      </Col>
+
+                      {/* Passing Marks */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="Passing Marks"
+                          name={[name, "passing_marks"]}
+                        >
+                          <InputNumber
+                            min={0}
+                            max={100}
+                            className="w-full"
+                            placeholder="Passing Marks"
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Card>
+                );
+              })}
 
               {/* Add New Exam Button */}
               <Form.Item>
                 <Button
                   type="dashed"
-                  onClick={() => add()}
+                  onClick={() => {
+                    const existingTimetables =
+                      form.getFieldValue("timetables") || [];
+                    const lastEntry =
+                      existingTimetables.length > 0
+                        ? existingTimetables[existingTimetables.length - 1]
+                        : { mcq_marks: 0, written_marks: 0, passing_marks: 0 };
+
+                    add({
+                      mcq_marks: lastEntry.mcq_marks || 0,
+                      written_marks: lastEntry.written_marks || 0,
+                      passing_marks: lastEntry.passing_marks || 0,
+                    });
+                  }}
                   block
                   icon={<PlusOutlined />}
                   className="mt-4"
