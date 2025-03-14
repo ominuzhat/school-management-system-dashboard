@@ -64,7 +64,7 @@ const CreateExam = () => {
       end_date: dayjs(values.end_date).format("YYYY-MM-DD"),
       comment: values.comment,
       timetables: Object.keys(formData).map((key: string) => {
-        const timetable = formData[key].timetables[0]; // Assuming you're taking the first timetable for each subject
+        const timetable = formData[key].timetables[0]; 
         return {
           subject: timetable.subject,
           exam_date: dayjs(timetable.exam_date).format("YYYY-MM-DD"),
@@ -77,6 +77,7 @@ const CreateExam = () => {
           mcq_marks: timetable.mcq_marks,
           written_marks: timetable.written_marks,
           passing_marks: timetable.passing_marks,
+          contribution_marks: timetable.contribution_marks,
         };
       }),
     };

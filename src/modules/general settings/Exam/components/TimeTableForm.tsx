@@ -36,7 +36,6 @@ const TimeTableForm = ({
     setFormData(allValues);
   };
 
-
   return (
     <div className="p-4">
       <Form
@@ -124,11 +123,15 @@ const TimeTableForm = ({
                             },
                           ]}
                         >
-                          <TimePicker
+                          <input
+                            type="time"
+                            className="border w-full rounded p-1"
+                          ></input>
+                          {/* <TimePicker
                             format="h:mm A"
                             use12Hours
                             className="w-full"
-                          />
+                          /> */}
                         </Form.Item>
                       </Col>
 
@@ -208,6 +211,21 @@ const TimeTableForm = ({
                           />
                         </Form.Item>
                       </Col>
+                      {/* Contribution Marks */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="Contribution Marks"
+                          name={[name, "contribution_marks"]}
+                        >
+                          <InputNumber
+                            min={0}
+                            max={100}
+                            className="w-full"
+                            placeholder="Contribution Marks"
+                          />
+                        </Form.Item>
+                      </Col>
 
                       {/* Passing Marks */}
                       <Col xs={24} sm={12} md={8} lg={6}>
@@ -239,11 +257,17 @@ const TimeTableForm = ({
                     const lastEntry =
                       existingTimetables.length > 0
                         ? existingTimetables[existingTimetables.length - 1]
-                        : { mcq_marks: 0, written_marks: 0, passing_marks: 0 };
+                        : {
+                            mcq_marks: 0,
+                            written_marks: 0,
+                            passing_marks: 0,
+                            contribution_marks: 0,
+                          };
 
                     add({
                       mcq_marks: lastEntry.mcq_marks || 0,
                       written_marks: lastEntry.written_marks || 0,
+                      contribution_marks: lastEntry.contribution_marks || 0,
                       passing_marks: lastEntry.passing_marks || 0,
                     });
                   }}

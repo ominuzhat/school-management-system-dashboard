@@ -1,4 +1,4 @@
-import { ICreateExamMark, IGetExamMark } from "./../types/markExamTypes";
+import { ICreateExamMark, IGetMarkExam } from "./../types/markExamTypes";
 import api from "../../../../../app/api/api";
 import { FilterTypes } from "../../../../../app/features/filterSlice";
 import {
@@ -11,7 +11,7 @@ import { TagTypes } from "../../../../../app/utils/tagTypes";
 const examMarkEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
     getExamMark: builder.query<
-      ApiResponse<PaginatedResponse<IGetExamMark[]>>,
+      ApiResponse<PaginatedResponse<IGetMarkExam[]>>,
       FilterTypes
     >({
       query: (params) => ({
@@ -44,13 +44,12 @@ const examMarkEndpoint = api.injectEndpoints({
     }),
 
     getSingleExamMarks: builder.query<
-      ApiResponse<PaginatedResponse<IGetExamMark>>,
+      ApiResponse<PaginatedResponse<IGetMarkExam>>,
       number
     >({
       query: (roleId) => ({
-        url: `/api/v1.0/exams/marks/mark-exam/${roleId}/`,
+        url: `/api/v1.0/exams/marks/mark-exam/?exam=${roleId}`,
       }),
-
       providesTags: [
         {
           type: TagTypes.EXAM_MARK,
@@ -60,7 +59,7 @@ const examMarkEndpoint = api.injectEndpoints({
     }),
 
     updateExamMarks: builder.mutation<
-      ApiResponse<IGetExamMark>,
+      ApiResponse<IGetMarkExam>,
       { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({

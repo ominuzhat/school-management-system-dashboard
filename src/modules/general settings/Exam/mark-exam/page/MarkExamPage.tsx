@@ -6,19 +6,18 @@ import {
   Form as AntForm,
   Input,
   InputNumber,
-  Button,
   Table,
   Typography,
 } from "antd";
-import { useState } from "react";
-import {
-  useGetExamQuery,
-  useGetSingleExamQuery,
-} from "../../api/examEndPoints";
+import { useState, useEffect } from "react";
+import { useGetExamQuery } from "../../api/examEndPoints";
 import { Form } from "../../../../../common/CommonAnt";
-import { useCreateExamMarkMutation } from "../api/markExamEndPoints";
+import {
+  useCreateExamMarkMutation,
+  useGetSingleExamMarksQuery,
+} from "../api/markExamEndPoints";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const MarkExamPage = () => {
   const [form] = AntForm.useForm();
@@ -26,49 +25,64 @@ const MarkExamPage = () => {
 
   const [create, { isLoading, isSuccess }] = useCreateExamMarkMutation();
   const { data: examData } = useGetExamQuery({});
-  const { data: examDetails } = useGetSingleExamQuery<any>(
-    exam && Number(exam)
-  );
+  const { data: examDetails } = useGetSingleExamMarksQuery<any>(Number(exam), {
+    skip: !exam,
+  });
 
-  const [marks, setMarks] = useState<{ [key: string]: any }>({});
-  const [comments, setComments] = useState<{ [key: string]: string }>({});
+  const [studentData, setStudentData] = useState<{
+    [key: string]: { mcq?: number; written?: number; comment?: string };
+  }>({});
 
-  const handleMarksChange = (
+  useEffect(() => {
+    if (examDetails?.data?.records) {
+      const initialData: { [key: string]: any } = {};
+
+      examDetails?.data?.records?.forEach((student: any) => {
+        student?.subjects?.forEach((subject: any) => {
+          initialData[`${student.id}-${subject.id}`] = {
+            mcq: subject.mcq_marks_obtained || 0,
+            written: subject.written_marks_obtained || 0,
+            comment: subject.comment || "",
+          };
+        });
+      });
+
+      setStudentData(initialData);
+    }
+  }, [examDetails]);
+
+  const handleInputChange = (
     studentId: string,
     subjectId: string,
-    field: string,
+    field: "mcq" | "written" | "comment",
     value: any
   ) => {
-    setMarks((prevMarks) => ({
-      ...prevMarks,
-      [`${studentId}-${subjectId}-${field}`]: value,
-    }));
-  };
-
-  const handleCommentChange = (
-    studentId: string,
-    subjectId: string,
-    value: string
-  ) => {
-    setComments((prevComments) => ({
-      ...prevComments,
-      [`${studentId}-${subjectId}`]: value,
+    setStudentData((prevData) => ({
+      ...prevData,
+      [`${studentId}-${subjectId}`]: {
+        ...prevData[`${studentId}-${subjectId}`],
+        [field]: value,
+      },
     }));
   };
 
   const onFinish = (values: any): void => {
-    const results = {
-      name: values.name,
-      session: values.session,
-      grade_level: values.grade_level,
-      marks: marks,
-      comments: comments,
-    };
+    const formattedResults = Object.entries(studentData).map(([key, value]) => {
+      const [studentId, subjectId] = key.split("-");
 
-    create(results);
+      return {
+        exam: values.exam,
+        admission: Number(studentId),
+        subject: Number(subjectId),
+        mcq_marks_obtained: value.mcq || 0,
+        written_marks_obtained: value.written || 0,
+        comment: value.comment || "", // Ensure comment is passed properly
+      };
+    });
+
+    create(formattedResults);
   };
 
-  // Table columns definition
   const columns: any = [
     {
       title: "Roll",
@@ -100,9 +114,12 @@ const MarkExamPage = () => {
       render: (text: any, record: any) => (
         <InputNumber
           placeholder="MCQ Marks"
-          value={marks[`${record.studentId}-${record.subjectId}-mcq`] || ""}
+          value={
+            studentData[`${record.studentId}-${record.subjectId}`]?.mcq ??
+            (record.mcq_marks_obtained || 0)
+          }
           onChange={(value) =>
-            handleMarksChange(record.studentId, record.subjectId, "mcq", value)
+            handleInputChange(record.studentId, record.subjectId, "mcq", value)
           }
           style={{ width: "100%" }}
           min={0}
@@ -119,9 +136,12 @@ const MarkExamPage = () => {
       render: (text: any, record: any) => (
         <InputNumber
           placeholder="Written Marks"
-          value={marks[`${record.studentId}-${record.subjectId}-written`] || ""}
+          value={
+            studentData[`${record.studentId}-${record.subjectId}`]?.written ??
+            (record.written_marks_obtained || 0)
+          }
           onChange={(value) =>
-            handleMarksChange(
+            handleInputChange(
               record.studentId,
               record.subjectId,
               "written",
@@ -143,11 +163,15 @@ const MarkExamPage = () => {
       render: (text: any, record: any) => (
         <Input
           placeholder="Enter Comment"
-          value={comments[`${record.studentId}-${record.subjectId}`] || ""}
+          value={
+            studentData[`${record.studentId}-${record.subjectId}`]?.comment ??
+            (record.comment || "")
+          }
           onChange={(e) =>
-            handleCommentChange(
+            handleInputChange(
               record.studentId,
               record.subjectId,
+              "comment",
               e.target.value
             )
           }
@@ -157,24 +181,25 @@ const MarkExamPage = () => {
     },
   ];
 
-  const dataSource = examDetails?.data?.assigned_admissions
-    ?.map((data: any) => {
-      return data.subjects?.map((sub: any) => ({
-        key: `${data.id}-${sub.id}`,
-        roll: data.roll,
-        studentName: `${data.student?.first_name} ${data.student?.last_name}`,
-        studentId: data.id,
-        subjectId: sub.id,
-        subjectName: sub.name,
-      }));
-    })
-    .flat();
+  const dataSource = examDetails?.data?.records?.flatMap((student: any) => {
+    return student?.subjects?.map((subject: any) => ({
+      key: `${student.id}-${subject.id}`,
+      roll: student?.roll,
+      studentName: `${student?.first_name} ${student?.last_name}`,
+      studentId: student?.id,
+      subjectId: subject?.id,
+      subjectName: subject?.name,
+      mcq_marks_obtained: subject.mcq_marks_obtained || 0,
+      written_marks_obtained: subject.written_marks_obtained || 0,
+      comment: subject.comment || "",
+    }));
+  });
 
   return (
     <div className="p-6 ">
       <Card
         title={
-          <Title level={3} className="text-center text-blue-800">
+          <Title level={3} className="text-center ">
             Exam Marks Entry
           </Title>
         }
@@ -224,20 +249,6 @@ const MarkExamPage = () => {
               rowClassName={() => "hover:bg-gray-50 transition-all"}
             />
           )}
-
-          <Row justify="center" className="mt-6">
-            <Col>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={isLoading}
-                size="large"
-                className="bg-blue-600 hover:bg-blue-700 transition-all"
-              >
-                Submit Marks
-              </Button>
-            </Col>
-          </Row>
         </Form>
       </Card>
     </div>
