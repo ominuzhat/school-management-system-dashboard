@@ -64,16 +64,19 @@ const CreateExam = () => {
       end_date: dayjs(values.end_date).format("YYYY-MM-DD"),
       comment: values.comment,
       timetables: Object.keys(formData).map((key: string) => {
-        const timetable = formData[key].timetables[0]; 
+        const timetable = formData[key].timetables[0];
         return {
           subject: timetable.subject,
           exam_date: dayjs(timetable.exam_date).format("YYYY-MM-DD"),
+
           start_time: timetable.start_time
-            ? dayjs(timetable.start_time).format("HH:mm:ss")
+            ? dayjs(timetable.start_time, "HH:mm").format("HH:mm:ss")
             : undefined,
+
           end_time: timetable.end_time
-            ? dayjs(timetable.end_time).format("HH:mm:ss")
+            ? dayjs(timetable.end_time, "HH:mm").format("HH:mm:ss")
             : undefined,
+
           mcq_marks: timetable.mcq_marks,
           written_marks: timetable.written_marks,
           passing_marks: timetable.passing_marks,

@@ -68,6 +68,9 @@ import UpdateExam from "../modules/general settings/Exam/components/UpdateExam";
 import ExamHallPage from "../modules/general settings/Exam/Exam-hall/page/ExamHall";
 import ExamReceiptsPage from "../modules/general settings/Exam/Exam-receipt/page/ExamReceiptsPage";
 import MarkExamPage from "../modules/general settings/Exam/mark-exam/page/MarkExamPage";
+import GradeMarkPage from "../modules/general settings/Exam/Grade/pages/GradeMark";
+import ResultsPage from "../modules/general settings/Exam/Result/pages/ResultsPage";
+import ResultView from "../modules/general settings/Exam/Result/components/ResultView";
 
 const router = createBrowserRouter([
   {
@@ -243,6 +246,32 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <ExamReceiptsPage />,
+          },
+        ],
+      },
+      // Grade Mark
+      {
+        path: "/grade-mark",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <GradeMarkPage />,
+          },
+        ],
+      },
+      // exam Result
+      {
+        path: "/exam-result",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <ResultsPage />,
+          },
+          {
+            path: "/exam-result/view/:resultId",
+            element: <ResultView />,
           },
         ],
       },

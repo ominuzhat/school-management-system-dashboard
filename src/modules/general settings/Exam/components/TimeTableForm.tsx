@@ -9,7 +9,6 @@ import {
   InputNumber,
   Row,
   Select,
-  TimePicker,
 } from "antd";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 
@@ -48,7 +47,6 @@ const TimeTableForm = ({
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }, index) => {
-                // ✅ Ensure selectedSubjects is always an array
                 const selectedSubjects =
                   form
                     .getFieldValue("timetables")
@@ -102,11 +100,10 @@ const TimeTableForm = ({
                             },
                           ]}
                         >
-                          <TimePicker
-                            format="h:mm A"
-                            use12Hours
-                            className="w-full"
-                          />
+                          <input
+                            type="time"
+                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+                          ></input>
                         </Form.Item>
                       </Col>
 
@@ -125,13 +122,8 @@ const TimeTableForm = ({
                         >
                           <input
                             type="time"
-                            className="border w-full rounded p-1"
+                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
                           ></input>
-                          {/* <TimePicker
-                            format="h:mm A"
-                            use12Hours
-                            className="w-full"
-                          /> */}
                         </Form.Item>
                       </Col>
 

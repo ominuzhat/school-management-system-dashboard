@@ -6,14 +6,13 @@ const { RangePicker } = TimePicker;
 
 const CreateShift = () => {
   const [create, { isLoading, isSuccess }] = useCreateShiftMutation();
-  const formatDisplay = "h:mm A"; // 12-hour format for display
-  const formatSend = "HH:mm"; // 24-hour format to send
+  const formatDisplay = "h:mm A";
+  const formatSend = "HH:mm";
 
   const onFinish = (values: any): void => {
     const startTime = values.time_range?.[0]?.format(formatSend);
     const endTime = values.time_range?.[1]?.format(formatSend);
 
-    // Send the times in 24-hour format
     create({
       name: values?.name,
       start_time: startTime,

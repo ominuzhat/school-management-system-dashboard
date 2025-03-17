@@ -38,7 +38,11 @@ import { IoMdPersonAdd } from "react-icons/io";
 import { VscGoToEditingSession } from "react-icons/vsc";
 import { RiLuggageDepositLine, RiSecurePaymentLine } from "react-icons/ri";
 import { TfiAnnouncement } from "react-icons/tfi";
-import { BsBookmarks, BsFillFileRuledFill } from "react-icons/bs";
+import {
+  BsBookmarks,
+  BsFileEarmarkDiff,
+  BsFillFileRuledFill,
+} from "react-icons/bs";
 import { FiPenTool } from "react-icons/fi";
 
 const MenuData: React.FC = () => {
@@ -240,6 +244,16 @@ const MenuData: React.FC = () => {
           key: "/mark-exam",
           label: <Link to="/mark-exam">Mark Exam</Link>,
           icon: <BsBookmarks />,
+        },
+        {
+          key: "/grade-mark",
+          label: <Link to="/grade-mark">Grade Configuration</Link>,
+          icon: <BsFileEarmarkDiff />,
+        },
+        {
+          key: "/exam-result",
+          label: <Link to="/exam-result">Exam Result</Link>,
+          icon: <BsFileEarmarkDiff />,
         },
       ],
     },
