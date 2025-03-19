@@ -178,7 +178,7 @@ const CreateStudent = () => {
                             </Form.Item>
                           </Col>
                           <Col lg={8}>
-                            <PasswordInput />
+                            <PasswordInput isRequired={true} />
                           </Col>
                         </>
                       )}

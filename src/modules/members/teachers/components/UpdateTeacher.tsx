@@ -221,7 +221,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <PasswordInput />
+                        <PasswordInput isRequired={false} />
                       </Col>
                       <Col lg={8}>
                         <Form.Item

@@ -17,6 +17,7 @@ import {
   IoAccessibilityOutline,
   IoBookOutline,
   IoCalendarOutline,
+  IoCompassOutline,
   IoPeopleOutline,
   IoReceiptOutline,
 } from "react-icons/io5";
@@ -44,6 +45,7 @@ import {
   BsFillFileRuledFill,
 } from "react-icons/bs";
 import { FiPenTool } from "react-icons/fi";
+import { FaMapMarkedAlt } from "react-icons/fa";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -253,7 +255,12 @@ const MenuData: React.FC = () => {
         {
           key: "/exam-result",
           label: <Link to="/exam-result">Exam Result</Link>,
-          icon: <BsFileEarmarkDiff />,
+          icon: <IoCompassOutline />,
+        },
+        {
+          key: "/result-migration",
+          label: <Link to="/result-migration">Result Migration</Link>,
+          icon: <FaMapMarkedAlt />,
         },
       ],
     },

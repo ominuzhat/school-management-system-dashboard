@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form, Input } from "antd";
 
-const PasswordInput = () => {
+const PasswordInput = ({isRequired}:{isRequired:boolean}) => {
   const [password, setPassword] = useState("");
 
   const handlePasswordChange = (e: any) => {
@@ -40,7 +40,7 @@ const PasswordInput = () => {
       label="Password"
       name="password"
       rules={[
-        { required: true, message: "Password is required!" },
+        { required: isRequired, message: "Password is required!" },
         { min: 8, message: "Password must be at least 8 characters long." },
         {
           pattern: /^(?!\d+$)(?!.*password).*$/,

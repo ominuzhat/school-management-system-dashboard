@@ -39,6 +39,7 @@ export const TagTypes = {
   EXAM_Receipts: "Exam_RECEIPTS",
   EXAM_MARK: "Exam_Mark",
   RESULT: "Result",
+  RESULT_MIGRATION: "Result_Migration",
   ADMISSION: "Admission",
   DEPARTMENT: "Department",
   ADMISSION_SESSION: "Admission_Session",

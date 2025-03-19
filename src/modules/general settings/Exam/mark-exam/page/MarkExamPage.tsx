@@ -199,7 +199,7 @@ const MarkExamPage = () => {
     <div className="p-6 ">
       <Card
         title={
-          <Title level={3} className="text-center ">
+          <Title level={3} className="text-center pt-6">
             Exam Marks Entry
           </Title>
         }

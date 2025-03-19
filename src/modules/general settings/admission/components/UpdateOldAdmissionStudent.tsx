@@ -21,12 +21,15 @@ import { useParams } from "react-router-dom";
 import { IAdmission } from "../type/admissionType";
 import { debounce } from "lodash";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
+import { useGetShiftQuery } from "../../shift/api/shiftEndPoints";
 
 const { Option } = Select;
 
 const UpdateOldAdmissionStudent = () => {
   const [form] = AntForm.useForm();
   const [search, setSearch] = useState("");
+  const { data: shiftData } = useGetShiftQuery({});
+
   const gradeLevel = AntForm.useWatch("grade_level", form);
 
   const { admissionId } = useParams();
@@ -34,8 +37,6 @@ const UpdateOldAdmissionStudent = () => {
     Number(admissionId)
   );
   const singleAdmission: any = singleAdmissionData?.data;
-
-  console.log("singleAdmission", singleAdmission);
 
   const { data: studentData, isFetching } = useGetStudentsQuery({
     search: search,
@@ -62,7 +63,7 @@ const UpdateOldAdmissionStudent = () => {
         roll: singleAdmission?.roll,
         session: singleAdmission?.session?.id,
         status: singleAdmission?.status,
-        shift: singleAdmission?.shift,
+        shift: singleAdmission?.shift?.id,
         fee_type: singleAdmission?.fee_type,
         section: singleAdmission?.section?.id,
         grade_level: singleAdmission?.subjects?.[0]?.grade_level?.id,
@@ -224,14 +225,23 @@ const UpdateOldAdmissionStudent = () => {
               </Form.Item>
             </Col>
             <Col lg={8}>
-              <Form.Item<IAdmission> label="Shift" name="shift">
+              <Form.Item<IAdmission>
+                label="Shift"
+                name="shift"
+                rules={[{ required: true, message: "Shift" }]}
+              >
                 <Select
-                  placeholder="Shift"
-                  options={[
-                    { value: "day", label: "Day" },
-                    { value: "noon", label: "Noon" },
-                  ]}
-                />
+                  className="w-full"
+                  placeholder="Select Shift"
+                  allowClear
+                >
+                  {Array.isArray(shiftData?.data) &&
+                    shiftData.data.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.name}
+                      </Option>
+                    ))}
+                </Select>
               </Form.Item>
             </Col>
           </Row>

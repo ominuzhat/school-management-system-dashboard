@@ -71,6 +71,7 @@ import MarkExamPage from "../modules/general settings/Exam/mark-exam/page/MarkEx
 import GradeMarkPage from "../modules/general settings/Exam/Grade/pages/GradeMark";
 import ResultsPage from "../modules/general settings/Exam/Result/pages/ResultsPage";
 import ResultView from "../modules/general settings/Exam/Result/components/ResultView";
+import ResultMigrationPage from "../modules/general settings/Exam/Result Migration/pages/ResultMigration";
 
 const router = createBrowserRouter([
   {
@@ -260,6 +261,19 @@ const router = createBrowserRouter([
           },
         ],
       },
+
+      // Result Migration
+      {
+        path: "/result-migration",
+        element: <Accounts />,
+        children: [
+          {
+            path: "",
+            element: <ResultMigrationPage />,
+          },
+        ],
+      },
+
       // exam Result
       {
         path: "/exam-result",

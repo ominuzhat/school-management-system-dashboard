@@ -266,7 +266,7 @@ const UpdateEmployee = ({ records }: any) => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <PasswordInput />
+                        <PasswordInput isRequired={false} />
                       </Col>
 
                       <Col lg={8}>
