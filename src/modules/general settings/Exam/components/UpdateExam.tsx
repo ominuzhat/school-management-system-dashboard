@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   useGetSingleExamQuery,
@@ -6,7 +6,6 @@ import {
 } from "../api/examEndPoints";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import {
-  Badge,
   Button,
   Card,
   Col,
@@ -14,6 +13,8 @@ import {
   Row,
   Select,
   Form as AntForm,
+  Tabs,
+  TabsProps,
 } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
@@ -27,6 +28,7 @@ import TimeTableForm from "./TimeTableForm";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
+import { capitalize } from "../../../../common/capitalize/Capitalize";
 
 const { Option } = Select;
 
@@ -43,6 +45,8 @@ const UpdateExam = () => {
   const [update] = useUpdateExamMutation();
 
   const examData = singleData?.data as any;
+  const [timetablesData, setTimeTablesData] = useState([]);
+  const [formData, setFormData] = useState<Record<string, any>>([]);
 
   useEffect(() => {
     if (examData) {
@@ -58,10 +62,13 @@ const UpdateExam = () => {
         passing_marks: timetable.passing_marks,
       }));
 
+      setTimeTablesData(timetables);
+      setFormData(timetables);
+
       form.setFieldsValue({
         name: examData?.name,
         session: examData?.session.id,
-        grade_level: examData?.grade_level.id,
+        grade_level: examData?.grade_level.map((s: any) => s.id),
         section: examData?.section.map((s: any) => s.id),
         term: examData?.term.id,
         exam_date: [dayjs(examData?.start_date), dayjs(examData?.end_date)],
@@ -93,6 +100,44 @@ const UpdateExam = () => {
       })),
     };
     update({ id: Number(examId), data: results });
+  };
+
+  const [selectedClass, setSelectedClass] = useState([]);
+
+  const gradeLevel = AntForm.useWatch("grade_level", form);
+
+  useEffect(() => {
+    if (Array.isArray(gradeLevel) && Array.isArray(classData?.data)) {
+      const filteredClasses: any = classData.data.filter((classItem) =>
+        gradeLevel.includes(classItem.id)
+      );
+      setSelectedClass(filteredClasses);
+    }
+  }, [gradeLevel, classData]);
+
+  console.log(selectedClass);
+  console.log(timetablesData, "timetablesData");
+  console.log(formData, "formData");
+
+  const items: TabsProps["items"] = selectedClass.map((classItem: any) => ({
+    key: classItem.id.toString(),
+    label: capitalize(classItem.name),
+    children: (
+      <TimeTableForm
+        selectedTab={classItem.id.toString()}
+        formData={formData[classItem.id.toString()] || {}}
+        setFormData={(data: any) =>
+          setFormData((prev) => ({
+            ...prev,
+            [classItem.id.toString()]: data,
+          }))
+        }
+      />
+    ),
+  }));
+
+  const onChange = (key: any) => {
+    console.log(key);
   };
 
   return (
@@ -230,12 +275,21 @@ const UpdateExam = () => {
             </Col>
 
             <Col xs={24}>
+              <Tabs
+                // defaultActiveKey={selectedTab}
+                // activeKey={selectedTab}
+                items={items}
+                onChange={onChange}
+              />
+            </Col>
+
+            {/* <Col xs={24}>
               <Badge.Ribbon text="Exam Schedule" color="blue" placement="start">
                 <Card className="pt-5">
                   <TimeTableForm />
                 </Card>
               </Badge.Ribbon>
-            </Col>
+            </Col> */}
           </Row>
         </Form>
       </Card>

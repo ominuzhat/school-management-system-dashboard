@@ -1,22 +1,16 @@
-import { Col, Input, Row, TimePicker } from "antd";
+import { Col, Input, Row } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateShiftMutation } from "../api/shiftEndPoints";
-
-const { RangePicker } = TimePicker;
+import dayjs from "dayjs";
 
 const CreateShift = () => {
   const [create, { isLoading, isSuccess }] = useCreateShiftMutation();
-  const formatDisplay = "h:mm A";
-  const formatSend = "HH:mm";
 
   const onFinish = (values: any): void => {
-    const startTime = values.time_range?.[0]?.format(formatSend);
-    const endTime = values.time_range?.[1]?.format(formatSend);
-
     create({
       name: values?.name,
-      start_time: startTime,
-      end_time: endTime,
+      start_time: dayjs(values.start_time, "HH:mm").format("HH:mm:ss"),
+      end_time: dayjs(values.end_time, "HH:mm").format("HH:mm:ss"),
     });
   };
 
@@ -41,13 +35,33 @@ const CreateShift = () => {
             </Form.Item>
           </Col>
 
-          <Col lg={12}>
+          <Col lg={6}>
             <Form.Item
-              label="Shift Time"
-              name="time_range"
-              rules={[{ required: true, message: "Shift Time is required!" }]}
+              label="Shift Started Time"
+              name="start_time"
+              rules={[
+                { required: true, message: "Shift Started Time is required!" },
+              ]}
             >
-              <RangePicker format={formatDisplay} className="w-full" />
+              <input
+                type="time"
+                className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+              ></input>
+            </Form.Item>
+          </Col>
+
+          <Col lg={6}>
+            <Form.Item
+              label="Shift Ended Time"
+              name="end_time"
+              rules={[
+                { required: true, message: "Shift Ended Time is required!" },
+              ]}
+            >
+              <input
+                type="time"
+                className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+              ></input>
             </Form.Item>
           </Col>
         </Row>

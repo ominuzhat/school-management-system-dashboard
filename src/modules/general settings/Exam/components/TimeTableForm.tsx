@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,

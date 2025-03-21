@@ -26,7 +26,7 @@ const SidebarTop: React.FC = () => {
           src={dashboardData?.data?.institution?.logo || mainLogo}
           preview={false}
           style={{
-            width: "50%",
+            width: "30%",
             height: "100%",
             objectFit: "contain",
           }}

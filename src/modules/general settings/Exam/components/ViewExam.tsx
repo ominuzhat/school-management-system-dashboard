@@ -30,6 +30,11 @@ const ViewExam = () => {
     },
     { title: "Total Marks", dataIndex: "total_marks", key: "total_marks" },
     {
+      title: "Contribution Marks",
+      dataIndex: "contribution_marks",
+      key: "contribution_marks",
+    },
+    {
       title: "Passing Marks",
       dataIndex: "passing_marks",
       key: "passing_marks",
@@ -57,7 +62,10 @@ const ViewExam = () => {
                 <Text strong className="text-gray-700">
                   Grade Level:
                 </Text>{" "}
-                <Tag color="blue">{exam?.grade_level?.name}</Tag>
+                <Tag color="blue">
+                  {exam?.grade_level.map((s: any) => s.name).join(", ")}
+                  {/* {exam?.grade_level?.name} */}
+                </Tag>
               </div>
               <div>
                 <Text strong className="text-gray-700">
