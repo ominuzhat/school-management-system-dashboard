@@ -99,6 +99,14 @@ const MarkExamPage = () => {
       width: 200,
     },
     {
+      title: "Class",
+      dataIndex: "gradeLevel",
+      key: "gradeLevel",
+      align: "center",
+      width: 200,
+      render: (title: any) => title || "N/A",
+    },
+    {
       title: "Subject Name",
       dataIndex: "subjectName",
       key: "subjectName",
@@ -187,6 +195,7 @@ const MarkExamPage = () => {
       roll: student?.roll,
       studentName: `${student?.first_name} ${student?.last_name}`,
       studentId: student?.id,
+      gradeLevel: student?.grade_level?.name,
       subjectId: subject?.id,
       subjectName: subject?.name,
       mcq_marks_obtained: subject.mcq_marks_obtained || 0,
