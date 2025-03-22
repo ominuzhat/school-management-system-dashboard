@@ -22,7 +22,18 @@ const ViewExam = () => {
     { title: "Exam Date", dataIndex: "exam_date", key: "exam_date" },
     { title: "Start Time", dataIndex: "start_time", key: "start_time" },
     { title: "End Time", dataIndex: "end_time", key: "end_time" },
-    { title: "MCQ Marks", dataIndex: "mcq_marks", key: "mcq_marks" },
+    {
+      title: "Subject",
+      dataIndex: "subject",
+      key: "subject",
+      render: (title: any) =>
+        title ? `${title.name} (${title?.grade_level?.name})` : "N/A",
+    },
+    {
+      title: "MCQ Marks",
+      dataIndex: "mcq_marks",
+      key: "mcq_marks",
+    },
     {
       title: "Written Marks",
       dataIndex: "written_marks",

@@ -76,7 +76,7 @@ const MarkExamPage = () => {
         subject: Number(subjectId),
         mcq_marks_obtained: value.mcq || 0,
         written_marks_obtained: value.written || 0,
-        comment: value.comment || "", // Ensure comment is passed properly
+        comment: value.comment || "",
       };
     });
 
@@ -119,7 +119,7 @@ const MarkExamPage = () => {
       key: "mcqMarks",
       align: "center",
       width: 150,
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <InputNumber
           placeholder="MCQ Marks"
           value={
@@ -141,7 +141,7 @@ const MarkExamPage = () => {
       key: "writtenMarks",
       align: "center",
       width: 150,
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <InputNumber
           placeholder="Written Marks"
           value={
@@ -168,7 +168,7 @@ const MarkExamPage = () => {
       key: "comment",
       align: "center",
       width: 200,
-      render: (text: any, record: any) => (
+      render: (_text: any, record: any) => (
         <Input
           placeholder="Enter Comment"
           value={
@@ -215,6 +215,7 @@ const MarkExamPage = () => {
         className="rounded-lg shadow-xl border-0"
         headStyle={{ borderBottom: "none" }}
       >
+       
         <Form
           form={form}
           onFinish={onFinish}

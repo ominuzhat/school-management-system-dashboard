@@ -70,7 +70,7 @@ const ExamReceiptsPage = () => {
     {
       title: "Name",
       dataIndex: ["student", "first_name"],
-      render: (text: string, record: any) =>
+      render: (_text: string, record: any) =>
         `${record.student.first_name} ${record.student.last_name}`,
     },
     { title: "Email", dataIndex: ["student", "email"] },

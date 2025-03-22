@@ -17,7 +17,7 @@ interface Props<T> extends FormProps<T> {
 
 interface ItemProps<T> extends Omit<FormItemProps, "name" | "children"> {
   name: keyof T;
-  label?: string;
+  label?: string | JSX.Element;
   rules?: FormItemProps["rules"];
   children: React.ReactNode;
 }

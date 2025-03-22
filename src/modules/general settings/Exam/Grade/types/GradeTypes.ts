@@ -6,3 +6,9 @@ export interface IGradeMarks {
   status: string;
   institution_id: number;
 }
+
+export interface IFailCriteria {
+  overall: number;
+  subject: number;
+  min_subject: number;
+}
