@@ -34,6 +34,7 @@ export const TagTypes = {
   SMS: "Sms",
   SHIFT: "Shift",
   EXAM: "Exam",
+  LEAVE: "Leave",
   EXAM_Hall: "Exam_Hall",
   GRADE_MARK: "Grade_Mark",
   EXAM_Receipts: "Exam_RECEIPTS",

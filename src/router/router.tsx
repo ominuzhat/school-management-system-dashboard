@@ -72,6 +72,7 @@ import GradeMarkPage from "../modules/general settings/Exam/Grade/pages/GradeMar
 import ResultsPage from "../modules/general settings/Exam/Result/pages/ResultsPage";
 import ResultView from "../modules/general settings/Exam/Result/components/ResultView";
 import ResultMigrationPage from "../modules/general settings/Exam/Result Migration/pages/ResultMigration";
+import LeavePage from "../modules/general settings/Leave/page/LeavePage";
 
 const router = createBrowserRouter([
   {
@@ -179,6 +180,12 @@ const router = createBrowserRouter([
       {
         path: "/shift",
         element: <ShiftPage />,
+      },
+
+      // Leave
+      {
+        path: "/leave",
+        element: <LeavePage />,
       },
 
       // exam

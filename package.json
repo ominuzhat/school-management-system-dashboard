@@ -13,7 +13,7 @@
   "dependencies": {
     "@redux-devtools/extension": "^3.3.0",
     "@reduxjs/toolkit": "^2.2.5",
-    "antd": "^5.18.1",
+    "antd": "^5.24.4",
     "apexcharts": "^3.49.1",
     "axios": "^1.7.3",
     "dayjs": "^1.11.11",

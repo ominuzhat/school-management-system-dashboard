@@ -46,6 +46,7 @@ import {
 } from "react-icons/bs";
 import { FiPenTool } from "react-icons/fi";
 import { FaMapMarkedAlt } from "react-icons/fa";
+import { LuCopyleft } from "react-icons/lu";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -167,7 +168,7 @@ const MenuData: React.FC = () => {
         {
           label: <Link to="/account">Chart of Account</Link>,
           icon: <BiSolidUserAccount />,
-          key: "/account",
+          key: "/account-chart",
         },
         {
           label: <Link to="/account/transactions">Account Transaction</Link>,
@@ -214,6 +215,12 @@ const MenuData: React.FC = () => {
       key: "/shift",
       label: <Link to="/shift">Shift</Link>,
       icon: <MdFilterTiltShift />,
+    },
+
+    {
+      key: "/leave",
+      label: <Link to="/leave">Leave</Link>,
+      icon: <LuCopyleft />,
     },
     {
       key: "/routine",

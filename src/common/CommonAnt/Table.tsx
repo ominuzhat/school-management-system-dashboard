@@ -51,145 +51,41 @@ const Table = <T extends object>({
             Showing {page_size} of {total} entries
           </Typography.Text>
         ),
-        current: page || total,
+        current: page || total, // Ensure current is always a positive number
         pageSize: page_size,
         onChange: (page: number, pageSize: number) => {
           dispatch(addFilter({ name: "PAGE_SIZE", value: pageSize }));
           dispatch(
             addFilter({
               name: "PAGE",
-              value: page || undefined,
+              value: page || 1, // Ensure page is always set to a positive number
             })
           );
         },
       }}
+      // pagination={{
+      //   total,
+      //   showSizeChanger: true,
+      //   showTotal: (total) => (
+      //     <Typography.Text strong>
+      //       Showing {page_size} of {total} entries
+      //     </Typography.Text>
+      //   ),
+      //   current: page || total,
+      //   pageSize: page_size,
+      //   onChange: (page: number, pageSize: number) => {
+      //     dispatch(addFilter({ name: "PAGE_SIZE", value: pageSize }));
+      //     dispatch(
+      //       addFilter({
+      //         name: "PAGE",
+      //         value: page || undefined,
+      //       })
+      //     );
+      //   },
+      // }}
       footer={() => <Typography.Text>Total Data: {total || 0}</Typography.Text>}
     />
   );
 };
 
 export default Table;
-
-// // TABLE COLUMN ACTION DROPDOWN
-// export const TableActionDropdown = <T,>({
-//   title = "Actions",
-//   content,
-// }: {
-//   title?: string;
-//   content: (record: T) => React.ReactElement[];
-// }) => ({
-//   title,
-//   render: (_: unknown, record: T) => {
-//     const items = content(record).map((item, index) => ({
-//       key: String(index),
-//       label: item,
-//     }));
-//     return (
-//       <Dropdown
-//         placement="bottomRight"
-//         trigger={["click"]}
-//         arrow
-//         menu={{ items }}
-//       >
-//         <Button
-//           type="text"
-//           size="small"
-//           // icon={<Iconify icon="entypo:dots-three-horizontal" />}
-//         />
-//       </Dropdown>
-//     );
-//   },
-// });
-
-// import { Table as AntTable, TableProps, Typography } from "antd";
-// import { useDispatch, useSelector } from "react-redux";
-// import { RootState } from "../../app/store";
-// import { setLimit, setSkip } from "../../app/features/filterSlice";
-
-// interface Props<T> extends TableProps<T> {
-//   total: number | undefined;
-// }
-
-// const Table = <T extends object>({ total, ...restProps }: Props<T>) => {
-//   const { page_size = 10, skip = 0 } = useSelector(
-//     (state: RootState) => state.filter
-//   );
-
-//   const dispatch = useDispatch();
-//   const currentPage = Math.floor(skip / page_size) + 1;
-
-//   console.log(currentPage, "currentPage");
-
-//   return (
-//     <AntTable
-//       {...restProps}
-//       scroll={{ x: true }}
-//       size="small"
-//       bordered
-//       pagination={{
-//         total: total,
-//         showSizeChanger: true,
-//         showTotal: (total) => (
-//           <Typography.Text strong>
-//             Total {page_size} of {total}
-//           </Typography.Text>
-//         ),
-//         current: currentPage,
-//         pageSize: page_size,
-//         onChange: (page, pageSize) => {
-//           dispatch(setLimit(pageSize));
-//           dispatch(setSkip((page - 1) * pageSize));
-//         },
-//       }}
-//     />
-//   );
-// };
-
-// export default Table;
-
-// -------------------------
-
-// import { Table as AntTable, TableProps, Typography } from "antd";
-// import { useDispatch, useSelector } from "react-redux";
-// import { RootState } from "../../app/store";
-// import { setLimit, setSkip } from "../../app/features/filterSlice";
-
-// interface Props<T> extends TableProps<T> {
-//   total: number | undefined;
-// }
-
-// const Table = <T extends object>({ total, ...restProps }: Props<T>) => {
-//   const { page_size = 10, skip = 0 } = useSelector(
-//     (state: RootState) => state.filter
-//   );
-
-//   const dispatch = useDispatch();
-
-//   console.log(page_size, skip, total, "ssssssssssss");
-
-//   return (
-//     <AntTable
-//       {...restProps}
-//       scroll={{ x: true }}
-//       size="small"
-//       bordered
-//       pagination={{
-//         total: total,
-//         showSizeChanger: true,
-//         showTotal: (total) => (
-//           <Typography.Text strong>
-//             Total {page_size} of {total}
-//           </Typography.Text>
-//         ),
-//         current: Math.floor(skip / page_size) + 1,
-//         pageSize: page_size,
-//         onChange: (page, pageSize) => {
-//           dispatch(setLimit(pageSize));
-//           dispatch(setSkip((page - 1) * pageSize));
-//         },
-//       }}
-//     />
-//   );
-// };
-
-// export default Table;
