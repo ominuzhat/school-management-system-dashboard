@@ -9,8 +9,18 @@ import { useGetSubjectsQuery } from "../api/subjectsEndPoints";
 import useSubjectColumns from "../utils/SubjectsColumns";
 import { useAppSelector } from "../../../../app/store";
 import { FilterState } from "../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../utilities/NoPermissionData";
 
 const SubjectsPage = () => {
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useSubjectColumns();
+
   const dispatch = useDispatch();
   const { page_size, page } = useAppSelector(FilterState);
 
@@ -24,6 +34,17 @@ const SubjectsPage = () => {
     page: Number(page) || undefined,
   });
 
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.classsubject,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.classsubject,
+    actionNames.add
+  );
+
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -31,34 +52,40 @@ const SubjectsPage = () => {
       </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
-          <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() =>
-                dispatch(
-                  showModal({
-                    title: "Add Subjects",
-                    content: <CreateSubjects />,
-                  })
-                )
-              }
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Subjects
-            </Button>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  dispatch(
+                    showModal({
+                      title: "Add Subjects",
+                      content: <CreateSubjects />,
+                    })
+                  )
+                }
+                icon={<PlusOutlined />}
+                className="w-full"
+              >
+                Add Subjects
+              </Button>
+            </Col>
+          )}
         </Row>
       </Card>
       <Card>
-        <Table
-          rowKey={"id"}
-          loading={isLoading || isFetching}
-          refetch={refetch}
-          total={getSubjectsData?.data?.count}
-          dataSource={getSubjectsData?.data?.results}
-          columns={useSubjectColumns()}
-        />
+        {viewPermission ? (
+          <Table
+            rowKey={"id"}
+            loading={isLoading || isFetching}
+            refetch={refetch}
+            total={getSubjectsData?.data?.count}
+            dataSource={getSubjectsData?.data?.results}
+            columns={columns}
+          />
+        ) : (
+          <NoPermissionData />
+        )}
       </Card>
     </div>
   );

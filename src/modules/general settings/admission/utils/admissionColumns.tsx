@@ -9,13 +9,26 @@ import { IAdmissionStatus } from "../type/admissionType";
 import { FaFilePdf } from "react-icons/fa6";
 import { useGetSingleAdmissionFormQuery } from "../api/admissionEndPoints";
 import { useEffect, useState } from "react";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useAdmissionColumns = (): ColumnsType<any> => {
   const navigate = useNavigate();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admission,
+    actionNames.change
+  );
   const [admissionId, setAdmissionId] = useState<number | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
-  const { data: singleAdmissionForm  } = useGetSingleAdmissionFormQuery(
+  const { data: singleAdmissionForm } = useGetSingleAdmissionFormQuery(
     admissionId as number,
     {
       skip: admissionId === null,
@@ -120,7 +133,8 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Shift",
       dataIndex: "shift",
       align: "center",
-      render: (title) => (title && title?.name ? capitalize(title?.name ) : "N/A"),
+      render: (title) =>
+        title && title?.name ? capitalize(title?.name) : "N/A",
     },
     {
       key: "6",
@@ -190,7 +204,9 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton onClick={() => navigate(`/admission/${record?.id}`)} />
+          {updatePermission && (
+            <EditButton onClick={() => navigate(`/admission/${record?.id}`)} />
+          )}
 
           <ViewButton to={`/admission/admission-view/${record?.id}`} />
           <Button

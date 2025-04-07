@@ -19,18 +19,15 @@ const SidebarTop: React.FC = () => {
 
   return (
     <React.Fragment>
-      <div className="sidebar-top-style flex items-center justify-center">
+      <div className="sidebar-top-style flex items-center justify-center overflow-hidden">
         {/* <h1 style={{ fontSize: "24px", fontFamily: "Arial" }}>{time .}</h1> */}
 
         <Image
           src={dashboardData?.data?.institution?.logo || mainLogo}
           preview={false}
-          style={{
-            width: "30%",
-            height: "100%",
-            objectFit: "contain",
-          }}
-          className="mx-auto"
+          width={40}
+          height={40}
+          className="mx-auto object-fit-contain"
         />
       </div>
       <hr />

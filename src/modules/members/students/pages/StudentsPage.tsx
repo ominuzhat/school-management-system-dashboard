@@ -17,9 +17,11 @@ import { no_img } from "../../../../utilities/images";
 import { useGetStudentsQuery } from "../api/studentEndPoints";
 import useStudentColumns from "../utils/studentColumns";
 import { FilterState } from "../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
 
 const StudentsPage = () => {
   // const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
   const [layout, setLayout] = useState("grid");
   const [filters, setFilters] = useState({ search: "", is_active: "" });
   const { page_size, page } = useAppSelector(FilterState);

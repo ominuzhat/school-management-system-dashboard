@@ -16,6 +16,13 @@ import { debounce } from "lodash";
 import { useGetExamQuery } from "../../api/examEndPoints";
 import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
 import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../../utilities/NoPermissionData";
 const { Option } = Select;
 const ResultsPage = () => {
   const dispatch = useDispatch();
@@ -26,6 +33,8 @@ const ResultsPage = () => {
   const { data: examList } = useGetExamQuery({});
   const { data: classList } = useGetClassesQuery({});
   const { data: admissionSessionList } = useGetAdmissionSessionQuery({});
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useResultsColumns();
 
   const { page_size, page } = useAppSelector(FilterState);
   const [filters, setFilters] = useState({
@@ -56,6 +65,17 @@ const ResultsPage = () => {
   const dataSource =
     (resultList?.data?.results as IResults[] | undefined) ?? [];
 
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.studentresult,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.studentresult,
+    actionNames.add
+  );
+
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -64,23 +84,25 @@ const ResultsPage = () => {
       <Card>
         <Row justify="space-between" gutter={[16, 16]}>
           {/* Button Section */}
-          <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() =>
-                dispatch(
-                  showModal({
-                    title: "Add Exam Result",
-                    content: <CreateResult />,
-                  })
-                )
-              }
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Exam Result
-            </Button>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  dispatch(
+                    showModal({
+                      title: "Publish Result",
+                      content: <CreateResult />,
+                    })
+                  )
+                }
+                icon={<PlusOutlined />}
+                className="w-full"
+              >
+                Publish Result
+              </Button>
+            </Col>
+          )}
 
           {/* Filters Section */}
           <Col lg={16} xs={24}>
@@ -196,14 +218,18 @@ const ResultsPage = () => {
         </Row>
       </Card>
 
-      <Table
-        rowKey={"id"}
-        loading={isLoading || isFetching}
-        refetch={refetch}
-        total={dataLength}
-        dataSource={dataSource}
-        columns={useResultsColumns()}
-      />
+      {viewPermission ? (
+        <Table
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={dataLength}
+          dataSource={dataSource}
+          columns={columns}
+        />
+      ) : (
+        <NoPermissionData />
+      )}
     </div>
   );
 };

@@ -8,9 +8,15 @@ import {
   useCreateTeacherAttendanceMutation,
   useLazyGetMarkTeacherAttendanceQuery,
 } from "../api/teacherAttendanceEndPoints";
-// import { Table } from "../../../../../common/CommonAnt";
 import useMarkTeacherAttendanceColumns from "../utils/MarkTeacherAttendanceColumn";
 import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../../utilities/NoPermissionData";
 
 const MarkTeachersAttendance = () => {
   const [result, setResult] = useState<Record<string, any> | null>(null);
@@ -21,6 +27,13 @@ const MarkTeachersAttendance = () => {
 
   const [fetchAttendanceData, { data: attendanceData, isLoading }] =
     useLazyGetMarkTeacherAttendanceQuery<any>({});
+
+  // Move hook call to top level
+  const columns = useMarkTeacherAttendanceColumns({
+    attendanceData: attendanceData?.data?.records || [],
+    formData,
+    setResult,
+  });
 
   const handleSearch = () => {
     if (formData) {
@@ -58,26 +71,42 @@ const MarkTeachersAttendance = () => {
     }
   };
 
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.employeeattendance,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.employeeattendance,
+    actionNames.add
+  );
+
   return (
     <div className="space-y-5">
       <div className="my-5">
         <BreadCrumb />
       </div>
-      <Link to="/attendance/mark-employee-attendance-list">
-        <p
-          style={{
-            fontSize: "14px",
-            fontWeight: "400",
-            color: "#1890ff",
-            padding: "8px 16px",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-          }}
-          className="flex items-center gap-2  w-64"
-        >
-          View List of Attendance <MdOutlineArrowRightAlt className="text-xl" />
-        </p>
-      </Link>
+      {viewPermission && (
+        <Link to="/attendance/mark-employee-attendance-list">
+          <p
+            style={{
+              fontSize: "14px",
+              fontWeight: "400",
+              color: "#1890ff",
+              padding: "8px 16px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            className="flex items-center gap-2  w-64"
+          >
+            View List of Attendance{" "}
+            <MdOutlineArrowRightAlt className="text-xl" />
+          </p>
+        </Link>
+      )}
 
       <Card>
         <Row justify="space-between" align="middle" gutter={[10, 10]}>
@@ -110,24 +139,26 @@ const MarkTeachersAttendance = () => {
       </Card>
 
       <Card>
-        <Table
-          loading={isLoading}
-          dataSource={attendanceData?.data?.records || []}
-          columns={useMarkTeacherAttendanceColumns({
-            attendanceData: attendanceData?.data?.records || [],
-            formData,
-            setResult,
-          })}
-          pagination={false}
-          rowKey={(record) => record.teacher?.id || record.employee?.id}
-        />
-        <Button
-          className="mt-5"
-          type="primary"
-          onClick={handleAttendanceSubmit}
-        >
-          Submit Attendance
-        </Button>
+        {createPermission ? (
+          <>
+            <Table
+              loading={isLoading}
+              dataSource={attendanceData?.data?.records || []}
+              columns={columns}
+              pagination={false}
+              rowKey={(record) => record.teacher?.id || record.employee?.id}
+            />
+            <Button
+              className="mt-5"
+              type="primary"
+              onClick={handleAttendanceSubmit}
+            >
+              Submit Attendance
+            </Button>
+          </>
+        ) : (
+          <NoPermissionData />
+        )}
       </Card>
     </div>
   );

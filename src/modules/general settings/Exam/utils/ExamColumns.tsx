@@ -5,8 +5,22 @@ import dayjs from "dayjs";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useExamColumns = (): ColumnsType<any> => {
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.exam,
+    actionNames.change
+  );
+
   // const [deleteCartItem] = useDeleteOrderItemMutation();
 
   // const handleDelete = async (id: any) => {
@@ -60,19 +74,21 @@ const useExamColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <Link to={`${record.id}`}>
-            <Button
-              title="Edit"
-              size="small"
-              type="default"
-              style={{
-                color: "#FFA500",
-                border: "1px solid #FFA500",
-              }}
-            >
-              <FaEdit />
-            </Button>
-          </Link>
+          {updatePermission && (
+            <Link to={`${record.id}`}>
+              <Button
+                title="Edit"
+                size="small"
+                type="default"
+                style={{
+                  color: "#FFA500",
+                  border: "1px solid #FFA500",
+                }}
+              >
+                <FaEdit />
+              </Button>
+            </Link>
+          )}
           <ViewButton to={`view/${record?.id}`} />
           {/* <DeleteButton
           onClick={() => handleDelete(record.id)}>

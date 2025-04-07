@@ -16,12 +16,26 @@ import {
   useCreateExamMarkMutation,
   useGetSingleExamMarksQuery,
 } from "../api/markExamEndPoints";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../../utilities/NoPermissionData";
 
 const { Title } = Typography;
 
 const MarkExamPage = () => {
   const [form] = AntForm.useForm();
   const exam = AntForm.useWatch("exam", form);
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.exammark,
+    actionNames.add
+  );
 
   const [create, { isLoading, isSuccess }] = useCreateExamMarkMutation();
   const { data: examData } = useGetExamQuery({});
@@ -215,51 +229,54 @@ const MarkExamPage = () => {
         className="rounded-lg shadow-xl border-0"
         headStyle={{ borderBottom: "none" }}
       >
-       
-        <Form
-          form={form}
-          onFinish={onFinish}
-          isLoading={isLoading}
-          isSuccess={isSuccess}
-        >
-          <Row gutter={[16, 16]} justify="center">
-            <Col xs={24} sm={12} lg={8}>
-              <Form.Item
-                label="Select Exam"
-                name="exam"
-                rules={[{ required: true, message: "Exam is required!" }]}
-              >
-                <Select
-                  placeholder="Select Exam Name"
-                  className="w-full"
-                  allowClear
-                  showSearch
-                  dropdownStyle={{ borderRadius: "8px" }}
+        {createPermission ? (
+          <Form
+            form={form}
+            onFinish={onFinish}
+            isLoading={isLoading}
+            isSuccess={isSuccess}
+          >
+            <Row gutter={[16, 16]} justify="center">
+              <Col xs={24} sm={12} lg={8}>
+                <Form.Item
+                  label="Select Exam"
+                  name="exam"
+                  rules={[{ required: true, message: "Exam is required!" }]}
                 >
-                  {Array.isArray(examData?.data) &&
-                    examData?.data?.map((exam: any) => (
-                      <Select.Option key={exam.id} value={exam.id}>
-                        {exam?.name}
-                      </Select.Option>
-                    ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
+                  <Select
+                    placeholder="Select Exam Name"
+                    className="w-full"
+                    allowClear
+                    showSearch
+                    dropdownStyle={{ borderRadius: "8px" }}
+                  >
+                    {Array.isArray(examData?.data) &&
+                      examData?.data?.map((exam: any) => (
+                        <Select.Option key={exam.id} value={exam.id}>
+                          {exam?.name}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
 
-          {exam && (
-            <Table
-              columns={columns}
-              dataSource={dataSource}
-              rowKey="key"
-              pagination={false}
-              bordered
-              className="mt-6 rounded-lg shadow-sm"
-              scroll={{ x: true }}
-              rowClassName={() => "hover:bg-gray-50 transition-all"}
-            />
-          )}
-        </Form>
+            {exam && (
+              <Table
+                columns={columns}
+                dataSource={dataSource}
+                rowKey="key"
+                pagination={false}
+                bordered
+                className="mt-6 rounded-lg shadow-sm"
+                scroll={{ x: true }}
+                rowClassName={() => "hover:bg-gray-50 transition-all"}
+              />
+            )}
+          </Form>
+        ) : (
+          <NoPermissionData />
+        )}
       </Card>
     </div>
   );

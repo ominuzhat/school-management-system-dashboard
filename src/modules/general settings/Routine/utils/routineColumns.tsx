@@ -4,10 +4,24 @@ import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import { useNavigate } from "react-router-dom";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useRoutineColumns = (): ColumnsType<any> => {
   const navigate = useNavigate();
-//   const dispatch = useDispatch();
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.routine,
+    actionNames.change
+  );
+  //   const dispatch = useDispatch();
   //   const [deleteCartItem] = useDeleteOrderItemMutation();
 
   //   const handleDelete = async (id: any) => {
@@ -53,7 +67,11 @@ const useRoutineColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-                 <EditButton onClick={() => navigate(`/routine/update/${record?.id}`)} />
+          {updatePermission && (
+            <EditButton
+              onClick={() => navigate(`/routine/update/${record?.id}`)}
+            />
+          )}
 
           <ViewButton to={`/routine/view/${record?.id}`} />
 

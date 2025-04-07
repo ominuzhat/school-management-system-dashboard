@@ -261,7 +261,7 @@ const MenuData: React.FC = () => {
         },
         {
           key: "/exam-result",
-          label: <Link to="/exam-result">Exam Result</Link>,
+          label: <Link to="/exam-result">Publish Result</Link>,
           icon: <IoCompassOutline />,
         },
         {

@@ -5,9 +5,22 @@ import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import UpdateShift from "../components/UpdateShift";
 import moment from "moment"; // Or use dayjs if you prefer
+import { GetPermission } from "../../../../utilities/permission";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useShiftColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.shift,
+    actionNames.change
+  );
 
   return [
     {
@@ -47,16 +60,18 @@ const useShiftColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Shift",
-                  content: <UpdateShift record={record?.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Shift",
+                    content: <UpdateShift record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
         </Space>
       ),
     },

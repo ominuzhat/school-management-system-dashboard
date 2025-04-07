@@ -4,9 +4,22 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import UpdateSection from "../components/UpdateSection";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useSectionColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.section,
+    actionNames.change
+  );
   //   const [deleteCartItem] = useDeleteOrderItemMutation();
 
   //   const handleDelete = async (id: any) => {
@@ -77,16 +90,18 @@ const useSectionColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Section",
-                  content: <UpdateSection record={record?.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Section",
+                    content: <UpdateSection record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
           {/* <ViewButton to={`student-view/1`} /> */}
           {/* <DeleteButton
           onClick={() => handleDelete(record.id)}>

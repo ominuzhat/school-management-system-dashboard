@@ -14,9 +14,18 @@ import { useGetAdmissionSessionQuery } from "../../admission session/api/admissi
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
 import { useAppSelector } from "../../../../app/store";
 import { FilterState } from "../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../utilities/NoPermissionData";
 const { Option } = Select;
 const RoutinePages = () => {
   const [search, setSearch] = useState("");
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useRoutineColumns();
 
   const [filters, setFilters] = useState({
     search: "",
@@ -44,6 +53,17 @@ const RoutinePages = () => {
     (routineList?.data as IGetRoutine[] | undefined)?.length ?? 0;
   const dataSource = (routineList?.data as IGetRoutine[] | undefined) ?? [];
 
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.routine,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.routine,
+    actionNames.add
+  );
+
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -51,13 +71,19 @@ const RoutinePages = () => {
       </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
-          <Col lg={4} xs={24}>
-            <Link to="/routine/create-routine">
-              <Button type="primary" icon={<PlusOutlined />} className="w-full">
-                Add Routine
-              </Button>
-            </Link>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Link to="/routine/create-routine">
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  className="w-full"
+                >
+                  Add Routine
+                </Button>
+              </Link>
+            </Col>
+          )}
 
           <Col lg={14} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
@@ -146,14 +172,18 @@ const RoutinePages = () => {
         </Row>
       </Card>
 
-      <Table
-        rowKey={"id"}
-        loading={isLoading || isFetching}
-        refetch={refetch}
-        total={dataLength}
-        dataSource={dataSource}
-        columns={useRoutineColumns()}
-      />
+      {viewPermission ? (
+        <Table
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={dataLength}
+          dataSource={dataSource}
+          columns={columns}
+        />
+      ) : (
+        <NoPermissionData />
+      )}
     </div>
   );
 };

@@ -4,9 +4,22 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
 import UpdateClass from "../components/UpdateClass";
 import { useDispatch } from "react-redux";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useClassesColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.gradelevel,
+    actionNames.change
+  );
   // const [deleteCartItem] = useDeleteOrderItemMutation();
 
   // const handleDelete = async (id: any) => {
@@ -33,6 +46,13 @@ const useClassesColumns = (): ColumnsType<any> => {
       render: (title) => (title ? title : "N/A"),
     },
     {
+      key: "3",
+      title: "Class Teacher Name",
+      dataIndex: "class_teacher",
+      align: "center",
+      render: (title) => (title ? title?.first_name : "N/A"),
+    },
+    {
       key: "2",
       title: "Description",
       dataIndex: "description",
@@ -41,27 +61,22 @@ const useClassesColumns = (): ColumnsType<any> => {
     },
 
     {
-      key: "3",
-      title: "Class Teacher Name",
-      dataIndex: "class_teacher",
-      align: "center",
-      render: (title) => (title ? title?.first_name : "N/A"),
-    },
-    {
       title: "Actions",
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Class",
-                  content: <UpdateClass record={record?.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Class",
+                    content: <UpdateClass record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
           {/* <ViewButton to={`student-view/1`} />
           <DeleteButton
           onClick={() => handleDelete(record.id)}>

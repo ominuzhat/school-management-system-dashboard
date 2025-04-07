@@ -12,10 +12,20 @@ import { useGetStudentsQuery } from "../../../members/students/api/studentEndPoi
 import { debounce } from "lodash";
 import { useAppSelector } from "../../../../app/store";
 import { FilterState } from "../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../utilities/NoPermissionData";
 const { Option } = Select;
 
 const AdmissionPage = () => {
   const [search, setSearch] = useState("");
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useAdmissionColumns();
 
   const [filters, setFilters] = useState({
     search: "",
@@ -38,12 +48,23 @@ const AdmissionPage = () => {
     session: filters.session,
     student: filters.student,
     page_size: page_size,
-    page:Number(page) || undefined,
+    page: Number(page) || undefined,
   });
   const { data: getSession } = useGetAdmissionSessionQuery({});
   const { data: getStudent } = useGetStudentsQuery({
     search: search,
   });
+
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admission,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admission,
+    actionNames.add
+  );
 
   return (
     <div>
@@ -53,16 +74,18 @@ const AdmissionPage = () => {
 
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
-          <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() => navigate("/admission/create-admission")}
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Admission
-            </Button>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Button
+                type="primary"
+                onClick={() => navigate("/admission/create-admission")}
+                icon={<PlusOutlined />}
+                className="w-full"
+              >
+                Add Admission
+              </Button>
+            </Col>
+          )}
           <Col lg={14} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
               <Col lg={6} xs={12}>
@@ -136,15 +159,19 @@ const AdmissionPage = () => {
       </Card>
 
       <Card>
-        <Table
-          // loading={isLoading}
-          rowKey={"id"}
-          loading={isLoading || isFetching}
-          refetch={refetch}
-          total={getAdmission?.data?.count}
-          dataSource={getAdmission?.data?.results}
-          columns={useAdmissionColumns()}
-        />
+        {viewPermission ? (
+          <Table
+            // loading={isLoading}
+            rowKey={"id"}
+            loading={isLoading || isFetching}
+            refetch={refetch}
+            total={getAdmission?.data?.count}
+            dataSource={getAdmission?.data?.results}
+            columns={columns}
+          />
+        ) : (
+          <NoPermissionData />
+        )}
       </Card>
     </div>
   );

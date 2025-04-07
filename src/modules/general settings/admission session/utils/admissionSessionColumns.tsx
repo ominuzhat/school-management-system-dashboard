@@ -8,11 +8,25 @@ import {
   useClosedAdmissionSessionMutation,
   useOpenAdmissionSessionMutation,
 } from "../api/admissionSessionEndPoints";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useAdmissionSessionsColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
   const [openSession] = useOpenAdmissionSessionMutation();
   const [deleteCartItem] = useClosedAdmissionSessionMutation();
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admissionsession,
+    actionNames.change
+  );
 
   return [
     {
@@ -64,58 +78,64 @@ const useAdmissionSessionsColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Admission Session",
-                  content: <UpdateAdmissionSessions record={record?.id} />,
-                })
-              )
-            }
-          />
-
-          <Popconfirm
-            title="Are you sure to Closed this item?"
-            onConfirm={async () => {
-              try {
-                await deleteCartItem({ session: record?.id } as any).unwrap();
-                console.log("Item Closed successfully");
-              } catch (error) {
-                console.error("Failed to delete item:", error);
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Admission Session",
+                    content: <UpdateAdmissionSessions record={record?.id} />,
+                  })
+                )
               }
-            }}
-            onCancel={() => console.log("Cancelled")}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="default" size="small" danger>
-              Close
-            </Button>
-          </Popconfirm>
+            />
+          )}
 
-          <Popconfirm
-            title="Are you sure to Open this item?"
-            onConfirm={async () => {
-              try {
-                await openSession({ session: record?.id } as any).unwrap();
-                console.log("Item Opened successfully");
-              } catch (error) {
-                console.error("Failed to Open item:", error);
-              }
-            }}
-            onCancel={() => console.log("Cancelled")}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button
-              type="default"
-              size="small"
-              style={{ color: "green", border: "1px solid green" }}
+          {updatePermission && (
+            <Popconfirm
+              title="Are you sure to Closed this item?"
+              onConfirm={async () => {
+                try {
+                  await deleteCartItem({ session: record?.id } as any).unwrap();
+                  console.log("Item Closed successfully");
+                } catch (error) {
+                  console.error("Failed to delete item:", error);
+                }
+              }}
+              onCancel={() => console.log("Cancelled")}
+              okText="Yes"
+              cancelText="No"
             >
-              Open
-            </Button>
-          </Popconfirm>
+              <Button type="default" size="small" danger>
+                Close
+              </Button>
+            </Popconfirm>
+          )}
+
+          {updatePermission && (
+            <Popconfirm
+              title="Are you sure to Open this item?"
+              onConfirm={async () => {
+                try {
+                  await openSession({ session: record?.id } as any).unwrap();
+                  console.log("Item Opened successfully");
+                } catch (error) {
+                  console.error("Failed to Open item:", error);
+                }
+              }}
+              onCancel={() => console.log("Cancelled")}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="default"
+                size="small"
+                style={{ color: "green", border: "1px solid green" }}
+              >
+                Open
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },
