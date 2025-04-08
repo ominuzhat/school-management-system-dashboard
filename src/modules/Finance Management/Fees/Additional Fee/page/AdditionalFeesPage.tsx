@@ -12,10 +12,29 @@ import CreateAdditionalFees from "../component/CreateAdditionalFees";
 import { IGetAdditionalFee } from "../type/additionalFeeTypes";
 import { useAppSelector } from "../../../../../app/store";
 import { FilterState } from "../../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
 
 const AdditionalFeesPage = () => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useAdditionalFeesColumns();
+
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admissionfeestructure,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admissionfeestructure,
+    actionNames.add
+  );
 
   const { page_size, page } = useAppSelector(FilterState);
 
@@ -43,23 +62,25 @@ const AdditionalFeesPage = () => {
       </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
-          <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() =>
-                dispatch(
-                  showModal({
-                    title: "Add Additional Fees",
-                    content: <CreateAdditionalFees />,
-                  })
-                )
-              }
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Additional Fees
-            </Button>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  dispatch(
+                    showModal({
+                      title: "Add Additional Fees",
+                      content: <CreateAdditionalFees />,
+                    })
+                  )
+                }
+                icon={<PlusOutlined />}
+                className="w-full"
+              >
+                Add Additional Fees
+              </Button>
+            </Col>
+          )}
           <Col lg={6} xs={24}>
             <SearchComponent
               onSearch={(value) => setSearch(value)}
@@ -69,14 +90,16 @@ const AdditionalFeesPage = () => {
         </Row>
       </Card>
 
-      <Table
-        rowKey={"id"}
-        loading={isLoading || isFetching}
-        refetch={refetch}
-        total={dataLength}
-        dataSource={dataSource}
-        columns={useAdditionalFeesColumns()}
-      />
+      {viewPermission && (
+        <Table
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={dataLength}
+          dataSource={dataSource}
+          columns={columns}
+        />
+      )}
     </div>
   );
 };

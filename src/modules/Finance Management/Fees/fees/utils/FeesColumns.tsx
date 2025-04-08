@@ -7,9 +7,23 @@ import { showModal } from "../../../../../app/features/modalSlice";
 import UpdateFees from "../components/UpdateFees";
 import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
 import { capitalize } from "../../../../../common/capitalize/Capitalize";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
 
 const useFeesColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.feestructure,
+    actionNames.change
+  );
   // const [deleteCartItem] = useDeleteOrderItemMutation();
 
   // const handleDelete = async (id: any) => {
@@ -65,16 +79,19 @@ const useFeesColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Fees",
-                  content: <UpdateFees record={record.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Fees",
+                    content: <UpdateFees record={record.id} />,
+                  })
+                )
+              }
+            />
+          )}
+
           <ViewButton to={`view/${record?.id}`} />
           {/* <DeleteButton onClick={() => handleDelete(record.id)}>
             Delete

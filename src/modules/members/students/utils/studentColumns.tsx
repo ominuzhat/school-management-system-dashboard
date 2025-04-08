@@ -5,8 +5,22 @@ import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useStudentColumns = (): ColumnsType<any> => {
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.student,
+    actionNames.change
+  );
+
   // const dispatch = useDispatch();
   //   const [deleteCartItem] = useDeleteOrderItemMutation();
 
@@ -75,19 +89,21 @@ const useStudentColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <Link to={`/students/update/${record.id}`}>
-            <Button
-              title="Edit"
-              size="small"
-              type="default"
-              style={{
-                color: "#FFA500",
-                border: "1px solid #FFA500",
-              }}
-            >
-              <FaEdit />
-            </Button>
-          </Link>
+          {updatePermission && (
+            <Link to={`/students/update/${record.id}`}>
+              <Button
+                title="Edit"
+                size="small"
+                type="default"
+                style={{
+                  color: "#FFA500",
+                  border: "1px solid #FFA500",
+                }}
+              >
+                <FaEdit />
+              </Button>
+            </Link>
+          )}
 
           <ViewButton to={`student-view/${record?.id}`} />
           {/* <DeleteButton 

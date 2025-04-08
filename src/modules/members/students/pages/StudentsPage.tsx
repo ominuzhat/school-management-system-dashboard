@@ -18,10 +18,17 @@ import { useGetStudentsQuery } from "../api/studentEndPoints";
 import useStudentColumns from "../utils/studentColumns";
 import { FilterState } from "../../../../app/features/filterSlice";
 import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../utilities/NoPermissionData";
 
 const StudentsPage = () => {
   // const dispatch = useDispatch();
   const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useStudentColumns();
   const [layout, setLayout] = useState("grid");
   const [filters, setFilters] = useState({ search: "", is_active: "" });
   const { page_size, page } = useAppSelector(FilterState);
@@ -48,6 +55,17 @@ const StudentsPage = () => {
     }
   };
 
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.student,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.student,
+    actionNames.add
+  );
+
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -55,13 +73,20 @@ const StudentsPage = () => {
       </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
-          <Col lg={4} xs={24}>
-            <Link to={"/students/create"}>
-              <Button type="primary" icon={<PlusOutlined />} className="w-full">
-                Add Student
-              </Button>
-            </Link>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Link to={"/students/create"}>
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  className="w-full"
+                >
+                  Add Student
+                </Button>
+              </Link>
+            </Col>
+          )}
+
           <Col lg={10} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
               <Col lg={8} xs={12}>
@@ -89,75 +114,80 @@ const StudentsPage = () => {
           </Col>
         </Row>
       </Card>
-      <Card
-        title={
-          <div className="flex justify-between items-center">
-            <span>All Students</span>
-            <div className="flex items-center">
-              <FaListUl
-                className={`w-9 h-9 border px-2 cursor-pointer ${
-                  layout === "grid"
-                    ? "text-blue-500 border-blue-500"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setLayout("grid")}
-              />
-              <IoGridOutline
-                className={`w-9 h-9 border px-2 cursor-pointer ${
-                  layout === "column"
-                    ? "text-blue-500 border-blue-500"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setLayout("column")}
-              />
+
+      {viewPermission ? (
+        <Card
+          title={
+            <div className="flex justify-between items-center">
+              <span>All Students</span>
+              <div className="flex items-center">
+                <FaListUl
+                  className={`w-9 h-9 border px-2 cursor-pointer ${
+                    layout === "grid"
+                      ? "text-blue-500 border-blue-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setLayout("grid")}
+                />
+                <IoGridOutline
+                  className={`w-9 h-9 border px-2 cursor-pointer ${
+                    layout === "column"
+                      ? "text-blue-500 border-blue-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setLayout("column")}
+                />
+              </div>
             </div>
-          </div>
-        }
-      >
-        {layout !== "grid" ? (
-          <Row gutter={[16, 16]}>
-            {studentData?.data?.results?.map((student: any, index) => (
-              <Col key={index} span={3} xs={12} lg={8} xxl={3}>
-                <div className="border py-8 px-2 rounded-lg space-y-2 text-center">
-                  <img src={no_img} alt="student" className="mx-auto" />
-                  <p className="font-serif">
-                    {student?.first_name} {student?.last_name}
-                  </p>
-                  <div className="space-x-2">
-                    <ViewButton to={`student-view/${student?.id}`} />
-                    <Link to={`/students/update/${student.id}`}>
-                      <Button
-                        title="Edit"
-                        size="small"
-                        type="default"
-                        style={{
-                          color: "#FFA500",
-                          border: "1px solid #FFA500",
-                        }}
-                      >
-                        <FaEdit />
-                      </Button>
-                    </Link>
-                    <DeleteButton
-                      onConfirm={() => handleDelete(student?.id)}
-                      onCancel={() => console.log("Cancel delete")}
-                    />
+          }
+        >
+          {layout !== "grid" ? (
+            <Row gutter={[16, 16]}>
+              {studentData?.data?.results?.map((student: any, index) => (
+                <Col key={index} span={3} xs={12} lg={8} xxl={3}>
+                  <div className="border py-8 px-2 rounded-lg space-y-2 text-center">
+                    <img src={no_img} alt="student" className="mx-auto" />
+                    <p className="font-serif">
+                      {student?.first_name} {student?.last_name}
+                    </p>
+                    <div className="space-x-2">
+                      <ViewButton to={`student-view/${student?.id}`} />
+                      <Link to={`/students/update/${student.id}`}>
+                        <Button
+                          title="Edit"
+                          size="small"
+                          type="default"
+                          style={{
+                            color: "#FFA500",
+                            border: "1px solid #FFA500",
+                          }}
+                        >
+                          <FaEdit />
+                        </Button>
+                      </Link>
+                      <DeleteButton
+                        onConfirm={() => handleDelete(student?.id)}
+                        onCancel={() => console.log("Cancel delete")}
+                      />
+                    </div>
                   </div>
-                </div>
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <Table
-            rowKey={"id"}
-            loading={isLoading || isFetching}
-            refetch={refetch}
-            total={studentData?.data?.count}
-            dataSource={studentData?.data?.results}
-            columns={useStudentColumns()}
-          />
-        )}
-      </Card>
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <Table
+              rowKey={"id"}
+              loading={isLoading || isFetching}
+              refetch={refetch}
+              total={studentData?.data?.count}
+              dataSource={studentData?.data?.results}
+              columns={columns}
+            />
+          )}
+        </Card>
+      ) : (
+        <NoPermissionData />
+      )}
     </div>
   );
 };

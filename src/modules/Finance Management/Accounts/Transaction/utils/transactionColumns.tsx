@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 
 const useTransactionColumns = (): ColumnsType<any> => {
   // const dispatch = useDispatch();
+
   // const [deleteCartItem] = useDeleteOrderItemMutation();
 
   // const handleDelete = async (id: any) => {
@@ -64,16 +65,19 @@ const useTransactionColumns = (): ColumnsType<any> => {
     //   align: "center",
     //   render: (record) => (
     //     <Space>
-    //       <EditButton
-    //         onClick={() =>
-    //           dispatch(
-    //             showModal({
-    //               title: "Update Transaction",
-    //               content: <UpdateTransaction record={record?.id} />,
-    //             })
-    //           )
-    //         }
-    //       />
+    //       {updatePermission && (
+    //         <EditButton
+    //           onClick={() =>
+    //             dispatch(
+    //               showModal({
+    //                 title: "Update Transaction",
+    //                 content: <UpdateTransaction record={record?.id} />,
+    //               })
+    //             )
+    //           }
+    //         />
+    //       )}
+
     //       <ViewButton to={`student-view/1`} />
     //       <DeleteButton
     //       onClick={() => handleDelete(record.id)}>

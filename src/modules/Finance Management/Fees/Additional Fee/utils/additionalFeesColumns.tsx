@@ -6,10 +6,23 @@ import { showModal } from "../../../../../app/features/modalSlice";
 import UpdateAdditionalFee from "../component/UpdateAdditionalFee";
 import DeleteButton from "../../../../../common/CommonAnt/Button/DeleteButton";
 import { useDeleteAdditionalItemMutation } from "../api/additionalFeeEndPoints";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
 
 // Define the columns function based on your provided structure
 const useAdditionalFeesColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admissionfeestructure,
+    actionNames.change
+  );
 
   const [deleteItem] = useDeleteAdditionalItemMutation();
 
@@ -46,16 +59,18 @@ const useAdditionalFeesColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Additional Fees",
-                  content: <UpdateAdditionalFee record={record?.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Additional Fees",
+                    content: <UpdateAdditionalFee record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
           <DeleteButton
             onConfirm={() => handleDelete(record.id)}
             onCancel={() => ""}

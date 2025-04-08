@@ -6,9 +6,24 @@ import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import UpdatePayment from "../components/UpdatePayment";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const usePaymentColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.payment,
+    actionNames.change
+  );
+
   //   const [deleteCartItem] = useDeleteOrderItemMutation();
 
   //   const handleDelete = async (id: any) => {
@@ -93,16 +108,18 @@ const usePaymentColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Payment",
-                  content: <UpdatePayment record={record?.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Payment",
+                    content: <UpdatePayment record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
 
           <ViewButton to={`payment-view/${record?.id}`} />
         </Space>

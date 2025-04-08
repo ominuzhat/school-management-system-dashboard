@@ -4,9 +4,22 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import UpdateRules from "../components/UpdateRules";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useRulesColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.rulesandregulations,
+    actionNames.change
+  );
 
   return [
     {
@@ -68,16 +81,18 @@ const useRulesColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Rules",
-                  content: <UpdateRules record={record?.id} />, 
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Rules",
+                    content: <UpdateRules record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
         </Space>
       ),
     },

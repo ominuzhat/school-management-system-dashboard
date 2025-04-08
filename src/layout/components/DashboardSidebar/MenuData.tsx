@@ -53,11 +53,19 @@ const MenuData: React.FC = () => {
     (state) => state.themes
   );
   const { pathname } = useLocation();
+  // const { data: dashboardData } = useGetDashboardDataQuery({});
 
   const iconStyle: React.CSSProperties | undefined = {
     marginRight: "8px",
     color: themes === "light" ? "#000000" : "#FFFFFF",
   };
+
+  // GetMenuPermission(dashboardData?.data?.permissions, moduleNames.role, [
+  //   actionNames.add,
+  //   actionNames.change,
+  //   actionNames.delete,
+  //   actionNames.view,
+  // ]);
 
   const settings = [
     {
@@ -343,6 +351,7 @@ const MenuData: React.FC = () => {
           />
         </div>
         <span className="features-title">Members</span>
+
         <div>
           <Menu
             style={{

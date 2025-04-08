@@ -5,9 +5,23 @@ import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../../app/features/modalSlice";
 import UpdateAccount from "../components/UpdateAccount";
 import { capitalize } from "../../../../../common/capitalize/Capitalize";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
 
 const useAccountColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.account,
+    actionNames.change
+  );
+
   // const [deleteCartItem] = useDeleteOrderItemMutation();
 
   // const handleDelete = async (id: any) => {
@@ -46,16 +60,19 @@ const useAccountColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Account",
-                  content: <UpdateAccount record={record?.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Account",
+                    content: <UpdateAccount record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
+
           {/* <ViewButton to={`student-view/1`} />
           <DeleteButton
           onClick={() => handleDelete(record.id)}>

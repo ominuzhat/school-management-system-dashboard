@@ -6,9 +6,24 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
 import UpdateTeacher from "../components/UpdateTeacher";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useTeacherColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.teacher,
+    actionNames.change
+  );
+
   //   const [deleteCartItem] = useDeleteOrderItemMutation();
 
   //   const handleDelete = async (id: any) => {
@@ -94,16 +109,19 @@ const useTeacherColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Teacher",
-                  content: <UpdateTeacher record={record} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Teacher",
+                    content: <UpdateTeacher record={record} />,
+                  })
+                )
+              }
+            />
+          )}
+
           <ViewButton to={`teacher-view/${record?.id}`} />
           {/* <DeleteButton 
           onClick={() => handleDelete(record.id)}>

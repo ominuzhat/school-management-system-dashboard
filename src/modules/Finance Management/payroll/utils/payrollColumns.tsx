@@ -6,9 +6,23 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import UpdatePayroll from "../components/UpdatePayroll";
 import dayjs from "dayjs";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const usePayrollColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.payroll,
+    actionNames.change
+  );
 
   return [
     {
@@ -100,16 +114,19 @@ const usePayrollColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Payroll",
-                  content: <UpdatePayroll record={record?.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Payroll",
+                    content: <UpdatePayroll record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
+
           <ViewButton to={`payroll-view/${record?.id}`} />
         </Space>
       ),

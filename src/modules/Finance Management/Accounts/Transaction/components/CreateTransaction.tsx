@@ -1,4 +1,4 @@
-import { Col, Input, Row, Select } from "antd";
+import { Col, Input, Row, Select, Form as AntForm } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import { ICreateTransaction, TransactionType } from "../types/transactionTypes";
 import { useCreateTransactionMutation } from "../api/transactionEndPoints";
@@ -8,6 +8,9 @@ import { TbCoinTaka } from "react-icons/tb";
 const CreateTransaction = () => {
   const [create, { isLoading, isSuccess }] = useCreateTransactionMutation();
   const { data: accountList } = useGetAccountQuery({});
+  const [form] = AntForm.useForm();
+
+  const accountId = AntForm.useWatch("account", form);
 
   const onFinish = (values: any): void => {
     create(values);
@@ -16,6 +19,7 @@ const CreateTransaction = () => {
   return (
     <div>
       <Form
+        form={form}
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
@@ -28,11 +32,15 @@ const CreateTransaction = () => {
               name="account"
               rules={[{ required: true, message: "Account Type is required!" }]}
             >
-              <Select placeholder="Select Account Type" className="w-full">
+              <Select
+                placeholder="Select Account Type"
+                className="w-full"
+                allowClear
+              >
                 {Array.isArray(accountList?.data) &&
                   accountList?.data?.map((account: any) => (
                     <Select.Option key={account?.id} value={account?.id}>
-                      {account?.account_type}  - {account?.balance}
+                      {account?.account_type} - {account?.balance}
                     </Select.Option>
                   ))}
               </Select>
@@ -68,6 +76,31 @@ const CreateTransaction = () => {
               />
             </Form.Item>
           </Col>
+          <Col lg={8}>
+            <Form.Item<ICreateTransaction>
+              label="Transfer Account"
+              name="target_account"
+              rules={[
+                { required: true, message: "Transfer Account is required!" },
+              ]}
+            >
+              <Select
+                placeholder="Select Account Type"
+                className="w-full"
+                allowClear
+              >
+                {Array.isArray(accountList?.data) &&
+                  accountList?.data
+                    .filter((account: any) => account?.id !== accountId)
+                    .map((account: any) => (
+                      <Select.Option key={account?.id} value={account?.id}>
+                        {account?.account_type} - {account?.balance}
+                      </Select.Option>
+                    ))}
+              </Select>
+            </Form.Item>
+          </Col>
+
           <Col lg={24}>
             <Form.Item<ICreateTransaction>
               label="Description"

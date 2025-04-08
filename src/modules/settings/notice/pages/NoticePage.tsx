@@ -11,11 +11,32 @@ import useNoticeColumns from "../utils/noticeColumns";
 import CreateNotice from "../components/CreateNotice";
 import { useAppSelector } from "../../../../app/store";
 import { FilterState } from "../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../utilities/NoPermissionData";
 
 const NoticePage = () => {
   const dispatch = useDispatch();
   const [filters, setFilters] = useState({ search: "" });
   const { page_size, page } = useAppSelector(FilterState);
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useNoticeColumns();
+
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.noticeboard,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.noticeboard,
+    actionNames.add
+  );
 
   const {
     data: noticeList,
@@ -35,23 +56,25 @@ const NoticePage = () => {
       </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
-          <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() =>
-                dispatch(
-                  showModal({
-                    title: "Add Notice",
-                    content: <CreateNotice />,
-                  })
-                )
-              }
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Notice
-            </Button>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  dispatch(
+                    showModal({
+                      title: "Add Notice",
+                      content: <CreateNotice />,
+                    })
+                  )
+                }
+                icon={<PlusOutlined />}
+                className="w-full"
+              >
+                Add Notice
+              </Button>
+            </Col>
+          )}
           <Col lg={8} xs={12}>
             <SearchComponent
               onSearch={(value) =>
@@ -63,14 +86,18 @@ const NoticePage = () => {
         </Row>
       </Card>
 
-      <Table
-        rowKey={"id"}
-        loading={isLoading || isFetching}
-        refetch={refetch}
-        total={noticeList?.data?.count}
-        dataSource={noticeList?.data?.results || []}
-        columns={useNoticeColumns()}
-      />
+      {viewPermission ? (
+        <Table
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={noticeList?.data?.count}
+          dataSource={noticeList?.data?.results || []}
+          columns={columns}
+        />
+      ) : (
+        <NoPermissionData />
+      )}
     </div>
   );
 };

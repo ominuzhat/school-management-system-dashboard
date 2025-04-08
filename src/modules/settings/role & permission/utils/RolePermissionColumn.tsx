@@ -6,9 +6,22 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import EditRolePermission from "../components/EditRolePermission";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const RolePermissionColumn = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.role,
+    actionNames.change
+  );
 
   return [
     {
@@ -31,16 +44,19 @@ const RolePermissionColumn = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Role Permissions",
-                  content: <EditRolePermission record={record} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Role Permissions",
+                    content: <EditRolePermission record={record} />,
+                  })
+                )
+              }
+            />
+          )}
+
           <ViewButton to={`/role-permission/${record?.id}`} />
         </Space>
       ),

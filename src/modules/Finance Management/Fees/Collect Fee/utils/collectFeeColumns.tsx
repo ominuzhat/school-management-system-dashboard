@@ -11,10 +11,23 @@ import { useNavigate } from "react-router-dom";
 import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
 import { useEffect, useState } from "react";
 import { FaFilePdf } from "react-icons/fa6";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
 
 const useCollectFeeColumns = (): ColumnsType<any> => {
   //   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.fees,
+    actionNames.change
+  );
 
   const [collectFeeId, setCollectFeeId] = useState<number | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -163,7 +176,11 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton onClick={() => navigate(`/collect-fee/${record?.id}`)} />
+          {updatePermission && (
+            <EditButton
+              onClick={() => navigate(`/collect-fee/${record?.id}`)}
+            />
+          )}
           <ViewButton to={`/collect-fee/view/${record?.id}`} />
           <DeleteButton
             onConfirm={() => handleDelete(record.id)}

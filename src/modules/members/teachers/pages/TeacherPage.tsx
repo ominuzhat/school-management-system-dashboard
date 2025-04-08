@@ -23,11 +23,21 @@ import { useGetTeacherQuery } from "../api/teachersEndPoints";
 import UpdateTeacher from "../components/UpdateTeacher";
 import { useAppSelector } from "../../../../app/store";
 import { FilterState } from "../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../utilities/NoPermissionData";
 
 const TeacherPage = () => {
   const dispatch = useDispatch();
   const [layout, setLayout] = useState("grid");
   const [filters, setFilters] = useState({ search: "", is_active: "" });
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useTeacherColumns();
 
   const { page_size, page } = useAppSelector(FilterState);
 
@@ -52,6 +62,18 @@ const TeacherPage = () => {
       console.error("Failed to delete item:", error);
     }
   };
+
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.teacher,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.teacher,
+    actionNames.add
+  );
+
   return (
     <div>
       <div className="my-5">
@@ -59,23 +81,25 @@ const TeacherPage = () => {
       </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
-          <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() =>
-                dispatch(
-                  showModal({
-                    title: "Add Teacher",
-                    content: <CreateTeacher />,
-                  })
-                )
-              }
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Teacher
-            </Button>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  dispatch(
+                    showModal({
+                      title: "Add Teacher",
+                      content: <CreateTeacher />,
+                    })
+                  )
+                }
+                icon={<PlusOutlined />}
+                className="w-full"
+              >
+                Add Teacher
+              </Button>
+            </Col>
+          )}
           <Col lg={10} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
               <Col lg={8} xs={12}>
@@ -103,16 +127,10 @@ const TeacherPage = () => {
           </Col>
         </Row>
       </Card>
-      <Card
-        title={
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <span>All Teacher</span>
+
+      {viewPermission ? (
+        <Card
+          title={
             <div
               style={{
                 display: "flex",
@@ -120,73 +138,86 @@ const TeacherPage = () => {
                 alignItems: "center",
               }}
             >
-              <FaListUl
-                className={`w-9 h-9 border px-2 cursor-pointer ${
-                  layout === "grid"
-                    ? "text-blue-500 border-blue-500"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setLayout("grid")}
-              />
-              <IoGridOutline
-                className={`w-9 h-9 border px-2 cursor-pointer ${
-                  layout === "column"
-                    ? "text-blue-500 border-blue-500"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setLayout("column")}
-              />
+              <span>All Teacher</span>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <FaListUl
+                  className={`w-9 h-9 border px-2 cursor-pointer ${
+                    layout === "grid"
+                      ? "text-blue-500 border-blue-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setLayout("grid")}
+                />
+                <IoGridOutline
+                  className={`w-9 h-9 border px-2 cursor-pointer ${
+                    layout === "column"
+                      ? "text-blue-500 border-blue-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setLayout("column")}
+                />
+              </div>
             </div>
-          </div>
-        }
-      >
-        {layout !== "grid" ? (
-          <Row gutter={[16, 16]}>
-            {teacherData?.data?.results?.map((teacher: any, index: number) => (
-              <Col key={index} span={3} xs={12} lg={8} xxl={3}>
-                <div
-                  style={{
-                    textAlign: "center",
-                  }}
-                  className="border py-8 px-2 rounded-lg space-y-2"
-                >
-                  <img src={no_img} alt="image" className="mx-auto" />
-                  <p> {teacher?.id}</p>
-                  <p className="font-serif">
-                    {teacher?.first_name} {teacher?.last_name}
-                  </p>
-                  <div className="space-x-2">
-                    <ViewButton to={`teacher-view/${teacher?.id}`} />
-                    <EditButton
-                      onClick={() =>
-                        dispatch(
-                          showModal({
-                            title: "Update Teacher",
-                            content: <UpdateTeacher record={teacher} />,
-                          })
-                        )
-                      }
-                    />
-                    <DeleteButton
-                      onConfirm={() => handleDelete(1)}
-                      onCancel={() => console.log("Cancel delete")}
-                    ></DeleteButton>
-                  </div>
-                </div>
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <Table
-            rowKey={"id"}
-            loading={isLoading || isFetching}
-            refetch={refetch}
-            total={teacherData?.data?.results?.length}
-            dataSource={teacherData?.data?.results}
-            columns={useTeacherColumns()}
-          />
-        )}
-      </Card>
+          }
+        >
+          {layout !== "grid" ? (
+            <Row gutter={[16, 16]}>
+              {teacherData?.data?.results?.map(
+                (teacher: any, index: number) => (
+                  <Col key={index} span={3} xs={12} lg={8} xxl={3}>
+                    <div
+                      style={{
+                        textAlign: "center",
+                      }}
+                      className="border py-8 px-2 rounded-lg space-y-2"
+                    >
+                      <img src={no_img} alt="image" className="mx-auto" />
+                      <p> {teacher?.id}</p>
+                      <p className="font-serif">
+                        {teacher?.first_name} {teacher?.last_name}
+                      </p>
+                      <div className="space-x-2">
+                        <ViewButton to={`teacher-view/${teacher?.id}`} />
+                        <EditButton
+                          onClick={() =>
+                            dispatch(
+                              showModal({
+                                title: "Update Teacher",
+                                content: <UpdateTeacher record={teacher} />,
+                              })
+                            )
+                          }
+                        />
+                        <DeleteButton
+                          onConfirm={() => handleDelete(1)}
+                          onCancel={() => console.log("Cancel delete")}
+                        ></DeleteButton>
+                      </div>
+                    </div>
+                  </Col>
+                )
+              )}
+            </Row>
+          ) : (
+            <Table
+              rowKey={"id"}
+              loading={isLoading || isFetching}
+              refetch={refetch}
+              total={teacherData?.data?.results?.length}
+              dataSource={teacherData?.data?.results}
+              columns={columns}
+            />
+          )}
+        </Card>
+      ) : (
+        <NoPermissionData />
+      )}
     </div>
   );
 };

@@ -5,9 +5,23 @@ import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs"; // For formatting dates
 import UpdateNotice from "../components/UpdateNotice";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useNoticeColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.noticeboard,
+    actionNames.change
+  );
 
   return [
     {
@@ -87,16 +101,18 @@ const useNoticeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Notice",
-                  content: <UpdateNotice record={record?.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Notice",
+                    content: <UpdateNotice record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
         </Space>
       ),
     },

@@ -28,9 +28,28 @@ type ModuleNames = {
   admission: string;
   employeeattendance: string;
   attendance: string;
+  teacher: string;
+  department: string;
+  employee: string;
+  payroll: string;
+  feestructure: string;
+  payment: string;
+  fees: string;
+  admissionfeestructure: string;
+  account: string;
+  transaction: string;
+  institution: string;
+  role: string;
+  noticeboard: string;
+  rulesandregulations: string;
+  smsconfig: string;
 };
 
 export const moduleNames: ModuleNames = {
+  role: "role",
+  rulesandregulations: "rulesandregulations",
+  smsconfig: "smsconfig",
+  noticeboard: "noticeboard",
   shift: "shift",
   gradelevel: "gradelevel",
   student: "student",
@@ -47,4 +66,15 @@ export const moduleNames: ModuleNames = {
   admission: "admission",
   employeeattendance: "employeeattendance",
   attendance: "attendance",
+  teacher: "teacher",
+  department: "teacher",
+  employee: "teacher",
+  payroll: "payroll",
+  payment: "payment",
+  feestructure: "feestructure",
+  fees: "fees",
+  admissionfeestructure: "admissionfeestructure",
+  account: "account",
+  institution: "institution",
+  transaction: "transaction",
 };

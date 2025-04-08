@@ -16,15 +16,17 @@ export const GetPermission = (
 };
 
 // Fixed GetMenuPermission function
-// export const GetMenuPermission = (moduleName: string, actions: string[]): boolean => {
-//   return actions.some(action =>
-//     permissions.some(
-//       permission =>
-//         permission.name === `${action}_${moduleName}` &&
-//         permission.status
-//     )
-//   );
-// };
+export const GetMenuPermission = (
+  data: any,
+  moduleName: string,
+  actions: string[]
+): boolean => {
+  return actions.some((action) =>
+    data.some(
+      (item: any) => item.name === `${action}_${moduleName}` && item.status
+    )
+  );
+};
 
 // Example usage
 

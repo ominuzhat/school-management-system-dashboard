@@ -6,9 +6,23 @@ import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
 import UpdateEmployee from "../components/UpdateEmployee";
 import { useGetDepartmentQuery } from "../../../general settings/Department/api/departmentEndPoints";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
 
 const useEmployeeColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.employee,
+    actionNames.change
+  );
 
   const { data: departmentList } = useGetDepartmentQuery({});
 
@@ -109,16 +123,19 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Employee",
-                  content: <UpdateEmployee records={record} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Employee",
+                    content: <UpdateEmployee records={record} />,
+                  })
+                )
+              }
+            />
+          )}
+
           <ViewButton to={`employee-view/${record?.id}`} />
         </Space>
       ),

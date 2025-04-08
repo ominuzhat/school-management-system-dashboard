@@ -23,11 +23,21 @@ import CreateEmployee from "../components/CreateEmployee";
 import UpdateEmployee from "../components/UpdateEmployee";
 import { useAppSelector } from "../../../../app/store";
 import { FilterState } from "../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../utilities/NoPermissionData";
 
 const EmployeePage = () => {
   const [layout, setLayout] = useState("grid");
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useEmployeeColumns();
 
   const { page_size, page } = useAppSelector(FilterState);
 
@@ -42,7 +52,6 @@ const EmployeePage = () => {
     page: Number(page) || undefined,
   });
 
-  const employeeColumns = useEmployeeColumns();
 
   const handleDelete = async (id: any) => {
     console.log(id);
@@ -53,6 +62,18 @@ const EmployeePage = () => {
       console.error("Failed to delete item:", error);
     }
   };
+
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.employee,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.employee,
+    actionNames.add
+  );
+
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -60,23 +81,26 @@ const EmployeePage = () => {
       </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
-          <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() =>
-                dispatch(
-                  showModal({
-                    title: "Add Employee",
-                    content: <CreateEmployee />,
-                  })
-                )
-              }
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Employee
-            </Button>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  dispatch(
+                    showModal({
+                      title: "Add Employee",
+                      content: <CreateEmployee />,
+                    })
+                  )
+                }
+                icon={<PlusOutlined />}
+                className="w-full"
+              >
+                Add Employee
+              </Button>
+            </Col>
+          )}
+
           <Col lg={6} xs={24}>
             <SearchComponent
               onSearch={(value) => setSearch(value)}
@@ -85,17 +109,9 @@ const EmployeePage = () => {
           </Col>
         </Row>
       </Card>
-      <Card
-        title={
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <span>All Employee</span>
-
+      {viewPermission ? (
+        <Card
+          title={
             <div
               style={{
                 display: "flex",
@@ -103,74 +119,85 @@ const EmployeePage = () => {
                 alignItems: "center",
               }}
             >
-              <FaListUl
-                className={`w-9 h-9 border px-2 cursor-pointer ${
-                  layout === "grid"
-                    ? "text-blue-500 border-blue-500"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setLayout("grid")}
-              />
-              <IoGridOutline
-                className={`w-9 h-9 border px-2 cursor-pointer ${
-                  layout === "column"
-                    ? "text-blue-500 border-blue-500"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setLayout("column")}
-              />
-            </div>
-          </div>
-        }
-      >
-        {layout !== "grid" ? (
-          <Row gutter={[16, 16]}>
-            {employeeData?.data?.results?.map((employee: any, index) => (
-              <Col key={index} span={3} xs={12} lg={8} xxl={3}>
-                <div
-                  style={{
-                    textAlign: "center",
-                  }}
-                  className="border py-8 px-2 rounded-lg space-y-2"
-                >
-                  <img src={no_img} alt="image" className="mx-auto" />
-                  <p> {employee?.id}</p>
-                  <p className="font-serif">
-                    {employee?.first_name} {employee?.last_name}
-                  </p>
-                  <div className="space-x-2">
-                    <ViewButton to={`employee-view/${employee?.id}`} />
-                    <EditButton
-                      onClick={() =>
-                        dispatch(
-                          showModal({
-                            title: "Update Employee",
-                            content: <UpdateEmployee records={employee} />,
-                          })
-                        )
-                      }
-                    />
-                    <DeleteButton
-                      onConfirm={() => handleDelete(1)}
-                      onCancel={() => console.log("Cancel delete")}
-                    ></DeleteButton>
-                  </div>
-                </div>
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <Table
-            rowKey={"id"}
-            loading={isLoading || isFetching}
-            refetch={refetch}
-            total={employeeData?.data?.results?.length}
-            dataSource={employeeData?.data?.results}
-            columns={employeeColumns}
-          />
+              <span>All Employee</span>
 
-        )}
-      </Card>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <FaListUl
+                  className={`w-9 h-9 border px-2 cursor-pointer ${
+                    layout === "grid"
+                      ? "text-blue-500 border-blue-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setLayout("grid")}
+                />
+                <IoGridOutline
+                  className={`w-9 h-9 border px-2 cursor-pointer ${
+                    layout === "column"
+                      ? "text-blue-500 border-blue-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setLayout("column")}
+                />
+              </div>
+            </div>
+          }
+        >
+          {layout !== "grid" ? (
+            <Row gutter={[16, 16]}>
+              {employeeData?.data?.results?.map((employee: any, index) => (
+                <Col key={index} span={3} xs={12} lg={8} xxl={3}>
+                  <div
+                    style={{
+                      textAlign: "center",
+                    }}
+                    className="border py-8 px-2 rounded-lg space-y-2"
+                  >
+                    <img src={no_img} alt="image" className="mx-auto" />
+                    <p> {employee?.id}</p>
+                    <p className="font-serif">
+                      {employee?.first_name} {employee?.last_name}
+                    </p>
+                    <div className="space-x-2">
+                      <ViewButton to={`employee-view/${employee?.id}`} />
+                      <EditButton
+                        onClick={() =>
+                          dispatch(
+                            showModal({
+                              title: "Update Employee",
+                              content: <UpdateEmployee records={employee} />,
+                            })
+                          )
+                        }
+                      />
+                      <DeleteButton
+                        onConfirm={() => handleDelete(1)}
+                        onCancel={() => console.log("Cancel delete")}
+                      ></DeleteButton>
+                    </div>
+                  </div>
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <Table
+              rowKey={"id"}
+              loading={isLoading || isFetching}
+              refetch={refetch}
+              total={employeeData?.data?.results?.length}
+              dataSource={employeeData?.data?.results}
+              columns={columns}
+            />
+          )}
+        </Card>
+      ) : (
+        <NoPermissionData />
+      )}
     </div>
   );
 };
