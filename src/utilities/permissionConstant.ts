@@ -1,3 +1,10 @@
+export type TPermission = {
+  id: number;
+  name: string;
+  codename: string;
+  status: boolean;
+};
+
 type ActionNames = {
   change: string;
   view: string;

@@ -1,3 +1,5 @@
+import { actionNames, moduleNames, TPermission } from "./permissionConstant";
+
 // Fixed GetPermission function
 export const GetPermission = (
   data: any,
@@ -15,23 +17,27 @@ export const GetPermission = (
   return !!existsPermission && existsPermission.status;
 };
 
-// Fixed GetMenuPermission function
-export const GetMenuPermission = (
-  data: any,
-  moduleName: string,
-  actions: string[]
+export const hasPermissionForModule = (
+  permissions: TPermission[],
+  moduleKey: keyof typeof moduleNames
 ): boolean => {
-  return actions.some((action) =>
-    data.some(
-      (item: any) => item.name === `${action}_${moduleName}` && item.status
+  const module = moduleNames[moduleKey];
+
+  return Object.values(actionNames).some((action) => {
+    const codename = `${action}_${module}`;
+    return permissions.some(
+      (perm) => perm.codename === codename && perm.status
+    );
+  });
+};
+
+export const hasFullModuleAccess = (
+  permissions: TPermission[],
+  moduleName: string // Change type to string for dynamic modules
+): boolean => {
+  return ["view", "add", "change", "delete"].every((action) =>
+    permissions.some(
+      (perm) => perm.codename === `${action}_${moduleName}` && perm.status
     )
   );
 };
-
-// Example usage
-
-// const menuPermissionResult = GetMenuPermission(moduleNames.logentry, [
-//   actionNames.change,
-//   actionNames.view,
-// ]);
-// console.log('Menu permission check:', menuPermissionResult);

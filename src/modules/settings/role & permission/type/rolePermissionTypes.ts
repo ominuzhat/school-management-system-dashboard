@@ -65,7 +65,7 @@ export interface WelcomeInstitution {
 export interface Permission {
   id: number;
   name: string;
-  codename: string;
+  codename?: string;
 }
 
 export interface IUser {

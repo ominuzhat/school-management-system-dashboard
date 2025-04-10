@@ -47,62 +47,61 @@ import {
 import { FiPenTool } from "react-icons/fi";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { LuCopyleft } from "react-icons/lu";
+import { useGetDashboardDataQuery } from "../../../modules/Dashboard/api/dashoboardEndPoints";
+import { hasPermissionForModule } from "../../../utilities/permission";
+import { ItemType, MenuItemType } from "antd/es/menu/interface";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
     (state) => state.themes
   );
   const { pathname } = useLocation();
-  // const { data: dashboardData } = useGetDashboardDataQuery({});
+  const { data: dashboardData } = useGetDashboardDataQuery({});
 
+  const permissions = dashboardData?.data?.permissions || [];
+  
   const iconStyle: React.CSSProperties | undefined = {
     marginRight: "8px",
     color: themes === "light" ? "#000000" : "#FFFFFF",
   };
 
-  // GetMenuPermission(dashboardData?.data?.permissions, moduleNames.role, [
-  //   actionNames.add,
-  //   actionNames.change,
-  //   actionNames.delete,
-  //   actionNames.view,
-  // ]);
 
   const settings = [
-    {
+    hasPermissionForModule(permissions, "institution") && {
       key: "/institute-profile",
       label: <Link to="/institute-profile">Institute Profile</Link>,
       icon: <BiSolidInstitution />,
     },
 
-    {
+    hasPermissionForModule(permissions, "role") && {
       key: "/role-permission",
       label: <Link to="/role-permission">Role & Permissions</Link>,
       icon: <IoAccessibilityOutline />,
     },
-    {
+    hasPermissionForModule(permissions, "noticeboard") && {
       key: "/notice",
       label: <Link to="/notice">Notice</Link>,
       icon: <TfiAnnouncement />,
     },
-    {
+    hasPermissionForModule(permissions, "rulesandregulations") && {
       key: "/rules",
       label: <Link to="/rules">Rules & Regulation</Link>,
       icon: <BsFillFileRuledFill />,
     },
-    {
+    hasPermissionForModule(permissions, "smsconfig") && {
       key: "/sms",
       label: <Link to="/sms">SMS Configuration</Link>,
       icon: <FaCommentSms />,
     },
-  ];
+  ].filter(Boolean);
 
   const members = [
-    {
+    hasPermissionForModule(permissions, "student") && {
       key: "/students",
       label: <Link to="/students">Students</Link>,
       icon: <PiStudent />,
     },
-    {
+    hasPermissionForModule(permissions, "teacher") && {
       key: "/teacher",
       label: <Link to="/teacher">Teachers</Link>,
       icon: <LiaChalkboardTeacherSolid />,
@@ -113,19 +112,19 @@ const MenuData: React.FC = () => {
       label: "Employees",
       icon: <IoPeopleOutline />,
       children: [
-        {
+        hasPermissionForModule(permissions, "employee") && {
           key: "/employees",
           label: <Link to="/employees">Employees</Link>,
           icon: <FaPeopleGroup />,
         },
-        {
+        hasPermissionForModule(permissions, "department") && {
           key: "/department",
           label: <Link to="/department">Department</Link>,
           icon: <RiLuggageDepositLine />,
         },
       ],
     },
-  ];
+  ].filter(Boolean);
 
   const payroll = [
     {
@@ -133,12 +132,12 @@ const MenuData: React.FC = () => {
       label: "Salary",
       icon: <MdPayment />,
       children: [
-        {
+        hasPermissionForModule(permissions, "payroll") && {
           key: "/payroll",
           label: <Link to="/payroll">Payroll</Link>,
           icon: <MdOutlinePayments />,
         },
-        {
+        hasPermissionForModule(permissions, "payment") && {
           label: <Link to="/payment">Payment</Link>,
           icon: <PiContactlessPaymentBold />,
           key: "/payment",
@@ -150,17 +149,17 @@ const MenuData: React.FC = () => {
       label: "Fees",
       icon: <TbCoinTaka />,
       children: [
-        {
+        hasPermissionForModule(permissions, "feestructure") && {
           label: <Link to="/fees">Config</Link>,
           icon: <BiSolidUserAccount />,
           key: "/fees",
         },
-        {
+        hasPermissionForModule(permissions, "admissionfeestructure") && {
           label: <Link to="/additional-fee">Additional Fee</Link>,
           icon: <HiOutlineCash />,
           key: "/additional-fee",
         },
-        {
+        hasPermissionForModule(permissions, "fees") && {
           label: <Link to="/collect-fee">Collect Fee</Link>,
           icon: <RiSecurePaymentLine />,
           key: "/collect-fee",
@@ -173,64 +172,49 @@ const MenuData: React.FC = () => {
       label: "Account",
       icon: <MdAccountBalanceWallet />,
       children: [
-        {
+        hasPermissionForModule(permissions, "account") && {
           label: <Link to="/account">Chart of Account</Link>,
           icon: <BiSolidUserAccount />,
           key: "/account-chart",
         },
-        {
+        hasPermissionForModule(permissions, "transaction") && {
           label: <Link to="/account/transactions">Account Transaction</Link>,
           icon: <AiOutlineAccountBook />,
           key: "/account/transactions",
         },
-        // Comment
-        // {
-        //   label: (
-        //     <Link to="/attendance/mark-teacher-attendance">Add Income</Link>
-        //   ),
-        //   icon: <FaPiggyBank />,
-        //   key: "/attendance/mark-teacher-attendance",
-        // },
-        // {
-        //   label: (
-        //     <Link to="/attendance/mark-teacher-attendance">Add Expense</Link>
-        //   ),
-        //   icon: <GiExpense />,
-        //   key: "/attendance/mark-teacher-attendance",
-        // },
       ],
     },
-  ];
+  ].filter(Boolean);
 
   const institution = [
-    {
+    hasPermissionForModule(permissions, "gradelevel") && {
       key: "/classes",
       label: <Link to="/classes">Classes</Link>,
       icon: <SiGoogleclassroom />,
     },
-    {
+    hasPermissionForModule(permissions, "classsubject") && {
       key: "/subjects",
       label: <Link to="/subjects">Subjects</Link>,
       icon: <IoBookOutline />,
     },
-    {
+    hasPermissionForModule(permissions, "section") && {
       key: "/section",
       label: <Link to="/section">Section</Link>,
       icon: <TbSection />,
     },
 
-    {
+    hasPermissionForModule(permissions, "shift") && {
       key: "/shift",
       label: <Link to="/shift">Shift</Link>,
       icon: <MdFilterTiltShift />,
     },
 
-    {
+    hasPermissionForModule(permissions, "account") && {
       key: "/leave",
       label: <Link to="/leave">Leave</Link>,
       icon: <LuCopyleft />,
     },
-    {
+    hasPermissionForModule(permissions, "routine") && {
       key: "/routine",
       label: <Link to="/routine">Routine</Link>,
       icon: <IoCalendarOutline />,
@@ -241,38 +225,38 @@ const MenuData: React.FC = () => {
       label: "Exam",
       icon: <FiPenTool />,
       children: [
-        {
+        hasPermissionForModule(permissions, "exam") && {
           key: "/exam",
           label: <Link to="/exam">Exam</Link>,
           icon: <PiExamLight />,
         },
 
-        {
+        hasPermissionForModule(permissions, "examhall") && {
           key: "/exam-hall",
           label: <Link to="/exam-hall">Exam Hall</Link>,
           icon: <SiGoogleclassroom />,
         },
-        {
+        hasPermissionForModule(permissions, "examhallreceipt") && {
           key: "/exam-receipts",
           label: <Link to="/exam-receipts">Assign Exam Hall</Link>,
           icon: <IoReceiptOutline />,
         },
-        {
+        hasPermissionForModule(permissions, "exammark") && {
           key: "/mark-exam",
           label: <Link to="/mark-exam">Mark Exam</Link>,
           icon: <BsBookmarks />,
         },
-        {
+        hasPermissionForModule(permissions, "gradescale") && {
           key: "/grade-mark",
           label: <Link to="/grade-mark">Grade Configuration</Link>,
           icon: <BsFileEarmarkDiff />,
         },
-        {
+        hasPermissionForModule(permissions, "studentresult") && {
           key: "/exam-result",
           label: <Link to="/exam-result">Publish Result</Link>,
           icon: <IoCompassOutline />,
         },
-        {
+        hasPermissionForModule(permissions, "exam") && {
           key: "/result-migration",
           label: <Link to="/result-migration">Result Migration</Link>,
           icon: <FaMapMarkedAlt />,
@@ -284,13 +268,13 @@ const MenuData: React.FC = () => {
       label: "Admission",
       icon: <FaRegAddressCard />,
       children: [
-        {
+        hasPermissionForModule(permissions, "admission") && {
           key: "/admission",
           label: <Link to="/admission">Admission</Link>,
           icon: <IoMdPersonAdd />,
         },
 
-        {
+        hasPermissionForModule(permissions, "admissionsession") && {
           key: "/admission-session",
           label: <Link to="/admission-session">Admission Session</Link>,
           icon: <VscGoToEditingSession />,
@@ -303,7 +287,7 @@ const MenuData: React.FC = () => {
       label: "Attendance",
       icon: <MdCoPresent />,
       children: [
-        {
+        hasPermissionForModule(permissions, "attendance") && {
           label: (
             <Link to="/attendance/mark-student-attendance">
               Students Attendance
@@ -313,7 +297,7 @@ const MenuData: React.FC = () => {
           key: "/attendance/mark-student-attendance",
         },
 
-        {
+        hasPermissionForModule(permissions, "employeeattendance") && {
           label: (
             <Link to="/attendance/mark-employee-attendance">
               Employee Attendance
@@ -324,7 +308,7 @@ const MenuData: React.FC = () => {
         },
       ],
     },
-  ];
+  ].filter(Boolean);
 
   const items: MenuProps["items"] = [
     {
@@ -360,7 +344,7 @@ const MenuData: React.FC = () => {
             mode="inline"
             theme={themes}
             selectedKeys={[pathname]}
-            items={members}
+            items={members.filter(Boolean) as ItemType<MenuItemType>[]}
           />
         </div>
         <span className="features-title">Institution</span>
@@ -372,7 +356,7 @@ const MenuData: React.FC = () => {
             mode="inline"
             theme={themes}
             selectedKeys={[pathname]}
-            items={institution}
+            items={institution.filter(Boolean) as ItemType<MenuItemType>[]}
           />
         </div>
         <span className="features-title">Finance Management</span>
@@ -384,7 +368,7 @@ const MenuData: React.FC = () => {
             mode="inline"
             theme={themes}
             selectedKeys={[pathname]}
-            items={payroll}
+            items={payroll.filter(Boolean) as ItemType<MenuItemType>[]}
           />
         </div>
         <span className="features-title">Settings</span>
@@ -396,7 +380,7 @@ const MenuData: React.FC = () => {
             mode="inline"
             theme={themes}
             selectedKeys={[pathname]}
-            items={settings}
+            items={settings.filter(Boolean) as ItemType<MenuItemType>[]}
           />
         </div>
       </div>

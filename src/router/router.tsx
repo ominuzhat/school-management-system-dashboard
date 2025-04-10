@@ -73,6 +73,7 @@ import ResultsPage from "../modules/general settings/Exam/Result/pages/ResultsPa
 import ResultView from "../modules/general settings/Exam/Result/components/ResultView";
 import ResultMigrationPage from "../modules/general settings/Exam/Result Migration/pages/ResultMigration";
 import LeavePage from "../modules/general settings/Leave/page/LeavePage";
+import WithPermission from "./withPermissionRouter";
 
 const router = createBrowserRouter([
   {
@@ -88,7 +89,11 @@ const router = createBrowserRouter([
       // students
       {
         path: "/students",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="student">
+            <StudentsPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "/students",
@@ -111,7 +116,11 @@ const router = createBrowserRouter([
       // employees
       {
         path: "/employees",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="employee">
+            <EmployeePage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -126,7 +135,11 @@ const router = createBrowserRouter([
       // teacher
       {
         path: "/teacher",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="teacher">
+            <TeacherPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -141,45 +154,47 @@ const router = createBrowserRouter([
       // Department
       {
         path: "/department",
-        element: <Accounts />,
-        children: [
-          {
-            path: "",
-            element: <DepartmentPage />,
-          },
-        ],
+        element: (
+          <WithPermission requiredPermission="department">
+            <DepartmentPage />
+          </WithPermission>
+        ),
       },
       // classes
       {
         path: "/classes",
-        element: <Accounts />,
-        children: [
-          {
-            path: "/classes",
-            element: <ClassesPage />,
-          },
-        ],
+        element: (
+          <WithPermission requiredPermission="gradelevel">
+            <ClassesPage />
+          </WithPermission>
+        ),
       },
       // subjects
       {
         path: "/subjects",
-        element: <Accounts />,
-        children: [
-          {
-            path: "/subjects",
-            element: <SubjectsPage />,
-          },
-        ],
+        element: (
+          <WithPermission requiredPermission="classsubject">
+            <SubjectsPage />
+          </WithPermission>
+        ),
       },
       // Section
       {
         path: "/section",
-        element: <SectionPage />,
+        element: (
+          <WithPermission requiredPermission="section">
+            <SectionPage />
+          </WithPermission>
+        ),
       },
       // shift
       {
         path: "/shift",
-        element: <ShiftPage />,
+        element: (
+          <WithPermission requiredPermission="shift">
+            <ShiftPage />
+          </WithPermission>
+        ),
       },
 
       // Leave
@@ -191,7 +206,11 @@ const router = createBrowserRouter([
       // exam
       {
         path: "/exam",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="exam">
+            <ExamPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -215,7 +234,11 @@ const router = createBrowserRouter([
       // exam Hall
       {
         path: "/exam-hall",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="examhall">
+            <ExamHallPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -238,53 +261,49 @@ const router = createBrowserRouter([
       // mark exam
       {
         path: "/mark-exam",
-        element: <Accounts />,
-        children: [
-          {
-            path: "",
-            element: <MarkExamPage />,
-          },
-        ],
+        element: (
+          <WithPermission requiredPermission="exammark">
+            <MarkExamPage />
+          </WithPermission>
+        ),
       },
       // exam Receipts
       {
         path: "/exam-receipts",
-        element: <Accounts />,
-        children: [
-          {
-            path: "",
-            element: <ExamReceiptsPage />,
-          },
-        ],
+        element: (
+          <WithPermission requiredPermission="examhallreceipt">
+            <ExamReceiptsPage />
+          </WithPermission>
+        ),
       },
       // Grade Mark
       {
         path: "/grade-mark",
-        element: <Accounts />,
-        children: [
-          {
-            path: "",
-            element: <GradeMarkPage />,
-          },
-        ],
+        element: (
+          <WithPermission requiredPermission="gradescale">
+            <GradeMarkPage />
+          </WithPermission>
+        ),
       },
 
       // Result Migration
       {
         path: "/result-migration",
-        element: <Accounts />,
-        children: [
-          {
-            path: "",
-            element: <ResultMigrationPage />,
-          },
-        ],
+        element: (
+          <WithPermission requiredPermission="exam">
+            <ResultMigrationPage />
+          </WithPermission>
+        ),
       },
 
       // exam Result
       {
         path: "/exam-result",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="studentresult">
+            <ResultsPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -300,7 +319,11 @@ const router = createBrowserRouter([
       // routine
       {
         path: "/routine",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="routine">
+            <RoutinePages />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -324,7 +347,11 @@ const router = createBrowserRouter([
       // admission
       {
         path: "/admission",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="admission">
+            <AdmissionPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -347,18 +374,20 @@ const router = createBrowserRouter([
       // admission session
       {
         path: "/admission-session",
-        element: <Accounts />,
-        children: [
-          {
-            path: "",
-            element: <AdmissionSessionPage />,
-          },
-        ],
+        element: (
+          <WithPermission requiredPermission="admissionsession">
+            <AdmissionSessionPage />
+          </WithPermission>
+        ),
       },
       // Fees
       {
         path: "/fees",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="feestructure">
+            <FeesPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -375,7 +404,11 @@ const router = createBrowserRouter([
       // collect fee
       {
         path: "/collect-fee",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="fees">
+            <CreateCollectFee />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -399,7 +432,11 @@ const router = createBrowserRouter([
       // Tuition Fees
       {
         path: "/additional-fee",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="admissionfeestructure">
+            <AdditionalFeesPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -464,34 +501,48 @@ const router = createBrowserRouter([
       // institution profile
       {
         path: "/institute-profile",
-        element: <Accounts />,
-        children: [
-          {
-            path: "/institute-profile",
-            element: <InstituteProfile />,
-          },
-        ],
+        element: (
+          <WithPermission requiredPermission="institution">
+            <InstituteProfile />
+          </WithPermission>
+        ),
       },
       // Notice
       {
         path: "/notice",
-        element: <NoticePage />,
+        element: (
+          <WithPermission requiredPermission="noticeboard">
+            <NoticePage />
+          </WithPermission>
+        ),
       },
       // Rules
       {
         path: "/rules",
-        element: <RulesPage />,
+        element: (
+          <WithPermission requiredPermission="rulesandregulations">
+            <RulesPage />
+          </WithPermission>
+        ),
       },
       // SMS
       {
         path: "/sms",
-        element: <SmsPage />,
+        element: (
+          <WithPermission requiredPermission="smsconfig">
+            <SmsPage />
+          </WithPermission>
+        ),
       },
 
       // Role & permissions
       {
         path: "/role-permission",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="role">
+            <RolePermissionPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -507,7 +558,11 @@ const router = createBrowserRouter([
       // payment
       {
         path: "/payment",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="payment">
+            <PaymentPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -523,7 +578,11 @@ const router = createBrowserRouter([
       // payroll
       {
         path: "/payroll",
-        element: <Accounts />,
+        element: (
+          <WithPermission requiredPermission="payroll">
+            <PayrollPage />
+          </WithPermission>
+        ),
         children: [
           {
             path: "",
@@ -540,7 +599,7 @@ const router = createBrowserRouter([
 
       {
         path: "/account",
-        element: <Accounts />,
+        element: <AccountPage />,
         children: [
           {
             path: "/account",
