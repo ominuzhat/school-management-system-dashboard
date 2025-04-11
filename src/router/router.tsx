@@ -91,7 +91,7 @@ const router = createBrowserRouter([
         path: "/students",
         element: (
           <WithPermission requiredPermission="student">
-            <StudentsPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -118,7 +118,7 @@ const router = createBrowserRouter([
         path: "/employees",
         element: (
           <WithPermission requiredPermission="employee">
-            <EmployeePage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -137,7 +137,7 @@ const router = createBrowserRouter([
         path: "/teacher",
         element: (
           <WithPermission requiredPermission="teacher">
-            <TeacherPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -208,7 +208,7 @@ const router = createBrowserRouter([
         path: "/exam",
         element: (
           <WithPermission requiredPermission="exam">
-            <ExamPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -236,7 +236,7 @@ const router = createBrowserRouter([
         path: "/exam-hall",
         element: (
           <WithPermission requiredPermission="examhall">
-            <ExamHallPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -301,7 +301,7 @@ const router = createBrowserRouter([
         path: "/exam-result",
         element: (
           <WithPermission requiredPermission="studentresult">
-            <ResultsPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -321,7 +321,7 @@ const router = createBrowserRouter([
         path: "/routine",
         element: (
           <WithPermission requiredPermission="routine">
-            <RoutinePages />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -349,7 +349,7 @@ const router = createBrowserRouter([
         path: "/admission",
         element: (
           <WithPermission requiredPermission="admission">
-            <AdmissionPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -385,7 +385,7 @@ const router = createBrowserRouter([
         path: "/fees",
         element: (
           <WithPermission requiredPermission="feestructure">
-            <FeesPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -406,7 +406,7 @@ const router = createBrowserRouter([
         path: "/collect-fee",
         element: (
           <WithPermission requiredPermission="fees">
-            <CreateCollectFee />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -434,7 +434,7 @@ const router = createBrowserRouter([
         path: "/additional-fee",
         element: (
           <WithPermission requiredPermission="admissionfeestructure">
-            <AdditionalFeesPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -540,7 +540,7 @@ const router = createBrowserRouter([
         path: "/role-permission",
         element: (
           <WithPermission requiredPermission="role">
-            <RolePermissionPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -560,7 +560,7 @@ const router = createBrowserRouter([
         path: "/payment",
         element: (
           <WithPermission requiredPermission="payment">
-            <PaymentPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -580,7 +580,7 @@ const router = createBrowserRouter([
         path: "/payroll",
         element: (
           <WithPermission requiredPermission="payroll">
-            <PayrollPage />
+            <Accounts />
           </WithPermission>
         ),
         children: [
@@ -594,12 +594,9 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // _______________________________________________________________________________________________________________
-      // new for education
-
       {
         path: "/account",
-        element: <AccountPage />,
+        element: <Accounts />,
         children: [
           {
             path: "/account",
@@ -620,6 +617,8 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // _______________________________________________________________________________________________________________
+      // new for education
 
       {
         path: "profile",

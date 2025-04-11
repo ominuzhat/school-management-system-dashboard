@@ -59,12 +59,11 @@ const MenuData: React.FC = () => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
 
   const permissions = dashboardData?.data?.permissions || [];
-  
+
   const iconStyle: React.CSSProperties | undefined = {
     marginRight: "8px",
     color: themes === "light" ? "#000000" : "#FFFFFF",
   };
-
 
   const settings = [
     hasPermissionForModule(permissions, "institution") && {
@@ -107,83 +106,88 @@ const MenuData: React.FC = () => {
       icon: <LiaChalkboardTeacherSolid />,
     },
 
-    {
-      key: "/employees-module",
-      label: "Employees",
-      icon: <IoPeopleOutline />,
-      children: [
-        hasPermissionForModule(permissions, "employee") && {
-          key: "/employees",
-          label: <Link to="/employees">Employees</Link>,
-          icon: <FaPeopleGroup />,
-        },
-        hasPermissionForModule(permissions, "department") && {
-          key: "/department",
-          label: <Link to="/department">Department</Link>,
-          icon: <RiLuggageDepositLine />,
-        },
-      ],
-    },
+    hasPermissionForModule(permissions, "employee") &&
+      hasPermissionForModule(permissions, "department") && {
+        key: "/employees-module",
+        label: "Employees",
+        icon: <IoPeopleOutline />,
+        children: [
+          hasPermissionForModule(permissions, "employee") && {
+            key: "/employees",
+            label: <Link to="/employees">Employees</Link>,
+            icon: <FaPeopleGroup />,
+          },
+          hasPermissionForModule(permissions, "department") && {
+            key: "/department",
+            label: <Link to="/department">Department</Link>,
+            icon: <RiLuggageDepositLine />,
+          },
+        ],
+      },
   ].filter(Boolean);
 
   const payroll = [
-    {
-      key: "/payroll-module",
-      label: "Salary",
-      icon: <MdPayment />,
-      children: [
-        hasPermissionForModule(permissions, "payroll") && {
-          key: "/payroll",
-          label: <Link to="/payroll">Payroll</Link>,
-          icon: <MdOutlinePayments />,
-        },
-        hasPermissionForModule(permissions, "payment") && {
-          label: <Link to="/payment">Payment</Link>,
-          icon: <PiContactlessPaymentBold />,
-          key: "/payment",
-        },
-      ],
-    },
-    {
-      key: "/fees-module",
-      label: "Fees",
-      icon: <TbCoinTaka />,
-      children: [
-        hasPermissionForModule(permissions, "feestructure") && {
-          label: <Link to="/fees">Config</Link>,
-          icon: <BiSolidUserAccount />,
-          key: "/fees",
-        },
-        hasPermissionForModule(permissions, "admissionfeestructure") && {
-          label: <Link to="/additional-fee">Additional Fee</Link>,
-          icon: <HiOutlineCash />,
-          key: "/additional-fee",
-        },
-        hasPermissionForModule(permissions, "fees") && {
-          label: <Link to="/collect-fee">Collect Fee</Link>,
-          icon: <RiSecurePaymentLine />,
-          key: "/collect-fee",
-        },
-      ],
-    },
+    hasPermissionForModule(permissions, "payroll") &&
+      hasPermissionForModule(permissions, "payment") && {
+        key: "/payroll-module",
+        label: "Salary",
+        icon: <MdPayment />,
+        children: [
+          hasPermissionForModule(permissions, "payroll") && {
+            key: "/payroll",
+            label: <Link to="/payroll">Payroll</Link>,
+            icon: <MdOutlinePayments />,
+          },
+          hasPermissionForModule(permissions, "payment") && {
+            label: <Link to="/payment">Payment</Link>,
+            icon: <PiContactlessPaymentBold />,
+            key: "/payment",
+          },
+        ],
+      },
+    hasPermissionForModule(permissions, "feestructure") &&
+      hasPermissionForModule(permissions, "admissionfeestructure") &&
+      hasPermissionForModule(permissions, "fees") && {
+        key: "/fees-module",
+        label: "Fees",
+        icon: <TbCoinTaka />,
+        children: [
+          hasPermissionForModule(permissions, "feestructure") && {
+            label: <Link to="/fees">Config</Link>,
+            icon: <BiSolidUserAccount />,
+            key: "/fees",
+          },
+          hasPermissionForModule(permissions, "admissionfeestructure") && {
+            label: <Link to="/additional-fee">Additional Fee</Link>,
+            icon: <HiOutlineCash />,
+            key: "/additional-fee",
+          },
+          hasPermissionForModule(permissions, "fees") && {
+            label: <Link to="/collect-fee">Collect Fee</Link>,
+            icon: <RiSecurePaymentLine />,
+            key: "/collect-fee",
+          },
+        ],
+      },
 
-    {
-      key: "/account",
-      label: "Account",
-      icon: <MdAccountBalanceWallet />,
-      children: [
-        hasPermissionForModule(permissions, "account") && {
-          label: <Link to="/account">Chart of Account</Link>,
-          icon: <BiSolidUserAccount />,
-          key: "/account-chart",
-        },
-        hasPermissionForModule(permissions, "transaction") && {
-          label: <Link to="/account/transactions">Account Transaction</Link>,
-          icon: <AiOutlineAccountBook />,
-          key: "/account/transactions",
-        },
-      ],
-    },
+    hasPermissionForModule(permissions, "account") &&
+      hasPermissionForModule(permissions, "transaction") && {
+        key: "/account",
+        label: "Account",
+        icon: <MdAccountBalanceWallet />,
+        children: [
+          hasPermissionForModule(permissions, "account") && {
+            label: <Link to="/account">Chart of Account</Link>,
+            icon: <BiSolidUserAccount />,
+            key: "/account-chart",
+          },
+          hasPermissionForModule(permissions, "transaction") && {
+            label: <Link to="/account/transactions">Account Transaction</Link>,
+            icon: <AiOutlineAccountBook />,
+            key: "/account/transactions",
+          },
+        ],
+      },
   ].filter(Boolean);
 
   const institution = [
@@ -220,94 +224,101 @@ const MenuData: React.FC = () => {
       icon: <IoCalendarOutline />,
     },
 
-    {
-      key: "/exam-module",
-      label: "Exam",
-      icon: <FiPenTool />,
-      children: [
-        hasPermissionForModule(permissions, "exam") && {
-          key: "/exam",
-          label: <Link to="/exam">Exam</Link>,
-          icon: <PiExamLight />,
-        },
+    hasPermissionForModule(permissions, "exam") &&
+      hasPermissionForModule(permissions, "examhall") &&
+      hasPermissionForModule(permissions, "examhallreceipt") &&
+      hasPermissionForModule(permissions, "exammark") &&
+      hasPermissionForModule(permissions, "gradescale") &&
+      hasPermissionForModule(permissions, "studentresult") && {
+        key: "/exam-module",
+        label: "Exam",
+        icon: <FiPenTool />,
+        children: [
+          hasPermissionForModule(permissions, "exam") && {
+            key: "/exam",
+            label: <Link to="/exam">Exam</Link>,
+            icon: <PiExamLight />,
+          },
 
-        hasPermissionForModule(permissions, "examhall") && {
-          key: "/exam-hall",
-          label: <Link to="/exam-hall">Exam Hall</Link>,
-          icon: <SiGoogleclassroom />,
-        },
-        hasPermissionForModule(permissions, "examhallreceipt") && {
-          key: "/exam-receipts",
-          label: <Link to="/exam-receipts">Assign Exam Hall</Link>,
-          icon: <IoReceiptOutline />,
-        },
-        hasPermissionForModule(permissions, "exammark") && {
-          key: "/mark-exam",
-          label: <Link to="/mark-exam">Mark Exam</Link>,
-          icon: <BsBookmarks />,
-        },
-        hasPermissionForModule(permissions, "gradescale") && {
-          key: "/grade-mark",
-          label: <Link to="/grade-mark">Grade Configuration</Link>,
-          icon: <BsFileEarmarkDiff />,
-        },
-        hasPermissionForModule(permissions, "studentresult") && {
-          key: "/exam-result",
-          label: <Link to="/exam-result">Publish Result</Link>,
-          icon: <IoCompassOutline />,
-        },
-        hasPermissionForModule(permissions, "exam") && {
-          key: "/result-migration",
-          label: <Link to="/result-migration">Result Migration</Link>,
-          icon: <FaMapMarkedAlt />,
-        },
-      ],
-    },
-    {
-      key: "/admission-module",
-      label: "Admission",
-      icon: <FaRegAddressCard />,
-      children: [
-        hasPermissionForModule(permissions, "admission") && {
-          key: "/admission",
-          label: <Link to="/admission">Admission</Link>,
-          icon: <IoMdPersonAdd />,
-        },
+          hasPermissionForModule(permissions, "examhall") && {
+            key: "/exam-hall",
+            label: <Link to="/exam-hall">Exam Hall</Link>,
+            icon: <SiGoogleclassroom />,
+          },
+          hasPermissionForModule(permissions, "examhallreceipt") && {
+            key: "/exam-receipts",
+            label: <Link to="/exam-receipts">Assign Exam Hall</Link>,
+            icon: <IoReceiptOutline />,
+          },
+          hasPermissionForModule(permissions, "exammark") && {
+            key: "/mark-exam",
+            label: <Link to="/mark-exam">Mark Exam</Link>,
+            icon: <BsBookmarks />,
+          },
+          hasPermissionForModule(permissions, "gradescale") && {
+            key: "/grade-mark",
+            label: <Link to="/grade-mark">Grade Configuration</Link>,
+            icon: <BsFileEarmarkDiff />,
+          },
+          hasPermissionForModule(permissions, "studentresult") && {
+            key: "/exam-result",
+            label: <Link to="/exam-result">Publish Result</Link>,
+            icon: <IoCompassOutline />,
+          },
+          hasPermissionForModule(permissions, "exam") && {
+            key: "/result-migration",
+            label: <Link to="/result-migration">Result Migration</Link>,
+            icon: <FaMapMarkedAlt />,
+          },
+        ],
+      },
+    hasPermissionForModule(permissions, "admission") &&
+      hasPermissionForModule(permissions, "admissionsession") && {
+        key: "/admission-module",
+        label: "Admission",
+        icon: <FaRegAddressCard />,
+        children: [
+          hasPermissionForModule(permissions, "admission") && {
+            key: "/admission",
+            label: <Link to="/admission">Admission</Link>,
+            icon: <IoMdPersonAdd />,
+          },
 
-        hasPermissionForModule(permissions, "admissionsession") && {
-          key: "/admission-session",
-          label: <Link to="/admission-session">Admission Session</Link>,
-          icon: <VscGoToEditingSession />,
-        },
-      ],
-    },
+          hasPermissionForModule(permissions, "admissionsession") && {
+            key: "/admission-session",
+            label: <Link to="/admission-session">Admission Session</Link>,
+            icon: <VscGoToEditingSession />,
+          },
+        ],
+      },
 
-    {
-      key: "/attendance",
-      label: "Attendance",
-      icon: <MdCoPresent />,
-      children: [
-        hasPermissionForModule(permissions, "attendance") && {
-          label: (
-            <Link to="/attendance/mark-student-attendance">
-              Students Attendance
-            </Link>
-          ),
-          icon: <PiStudent />,
-          key: "/attendance/mark-student-attendance",
-        },
+    hasPermissionForModule(permissions, "attendance") &&
+      hasPermissionForModule(permissions, "employeeattendance") && {
+        key: "/attendance",
+        label: "Attendance",
+        icon: <MdCoPresent />,
+        children: [
+          hasPermissionForModule(permissions, "attendance") && {
+            label: (
+              <Link to="/attendance/mark-student-attendance">
+                Students Attendance
+              </Link>
+            ),
+            icon: <PiStudent />,
+            key: "/attendance/mark-student-attendance",
+          },
 
-        hasPermissionForModule(permissions, "employeeattendance") && {
-          label: (
-            <Link to="/attendance/mark-employee-attendance">
-              Employee Attendance
-            </Link>
-          ),
-          icon: <IoPeopleOutline />,
-          key: "/attendance/mark-employee-attendance",
-        },
-      ],
-    },
+          hasPermissionForModule(permissions, "employeeattendance") && {
+            label: (
+              <Link to="/attendance/mark-employee-attendance">
+                Employee Attendance
+              </Link>
+            ),
+            icon: <IoPeopleOutline />,
+            key: "/attendance/mark-employee-attendance",
+          },
+        ],
+      },
   ].filter(Boolean);
 
   const items: MenuProps["items"] = [

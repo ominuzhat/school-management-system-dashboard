@@ -64,10 +64,10 @@ const useStudentsAttendanceListColumns = (): ColumnsType<any> => {
     },
     {
       key: "8",
-      title: "Total Leave",
-      dataIndex: "total_leave",
+      title: "Total Half",
+      dataIndex: "total_half",
       align: "center",
-      render: (total_leave) => <Tag color="blue">{total_leave || 0}</Tag>,
+      render: (total_half) => <Tag color="blue">{total_half || 0}</Tag>,
     },
     {
       key: "9",

@@ -128,7 +128,7 @@ const useMarkStudentsAttendanceColumns = ({
           <Button onClick={() => handleSetAllStatus("absent")}>
             All Absent
           </Button>
-          <Button onClick={() => handleSetAllStatus("leave")}>All Leave</Button>
+          <Button onClick={() => handleSetAllStatus("half")}>All Half</Button>
         </div>
       ),
       width: 400,
@@ -142,7 +142,7 @@ const useMarkStudentsAttendanceColumns = ({
             <Radio value="present">P</Radio>
             <Radio value="late">D</Radio>
             <Radio value="absent">A</Radio>
-            <Radio value="leave">L</Radio>
+            <Radio value="half">H</Radio>
           </Radio.Group>
         </Space>
       ),
