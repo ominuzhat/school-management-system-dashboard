@@ -26,12 +26,9 @@ const UpdateLeave = ({ record }: { record: any }) => {
 
   useEffect(() => {
     if (singleData?.data) {
-      const leaveData = singleData?.data as IGetLeave;
-
+      const leaveData = singleData?.data as unknown as IGetLeave;
       form.setFieldsValue({
         name: leaveData.name,
-        description: leaveData.description,
-        class_teacher: leaveData.class_teacher?.id,
         admission: leaveData.admission?.id,
         leave_type: leaveData.leave_type,
         leave_duration: leaveData.leave_duration || "full_day",
@@ -43,7 +40,14 @@ const UpdateLeave = ({ record }: { record: any }) => {
   }, [singleData, form]);
 
   const onFinish = (values: any): void => {
-    update(values);
+    const formattedValues = {
+      ...values,
+      start_date: dayjs(values.start_date).format("YYYY-MM-DD"),
+      ...(values.end_date && {
+        end_date: dayjs(values.end_date).format("YYYY-MM-DD"),
+      }),
+    };
+    update({ id: record, data: formattedValues });
   };
 
   return (
@@ -69,13 +73,13 @@ const UpdateLeave = ({ record }: { record: any }) => {
             </Form.Item>
           </Col>
           <Col lg={12}>
-            <Form.Item label="Select Leave Type" name="leave-type">
+            <Form.Item label="Select Leave Type" name="leave_type">
               <Select placeholder="Select Leave Type" className="w-full">
-                <Select.Option value="emergency">Emergency Leave</Select.Option>
-                <Select.Option value="functional">
+                <Select.Option value="Emergency">Emergency Leave</Select.Option>
+                <Select.Option value="Functional">
                   Functional Leave
                 </Select.Option>
-                <Select.Option value="medical">medical Leave</Select.Option>
+                <Select.Option value="Medical">medical Leave</Select.Option>
                 <Select.Option value="Other">Other</Select.Option>
               </Select>
             </Form.Item>
@@ -89,9 +93,9 @@ const UpdateLeave = ({ record }: { record: any }) => {
               ]}
             >
               <Radio.Group>
-                <Radio value="half_day">Half Day</Radio>
-                <Radio value="full_day">Full Day</Radio>
-                <Radio value="multiple_days">Multiple Days</Radio>
+                <Radio value="H">Half Day</Radio>
+                <Radio value="F">Full Day</Radio>
+                <Radio value="M">Multiple Days</Radio>
               </Radio.Group>
             </Form.Item>
           </Col>
@@ -104,7 +108,7 @@ const UpdateLeave = ({ record }: { record: any }) => {
               <DatePicker style={{ width: "100%" }} />
             </Form.Item>
           </Col>
-          {leaveDuration === "multiple_days" && (
+          {leaveDuration === "M" && (
             <Col lg={6}>
               <Form.Item
                 label="End Date"

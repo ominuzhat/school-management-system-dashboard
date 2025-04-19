@@ -39,7 +39,7 @@ export const api = createApi({
       // 403,
       // "CUSTOM_ERROR",
       // "FETCH_ERROR",
-      "PARSING_ERROR",
+      // "PARSING_ERROR",
       "TIMEOUT_ERROR",
     ];
 

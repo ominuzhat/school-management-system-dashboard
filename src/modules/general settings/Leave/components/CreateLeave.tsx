@@ -10,15 +10,29 @@ import {
 import { Form } from "../../../../common/CommonAnt";
 import { useGetAdmissionQuery } from "../../admission/api/admissionEndPoints";
 import { useCreateLeaveMutation } from "../api/leaveEndPoints";
+import { debounce } from "lodash";
+import { useState } from "react";
+import dayjs from "dayjs";
 
 const CreateLeave = () => {
   const [form] = AntForm.useForm();
+  const [search, setSearch] = useState("");
+
   const [create, { isLoading, isSuccess }] = useCreateLeaveMutation();
-  const { data: admissionData } = useGetAdmissionQuery({});
+  const { data: admissionData, isFetching } = useGetAdmissionQuery({
+    search: search,
+  });
   const leaveDuration = AntForm.useWatch("leave_duration", form);
 
   const onFinish = (values: any): void => {
-    create(values);
+    const formattedValues = {
+      ...values,
+      start_date: dayjs(values.start_date).format("YYYY-MM-DD"),
+      ...(values.end_date && {
+        end_date: dayjs(values.end_date).format("YYYY-MM-DD"),
+      }),
+    };
+    create(formattedValues);
   };
 
   return (
@@ -33,7 +47,21 @@ const CreateLeave = () => {
         <Row gutter={[16, 16]}>
           <Col lg={12}>
             <Form.Item label="Select Admission" name="admission">
-              <Select placeholder="Select Admission" className="w-full">
+              <Select
+                placeholder="Select Admission"
+                className="w-full"
+                allowClear
+                showSearch
+                onSearch={debounce(setSearch, 500)}
+                filterOption={false}
+                loading={isFetching}
+                notFoundContent={
+                  Array?.isArray(admissionData?.data?.results) &&
+                  admissionData?.data?.results?.length === 0
+                    ? "No Admission Student found"
+                    : null
+                }
+              >
                 {admissionData?.data?.results?.map((admission: any) => (
                   <Select.Option key={admission.id} value={admission.id}>
                     {admission?.student?.first_name}{" "}
@@ -46,11 +74,11 @@ const CreateLeave = () => {
           <Col lg={12}>
             <Form.Item label="Select Leave Type" name="leave-type">
               <Select placeholder="Select Leave Type" className="w-full">
-                <Select.Option value="emergency">Emergency Leave</Select.Option>
-                <Select.Option value="functional">
+                <Select.Option value="Emergency">Emergency Leave</Select.Option>
+                <Select.Option value="Functional">
                   Functional Leave
                 </Select.Option>
-                <Select.Option value="medical">medical Leave</Select.Option>
+                <Select.Option value="Medical">medical Leave</Select.Option>
                 <Select.Option value="Other">Other</Select.Option>
               </Select>
             </Form.Item>
@@ -64,9 +92,9 @@ const CreateLeave = () => {
               ]}
             >
               <Radio.Group>
-                <Radio value="half_day">Half Day</Radio>
-                <Radio value="full_day">Full Day</Radio>
-                <Radio value="multiple_days">Multiple Days</Radio>
+                <Radio value="H">Half Day</Radio>
+                <Radio value="F">Full Day</Radio>
+                <Radio value="M">Multiple Days</Radio>
               </Radio.Group>
             </Form.Item>
           </Col>
@@ -76,17 +104,23 @@ const CreateLeave = () => {
               name="start_date"
               rules={[{ required: true, message: "Start Date is required!" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker
+                style={{ width: "100%" }}
+                format="YYYY-MM-DD" // Optional: Display format in the input
+              />
             </Form.Item>
           </Col>
-          {leaveDuration === "multiple_days" && (
+          {leaveDuration === "M" && (
             <Col lg={6}>
               <Form.Item
                 label="End Date"
                 name="end_date"
                 rules={[{ required: true, message: "End Date is required!" }]}
               >
-                <DatePicker style={{ width: "100%" }} />
+                <DatePicker
+                  style={{ width: "100%" }}
+                  format="YYYY-MM-DD" // Optional: Display format in the input
+                />
               </Form.Item>
             </Col>
           )}

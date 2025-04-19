@@ -9,8 +9,6 @@
 //   return error.error?.data?.message || "Error";
 // };
 export const GetErrorMassage = (error: any): string => {
-  console.log(error.error, "errorerrorerrorerrorerrorerrorerrorerrorerror");
-
   // First, check if there are validation messages in the 'message' array
   if (error.error?.data?.message && Array.isArray(error.error.data.message)) {
     const messageArray = error.error.data.message;

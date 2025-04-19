@@ -1,6 +1,8 @@
+import { IAdmission } from "../../admission/type/admissionType";
+
 export interface ICreateLeave {
   name: string;
-  leaveType: string;
+  leave_type: string;
   leave_duration: string;
   reason: string;
   start_date: string;
@@ -8,9 +10,10 @@ export interface ICreateLeave {
 }
 export interface IGetLeave {
   name: string;
-  leaveType: string;
+  leave_type: string;
   leave_duration: string;
   reason: string;
   start_date: string;
   end_date: string;
+  admission: IAdmission;
 }

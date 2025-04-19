@@ -17,25 +17,83 @@ const useLeaveColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Class Name",
-      dataIndex: "name",
+      title: "Student Name",
+      dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) =>
+        title
+          ? title?.student?.first_name + " " + title?.student?.last_name
+          : "N/A",
     },
     {
       key: "2",
-      title: "Description",
-      dataIndex: "description",
+      title: "Section Name",
+      dataIndex: "admission",
+      align: "center",
+      render: (title) => (title ? title?.section?.name : "N/A"),
+    },
+    {
+      key: "3",
+      title: "Session Name",
+      dataIndex: "admission",
+      align: "center",
+      render: (title) => (title ? title?.session?.name : "N/A"),
+    },
+    {
+      key: "4",
+      title: "Leave Type",
+      dataIndex: "leave_type",
       align: "center",
       render: (title) => (title ? title : "N/A"),
     },
+    {
+      key: "5",
+      title: "Duration",
+      dataIndex: "duration",
+      align: "center",
+      render: (type) => {
+        if (type === "F") return "Full Day";
+        if (type === "H") return "Half Day";
+        if (type === "M") return "Multiple Days";
+        return "N/A";
+      },
+    },
 
     {
-      key: "3",
-      title: "Class Teacher Name",
-      dataIndex: "class_teacher",
+      key: "6",
+      title: "Start Date",
+      dataIndex: "start_date",
       align: "center",
-      render: (title) => (title ? title?.first_name : "N/A"),
+      render: (date) =>
+        date
+          ? new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            }).format(new Date(date))
+          : "N/A",
+    },
+    {
+      key: "7",
+      title: "End Date",
+      dataIndex: "end_date",
+      align: "center",
+      render: (date) =>
+        date
+          ? new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            }).format(new Date(date))
+          : "N/A",
+    },
+
+    {
+      key: "7",
+      title: "Reason",
+      dataIndex: "reason",
+      align: "center",
+      render: (title) => (title ? title : "N/A"),
     },
     {
       title: "Actions",

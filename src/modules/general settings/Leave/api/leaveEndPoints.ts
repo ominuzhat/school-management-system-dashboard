@@ -12,7 +12,7 @@ const leaveEndpoint = api.injectEndpoints({
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/exams/",
+        url: "/api/v1.0/admissions/leaves/",
         params,
       }),
       providesTags: [
@@ -25,7 +25,7 @@ const leaveEndpoint = api.injectEndpoints({
 
     createLeave: builder.mutation<ApiResponse<ICreateLeave>, any>({
       query: (data) => ({
-        url: "/api/v1.0/exams/",
+        url: "/api/v1.0/admissions/leaves/",
         method: "POST",
         body: data,
       }),
@@ -45,7 +45,7 @@ const leaveEndpoint = api.injectEndpoints({
       number
     >({
       query: (examId) => ({
-        url: `/api/v1.0/exams/${examId}/`,
+        url: `/api/v1.0/admissions/leaves/${examId}/`,
       }),
 
       providesTags: [
@@ -61,7 +61,7 @@ const leaveEndpoint = api.injectEndpoints({
       { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/exams/${id}/`,
+        url: `/api/v1.0/admissions/leaves/${id}/`,
         method: "PATCH",
         body: data,
       }),
