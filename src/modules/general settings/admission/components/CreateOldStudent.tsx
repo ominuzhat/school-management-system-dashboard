@@ -122,6 +122,7 @@ const CreateOldStudent = () => {
                 <Select className="w-full" placeholder="Select Fee Type">
                   <Option value="class">Class</Option>
                   <Option value="subject">Subjects</Option>
+                  <Option value="student">Student</Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -243,6 +244,25 @@ const CreateOldStudent = () => {
                       </Option>
                     ))}
                 </Select>
+              </Form.Item>
+            </Col>
+
+            <Col lg={8}>
+              <Form.Item<IAdmission>
+                label="Discount Type"
+                name="discount_type"
+                rules={[{ required: true, message: "Discount Type" }]}
+              >
+                <Select className="w-full" placeholder="Discount Type">
+                  <Option value="amount">Amount</Option>
+                  <Option value="percent">Percent</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col lg={8}>
+              <Form.Item<IAdmission> label="Discount Value" name="discount_value">
+                <Input type="number" placeholder="Discount Value" />
               </Form.Item>
             </Col>
           </Row>

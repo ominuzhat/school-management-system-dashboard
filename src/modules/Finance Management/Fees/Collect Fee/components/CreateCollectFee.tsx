@@ -346,11 +346,11 @@ const CreateCollectFee = () => {
 
             <div className="flex justify-end gap-10 pt-4">
               <div className="flex flex-col gap-3">
+                <Text strong className="text-lg text-yellow-600">
+                  Discount :
+                </Text>
                 <Text strong className="text-lg text-red-600">
                   Total Due :
-                </Text>
-                <Text strong className="text-lg text-yellow-600">
-                  Total Discount :
                 </Text>
                 <Text strong className="text-lg text-green-600">
                   Paid :
@@ -358,12 +358,6 @@ const CreateCollectFee = () => {
               </div>
 
               <div className="flex flex-col gap-3  ">
-                <div className="flex justify-end">
-                  <p className="border-red-600 border shadow-lg rounded text-center text-lg font-semibold w-24">
-                    {finalDueAmount || 0}
-                  </p>
-                </div>
-
                 <div className="flex items-center gap-5">
                   <Form.Item
                     name="discount_type"
@@ -395,6 +389,12 @@ const CreateCollectFee = () => {
                     />
                   </Form.Item>
                 </div>
+                <div className="flex justify-end">
+                  <p className="border-red-600 border  rounded text-center text-lg font-semibold w-28">
+                    {finalDueAmount || 0}
+                  </p>
+                </div>
+
 
                 <div className="flex justify-end">
                   {/* <Form.Item

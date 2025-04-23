@@ -143,6 +143,7 @@ const UpdateOldAdmissionStudent = () => {
                 <Select className="w-full" placeholder="Select Fee Type">
                   <Option value="class">Class</Option>
                   <Option value="subject">Subjects</Option>
+                  <Option value="student">Students</Option>
                 </Select>
               </Form.Item>
             </Col>

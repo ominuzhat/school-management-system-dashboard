@@ -20,7 +20,9 @@ export interface IAdmission {
   admission_date: string;
   status: IAdmissionStatus;
   registration_number: string;
+  discount_value: number;
   fee_type: "class" | "other";
+  discount_type: "amount" | "percent";
   one_time_fee: number;
   monthly_fee: number;
   shift: "day" | "noon";

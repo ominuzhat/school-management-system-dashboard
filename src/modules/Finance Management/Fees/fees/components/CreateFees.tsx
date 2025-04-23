@@ -82,7 +82,7 @@ const CreateFees = () => {
               >
                 {/* <Select.Option value="all">All</Select.Option> */}
                 <Select.Option value="class">Class</Select.Option>
-                {/* <Select.Option value="student">Student</Select.Option> */}
+                <Select.Option value="student">Student</Select.Option>
                 <Select.Option value="subject">Subjects</Select.Option>
               </Select>
             </Form.Item>
@@ -124,8 +124,9 @@ const CreateFees = () => {
                 rules={[{ required: true, message: "Student is required!" }]}
               >
                 <Select
+                  mode="multiple"
                   className="w-full"
-                  placeholder="Select Student"
+                  placeholder="Select Students"
                   allowClear
                   showSearch
                   onSearch={debounce(setSearch, 500)}
