@@ -56,6 +56,19 @@ const examEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteExam: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/exams/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.EXAM,
+          id: TagTypes.EXAM + "_ID",
+        },
+      ],
+    }),
+
     updateExam: builder.mutation<
       ApiResponse<IGetExam>,
       { id: number | undefined; data: any }
@@ -83,4 +96,5 @@ export const {
   useCreateExamMutation,
   useUpdateExamMutation,
   useGetSingleExamQuery,
+  useDeleteExamMutation,
 } = examEndpoint;

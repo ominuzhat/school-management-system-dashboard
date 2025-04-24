@@ -43,6 +43,19 @@ const resultsEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteResult: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/exams/results/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.ROUTINE,
+          id: TagTypes.ROUTINE + "_ID",
+        },
+      ],
+    }),
+
     getSingleResults: builder.query<
       ApiResponse<PaginatedResponse<IResults>>,
       number
@@ -65,4 +78,5 @@ export const {
   useGetResultsQuery,
   useCreateResultsMutation,
   useGetSingleResultsQuery,
+  useDeleteResultMutation,
 } = resultsEndpoint;

@@ -56,6 +56,19 @@ const routineEndPoint = api.injectEndpoints({
       ],
     }),
 
+    deleteRoutine: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/admissions/routines/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.ROUTINE,
+          id: TagTypes.ROUTINE + "_ID",
+        },
+      ],
+    }),
+
     updateRoutine: builder.mutation<
       ApiResponse<ICreateRoutine>,
       { id: number | undefined; data: any }
@@ -83,4 +96,5 @@ export const {
   useCreateRoutineMutation,
   useUpdateRoutineMutation,
   useGetSingleRoutineQuery,
+  useDeleteRoutineMutation,
 } = routineEndPoint;

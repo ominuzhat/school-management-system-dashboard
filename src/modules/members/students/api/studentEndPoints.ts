@@ -53,6 +53,23 @@ const studentsEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteStudent: builder.mutation<ApiResponse<IStudents>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/students/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.STUDENTS,
+          id: TagTypes.STUDENTS + "_ID",
+        },
+        {
+          type: TagTypes.ADMISSION,
+          id: TagTypes.ADMISSION + "_ID",
+        },
+      ],
+    }),
+
     updateStudent: builder.mutation<
       ApiResponse<IStudents>,
       { id: number | undefined; data: FormData }
@@ -80,4 +97,5 @@ export const {
   useCreateStudentMutation,
   useGetSingleStudentQuery,
   useUpdateStudentMutation,
+  useDeleteStudentMutation,
 } = studentsEndpoint;

@@ -59,6 +59,19 @@ const examHallEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteExamHall: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/exams/halls/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.EXAM_Hall,
+          id: TagTypes.EXAM_Hall + "_ID",
+        },
+      ],
+    }),
+
     updateExamHall: builder.mutation<
       ApiResponse<IGetExamHall>,
       { id: number | undefined; data: any }
@@ -86,4 +99,5 @@ export const {
   useCreateExamHallMutation,
   useUpdateExamHallMutation,
   useGetSingleExamHallQuery,
+  useDeleteExamHallMutation,
 } = examHallEndpoint;

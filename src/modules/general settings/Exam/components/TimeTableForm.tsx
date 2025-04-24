@@ -218,22 +218,6 @@ const TimeTableForm = ({
                           />
                         </Form.Item>
                       </Col>
-
-                      {/* Passing Marks */}
-                      <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item
-                          {...restField}
-                          label="Passing Marks"
-                          name={[name, "passing_marks"]}
-                        >
-                          <InputNumber
-                            min={0}
-                            max={100}
-                            className="w-full"
-                            placeholder="Passing Marks"
-                          />
-                        </Form.Item>
-                      </Col>
                     </Row>
                   </Card>
                 );

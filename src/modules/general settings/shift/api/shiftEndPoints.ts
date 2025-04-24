@@ -56,6 +56,19 @@ const shiftEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteShift: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/admissions/shifts/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.SHIFT,
+          id: TagTypes.SHIFT + "_ID",
+        },
+      ],
+    }),
+
     updateShift: builder.mutation<
       ApiResponse<IGetShift>,
       { id: number | undefined; data: any }
@@ -83,4 +96,5 @@ export const {
   useCreateShiftMutation,
   useUpdateShiftMutation,
   useGetSingleShiftQuery,
+  useDeleteShiftMutation,
 } = shiftEndpoint;

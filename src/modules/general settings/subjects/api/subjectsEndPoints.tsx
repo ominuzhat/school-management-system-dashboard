@@ -56,6 +56,19 @@ const subjectsEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteSubject: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/institutions/subjects/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.SUBJECTS,
+          id: TagTypes.SUBJECTS + "_ID",
+        },
+      ],
+    }),
+
     updateSubjects: builder.mutation<
       ApiResponse<ISubjects>,
       { id: number | undefined; data: any }
@@ -82,5 +95,6 @@ export const {
   useGetSubjectsQuery,
   useCreateSubjectsMutation,
   useUpdateSubjectsMutation,
+  useDeleteSubjectMutation,
   useGetSingleSubjectsQuery,
 } = subjectsEndpoint;

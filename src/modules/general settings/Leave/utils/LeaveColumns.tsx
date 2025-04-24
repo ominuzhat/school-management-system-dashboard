@@ -4,9 +4,39 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import UpdateLeave from "../components/UpdateLeave";
+import { GetPermission } from "../../../../utilities/permission";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
+import { useDeleteLeavesMutation } from "../api/leaveEndPoints";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 
 const useLeaveColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const [deleteItem] = useDeleteLeavesMutation();
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admissionleave,
+    actionNames.change
+  );
+
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admissionleave,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -100,21 +130,29 @@ const useLeaveColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
-            onClick={() =>
-              dispatch(
-                showModal({
-                  title: "Update Leave",
-                  content: <UpdateLeave record={record?.id} />,
-                })
-              )
-            }
-          />
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Leave",
+                    content: <UpdateLeave record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
           {/* <ViewButton to={`student-view/1`} />
           <DeleteButton
           onClick={() => handleDelete(record.id)}>
             Delete
           </DeleteButton> */}
+
+          {deletePermission && (
+            <DeleteButton
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )}
         </Space>
       ),
     },

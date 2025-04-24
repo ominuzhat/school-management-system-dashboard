@@ -50,6 +50,7 @@ type ModuleNames = {
   noticeboard: string;
   rulesandregulations: string;
   smsconfig: string;
+  admissionleave: string;
 };
 
 export const moduleNames: ModuleNames = {
@@ -61,6 +62,7 @@ export const moduleNames: ModuleNames = {
   gradelevel: "gradelevel",
   student: "student",
   classsubject: "classsubject",
+  admissionleave: "admissionleave",
   section: "section",
   routine: "routine",
   exam: "exam",

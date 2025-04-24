@@ -12,6 +12,8 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import { useDeleteEmployeeMutation } from "../api/employeeEndPoints";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 
 const useEmployeeColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -32,6 +34,22 @@ const useEmployeeColumns = (): ColumnsType<any> => {
         value: dept.name,
       }))
     : [];
+
+  const [deleteItem] = useDeleteEmployeeMutation();
+
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.employee,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -137,6 +155,11 @@ const useEmployeeColumns = (): ColumnsType<any> => {
           )}
 
           <ViewButton to={`employee-view/${record?.id}`} />
+          {deletePermission && (
+            <DeleteButton
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )}
         </Space>
       ),
     },

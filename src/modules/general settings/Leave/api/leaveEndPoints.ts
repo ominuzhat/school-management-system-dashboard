@@ -56,6 +56,19 @@ const leaveEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteLeaves: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/admissions/leaves/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.LEAVE,
+          id: TagTypes.LEAVE + "_ID",
+        },
+      ],
+    }),
+
     updateLeave: builder.mutation<
       ApiResponse<IGetLeave>,
       { id: number | undefined; data: any }
@@ -83,4 +96,5 @@ export const {
   useCreateLeaveMutation,
   useUpdateLeaveMutation,
   useGetSingleLeaveQuery,
+  useDeleteLeavesMutation,
 } = leaveEndpoint;

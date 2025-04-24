@@ -56,6 +56,19 @@ const departmentEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteDepartment: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/employees/departments/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.DEPARTMENT,
+          id: TagTypes.DEPARTMENT + "_ID",
+        },
+      ],
+    }),
+
     updateDepartment: builder.mutation<
       ApiResponse<ICreateDepartment>,
       { id: number | undefined; data: FormData }
@@ -83,4 +96,5 @@ export const {
   useGetDepartmentQuery,
   useGetSingleDepartmentQuery,
   useUpdateDepartmentMutation,
+  useDeleteDepartmentMutation,
 } = departmentEndpoint;

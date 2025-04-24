@@ -52,6 +52,19 @@ const teacherEndPoint = api.injectEndpoints({
       ],
     }),
 
+    deleteTeacher: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/teachers/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.TEACHER,
+          id: TagTypes.TEACHER + "_ID",
+        },
+      ],
+    }),
+
     updateTeacher: builder.mutation<
       ApiResponse<any>,
       { id: number | undefined; data: FormData }
@@ -79,4 +92,5 @@ export const {
   useCreateTeacherMutation,
   useGetSingleSTeacherQuery,
   useUpdateTeacherMutation,
+  useDeleteTeacherMutation,
 } = teacherEndPoint;

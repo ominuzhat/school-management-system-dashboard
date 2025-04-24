@@ -10,6 +10,8 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import { useDeleteSubjectMutation } from "../api/subjectsEndPoints";
 
 const useSubjectColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -31,6 +33,22 @@ const useSubjectColumns = (): ColumnsType<any> => {
   //       console.error("Failed to delete item:", error);
   //     }
   //   };
+
+  const [deleteItem] = useDeleteSubjectMutation();
+
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.classsubject,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -102,10 +120,11 @@ const useSubjectColumns = (): ColumnsType<any> => {
             />
           )}
           {/* <ViewButton to={`student-view/1`} /> */}
-          {/* <DeleteButton
-          onClick={() => handleDelete(record.id)}>
-            Delete
-          </DeleteButton> */}
+          {deletePermission && (
+            <DeleteButton
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )}
         </Space>
       ),
     },

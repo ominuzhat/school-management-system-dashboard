@@ -53,6 +53,19 @@ const employeesEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteEmployee: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/employees/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.EMPLOYEE,
+          id: TagTypes.EMPLOYEE + "_ID",
+        },
+      ],
+    }),
+
     updateEmployee: builder.mutation<
       ApiResponse<any>,
       { id: number | undefined; data: FormData }
@@ -80,4 +93,5 @@ export const {
   useGetEmployeeQuery,
   useGetSingleEmployeeQuery,
   useUpdateEmployeeMutation,
+  useDeleteEmployeeMutation,
 } = employeesEndpoint;

@@ -56,6 +56,19 @@ const classesEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteClasses: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/institutions/grade-levels/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.ClASSES,
+          id: TagTypes.ClASSES + "_ID",
+        },
+      ],
+    }),
+
     updateClasses: builder.mutation<
       ApiResponse<IClasses>,
       { id: number | undefined; data: any }
@@ -83,4 +96,5 @@ export const {
   useCreateClassesMutation,
   useUpdateClassesMutation,
   useGetSingleClassesQuery,
+  useDeleteClassesMutation,
 } = classesEndpoint;

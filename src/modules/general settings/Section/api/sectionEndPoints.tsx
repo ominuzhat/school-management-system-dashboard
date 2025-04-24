@@ -56,6 +56,19 @@ const sectionEndPoint = api.injectEndpoints({
       ],
     }),
 
+    deleteSection: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/admissions/sections/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.SECTION,
+          id: TagTypes.SECTION + "_ID",
+        },
+      ],
+    }),
+
     updateSection: builder.mutation<
       ApiResponse<IGetSection>,
       { id: number | undefined; data: any }
@@ -83,4 +96,5 @@ export const {
   useCreateSectionMutation,
   useUpdateSectionMutation,
   useGetSingleSectionQuery,
+  useDeleteSectionMutation,
 } = sectionEndPoint;

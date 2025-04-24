@@ -15,12 +15,19 @@ import { useState } from "react";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
+import { GetPermission } from "../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../utilities/permissionConstant";
+import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
+import NoPermissionData from "../../../../utilities/NoPermissionData";
 const { Option } = Select;
 
 const LeavePage = () => {
   const dispatch = useDispatch();
   const { page_size, page } = useAppSelector(FilterState);
-
+  const columns = useLeaveColumns();
   const [filters, setFilters] = useState({
     search: "",
     is_active: "",
@@ -32,6 +39,7 @@ const LeavePage = () => {
   const { data: getClass } = useGetClassesQuery({});
   const { data: getSection } = useGetSectionQuery({});
   const { data: getSession } = useGetAdmissionSessionQuery({});
+  const { data: dashboardData } = useGetDashboardDataQuery({});
 
   const {
     data: classList,
@@ -54,6 +62,17 @@ const LeavePage = () => {
 
   const dataSource = (classList?.data as IGetLeave[] | undefined) ?? [];
 
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admissionleave,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admissionleave,
+    actionNames.add
+  );
+
   return (
     <div className="space-y-5">
       <div className="my-5">
@@ -61,23 +80,25 @@ const LeavePage = () => {
       </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
-          <Col lg={4} xs={24}>
-            <Button
-              type="primary"
-              onClick={() =>
-                dispatch(
-                  showModal({
-                    title: "Add Leave",
-                    content: <CreateLeave />,
-                  })
-                )
-              }
-              icon={<PlusOutlined />}
-              className="w-full"
-            >
-              Add Leave
-            </Button>
-          </Col>
+          {createPermission && (
+            <Col lg={4} xs={24}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  dispatch(
+                    showModal({
+                      title: "Add Leave",
+                      content: <CreateLeave />,
+                    })
+                  )
+                }
+                icon={<PlusOutlined />}
+                className="w-full"
+              >
+                Add Leave
+              </Button>
+            </Col>
+          )}
           <Col lg={14} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
               <Col lg={6} xs={12}>
@@ -160,14 +181,18 @@ const LeavePage = () => {
         </Row>
       </Card>
 
-      <Table
-        rowKey={"id"}
-        loading={isLoading || isFetching}
-        refetch={refetch}
-        total={dataLength}
-        dataSource={dataSource}
-        columns={useLeaveColumns()}
-      />
+      {viewPermission ? (
+        <Table
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={dataLength}
+          dataSource={dataSource}
+          columns={columns}
+        />
+      ) : (
+        <NoPermissionData />
+      )}
     </div>
   );
 };

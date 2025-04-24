@@ -11,6 +11,8 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import { useDeleteExamMutation } from "../api/examEndPoints";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 
 const useExamColumns = (): ColumnsType<any> => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -21,16 +23,21 @@ const useExamColumns = (): ColumnsType<any> => {
     actionNames.change
   );
 
-  // const [deleteCartItem] = useDeleteOrderItemMutation();
+  const [deleteItem] = useDeleteExamMutation();
 
-  // const handleDelete = async (id: any) => {
-  //   try {
-  //     await deleteCartItem({ id }).unwrap();
-  //     console.log("Item deleted successfully");
-  //   } catch (error) {
-  //     console.error("Failed to delete item:", error);
-  //   }
-  // };
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.exam,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -89,11 +96,14 @@ const useExamColumns = (): ColumnsType<any> => {
               </Button>
             </Link>
           )}
+
           <ViewButton to={`view/${record?.id}`} />
-          {/* <DeleteButton
-          onClick={() => handleDelete(record.id)}>
-            Delete
-          </DeleteButton> */}
+
+          {deletePermission && (
+            <DeleteButton
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )}
         </Space>
       ),
     },
