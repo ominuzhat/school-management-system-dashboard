@@ -11,6 +11,8 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import { useDeleteNoticeMutation } from "../api/noticeEndPoints";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 
 const useNoticeColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -22,6 +24,22 @@ const useNoticeColumns = (): ColumnsType<any> => {
     moduleNames.noticeboard,
     actionNames.change
   );
+
+  const [deleteItem] = useDeleteNoticeMutation();
+
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.noticeboard,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -112,6 +130,11 @@ const useNoticeColumns = (): ColumnsType<any> => {
                 )
               }
             />
+          )}
+          {deletePermission && (
+            <DeleteButton
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
           )}
         </Space>
       ),

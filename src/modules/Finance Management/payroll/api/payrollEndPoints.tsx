@@ -53,6 +53,19 @@ const payrollEndPoints = api.injectEndpoints({
       ],
     }),
 
+    deletePayroll: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/payrolls/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.PAYROLL,
+          id: TagTypes.PAYROLL + "_ID",
+        },
+      ],
+    }),
+
     updatePayroll: builder.mutation<
       ApiResponse<any>,
       { id: number | undefined; data: any }
@@ -80,4 +93,5 @@ export const {
   useGetPayrollQuery,
   useGetSinglePayrollQuery,
   useUpdatePayrollMutation,
+  useDeletePayrollMutation,
 } = payrollEndPoints;

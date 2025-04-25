@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import UpdateAdmissionSessions from "../components/UpdateAdmissionSessions";
 import {
   useClosedAdmissionSessionMutation,
+  useDeleteAdmissionSessionMutation,
   useOpenAdmissionSessionMutation,
 } from "../api/admissionSessionEndPoints";
 import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
@@ -14,6 +15,7 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 
 const useAdmissionSessionsColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -27,6 +29,22 @@ const useAdmissionSessionsColumns = (): ColumnsType<any> => {
     moduleNames.admissionsession,
     actionNames.change
   );
+
+  const [deleteItem] = useDeleteAdmissionSessionMutation();
+
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admissionsession,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -135,6 +153,11 @@ const useAdmissionSessionsColumns = (): ColumnsType<any> => {
                 Open
               </Button>
             </Popconfirm>
+          )}
+          {deletePermission && (
+            <DeleteButton
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
           )}
         </Space>
       ),

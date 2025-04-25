@@ -71,6 +71,19 @@ const admissionEndPoint = api.injectEndpoints({
       ],
     }),
 
+    deleteAdmission: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/admissions/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.ADMISSION,
+          id: TagTypes.ADMISSION + "_ID",
+        },
+      ],
+    }),
+
     updateAdmission: builder.mutation<
       ApiResponse<IAdmission>,
       { id: number | undefined; data: any }
@@ -100,4 +113,5 @@ export const {
   useGetSingleAdmissionQuery,
   useUpdateAdmissionMutation,
   useGetSingleAdmissionFormQuery,
+  useDeleteAdmissionMutation,
 } = admissionEndPoint;

@@ -12,6 +12,8 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import { useDeletePaymentMutation } from "../api/paymentEndPoints";
 
 const usePaymentColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -24,16 +26,21 @@ const usePaymentColumns = (): ColumnsType<any> => {
     actionNames.change
   );
 
-  //   const [deleteCartItem] = useDeleteOrderItemMutation();
+  const [deleteItem] = useDeletePaymentMutation();
 
-  //   const handleDelete = async (id: any) => {
-  //     try {
-  //       await deleteCartItem({ id }).unwrap();
-  //       console.log("Item deleted successfully");
-  //     } catch (error) {
-  //       console.error("Failed to delete item:", error);
-  //     }
-  //   };
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.payment,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -122,6 +129,12 @@ const usePaymentColumns = (): ColumnsType<any> => {
           )}
 
           <ViewButton to={`payment-view/${record?.id}`} />
+          {deletePermission && (
+            <DeleteButton
+              disabled
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )}
         </Space>
       ),
     },

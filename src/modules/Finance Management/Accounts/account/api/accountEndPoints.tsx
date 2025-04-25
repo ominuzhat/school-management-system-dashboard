@@ -1,10 +1,12 @@
 import api from "../../../../../app/api/api";
 import { FilterTypes } from "../../../../../app/features/filterSlice";
-import { ApiResponse, PaginatedResponse } from "../../../../../app/utils/constant";
+import {
+  ApiResponse,
+  PaginatedResponse,
+} from "../../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../../app/utils/tagTypes";
 import { ICreateAccount, IGetAccount } from "../types/accountTypes";
-
 
 const accountEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -57,6 +59,19 @@ const accountEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteAccount: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/accounts/accounts/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.ACCOUNT,
+          id: TagTypes.ACCOUNT + "_ID",
+        },
+      ],
+    }),
+
     updateAccount: builder.mutation<
       ApiResponse<IGetAccount>,
       { id: number | undefined; data: any }
@@ -84,4 +99,5 @@ export const {
   useCreateAccountMutation,
   useUpdateAccountMutation,
   useGetSingleAccountQuery,
+  useDeleteAccountMutation,
 } = accountEndpoint;

@@ -12,6 +12,8 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import { useDeletePayrollMutation } from "../api/payrollEndPoints";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 
 const usePayrollColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -23,6 +25,22 @@ const usePayrollColumns = (): ColumnsType<any> => {
     moduleNames.payroll,
     actionNames.change
   );
+
+  const [deleteItem] = useDeletePayrollMutation();
+
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.payroll,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -128,6 +146,12 @@ const usePayrollColumns = (): ColumnsType<any> => {
           )}
 
           <ViewButton to={`payroll-view/${record?.id}`} />
+          {deletePermission && (
+            <DeleteButton
+              disabled
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )}
         </Space>
       ),
     },

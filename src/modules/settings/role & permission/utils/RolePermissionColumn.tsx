@@ -12,6 +12,8 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import { useDeleteRolePermissionMutation } from "../api/rolePermissionEndPoints";
 
 const RolePermissionColumn = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -22,6 +24,22 @@ const RolePermissionColumn = (): ColumnsType<any> => {
     moduleNames.role,
     actionNames.change
   );
+
+  const [deleteItem] = useDeleteRolePermissionMutation();
+
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.role,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -58,6 +76,12 @@ const RolePermissionColumn = (): ColumnsType<any> => {
           )}
 
           <ViewButton to={`/role-permission/${record?.id}`} />
+          {deletePermission && (
+            <DeleteButton
+              disabled
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )}
         </Space>
       ),
     },

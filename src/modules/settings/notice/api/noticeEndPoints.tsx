@@ -53,6 +53,19 @@ const noticeEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteNotice: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/institutions/notice-boards/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.NOTICE,
+          id: TagTypes.NOTICE + "_ID",
+        },
+      ],
+    }),
+
     updateNotice: builder.mutation<
       ApiResponse<any>,
       { id: number | undefined; data: FormData }
@@ -80,4 +93,5 @@ export const {
   useGetNoticeQuery,
   useGetSingleNoticeQuery,
   useUpdateNoticeMutation,
+  useDeleteNoticeMutation,
 } = noticeEndpoint;

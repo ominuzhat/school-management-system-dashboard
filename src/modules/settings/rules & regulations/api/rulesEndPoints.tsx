@@ -53,6 +53,19 @@ const rulesEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deleteRule: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/institutions/rules/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.RULES,
+          id: TagTypes.RULES + "_ID",
+        },
+      ],
+    }),
+
     updateRule: builder.mutation<
       ApiResponse<any>,
       { id: number | undefined; data: FormData }
@@ -80,4 +93,5 @@ export const {
   useGetRuleQuery,
   useGetSingleRuleQuery,
   useUpdateRuleMutation,
+  useDeleteRuleMutation,
 } = rulesEndpoint;

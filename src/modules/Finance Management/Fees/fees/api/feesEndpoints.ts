@@ -49,6 +49,19 @@ const feesEndPoints = api.injectEndpoints({
       ],
     }),
 
+    deleteFees: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/fees/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.FESS,
+          id: TagTypes.FESS + "_ID",
+        },
+      ],
+    }),
+
     updateFees: builder.mutation<
       ApiResponse<any>,
       { id: number | undefined; data: FormData }
@@ -76,4 +89,5 @@ export const {
   useGetFeesQuery,
   useGetSingleFeesQuery,
   useUpdateFeesMutation,
+  useDeleteFeesMutation,
 } = feesEndPoints;

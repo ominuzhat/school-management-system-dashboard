@@ -10,6 +10,8 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import { useDeleteRuleMutation } from "../api/rulesEndPoints";
 
 const useRulesColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -20,6 +22,22 @@ const useRulesColumns = (): ColumnsType<any> => {
     moduleNames.rulesandregulations,
     actionNames.change
   );
+
+  const [deleteItem] = useDeleteRuleMutation();
+
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.rulesandregulations,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -92,6 +110,11 @@ const useRulesColumns = (): ColumnsType<any> => {
                 )
               }
             />
+          )}{" "}
+          {deletePermission && (
+            <DeleteButton
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
           )}
         </Space>
       ),

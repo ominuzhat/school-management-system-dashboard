@@ -11,6 +11,8 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
+import { useDeleteAccountMutation } from "../api/accountEndPoints";
+import DeleteButton from "../../../../../common/CommonAnt/Button/DeleteButton";
 
 const useAccountColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -22,16 +24,21 @@ const useAccountColumns = (): ColumnsType<any> => {
     actionNames.change
   );
 
-  // const [deleteCartItem] = useDeleteOrderItemMutation();
+  const [deleteItem] = useDeleteAccountMutation();
 
-  // const handleDelete = async (id: any) => {
-  //   try {
-  //     await deleteCartItem({ id }).unwrap();
-  //     console.log("Item deleted successfully");
-  //   } catch (error) {
-  //     console.error("Failed to delete item:", error);
-  //   }
-  // };
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.account,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   return [
     {
@@ -74,10 +81,14 @@ const useAccountColumns = (): ColumnsType<any> => {
           )}
 
           {/* <ViewButton to={`student-view/1`} />
-          <DeleteButton
-          onClick={() => handleDelete(record.id)}>
-            Delete
-          </DeleteButton> */}
+           */}
+
+          {deletePermission && (
+            <DeleteButton
+              disabled
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )}
         </Space>
       ),
     },

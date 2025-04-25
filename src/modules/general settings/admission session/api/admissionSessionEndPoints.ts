@@ -99,6 +99,19 @@ const admissionSessionEndPoint = api.injectEndpoints({
       ],
     }),
 
+    deleteAdmissionSession: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `api/v1.0/admissions/sessions/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.ADMISSION_SESSION,
+          id: TagTypes.ADMISSION_SESSION + "_ID",
+        },
+      ],
+    }),
+
     updateAdmissionSession: builder.mutation<
       ApiResponse<IAdmissionSession>,
       { id: number | undefined; data: any }
@@ -128,4 +141,5 @@ export const {
   useUpdateAdmissionSessionMutation,
   useClosedAdmissionSessionMutation,
   useOpenAdmissionSessionMutation,
+  useDeleteAdmissionSessionMutation,
 } = admissionSessionEndPoint;

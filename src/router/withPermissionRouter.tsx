@@ -24,7 +24,7 @@ const WithPermission = ({
   useEffect(() => {
     if (!isLoading && !isError && dashboardData) {
       const permissions = dashboardData?.data?.permissions || [];
-      const access = hasFullModuleAccess(permissions, requiredPermission); // Pass string module name
+      const access = hasFullModuleAccess(permissions, requiredPermission); 
 
       if (access) {
         setHasAccess(true);

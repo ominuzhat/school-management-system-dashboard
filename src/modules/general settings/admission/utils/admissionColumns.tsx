@@ -7,7 +7,10 @@ import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { useNavigate } from "react-router-dom";
 import { IAdmissionStatus } from "../type/admissionType";
 import { FaFilePdf } from "react-icons/fa6";
-import { useGetSingleAdmissionFormQuery } from "../api/admissionEndPoints";
+import {
+  useDeleteAdmissionMutation,
+  useGetSingleAdmissionFormQuery,
+} from "../api/admissionEndPoints";
 import { useEffect, useState } from "react";
 import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
 import { GetPermission } from "../../../../utilities/permission";
@@ -15,6 +18,7 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
+import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 
 const useAdmissionColumns = (): ColumnsType<any> => {
   const navigate = useNavigate();
@@ -27,6 +31,22 @@ const useAdmissionColumns = (): ColumnsType<any> => {
   );
   const [admissionId, setAdmissionId] = useState<number | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
+  const [deleteItem] = useDeleteAdmissionMutation();
+
+  const deletePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.admission,
+    actionNames.delete
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteItem({ id }).unwrap();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
 
   const { data: singleAdmissionForm } = useGetSingleAdmissionFormQuery(
     admissionId as number,
@@ -52,17 +72,6 @@ const useAdmissionColumns = (): ColumnsType<any> => {
   const handleForm = (id: number) => {
     setAdmissionId(id);
   };
-
-  //   const [deleteCartItem] = useDeleteOrderItemMutation();
-
-  //   const handleDelete = async (id: any) => {
-  //     try {
-  //       await deleteCartItem({ id }).unwrap();
-  //       console.log("Item deleted successfully");
-  //     } catch (error) {
-  //       console.error("Failed to delete item:", error);
-  //     }
-  //   };
 
   return [
     {
@@ -222,11 +231,11 @@ const useAdmissionColumns = (): ColumnsType<any> => {
           >
             <FaFilePdf />
           </Button>
-
-          {/* <DeleteButton
-          onClick={() => handleDelete(record.id)}>
-            Delete
-          </DeleteButton> */}
+          {deletePermission && (
+            <DeleteButton
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )}
         </Space>
       ),
     },

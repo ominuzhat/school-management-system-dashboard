@@ -74,18 +74,18 @@ const rolePermissionEndPoint = api.injectEndpoints({
       ],
     }),
 
-    // createRestaurant: builder.mutation<ApiResponse<RestaurantTypes>, FormData>({
-    //   query: (data) => ({
-    //     url: "/admin/restaurants",
-    //     method: "POST",
-    //     body: data,
-    //   }),
-    //   async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-    //     await handleOnQueryStarted(queryFulfilled, dispatch);
-    //   },
-    //   invalidatesTags: [{ type: "Restaurant", id: "RESTAURANT_ID" }],
-    // }),
-
+    deleteRolePermission: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/institutions/roles/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.ROLE_PERMISSION,
+          id: TagTypes.ROLE_PERMISSION + "_ID",
+        },
+      ],
+    }),
     updateRolePermission: builder.mutation<
       ApiResponse<IUpdateRolePermission>,
       { id: number | undefined; data: FormData }
@@ -114,4 +114,5 @@ export const {
   useGetSingleRolePermissionQuery,
   useGetPermissionQuery,
   useUpdateRolePermissionMutation,
+  useDeleteRolePermissionMutation,
 } = rolePermissionEndPoint;

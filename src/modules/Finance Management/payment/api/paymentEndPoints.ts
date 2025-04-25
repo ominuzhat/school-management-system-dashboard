@@ -52,6 +52,19 @@ const paymentEndpoint = api.injectEndpoints({
       ],
     }),
 
+    deletePayment: builder.mutation<ApiResponse<any>, { id: any }>({
+      query: ({ id }) => ({
+        url: `/api/v1.0/payrolls/payments/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [
+        {
+          type: TagTypes.PAYMENT,
+          id: TagTypes.PAYMENT + "_ID",
+        },
+      ],
+    }),
+
     updatePayment: builder.mutation<
       ApiResponse<ICreatePayment>,
       { id: number | undefined; data: FormData }
@@ -78,5 +91,6 @@ export const {
   useCreatePaymentMutation,
   useGetPaymentQuery,
   useGetSinglePaymentQuery,
+  useDeletePaymentMutation,
   useUpdatePaymentMutation,
 } = paymentEndpoint;
