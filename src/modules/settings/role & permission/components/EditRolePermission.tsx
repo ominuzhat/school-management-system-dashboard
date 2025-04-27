@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Col,
-  Form as AntForm,
-  Input,
-  Row,
-  Button,
-  Transfer,
-
-} from "antd";
+import { Col, Form as AntForm, Input, Row, Button, Transfer } from "antd";
 import type { TransferItem } from "antd/es/transfer";
 import { IGetSingleRolePermission } from "../type/rolePermissionTypes";
 import {
@@ -64,7 +56,7 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
     });
   };
 
-  const handleTransferChange = (newTargetKeys: string[]) => {
+  const handleTransferChange: any = (newTargetKeys: string[]) => {
     setTargetKeys(newTargetKeys);
     form.setFieldsValue({ permissions: newTargetKeys });
   };
@@ -116,7 +108,7 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
                   titles={["Available", "Selected"]}
                   targetKeys={targetKeys}
                   onChange={handleTransferChange}
-                  render={(item) => item.title}
+                  render={(item: any) => item.title}
                   oneWay
                 />
               </div>
