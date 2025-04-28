@@ -13,8 +13,6 @@ import { useEffect } from "react";
 import UpdateMultipleSelectRoutine from "./UpdateMultipleSelectRoutine";
 import dayjs from "dayjs";
 
-
-
 const UpdateRoutine = () => {
   const [form] = AntForm.useForm();
   const { routineID } = useParams();
@@ -38,8 +36,9 @@ const UpdateRoutine = () => {
         grade_level: singleRoutine?.grade_level?.id,
         slots: singleRoutine?.slots?.map((slot: any) => ({
           day: slot.day,
-          start_time: dayjs(slot.start_time, "HH:mm:ss"),
-          end_time: dayjs(slot.end_time, "HH:mm:ss"),
+          start_time: dayjs(slot.start_time, "HH:mm:ss").format("HH:mm"),
+          end_time: dayjs(slot.end_time, "HH:mm:ss").format("HH:mm"),
+
           teacher: slot.teacher.id,
           subject: slot.subject.id,
         })),
@@ -52,13 +51,20 @@ const UpdateRoutine = () => {
       session: values.session,
       grade_level: values.grade_level,
       section: values.section,
-      slots: values.slots.map((slot: any) => ({
-        day: slot.day,
-        start_time: slot.start_time?.format("HH:mm:ss"),
-        end_time: slot.end_time?.format("HH:mm:ss"),
-        subject: slot.subject,
-        teacher: slot.teacher,
-      })),
+      slots: values.slots.map((slot: any) => {
+        const start = dayjs(slot.start_time, ["HH:mm", "HH:mm:ss"], true);
+        const end = dayjs(slot.end_time, ["HH:mm", "HH:mm:ss"], true);
+
+        return {
+          day: slot.day,
+          start_time: start.isValid()
+            ? start.format("HH:mm:ss")
+            : slot.start_time,
+          end_time: end.isValid() ? end.format("HH:mm:ss") : slot.end_time,
+          subject: slot.subject,
+          teacher: slot.teacher,
+        };
+      }),
     };
 
     update({ id: Number(routineID), data: formattedValues });

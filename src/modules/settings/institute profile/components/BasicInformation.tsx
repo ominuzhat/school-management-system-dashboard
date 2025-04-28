@@ -55,10 +55,12 @@ const BasicInformation = ({
               return (
                 <Col
                   key={index}
-                  span={6}
-                  xs={24}
-                  sm={12}
-                  md={6}
+                  xs={24} // Mobile
+                  sm={12} // Small tablets
+                  md={12} // Tablets
+                  lg={8} // Small desktops
+                  xl={6} // Large desktops
+                  xxl={6} // Very large screens
                   className="space-y-3"
                 >
                   <TextView

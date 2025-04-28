@@ -1,5 +1,5 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Row, Select, TimePicker } from "antd";
+import { Button, Col, Form, Row, Select } from "antd";
 import { useGetTeacherQuery } from "../../../members/teachers/api/teachersEndPoints";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 
@@ -50,34 +50,42 @@ const UpdateMultipleSelectRoutine = ({
                 </Col>
 
                 {/* Start Time */}
-                <Col span={4}>
+                <Col xs={24} sm={12} md={8} lg={4}>
                   <Form.Item
                     {...restField}
                     label="Start Time"
                     name={[name, "start_time"]}
                     rules={[
-                      { required: true, message: "Please select Start time!" },
+                      {
+                        required: true,
+                        message: "Please select Start time!",
+                      },
                     ]}
                   >
-                    <TimePicker format="h:mm A" use12Hours className="w-full" />
+                    <input
+                      type="time"
+                      className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+                    ></input>
                   </Form.Item>
                 </Col>
 
                 {/* End Time */}
-                <Col span={4}>
+                <Col xs={24} sm={12} md={8} lg={4}>
                   <Form.Item
                     {...restField}
                     label="End Time"
                     name={[name, "end_time"]}
                     rules={[
-                      { required: true, message: "Please select end time!" },
+                      {
+                        required: true,
+                        message: "Please select End time!",
+                      },
                     ]}
                   >
-                    <TimePicker
-                      format="HH:mm A"
-                      use12Hours
-                      className="w-full"
-                    />
+                    <input
+                      type="time"
+                      className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+                    ></input>
                   </Form.Item>
                 </Col>
 

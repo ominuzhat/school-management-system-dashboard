@@ -6,6 +6,7 @@ import { useGetAdmissionSessionQuery } from "../../admission session/api/admissi
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
 import MultipleSelectRoutine from "./MultipleSelectRoutine";
+import dayjs from "dayjs";
 
 const CreateRoutine = () => {
   const [form] = AntForm.useForm();
@@ -26,8 +27,14 @@ const CreateRoutine = () => {
       section: values.section,
       slots: values.slots.map((slot: any) => ({
         day: slot.day,
-        start_time: slot.start_time?.format("HH:mm:ss"),
-        end_time: slot.end_time?.format("HH:mm:ss"),
+        start_time: slot.start_time
+          ? dayjs(slot.start_time, "HH:mm").format("HH:mm:ss")
+          : undefined,
+
+        end_time: slot.end_time
+          ? dayjs(slot.end_time, "HH:mm").format("HH:mm:ss")
+          : undefined,
+
         subject: slot.subject,
         teacher: slot.teacher,
       })),

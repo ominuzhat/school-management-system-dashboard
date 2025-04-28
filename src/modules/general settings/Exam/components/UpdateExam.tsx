@@ -49,17 +49,16 @@ const UpdateExam = () => {
   const [formData, setFormData] = useState<Record<string, any>>([]);
 
   useEffect(() => {
-    if (examData) {
-      const timetables = examData?.timetables?.map((timetable: any) => ({
-        subject: timetable.subject,
+    console.log("ddd", examData); // Check what examData contains
+    if (examData && examData.timetables && Array.isArray(examData.timetables)) {
+      const timetables = examData.timetables.map((timetable: any) => ({
+        subject: timetable?.subject,
         exam_date: dayjs(timetable.exam_date),
         start_time: dayjs(timetable.start_time, "HH:mm:ss"),
         end_time: dayjs(timetable.end_time, "HH:mm:ss"),
-
         mcq_marks: timetable.mcq_marks,
         written_marks: timetable.written_marks,
         total_marks: timetable.total_marks,
-        passing_marks: timetable.passing_marks,
       }));
 
       setTimeTablesData(timetables);
@@ -88,17 +87,25 @@ const UpdateExam = () => {
       start_date: dayjs(values.start_date).format("YYYY-MM-DD"),
       end_date: dayjs(values.end_date).format("YYYY-MM-DD"),
       comment: values.comment,
-      timetables: values.timetables.map((timetable: any) => ({
-        subject: timetable.subject,
-        exam_date: dayjs(timetable.exam_date).format("YYYY-MM-DD"),
-        start_time: dayjs(timetable.start_time).format("HH:mm:ss"),
-        end_time: dayjs(timetable.end_time).format("HH:mm:ss"),
-        mcq_marks: timetable.mcq_marks,
-        written_marks: timetable.written_marks,
-        total_marks: timetable.total_marks,
-        passing_marks: timetable.passing_marks,
-      })),
+      timetables: values.timetables.map((timetable: any) => {
+        const start = dayjs(timetable.start_time, ["HH:mm", "HH:mm:ss"], true);
+        const end = dayjs(timetable.end_time, ["HH:mm", "HH:mm:ss"], true);
+
+        return {
+          subject: timetable.subject,
+          exam_date: dayjs(timetable.exam_date).format("YYYY-MM-DD"),
+          start_time: start.isValid()
+            ? start.format("HH:mm:ss")
+            : timetable.start_time,
+          end_time: end.isValid() ? end.format("HH:mm:ss") : timetable.end_time,
+          mcq_marks: timetable.mcq_marks,
+          written_marks: timetable.written_marks,
+          total_marks: timetable.total_marks,
+          passing_marks: timetable.passing_marks,
+        };
+      }),
     };
+
     update({ id: Number(examId), data: results });
   };
 
@@ -114,10 +121,6 @@ const UpdateExam = () => {
       setSelectedClass(filteredClasses);
     }
   }, [gradeLevel, classData]);
-
-  console.log(selectedClass);
-  console.log(timetablesData, "timetablesData");
-  console.log(formData, "formData");
 
   const items: TabsProps["items"] = selectedClass.map((classItem: any) => ({
     key: classItem.id.toString(),
@@ -150,7 +153,7 @@ const UpdateExam = () => {
           form={form}
           onFinish={onFinish}
           isLoading={isLoading}
-          initialValues={{ timetables: [{}] }}
+          initialValues={{ timetables: timetablesData || [{}] }}
         >
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={12} lg={6}>

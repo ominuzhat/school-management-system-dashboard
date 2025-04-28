@@ -41,10 +41,12 @@ const SocialInformation = ({
             {basicInfo.map((info, index) => (
               <Col
                 key={index}
-                xs={24}
-                sm={24}
-                md={24}
-                lg={6}
+                xs={24} // Mobile
+                sm={12} // Small tablets
+                md={12} // Tablets
+                lg={8} // Small desktops
+                xl={6} // Large desktops
+                xxl={6} // Very large screens
                 className="space-y-3"
               >
                 <TextView

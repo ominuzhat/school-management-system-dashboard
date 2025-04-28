@@ -2,7 +2,7 @@
 import login_image from "../assets/login-image.png";
 import login_bg from "../assets/login-bg.svg";
 import forgot_password_image from "../assets/reset-password.png";
-import flight from "../assets/flight.jpeg";
+import avatar from "../assets/avatar.jpg";
 import airplane from "../assets/Airport.svg";
 import welcome from "../../public/welcome.svg";
 import no_img from "../../public/no-image.png";
@@ -21,7 +21,7 @@ export {
   login_image,
   login_bg,
   forgot_password_image,
-  flight,
+  avatar,
   airplane,
   welcome,
   no_img,

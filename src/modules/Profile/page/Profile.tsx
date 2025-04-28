@@ -15,7 +15,7 @@ import "../styles/Profile.css";
 import { useGetProfileQuery } from "../api/profileEndpoint";
 
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
-import { flight } from "../../../utilities/images";
+import { avatar } from "../../../utilities/images";
 import UpdateTeacherProfile from "../components/UpdateTeacherProfile";
 import UpdateStudentProfile from "../components/UpdatedStudentsProfile";
 import UpdateEmployeeProfile from "../components/UpdatedEmpoyeeProfile";
@@ -28,7 +28,8 @@ const Profile: React.FC = () => {
     password: false,
   });
 
-  const { username, teacher, student, employee } = profileData?.data || {};
+  const { username, teacher, student, employee, role } =
+    profileData?.data || {};
 
   console.log(profileData?.data);
 
@@ -87,6 +88,29 @@ const Profile: React.FC = () => {
           children: capitalize(employee.email || "N/A"),
         },
       ];
+    } else if (role?.name === "Admin") {
+      return [
+        {
+          key: "1",
+          label: capitalize("Institution Name"),
+          children: capitalize(role?.institution.name || "N/A"),
+        },
+        {
+          key: "2",
+          label: capitalize("code"),
+          children: capitalize(role?.institution.code || "N/A"),
+        },
+        {
+          key: "3",
+          label: capitalize("city"),
+          children: capitalize(role?.institution.city || "N/A"),
+        },
+        {
+          key: "4",
+          label: capitalize("contact email"),
+          children: capitalize(role?.institution.contact_email || "N/A"),
+        },
+      ];
     }
     return [];
   };
@@ -112,7 +136,7 @@ const Profile: React.FC = () => {
               style={{ width: "100%", textAlign: "center" }}
             >
               <Image
-                src={flight}
+                src={avatar}
                 preview={false}
                 alt="Profile picture"
                 id="profile-picture"
@@ -152,26 +176,30 @@ const Profile: React.FC = () => {
             }
             loading={isFetching}
             extra={
-              <Space>
-                {!edit.profile && !edit.password ? (
-                  <Button
-                    onClick={() => setEdit({ profile: true })}
-                    type="link"
-                    icon={<Iconify name="mage:edit" />}
-                  >
-                    Edit profile
-                  </Button>
-                ) : (
-                  <Button
-                    type="link"
-                    danger
-                    icon={<Iconify name="iconoir:cancel" />}
-                    onClick={() => setEdit({ profile: false, password: false })}
-                  >
-                    Cancel
-                  </Button>
-                )}
-              </Space>
+              role?.name !== "Admin" && (
+                <Space>
+                  {!edit.profile && !edit.password ? (
+                    <Button
+                      onClick={() => setEdit({ profile: true })}
+                      type="link"
+                      icon={<Iconify name="mage:edit" />}
+                    >
+                      Edit profile
+                    </Button>
+                  ) : (
+                    <Button
+                      type="link"
+                      danger
+                      icon={<Iconify name="iconoir:cancel" />}
+                      onClick={() =>
+                        setEdit({ profile: false, password: false })
+                      }
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                </Space>
+              )
             }
           >
             {!edit.profile && !edit.password && (

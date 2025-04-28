@@ -17,7 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { greeting } from "../../../utilities/helper";
 import { RootState } from "../../../app/store";
 import { toggleThemes } from "../../../app/features/themeSlice";
-import { flight } from "../../../utilities/images";
+import { avatar } from "../../../utilities/images";
 import { useGetProfileQuery } from "../../../modules/Profile/api/profileEndpoint";
 
 interface Props {
@@ -133,7 +133,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                 }}
               >
                 <Image
-                  src={flight}
+                  src={avatar}
                   alt="Profile picture"
                   preview={false}
                   style={{
