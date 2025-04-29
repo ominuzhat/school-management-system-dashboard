@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -24,11 +25,11 @@ import { useGetTermQuery } from "../api/termEndPoints";
 import { RangePickerComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { PlusOutlined } from "@ant-design/icons";
 import CreateTerm from "./CreateTerm";
-import TimeTableForm from "./TimeTableForm";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
+import UpdateTimeTableForm from "./UpdateTimeTableForm";
 
 const { Option } = Select;
 
@@ -47,17 +48,20 @@ const UpdateExam = () => {
   const examData = singleData?.data as any;
   const [timetablesData, setTimeTablesData] = useState([]);
   const [formData, setFormData] = useState<Record<string, any>>([]);
+  console.log(formData);
 
   useEffect(() => {
-    console.log("ddd", examData); // Check what examData contains
-    if (examData && examData.timetables && Array.isArray(examData.timetables)) {
+    if (examData?.timetables && Array.isArray(examData.timetables)) {
       const timetables = examData.timetables.map((timetable: any) => ({
-        subject: timetable?.subject,
+        subject: timetable.subject?.id, // Extract just the ID
         exam_date: dayjs(timetable.exam_date),
-        start_time: dayjs(timetable.start_time, "HH:mm:ss"),
-        end_time: dayjs(timetable.end_time, "HH:mm:ss"),
+        // start_time: dayjs(timetable.start_time, "HH:mm:ss"),
+        // end_time: dayjs(timetable.end_time, "HH:mm:ss"),
+        start_time: dayjs(timetable.start_time, "HH:mm:ss").format("HH:mm"),
+        end_time: dayjs(timetable.end_time, "HH:mm:ss").format("HH:mm"),
         mcq_marks: timetable.mcq_marks,
         written_marks: timetable.written_marks,
+        contribution_marks: timetable.contribution_marks,
         total_marks: timetable.total_marks,
       }));
 
@@ -66,17 +70,16 @@ const UpdateExam = () => {
 
       form.setFieldsValue({
         name: examData?.name,
-        session: examData?.session.id,
-        grade_level: examData?.grade_level.map((s: any) => s.id),
-        section: examData?.section.map((s: any) => s.id),
-        term: examData?.term.id,
+        session: examData?.session?.id,
+        grade_level: examData?.grade_level?.map((s: any) => s.id),
+        section: examData?.section?.map((s: any) => s.id),
+        term: examData?.term?.id,
         exam_date: [dayjs(examData?.start_date), dayjs(examData?.end_date)],
         comment: examData?.comment,
-        timetables,
+        timetables, // This should now match what your form expects
       });
     }
   }, [examData, form]);
-
   const onFinish = (values: any) => {
     const results = {
       name: values.name,
@@ -122,22 +125,49 @@ const UpdateExam = () => {
     }
   }, [gradeLevel, classData]);
 
-  const items: TabsProps["items"] = selectedClass.map((classItem: any) => ({
-    key: classItem.id.toString(),
-    label: capitalize(classItem.name),
-    children: (
-      <TimeTableForm
-        selectedTab={classItem.id.toString()}
-        formData={formData[classItem.id.toString()] || {}}
-        setFormData={(data: any) =>
-          setFormData((prev) => ({
-            ...prev,
-            [classItem.id.toString()]: data,
-          }))
-        }
-      />
-    ),
-  }));
+  // Change the items mapping to pass the correct formData
+  const items: TabsProps["items"] = selectedClass.map((classItem: any) => {
+    // Filter timetables for this class
+    const classTimetables = timetablesData.filter((t: any) =>
+      examData?.timetables?.some(
+        (examT: any) => examT.subject?.grade_level?.id === classItem.id
+      )
+    );
+
+    return {
+      key: classItem.id.toString(),
+      label: capitalize(classItem.name),
+      children: (
+        <UpdateTimeTableForm
+          selectedTab={classItem.id.toString()}
+          formData={{ timetables: classTimetables }}
+          setFormData={(data: any) => {
+            setFormData((prev: any) => ({
+              ...prev,
+              [classItem.id.toString()]: data,
+            }));
+          }}
+        />
+      ),
+    };
+  });
+
+  // const items: TabsProps["items"] = selectedClass.map((classItem: any) => ({
+  //   key: classItem.id.toString(),
+  //   label: capitalize(classItem.name),
+  //   children: (
+  //     <TimeTableForm
+  //       selectedTab={classItem.id.toString()}
+  //       formData={formData[classItem.id.toString()] || {}}
+  //       setFormData={(data: any) =>
+  //         setFormData((prev) => ({
+  //           ...prev,
+  //           [classItem.id.toString()]: data,
+  //         }))
+  //       }
+  //     />
+  //   ),
+  // }));
 
   const onChange = (key: any) => {
     console.log(key);
@@ -153,7 +183,7 @@ const UpdateExam = () => {
           form={form}
           onFinish={onFinish}
           isLoading={isLoading}
-          initialValues={{ timetables: timetablesData || [{}] }}
+          initialValues={{ timetables: [{}] }}
         >
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={12} lg={6}>
@@ -186,6 +216,7 @@ const UpdateExam = () => {
                 rules={[{ required: true, message: "Class is required!" }]}
               >
                 <Select
+                  mode="multiple"
                   allowClear
                   showSearch
                   style={{ width: "100%" }}

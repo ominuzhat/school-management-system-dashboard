@@ -26,6 +26,22 @@ const resultsEndpoint = api.injectEndpoints({
       ],
     }),
 
+    getExamResultByTerm: builder.query<
+      ApiResponse<PaginatedResponse<any[]>>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "/api/v1.0/exams/results/term-exams/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.RESULT,
+          id: TagTypes.RESULT + "_ID",
+        },
+      ],
+    }),
+
     createResults: builder.mutation<ApiResponse<IResults>, any>({
       query: (data) => ({
         url: "/api/v1.0/exams/results/publish/",
@@ -75,6 +91,7 @@ const resultsEndpoint = api.injectEndpoints({
 });
 
 export const {
+  useGetExamResultByTermQuery,
   useGetResultsQuery,
   useCreateResultsMutation,
   useGetSingleResultsQuery,

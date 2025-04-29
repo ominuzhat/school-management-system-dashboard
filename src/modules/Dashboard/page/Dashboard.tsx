@@ -18,10 +18,26 @@ const Dashboard: React.FC = () => {
 
       <br />
       <Row gutter={[12, 0]}>
-        <Col span={24} lg={16}>
+        <Col
+          span={24}
+          lg={24}
+          xs={24} // Mobile
+          sm={24} // Small tablets
+          md={24} // Tablets
+          xl={12} // Large desktops
+          xxl={16} // Very large screens
+        >
           <StudentsAttendance />
         </Col>
-        <Col span={24} lg={8}>
+        <Col
+          span={24}
+          lg={24}
+          xs={24} // Mobile
+          sm={24} // Small tablets
+          md={24} // Tablets
+          xl={10} // Large desktops
+          xxl={8} // Very large screens
+        >
           <EstimatedMonth />
         </Col>
       </Row>
