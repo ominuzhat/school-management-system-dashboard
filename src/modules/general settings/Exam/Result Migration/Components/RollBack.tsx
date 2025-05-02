@@ -6,7 +6,6 @@ import {
   Form as AntForm,
   Button,
   List,
-  Switch,
   Tooltip,
 } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
@@ -50,7 +49,7 @@ const guidelineContentBn = (
   </div>
 );
 
-const Migration = () => {
+const RollBack = () => {
   const [form] = AntForm.useForm();
   const dispatch = useDispatch();
   const term = AntForm.useWatch("term", form);
@@ -83,8 +82,8 @@ const Migration = () => {
       term: values.term,
       session: values.session,
       current_session: values.current_session,
-      force: values.force || false,
-      rollback: false,
+      rollback: true,
+      force: false,
       grade_levels: Object.entries(migrationMappings).map(
         ([id, migrateOption]) => ({
           id: parseInt(id),
@@ -93,6 +92,7 @@ const Migration = () => {
       ),
     };
 
+    console.log("Submitted Payload:", payload);
     create(payload);
   };
 
@@ -103,7 +103,7 @@ const Migration = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={{ force: false }}
+        initialValues={{ rollback: false }}
       >
         <Row gutter={[16, 16]} justify="start" className="w-full">
           <Col xs={24} md={12} lg={6}>
@@ -123,8 +123,8 @@ const Migration = () => {
             </Form.Item>
           </Col>
 
-         <Col xs={24} md={12} lg={6}>
-             <Form.Item
+          <Col xs={24} md={12} lg={6}>
+            <Form.Item
               label="Current Session"
               name="current_session"
               rules={[
@@ -142,7 +142,7 @@ const Migration = () => {
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={12} lg={10}>
+          <Col xs={24} md={12} lg={8}>
             <div className="flex items-center gap-4 w-full">
               <Form.Item
                 label="Migrate Session"
@@ -174,16 +174,6 @@ const Migration = () => {
                 Add Session
               </Button>
             </div>
-          </Col>
-
-          <Col xs={24} md={12} lg={4}>
-            <Form.Item
-              label="Force Migration"
-              name="force"
-              valuePropName="checked"
-            >
-              <Switch />
-            </Form.Item>
           </Col>
 
           <Col
@@ -224,16 +214,16 @@ const Migration = () => {
               <List
                 dataSource={gradeLevels}
                 renderItem={(gradeLevel: any) => {
-                  const gradeAlreadyExists =
-                    examResultByTerm?.data?.unique_grade_levels?.some(
-                      (item: any) => item.name === gradeLevel.name
-                    );
+                  //   const gradeAlreadyExists =
+                  //     examResultByTerm?.data?.unique_grade_levels?.some(
+                  //       (item: any) => item.name === gradeLevel.name
+                  //     );
 
-                  const filteredClassData = gradeAlreadyExists
-                    ? classData?.data?.filter(
-                        (cls: any) => cls.name !== gradeLevel.name
-                      )
-                    : classData?.data;
+                  //   const filteredClassData = gradeAlreadyExists
+                  //     ? classData?.data?.filter(
+                  //         (cls: any) => cls.name !== gradeLevel.name
+                  //       )
+                  //     : classData?.data;
 
                   return (
                     <List.Item key={gradeLevel.id} className="!px-0">
@@ -248,8 +238,8 @@ const Migration = () => {
                             handleSelectChange(gradeLevel.id, value)
                           }
                         >
-                          {Array.isArray(filteredClassData) &&
-                            filteredClassData.map((migrateGrade: any) => (
+                          {Array.isArray(classData?.data) &&
+                            classData?.data.map((migrateGrade: any) => (
                               <Select.Option
                                 key={migrateGrade.id}
                                 value={migrateGrade.id}
@@ -270,5 +260,4 @@ const Migration = () => {
     </div>
   );
 };
-
-export default Migration;
+export default RollBack;

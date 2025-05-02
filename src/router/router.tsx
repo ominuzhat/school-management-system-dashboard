@@ -74,6 +74,8 @@ import ResultView from "../modules/general settings/Exam/Result/components/Resul
 import ResultMigrationPage from "../modules/general settings/Exam/Result Migration/pages/ResultMigration";
 import LeavePage from "../modules/general settings/Leave/page/LeavePage";
 import WithPermission from "./withPermissionRouter";
+import ListOfResultMigration from "../modules/general settings/Exam/Result Migration/pages/ListOfResultMigration";
+import CashPage from "../modules/Finance Management/Accounts/cash management/pages/CashPage";
 
 const router = createBrowserRouter([
   {
@@ -292,6 +294,14 @@ const router = createBrowserRouter([
         element: (
           <WithPermission requiredPermission="exam">
             <ResultMigrationPage />
+          </WithPermission>
+        ),
+      },
+      {
+        path: "/result-migration/list",
+        element: (
+          <WithPermission requiredPermission="exam">
+            <ListOfResultMigration />
           </WithPermission>
         ),
       },
@@ -605,6 +615,10 @@ const router = createBrowserRouter([
           {
             path: "/account/transactions",
             element: <TransactionPage />,
+          },
+          {
+            path: "/account/cash",
+            element: <CashPage />,
           },
           {
             path: "balance-status",

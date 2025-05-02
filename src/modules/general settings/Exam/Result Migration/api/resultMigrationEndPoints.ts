@@ -1,11 +1,31 @@
 import api from "../../../../../app/api/api";
-import { ApiResponse } from "../../../../../app/utils/constant";
+import { FilterTypes } from "../../../../../app/features/filterSlice";
+import {
+  ApiResponse,
+  PaginatedResponse,
+} from "../../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../../app/utils/tagTypes";
 import { IResultMigration } from "../type/resultMigrationTypes";
 
 const resultMigrationEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
+    getMigrationResultList: builder.query<
+      ApiResponse<PaginatedResponse<any[]>>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "/api/v1.0/exams/migration-results/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.RESULT_MIGRATION,
+          id: TagTypes.RESULT_MIGRATION + "_ID",
+        },
+      ],
+    }),
+
     createResultMigration: builder.mutation<ApiResponse<IResultMigration>, any>(
       {
         query: (data) => ({
@@ -27,4 +47,5 @@ const resultMigrationEndpoint = api.injectEndpoints({
   }),
 });
 
-export const { useCreateResultMigrationMutation } = resultMigrationEndpoint;
+export const { useCreateResultMigrationMutation, useGetMigrationResultListQuery } =
+  resultMigrationEndpoint;

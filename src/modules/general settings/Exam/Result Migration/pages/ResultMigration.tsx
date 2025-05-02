@@ -7,6 +7,9 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
+import RollBack from "../Components/RollBack";
+import { MdOutlineArrowRightAlt } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const ResultMigrationPage = () => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -33,7 +36,7 @@ const ResultMigrationPage = () => {
           <span>Rollback</span>
         </div>
       ),
-      children: "Content of Tab Pane 2",
+      children: <RollBack />,
     },
   ];
 
@@ -43,6 +46,23 @@ const ResultMigrationPage = () => {
         className="rounded-lg shadow-xl border-0 w-full"
         headStyle={{ borderBottom: "none" }}
       >
+        <Link to="/result-migration/list">
+          <p
+            style={{
+              fontSize: "14px",
+              fontWeight: "400",
+              color: "#1890ff",
+              padding: "8px 16px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            className="flex items-center gap-2  w-64"
+          >
+            View List of Migration Result{" "}
+            <MdOutlineArrowRightAlt className="text-xl" />
+          </p>
+        </Link>
+
         {createPermission ? (
           <Tabs
             defaultActiveKey="1"

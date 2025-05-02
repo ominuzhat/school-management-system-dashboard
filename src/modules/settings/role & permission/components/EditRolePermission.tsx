@@ -1,87 +1,151 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Col, Form as AntForm, Input, Row, Button, Transfer } from "antd";
+import { Col, Form as AntForm, Input, Row, Button, Transfer, Collapse } from "antd";
 import type { TransferItem } from "antd/es/transfer";
-import { IGetSingleRolePermission } from "../type/rolePermissionTypes";
+import { IGetSingleRolePermission, Permission } from "../type/rolePermissionTypes";
 import {
   useGetPermissionQuery,
   useGetSingleRolePermissionQuery,
   useUpdateRolePermissionMutation,
 } from "../api/rolePermissionEndPoints";
+import { moduleNames } from "../../../../utilities/permissionConstant";
+
+const { Panel } = Collapse;
 
 interface Props {
   record: IGetSingleRolePermission;
 }
 
-const EditRolePermission: React.FC<Props> = ({ record }) => {
-  const [form] = AntForm.useForm();
-  const [update, { isLoading }] = useUpdateRolePermissionMutation();
-  const { data: permissionData } = useGetPermissionQuery({});
-  const { data: userPermissionData } = useGetSingleRolePermissionQuery(
-    Number(record?.id)
-  );
+interface GroupedPermissions {
+  [module: string]: TransferItem[];
+}
 
-  const [targetKeys, setTargetKeys] = useState<string[]>([]);
-  const [mockData, setMockData] = useState<TransferItem[]>([]);
+interface FormValues {
+  name: string;
+  permissions?: string[];
+}
 
-  useEffect(() => {
-    if (Array.isArray(permissionData?.data)) {
-      const formattedData: TransferItem[] = permissionData.data.map((item) => ({
-        key: item.id.toString(),
-        title: item.name,
-      }));
-      setMockData(formattedData);
+
+const organizePermissionsByModule = (
+  permissions: Permission[],
+  modules: typeof moduleNames
+): GroupedPermissions => {
+  const moduleValues = Object.values(modules);
+  const grouped: GroupedPermissions = {};
+
+  permissions.forEach((permission:any) => {
+    const [_, ...moduleParts] = permission.codename.split('_');
+    const moduleName = moduleParts.join('_');
+    
+    if (moduleValues.includes(moduleName)) {
+      if (!grouped[moduleName]) {
+        grouped[moduleName] = [];
+      }
+      grouped[moduleName].push({
+        key: permission.id.toString(),
+        title: permission.name,
+        description: permission.codename,
+      });
     }
-  }, [permissionData?.data]);
+  });
+
+  return grouped;
+};
+
+const EditRolePermission: React.FC<Props> = ({ record }) => {
+  const [form] = AntForm.useForm<FormValues>();
+  const [update] = useUpdateRolePermissionMutation();
+  const { data: permissionData } = useGetPermissionQuery<any>({});
+  const { data: userPermissionData } = useGetSingleRolePermissionQuery<any>(record.id);
+
+  const [groupedPermissions, setGroupedPermissions] = useState<GroupedPermissions>({});
+  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
 
   useEffect(() => {
-    const selectedPermissions = (
-      userPermissionData?.data as IGetSingleRolePermission
-    )?.permissions?.map((p) => p.id.toString());
+    if (permissionData?.data) {
+      const organized = organizePermissionsByModule(permissionData.data, moduleNames);
+      setGroupedPermissions(organized);
+    }
+  }, [permissionData]);
 
-    form.setFieldsValue({
-      name: record?.name,
-      permissions: selectedPermissions,
-    });
+  useEffect(() => {
+    if (userPermissionData?.data) {
+      const initialPermissions = userPermissionData.data.permissions
+        ?.map((p:any) => p.id.toString()) || [];
+      
+      form.setFieldsValue({
+        name: record.name,
+        permissions: initialPermissions,
+      });
+      setSelectedPermissions(initialPermissions);
+    }
+  }, [userPermissionData, record, form]);
 
-    setTargetKeys(selectedPermissions || []);
-  }, [userPermissionData?.data, record, form]);
-
-  const onFinish = (values: any): void => {
-    update({
-      id: record.id,
-      data: {
-        ...values,
-        permissions: values.permissions.map((id: string) => Number(id)),
-      },
-    });
+  const handleSubmit = async (values: FormValues) => {
+    try {
+      const requestData: any = {
+        id: record.id,
+        name: values.name,
+        permissions: values.permissions?.map(Number) || [],
+      };
+      
+      await update(requestData).unwrap();
+    } catch (error) {
+      console.error('Failed to update role permissions:', error);
+    }
   };
 
-  const handleTransferChange: any = (newTargetKeys: string[]) => {
-    setTargetKeys(newTargetKeys);
-    form.setFieldsValue({ permissions: newTargetKeys });
+  const handlePermissionChange = (module: string, newKeys: string[]) => {
+    const otherPermissions = selectedPermissions.filter(key => 
+      !groupedPermissions[module].some(item => item.key === key)
+    );
+    const updatedPermissions = [...otherPermissions, ...newKeys];
+    
+    setSelectedPermissions(updatedPermissions);
+    form.setFieldsValue({ permissions: updatedPermissions });
   };
 
-  // const handleSelectAll = () => {
-  //   const allKeys = mockData.map((item) => item.key);
-  //   setTargetKeys(allKeys);
-  //   form.setFieldsValue({ permissions: allKeys });
-  // };
+  const renderPermissionItem = (item: TransferItem) => ({
+    label: (
+      <div className="permission-item">
+        <span>{item.title}</span>
+      </div>
+    ),
+    value: item.title || '',
+  });
 
-  // const handleClearAll = () => {
-  //   setTargetKeys([]);
-  //   form.setFieldsValue({ permissions: [] });
-  // };
+  const renderModuleSection = (module: string) => {
+    const modulePermissions = groupedPermissions[module] || [];
+    const moduleSelectedKeys = selectedPermissions.filter(key => 
+      modulePermissions.some(item => item.key === key)
+    );
+
+    return (
+      <Collapse ghost key={module}>
+        <Panel header={<span className="module-header">{module.toUpperCase()}</span>} key={module}>
+          <Transfer
+            dataSource={modulePermissions}
+            targetKeys={moduleSelectedKeys}
+            onChange={(keys:any) => handlePermissionChange(module, keys)}
+            render={renderPermissionItem}
+            showSearch
+            listStyle={{ width: '100%', height: 250 }}
+          />
+        </Panel>
+      </Collapse>
+    );
+  };
 
   return (
-    <AntForm form={form} layout="vertical" onFinish={onFinish}>
-      <Row gutter={[10, 10]}>
-        <Col span={24} lg={12}>
+    <AntForm form={form} layout="vertical" onFinish={handleSubmit}>
+      <Row gutter={16}>
+        <Col span={24} md={12}>
           <AntForm.Item
-            label="Name"
+            label="Role Name"
             name="name"
-            rules={[{ required: true, message: "Name is required" }]}
+            rules={[{ required: true, message: 'Role name is required' }]}
           >
-            <Input placeholder="Name" />
+            <Input placeholder="Enter role name" />
           </AntForm.Item>
         </Col>
 
@@ -89,37 +153,17 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
           <AntForm.Item
             label="Permissions"
             name="permissions"
-            rules={[
-              {
-                required: true,
-                message: "At least one permission is required",
-              },
-            ]}
           >
-            <>
-              <div className="flex justify-center items-center">
-                <Transfer
-                  dataSource={mockData}
-                  showSearch
-                  listStyle={{
-                    width: 300,
-                    height: 300,
-                  }}
-                  titles={["Available", "Selected"]}
-                  targetKeys={targetKeys}
-                  onChange={handleTransferChange}
-                  render={(item: any) => item.title}
-                  oneWay
-                />
-              </div>
-            </>
+            <div className="permissions-container">
+              {Object.keys(groupedPermissions).map(renderModuleSection)}
+            </div>
           </AntForm.Item>
         </Col>
 
         <Col span={24}>
           <AntForm.Item>
-            <Button type="primary" htmlType="submit" loading={isLoading}>
-              Submit
+            <Button type="primary" htmlType="submit">
+              Save Role
             </Button>
           </AntForm.Item>
         </Col>

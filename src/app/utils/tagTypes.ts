@@ -47,6 +47,7 @@ export const TagTypes = {
   ADMISSION_SESSION: "Admission_Session",
   STUDENT_ATTENDANCE: "Student_Attendance",
   TEACHER_ATTENDANCE: "Teacher_Attendance",
+  CASH: "Cash",
 } as const;
 
 export type TagType = (typeof TagTypes)[keyof typeof TagTypes];

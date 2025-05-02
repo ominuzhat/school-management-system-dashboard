@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -128,7 +129,7 @@ const UpdateExam = () => {
   // Change the items mapping to pass the correct formData
   const items: TabsProps["items"] = selectedClass.map((classItem: any) => {
     // Filter timetables for this class
-    const classTimetables = timetablesData.filter((t: any) =>
+    const classTimetables = timetablesData.filter((_t: any) =>
       examData?.timetables?.some(
         (examT: any) => examT.subject?.grade_level?.id === classItem.id
       )

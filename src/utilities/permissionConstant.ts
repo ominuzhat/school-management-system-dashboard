@@ -23,6 +23,7 @@ type ModuleNames = {
   gradelevel: string;
   student: string;
   classsubject: string;
+  financialentry: string;
   routine: string;
   section: string;
   examhall: string;
@@ -54,6 +55,7 @@ type ModuleNames = {
 };
 
 export const moduleNames: ModuleNames = {
+  financialentry: "financialentry",
   role: "role",
   rulesandregulations: "rulesandregulations",
   smsconfig: "smsconfig",

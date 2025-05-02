@@ -58,7 +58,12 @@ const CreateOldStudent = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={{ subjects: selectedSubjects, status: "approved" }}
+        initialValues={{
+          subjects: selectedSubjects,
+          status: "approved",
+          discount_type: "amount",
+          discount_value: 0,
+        }}
       >
         <Card>
           <Row gutter={[16, 16]}>
@@ -248,11 +253,7 @@ const CreateOldStudent = () => {
             </Col>
 
             <Col lg={8}>
-              <Form.Item<IAdmission>
-                label="Discount Type"
-                name="discount_type"
-                rules={[{ required: true, message: "Discount Type" }]}
-              >
+              <Form.Item<IAdmission> label="Discount Type" name="discount_type">
                 <Select className="w-full" placeholder="Discount Type">
                   <Option value="amount">Amount</Option>
                   <Option value="percent">Percent</Option>
@@ -261,7 +262,10 @@ const CreateOldStudent = () => {
             </Col>
 
             <Col lg={8}>
-              <Form.Item<IAdmission> label="Discount Value" name="discount_value">
+              <Form.Item<IAdmission>
+                label="Discount Value"
+                name="discount_value"
+              >
                 <Input type="number" placeholder="Discount Value" />
               </Form.Item>
             </Col>
