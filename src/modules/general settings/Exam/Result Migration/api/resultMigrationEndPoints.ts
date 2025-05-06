@@ -44,8 +44,27 @@ const resultMigrationEndpoint = api.injectEndpoints({
         ],
       }
     ),
+
+    getSingleResultMigration: builder.query<
+      ApiResponse<PaginatedResponse<any>>,
+      number
+    >({
+      query: (roleId) => ({
+        url: `/api/v1.0/exams/migration-results/${roleId}/`,
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.RESULT_MIGRATION,
+          id: TagTypes.RESULT_MIGRATION + "_ID",
+        },
+      ],
+    }),
   }),
 });
 
-export const { useCreateResultMigrationMutation, useGetMigrationResultListQuery } =
-  resultMigrationEndpoint;
+export const {
+  useCreateResultMigrationMutation,
+  useGetMigrationResultListQuery,
+  useGetSingleResultMigrationQuery,
+} = resultMigrationEndpoint;

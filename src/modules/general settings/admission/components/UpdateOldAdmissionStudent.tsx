@@ -63,6 +63,8 @@ const UpdateOldAdmissionStudent = () => {
         roll: singleAdmission?.roll,
         session: singleAdmission?.session?.id,
         status: singleAdmission?.status,
+        discount_type: singleAdmission?.discount_type,
+        discount_value: singleAdmission?.discount_value,
         shift: singleAdmission?.shift?.id,
         fee_type: singleAdmission?.fee_type,
         section: singleAdmission?.section?.id,
@@ -243,6 +245,23 @@ const UpdateOldAdmissionStudent = () => {
                       </Option>
                     ))}
                 </Select>
+              </Form.Item>
+            </Col>
+            <Col lg={8}>
+              <Form.Item<IAdmission> label="Discount Type" name="discount_type">
+                <Select className="w-full" placeholder="Discount Type">
+                  <Option value="amount">Amount</Option>
+                  <Option value="percent">Percent</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col lg={8}>
+              <Form.Item<IAdmission>
+                label="Discount Value"
+                name="discount_value"
+              >
+                <Input type="number" placeholder="Discount Value" />
               </Form.Item>
             </Col>
           </Row>

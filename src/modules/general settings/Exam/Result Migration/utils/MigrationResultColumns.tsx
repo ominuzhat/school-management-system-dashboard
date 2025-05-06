@@ -1,5 +1,6 @@
-import { Tag } from "antd";
+import { Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
 
 const useMigrationResult = (): ColumnsType<any> => {
   //   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -102,37 +103,37 @@ const useMigrationResult = (): ColumnsType<any> => {
       },
     },
 
-    // {
-    //   title: "Actions",
-    //   align: "center",
-    //   render: (record) => (
-    //     <Space>
-    //       {updatePermission && (
-    //         <Link to={`${record.id}`}>
-    //           <Button
-    //             title="Edit"
-    //             size="small"
-    //             type="default"
-    //             style={{
-    //               color: "#FFA500",
-    //               border: "1px solid #FFA500",
-    //             }}
-    //           >
-    //             <FaEdit />
-    //           </Button>
-    //         </Link>
-    //       )}
+    {
+      title: "Actions",
+      align: "center",
+      render: (record) => (
+        <Space>
+          {/* {updatePermission && (
+            <Link to={`${record.id}`}>
+              <Button
+                title="Edit"
+                size="small"
+                type="default"
+                style={{
+                  color: "#FFA500",
+                  border: "1px solid #FFA500",
+                }}
+              >
+                <FaEdit />
+              </Button>
+            </Link>
+          )} */}
 
-    //       <ViewButton to={`view/${record?.id}`} />
+          <ViewButton to={`/result-migration/view/${record?.id}`} />
 
-    //       {deletePermission && (
-    //         <DeleteButton
-    //           onConfirm={() => handleDelete(record.id)}
-    //         ></DeleteButton>
-    //       )}
-    //     </Space>
-    //   ),
-    // },
+          {/* {deletePermission && (
+            <DeleteButton
+              onConfirm={() => handleDelete(record.id)}
+            ></DeleteButton>
+          )} */}
+        </Space>
+      ),
+    },
   ];
 };
 

@@ -51,16 +51,11 @@ const Table = <T extends object>({
             Showing {page_size} of {total} entries
           </Typography.Text>
         ),
-        current: page || total, // Ensure current is always a positive number
+        current: page || 1,
         pageSize: page_size,
         onChange: (page: number, pageSize: number) => {
           dispatch(addFilter({ name: "PAGE_SIZE", value: pageSize }));
-          dispatch(
-            addFilter({
-              name: "PAGE",
-              value: page || 1, // Ensure page is always set to a positive number
-            })
-          );
+          dispatch(addFilter({ name: "PAGE", value: page }));
         },
       }}
       // pagination={{
@@ -78,7 +73,7 @@ const Table = <T extends object>({
       //     dispatch(
       //       addFilter({
       //         name: "PAGE",
-      //         value: page || undefined,
+      //         value: page || 1,
       //       })
       //     );
       //   },

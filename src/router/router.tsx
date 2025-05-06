@@ -76,6 +76,7 @@ import LeavePage from "../modules/general settings/Leave/page/LeavePage";
 import WithPermission from "./withPermissionRouter";
 import ListOfResultMigration from "../modules/general settings/Exam/Result Migration/pages/ListOfResultMigration";
 import CashPage from "../modules/Finance Management/Accounts/cash management/pages/CashPage";
+import MigrationResultView from "../modules/general settings/Exam/Result Migration/Components/MigrationResultView";
 
 const router = createBrowserRouter([
   {
@@ -289,22 +290,57 @@ const router = createBrowserRouter([
       },
 
       // Result Migration
+
       {
         path: "/result-migration",
         element: (
           <WithPermission requiredPermission="exam">
-            <ResultMigrationPage />
+            <Accounts />
           </WithPermission>
         ),
+        children: [
+          {
+            path: "",
+            element: <ResultMigrationPage />,
+          },
+          {
+            path: "list",
+            element: <ListOfResultMigration />,
+          },
+
+          {
+            path: "view/:roleId",
+            element: <MigrationResultView />,
+          },
+        ],
       },
-      {
-        path: "/result-migration/list",
-        element: (
-          <WithPermission requiredPermission="exam">
-            <ListOfResultMigration />
-          </WithPermission>
-        ),
-      },
+
+      // {
+      //   path: "/result-migration",
+      //   element: (
+      //     <WithPermission requiredPermission="exam">
+      //       <ResultMigrationPage />
+      //     </WithPermission>
+      //   ),
+      //   children: [
+      //     {
+      //       path: "list",
+      //       element: <ListOfResultMigration />,
+      //     },
+      //     {
+      //       path: "/result-migration/:roleId",
+      //       element: <MigrationResultView />,
+      //     },
+      //   ],
+      // },
+      // {
+      //   path: "/result-migration/list",
+      //   element: (
+      //     <WithPermission requiredPermission="exam">
+      //       <ListOfResultMigration />
+      //     </WithPermission>
+      //   ),
+      // },
 
       // exam Result
       {

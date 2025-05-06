@@ -45,11 +45,6 @@ const ViewExam = () => {
       dataIndex: "contribution_marks",
       key: "contribution_marks",
     },
-    {
-      title: "Passing Marks",
-      dataIndex: "passing_marks",
-      key: "passing_marks",
-    },
   ];
 
   return (
