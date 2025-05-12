@@ -103,7 +103,7 @@ const CreateStudent = () => {
         isSuccess={isSuccess}
         initialValues={{
           is_active: true,
-          can_login: true,
+          can_login: false,
         }}
       >
         <Row gutter={[16, 16]}>
@@ -114,7 +114,7 @@ const CreateStudent = () => {
                   <Col span={6}>
                     <Card>
                       <Form.Item
-                        label="Picture "
+                        label="Picture"
                         name="image"
                         valuePropName="fileList"
                         getValueFromEvent={(e) => {
@@ -185,7 +185,7 @@ const CreateStudent = () => {
 
                       <Col lg={8}>
                         <Form.Item
-                          label="Can LogIn"
+                          label="Can Login"
                           name="can_login"
                           valuePropName="checked"
                           rules={[
@@ -282,13 +282,13 @@ const CreateStudent = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
+                  <Col lg={5}>
                     <GenderSelect />
                   </Col>
-                  <Col lg={4}>
+                  <Col lg={5}>
                     <ReligionSelect />
                   </Col>
-                  <Col lg={4}>
+                  <Col lg={5}>
                     <Form.Item<any>
                       label="Phone Number"
                       name="phone_number"
@@ -300,12 +300,8 @@ const CreateStudent = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Nationality" name="nationality">
-                      <Input placeholder="Nationality" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
+
+                  <Col lg={5}>
                     <Form.Item<any> label="Email" name="email">
                       <Input placeholder="Email" />
                     </Form.Item>
@@ -334,7 +330,7 @@ const CreateStudent = () => {
             <Badge.Ribbon text="Father Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
                     <Form.Item
                       label="Father Name"
                       name="father_name"
@@ -343,12 +339,8 @@ const CreateStudent = () => {
                       <Input placeholder="Enter Father Name" />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                    <Form.Item label="Father Email" name="father_email">
-                      <Input placeholder="Enter Father Email" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+
+                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
                     <Form.Item
                       label="Phone Number"
                       name="father_number"
@@ -360,28 +352,12 @@ const CreateStudent = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
                     <Form.Item
                       label="Father Profession"
                       name="father_profession"
                     >
                       <Input placeholder="Enter Father Profession" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                    <Form.Item
-                      label="Father Designation"
-                      name="father_designation"
-                    >
-                      <Input placeholder="Enter Father Designation" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                    <Form.Item
-                      label="Education Qualification"
-                      name="father_education_qualification"
-                    >
-                      <Input placeholder="Enter Education Qualification" />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -393,7 +369,7 @@ const CreateStudent = () => {
             <Badge.Ribbon text="Mother Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
                     <Form.Item
                       label="Mother Name"
                       name="mother_name"
@@ -402,12 +378,8 @@ const CreateStudent = () => {
                       <Input placeholder="Enter Mother Name" />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                    <Form.Item label="Mother Email" name="mother_email">
-                      <Input placeholder="Enter Mother Email" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+
+                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
                     <Form.Item
                       label="Phone Number"
                       name="mother_phone_number"
@@ -419,28 +391,12 @@ const CreateStudent = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
+                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
                     <Form.Item
                       label="Mother Profession"
                       name="mother_profession"
                     >
                       <Input placeholder="Enter Mother Profession" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                    <Form.Item
-                      label="Mother Designation"
-                      name="mother_designation"
-                    >
-                      <Input placeholder="Enter Mother Designation" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={4}>
-                    <Form.Item
-                      label="Education Qualification"
-                      name="mother_education_qualification"
-                    >
-                      <Input placeholder="Enter Education Qualification" />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -452,7 +408,7 @@ const CreateStudent = () => {
             <Badge.Ribbon text="Local Guardian Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={6}>
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Local Guardian Name"
                       name="local_guardian_name"
@@ -460,15 +416,8 @@ const CreateStudent = () => {
                       <Input placeholder="Local Guardian Name." />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
-                    <Form.Item<any>
-                      label="Local Guardian Email"
-                      name="local_guardian_email"
-                    >
-                      <Input placeholder="Local Guardian Email" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={6}>
+
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Local Guardian Phone Number"
                       name="local_guardian_phone_number"
@@ -480,7 +429,7 @@ const CreateStudent = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Local Guardian Relation"
                       name="local_guardian_relation"

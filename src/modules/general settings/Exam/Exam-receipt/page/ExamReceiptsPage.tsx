@@ -23,20 +23,41 @@ import {
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
+import { useGetShiftQuery } from "../../../shift/api/shiftEndPoints";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
+import { IClasses } from "../../../classes/type/classesType";
+import { useGetSectionQuery } from "../../../Section/api/sectionEndPoints";
 
 const { Title } = Typography;
 
 const ExamReceiptsPage = () => {
   const [form] = AntForm.useForm();
   const exam = AntForm.useWatch("exam", form);
+  const shift = AntForm.useWatch("shift", form);
+  const gradeLevel = AntForm.useWatch("grade_level", form);
+  const section = AntForm.useWatch("section", form);
+
+  const { data: classData } = useGetClassesQuery({});
+  const { data: sectionData } = useGetSectionQuery(
+    {
+      grade_level: gradeLevel,
+    },
+    { skip: !gradeLevel }
+  );
 
   const [create, { isLoading, isSuccess }] = useCreateExamReceiptMutation();
   const { data: examData } = useGetExamQuery({});
   const { data: examHallData, isLoading: classLoading } = useGetExamHallQuery(
     {}
   );
+
+  const { data: shiftData } = useGetShiftQuery({});
+
   const { data: examDetails } = useGetSingleExamQuery<any>(
-    exam && Number(exam)
+    exam
+      ? { examId: Number(exam), shift, grade_level: gradeLevel, section }
+      : skipToken
   );
   const { data: dashboardData } = useGetDashboardDataQuery({});
 
@@ -82,12 +103,23 @@ const ExamReceiptsPage = () => {
 
   const columns = [
     {
+      title: "SL",
+      dataIndex: "sl",
+      render: (_: any, __: any, index: number) => index + 1,
+    },
+    {
+      title: "Registration Number",
+      dataIndex: ["student", "registration_number"],
+      render: (_text: string, record: any) =>
+        `${record.registration_number} `,
+    },
+    {
       title: "Name",
       dataIndex: ["student", "first_name"],
       render: (_text: string, record: any) =>
         `${record.student.first_name} ${record.student.last_name}`,
     },
-    { title: "Email", dataIndex: ["student", "email"] },
+
     { title: "Phone", dataIndex: ["student", "phone_number"] },
   ];
 
@@ -118,8 +150,8 @@ const ExamReceiptsPage = () => {
             isLoading={isLoading}
             isSuccess={isSuccess}
           >
-            <Row gutter={[24, 24]}>
-              <Col xs={24} md={12}>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12} md={8} lg={6}>
                 <Form.Item
                   label="Select Exam Name"
                   name="exam"
@@ -136,7 +168,61 @@ const ExamReceiptsPage = () => {
                 </Form.Item>
               </Col>
 
-              <Col xs={24} md={12}>
+              <Col xs={24} sm={12} md={8} lg={6}>
+                <Form.Item label="Shift" name="shift">
+                  <Select
+                    className="w-full"
+                    placeholder="Select Shift"
+                    allowClear
+                  >
+                    {Array.isArray(shiftData?.data) &&
+                      shiftData.data.map((data: any) => (
+                        <Select.Option key={data.id} value={data.id}>
+                          {data.name}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} sm={12} md={8} lg={6}>
+                <Form.Item label="Class" name="grade_level">
+                  <Select
+                    className="w-full"
+                    placeholder="Select Class"
+                    allowClear
+                  >
+                    {Array.isArray(classData?.data) &&
+                      classData.data.map((data: IClasses) => (
+                        <Select.Option key={data.id} value={data.id}>
+                          {data.name}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              {gradeLevel && (
+                <Col xs={24} sm={12} md={8} lg={6}>
+                  <Form.Item label="Section" name="section">
+                    <Select
+                      className="w-full"
+                      placeholder="Select Section"
+                      allowClear
+                      showSearch
+                    >
+                      {Array.isArray(sectionData?.data) &&
+                        sectionData?.data?.map((data: any) => (
+                          <Select.Option key={data.id} value={data.id}>
+                            {data?.name}
+                          </Select.Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              )}
+
+              <Col xs={24} sm={12} md={8} lg={6}>
                 <Form.Item
                   label="Exam Hall"
                   name="hall"
@@ -165,7 +251,7 @@ const ExamReceiptsPage = () => {
 
             {exam && (
               <Row gutter={[24, 24]} className="mt-6">
-                <Col xs={24} md={12}>
+                <Col xs={24} sm={24} md={24} lg={12}>
                   <Card
                     title={
                       <span className="text-lg font-semibold">
@@ -198,7 +284,7 @@ const ExamReceiptsPage = () => {
                   </Card>
                 </Col>
 
-                <Col xs={24} md={12}>
+                <Col xs={24} sm={24} md={24} lg={12}>
                   <Card
                     title={
                       <span className="text-lg font-semibold">

@@ -42,10 +42,11 @@ const examEndpoint = api.injectEndpoints({
 
     getSingleExam: builder.query<
       ApiResponse<PaginatedResponse<IGetExam>>,
-      number
+      FilterTypes
     >({
-      query: (examId) => ({
+      query: ({ examId, ...params }) => ({
         url: `/api/v1.0/exams/${examId}/`,
+        params,
       }),
 
       providesTags: [

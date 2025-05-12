@@ -49,9 +49,12 @@ th {
   text-align: left;
   padding: 8px;
 }
+th {
+  background-color: #adb5bd75 !important;
+}
 
 tr:nth-child(even) {
-  background-color: #8888881c;
+  background-color: #dee2e65e;
 }
 
 /* ____login________ */

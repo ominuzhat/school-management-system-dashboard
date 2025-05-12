@@ -9,9 +9,9 @@ import {
   Card,
   DatePicker,
   Switch,
+  Avatar,
 } from "antd";
 import { useState, useEffect } from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import { Form } from "../../../../common/CommonAnt";
 import {
   useGetSingleStudentQuery,
@@ -35,31 +35,57 @@ const UpdateStudent = () => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [imageFileList, setImageFileList] = useState<any>([]);
+
   // const [originalImages, setOriginalImages] = useState<any[]>([]);
   const canLogin = AntForm.useWatch("can_login", form);
 
+  const phoneFields = [
+    "contact_phone_number",
+    "phone_number",
+    "mother_phone_number",
+    "local_guardian_phone_number",
+    "father_number",
+  ];
+
+  console.log(singleStudent?.data);
   useEffect(() => {
     if (singleStudent) {
-      const initialImages =
-        singleStudent?.data?.image &&
-        typeof singleStudent?.data?.image === "string"
-          ? [
-              {
-                uid: "-1",
-                url: singleStudent.data.image,
-                thumbUrl: singleStudent.data.image,
-                name: "Profile Image",
-              },
-            ]
-          : [];
+      const data = { ...singleStudent.data };
 
-      // setOriginalImages(initialImages);
+      Object.keys(data).forEach((key) => {
+        if (data[key] === null) {
+          data[key] = "";
+        }
+      });
+
+      phoneFields.forEach((field) => {
+        if (data[field]?.startsWith("880")) {
+          data[field] = data[field].slice(3);
+        }
+      });
+
+      const hasImage = typeof data.image === "string" && data.image !== "";
+
+      const initialImages = hasImage
+        ? [
+            {
+              uid: "-1",
+              url: data.image,
+              thumbUrl: data.image,
+              name: "Profile Image",
+            },
+          ]
+        : [];
+
+      setImageFileList(initialImages);
 
       form.setFieldsValue({
-        ...singleStudent.data,
-
-        username: singleStudent?.data?.user?.username,
-        date_of_birth: dayjs(singleStudent?.data?.date_of_birth),
+        ...data,
+        username: data?.user?.username || "",
+        date_of_birth: data?.date_of_birth
+          ? dayjs(data?.date_of_birth)
+          : undefined,
         image: initialImages,
       });
     }
@@ -68,6 +94,10 @@ const UpdateStudent = () => {
       navigate("/students");
     }
   }, [form, isSuccess, navigate, singleStudent]);
+
+  const handleImageChange = ({ fileList }: any) => {
+    setImageFileList(fileList);
+  };
 
   const handlePreview = async (file: any) => {
     setPreviewImage(file.thumbUrl || file.url);
@@ -80,14 +110,6 @@ const UpdateStudent = () => {
 
   const onFinish = (values: any) => {
     const formData: FormData = new FormData();
-
-    const phoneFields = [
-      "contact_phone_number",
-      "phone_number",
-      "mother_phone_number",
-      "local_guardian_phone_number",
-      "father_number",
-    ];
 
     Object.entries(values).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -127,7 +149,7 @@ const UpdateStudent = () => {
                   <Col span={6}>
                     <Card>
                       <Form.Item
-                        label="Picture "
+                        label="Picture"
                         name="image"
                         valuePropName="fileList"
                         getValueFromEvent={(e) => {
@@ -137,7 +159,7 @@ const UpdateStudent = () => {
                           return e?.fileList;
                         }}
                       >
-                        <Upload
+                        {/* <Upload
                           beforeUpload={() => false}
                           maxCount={1}
                           listType="picture-card"
@@ -145,6 +167,22 @@ const UpdateStudent = () => {
                           showUploadList={{ showRemoveIcon: true }}
                         >
                           <PlusOutlined />
+                        </Upload> */}
+                        <Upload
+                          listType="picture-card"
+                          fileList={imageFileList}
+                          onChange={handleImageChange}
+                          onPreview={handlePreview}
+                          showUploadList={{ showRemoveIcon: true }}
+                          beforeUpload={() => false}
+                        >
+                          {imageFileList.length === 0 && (
+                            <Avatar
+                              shape="square"
+                              size={104}
+                              src="/public/no-image.png"
+                            />
+                          )}
                         </Upload>
                       </Form.Item>
                       <Modal
@@ -183,7 +221,7 @@ const UpdateStudent = () => {
                             </Form.Item>
                           </Col>
                           <Col lg={8}>
-                            <PasswordInput isRequired={false}/>
+                            <PasswordInput isRequired={false} />
                           </Col>
                         </>
                       )}
@@ -257,12 +295,19 @@ const UpdateStudent = () => {
                       <Input placeholder="Email" />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Phone Number" name="phone_number">
-                      <Input placeholder="Enter Mobile Number" />
+                  <Col lg={5}>
+                    <Form.Item<any>
+                      label="Phone Number"
+                      name="phone_number"
+                      rules={[{ validator: phoneValidator }]}
+                    >
+                      <Input
+                        addonBefore="880"
+                        placeholder="Enter Mobile Number"
+                      />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
+                  <Col lg={5}>
                     <Form.Item<any> label="Date of Birth" name="date_of_birth">
                       <DatePicker
                         placeholder="Select Date"
@@ -274,17 +319,13 @@ const UpdateStudent = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
+                  <Col lg={5}>
                     <GenderSelect />
                   </Col>
-                  <Col lg={4}>
+                  <Col lg={5}>
                     <ReligionSelect />
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Nationality" name="nationality">
-                      <Input placeholder="Nationality" />
-                    </Form.Item>
-                  </Col>
+
                   <Col lg={12}>
                     <Form.Item<any>
                       label="Present Address"
@@ -309,17 +350,13 @@ const UpdateStudent = () => {
             <Badge.Ribbon text="Father Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={4}>
+                  <Col lg={8}>
                     <Form.Item<any> label="Father Name" name="father_name">
                       <Input placeholder="Father Name." />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Father Email" name="father_email">
-                      <Input placeholder="Father Email" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
+
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Phone Number"
                       name="father_number"
@@ -328,28 +365,12 @@ const UpdateStudent = () => {
                       <Input addonBefore="880" placeholder="Phone Number" />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Father Profession"
                       name="father_profession"
                     >
                       <Input placeholder="Father Profession" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Father Designation"
-                      name="father_designation"
-                    >
-                      <Input placeholder="Father Designation" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Education Qualification"
-                      name="father_education_qualification"
-                    >
-                      <Input placeholder="Education Qualification" />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -360,17 +381,13 @@ const UpdateStudent = () => {
             <Badge.Ribbon text="Mother Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={4}>
+                  <Col lg={8}>
                     <Form.Item<any> label="Mother Name" name="mother_name">
                       <Input placeholder="Mother Name." />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
-                    <Form.Item<any> label="Mother Email" name="mother_email">
-                      <Input placeholder="Mother Email" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
+
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Phone Number"
                       name="mother_phone_number"
@@ -379,28 +396,12 @@ const UpdateStudent = () => {
                       <Input addonBefore="880" placeholder="Phone Number" />
                     </Form.Item>
                   </Col>
-                  <Col lg={4}>
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Mother Profession"
                       name="mother_profession"
                     >
                       <Input placeholder="Mother Profession" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Mother Designation"
-                      name="mother_designation"
-                    >
-                      <Input placeholder="Mother Designation" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Education Qualification"
-                      name="mother_education_qualification"
-                    >
-                      <Input placeholder="Education Qualification" />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -411,7 +412,7 @@ const UpdateStudent = () => {
             <Badge.Ribbon text="Local Guardian Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={6}>
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Local Guardian Name"
                       name="local_guardian_name"
@@ -419,15 +420,8 @@ const UpdateStudent = () => {
                       <Input placeholder="Local Guardian Name." />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
-                    <Form.Item<any>
-                      label="Local Guardian Email"
-                      name="local_guardian_email"
-                    >
-                      <Input placeholder="Local Guardian Email" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={6}>
+
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Local Guardian Phone Number"
                       name="local_guardian_phone_number"
@@ -439,7 +433,7 @@ const UpdateStudent = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={8}>
                     <Form.Item<any>
                       label="Local Guardian Relation"
                       name="local_guardian_relation"

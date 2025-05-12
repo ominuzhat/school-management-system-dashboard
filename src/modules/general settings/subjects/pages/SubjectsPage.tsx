@@ -20,7 +20,6 @@ import NoPermissionData from "../../../../utilities/NoPermissionData";
 const SubjectsPage = () => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const columns = useSubjectColumns();
-
   const dispatch = useDispatch();
   const { page_size, page } = useAppSelector(FilterState);
 
@@ -44,6 +43,41 @@ const SubjectsPage = () => {
     moduleNames.classsubject,
     actionNames.add
   );
+
+  const transformData = (data: any) => {
+    // Correct access to results - notice the extra .data
+    if (!data?.data?.results) return [];
+
+    const classesMap = new Map();
+
+    data.data.results.forEach((subject: any) => {
+      const classInfo = subject.grade_level;
+      if (!classInfo) return;
+
+      if (!classesMap.has(classInfo.id)) {
+        classesMap.set(classInfo.id, {
+          id: classInfo.id,
+          name: classInfo.name,
+          description: classInfo.description,
+          class_teacher: classInfo.class_teacher,
+          subjects: [],
+        });
+      }
+      classesMap.get(classInfo.id).subjects.push({
+        ...subject,
+        key: subject.id,
+      });
+    });
+
+    const transformed = Array.from(classesMap.values()).map((classItem) => ({
+      ...classItem,
+      key: classItem.id,
+    }));
+
+    return transformed;
+  };
+
+  const transformedData = transformData(getSubjectsData);
 
   return (
     <div className="space-y-5">
@@ -76,11 +110,11 @@ const SubjectsPage = () => {
       <Card>
         {viewPermission ? (
           <Table
-            rowKey={"id"}
+            rowKey="id" // This matches the key we set in transformedData
             loading={isLoading || isFetching}
             refetch={refetch}
             total={getSubjectsData?.data?.count}
-            dataSource={getSubjectsData?.data?.results}
+            dataSource={transformedData}
             columns={columns}
           />
         ) : (

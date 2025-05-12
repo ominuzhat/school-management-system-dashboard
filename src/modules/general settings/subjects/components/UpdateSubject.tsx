@@ -18,7 +18,6 @@ const UpdateSubjects = ({ record }: any) => {
       const subjectData = singleData?.data as unknown as ISubjects;
       form.setFieldsValue({
         name: subjectData.name,
-        marks: subjectData.marks,
         grade_level: subjectData.grade_level?.id,
       });
     }
@@ -33,10 +32,6 @@ const UpdateSubjects = ({ record }: any) => {
       <Form form={form} onFinish={onFinish} layout="vertical">
         <Form.Item label="Subjects Name" name="name">
           <Input placeholder="Enter Subjects Name" />
-        </Form.Item>
-
-        <Form.Item label="Mark" name="marks">
-          <Input placeholder="Enter Mark" />
         </Form.Item>
 
         <Form.Item<ISubjects> label="Class " name="grade_level">

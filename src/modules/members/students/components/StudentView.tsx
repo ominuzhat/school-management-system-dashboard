@@ -13,7 +13,6 @@ const StudentView = () => {
   const { studentId } = useParams();
   const { data } = useGetSingleStudentQuery(Number(studentId));
 
-
   return (
     <div>
       <div className="my-5">
@@ -21,17 +20,20 @@ const StudentView = () => {
       </div>
       <Card>
         <Row gutter={[24, 16]}>
-          <Col lg={16}>
-            <StudentInformation data={data?.data && data?.data} />
+          {/* Left Column */}
+          <Col xs={24} sm={24} md={24} lg={24} xl={16}>
+            <StudentInformation data={data?.data} />
             <Row>
               <Col span={24} className="my-2">
                 <StudentClassTestReport />
               </Col>
             </Row>
           </Col>
-          <Col lg={8}>
-            <StudentsAttendance data={data?.data && data?.data} />
-            <StudentFeeReport data={data?.data && data?.data} />
+
+          {/* Right Column */}
+          <Col xs={24} sm={24} md={24} lg={24} xl={8}>
+            <StudentsAttendance data={data?.data} />
+            <StudentFeeReport data={data?.data} />
             {/* <StudentDueWithCalendar /> */}
             <StudentPerformance />
           </Col>

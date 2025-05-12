@@ -36,6 +36,7 @@ const StudentInformation = ({ data }: { data: any }) => {
     present_address,
     religion,
   } = data || {};
+
   const information = [
     {
       title: "Student Information",
@@ -189,7 +190,7 @@ const StudentInformation = ({ data }: { data: any }) => {
     <div>
       <Row gutter={[16, 16]}>
         {/* Student Overview */}
-        <Col lg={6}>
+        <Col xs={24} sm={24} md={24} lg={6} xl={6}>
           <Card className="text-center">
             <img src={image || no_img} className="mx-auto" alt="Profile" />
             <p className="text-xl font-semibold uppercase font-serif pt-5">
@@ -202,14 +203,28 @@ const StudentInformation = ({ data }: { data: any }) => {
           </Card>
         </Col>
 
+        {/* xs={24} // Mobile
+                  sm={12} // Small tablets
+                  md={12} // Tablets
+                  lg={8} // Small desktops
+                  xl={6} // Large desktops
+                  xxl={6} // Very large screens */}
         {/* Detailed Information */}
-        <Col lg={18} className="space-y-1">
+        <Col xs={24} sm={24} md={24} lg={18} xl={18}>
           {information.map((section, index) => (
             <Badge.Ribbon text={section.title} placement="start" key={index}>
               <Card className="pt-2">
                 <Row gutter={[16, 16]}>
                   {section.data.map((item, idx) => (
-                    <Col span={8} key={idx}>
+                    <Col
+                      xs={24}
+                      sm={12}
+                      md={12}
+                      lg={12}
+                      xl={12}
+                      xxl={8}
+                      key={idx}
+                    >
                       <div>
                         <TextView
                           fieldName={item.fieldName}

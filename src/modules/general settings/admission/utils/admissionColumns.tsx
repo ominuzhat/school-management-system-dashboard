@@ -137,14 +137,14 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? capitalize(title) : "N/A"),
     },
-    {
-      key: "5",
-      title: "Shift",
-      dataIndex: "shift",
-      align: "center",
-      render: (title) =>
-        title && title?.name ? capitalize(title?.name) : "N/A",
-    },
+    // {
+    //   key: "55",
+    //   title: "Shift",
+    //   dataIndex: "shift",
+    //   align: "center",
+    //   render: (title) =>
+    //     title && title?.name ? capitalize(title?.name) : "N/A",
+    // },
     {
       key: "6",
       title: "Fee Type",

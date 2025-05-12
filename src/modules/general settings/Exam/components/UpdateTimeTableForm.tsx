@@ -11,6 +11,7 @@ import {
   Select,
 } from "antd";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
+import { useGetProfileQuery } from "../../../Profile/api/profileEndpoint";
 
 const UpdateTimeTableForm = ({
   selectedTab,
@@ -26,6 +27,7 @@ const UpdateTimeTableForm = ({
   });
 
   const [form] = Form.useForm();
+  const { data } = useGetProfileQuery();
 
   useEffect(() => {
     form.setFieldsValue(formData);
@@ -85,34 +87,6 @@ const UpdateTimeTableForm = ({
                         </Form.Item>
                       </Col>
 
-                      {/* Start Time */}
-                      <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item
-                          {...restField}
-                          label="Start Time"
-                          name={[name, "start_time"]}
-                        >
-                          <input
-                            type="time"
-                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
-                          />
-                        </Form.Item>
-                      </Col>
-
-                      {/* End Time */}
-                      <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item
-                          {...restField}
-                          label="End Time"
-                          name={[name, "end_time"]}
-                        >
-                          <input
-                            type="time"
-                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
-                          />
-                        </Form.Item>
-                      </Col>
-
                       {/* Select Subject */}
                       <Col xs={24} sm={12} md={8} lg={6}>
                         <Form.Item
@@ -150,6 +124,34 @@ const UpdateTimeTableForm = ({
                                 </Select.Option>
                               ))}
                           </Select>
+                        </Form.Item>
+                      </Col>
+
+                      {/* Start Time */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="Start Time"
+                          name={[name, "start_time"]}
+                        >
+                          <input
+                            type="time"
+                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+                          />
+                        </Form.Item>
+                      </Col>
+
+                      {/* End Time */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="End Time"
+                          name={[name, "end_time"]}
+                        >
+                          <input
+                            type="time"
+                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+                          />
                         </Form.Item>
                       </Col>
 
@@ -200,6 +202,21 @@ const UpdateTimeTableForm = ({
                           />
                         </Form.Item>
                       </Col>
+                      {/* exam_mark_exp_date */}
+                      {data?.data?.role?.name === "Admin" && (
+                        <Col xs={24} sm={12} md={8} lg={6}>
+                          <Form.Item
+                            {...restField}
+                            label="Exam Mark Expire Date"
+                            name={[name, "exam_mark_exp_date"]}
+                          >
+                            <DatePicker
+                              format="YYYY-MM-DD"
+                              className="w-full"
+                            />
+                          </Form.Item>
+                        </Col>
+                      )}
                     </Row>
                   </Card>
                 );

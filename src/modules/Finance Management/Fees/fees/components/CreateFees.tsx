@@ -138,7 +138,7 @@ const CreateFees = () => {
                       ? "No Students found"
                       : null
                   }
-                  onChange={(value) => setSearch(value)}
+                  // onChange={(value) => setSearch(value)}
                 >
                   {getStudent?.data?.results?.map((data: any) => (
                     <Option key={data.id} value={data.id}>

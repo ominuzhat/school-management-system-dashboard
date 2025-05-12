@@ -1,8 +1,5 @@
 import { useParams } from "react-router-dom";
-import {
- 
-  useGetSingleAdmissionQuery,
-} from "../api/admissionEndPoints";
+import { useGetSingleAdmissionQuery } from "../api/admissionEndPoints";
 import {
   Card,
   Row,
@@ -68,11 +65,7 @@ const AdmissionView = () => {
       dataIndex: "name",
       key: "name",
     },
-    {
-      title: "Marks",
-      dataIndex: "marks",
-      key: "marks",
-    },
+
     {
       title: "Class",
       dataIndex: ["grade_level", "name"],

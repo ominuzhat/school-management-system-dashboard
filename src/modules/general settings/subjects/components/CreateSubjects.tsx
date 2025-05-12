@@ -25,15 +25,7 @@ const CreateSubject = () => {
               <Input placeholder="Subjects Name" />
             </Form.Item>
           </Col>
-          <Col lg={8}>
-            <Form.Item<ISubjects>
-              label="Marks"
-              name="marks"
-              rules={[{ required: true, message: "Marks" }]}
-            >
-              <Input placeholder="Marks" />
-            </Form.Item>
-          </Col>
+  
 
           <Col lg={8}>
             <Form.Item<ISubjects>

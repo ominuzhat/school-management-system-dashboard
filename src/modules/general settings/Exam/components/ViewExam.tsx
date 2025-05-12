@@ -1,12 +1,16 @@
 import { useParams } from "react-router-dom";
 import { useGetSingleExamQuery } from "../api/examEndPoints";
 import { Card, Typography, Table, Row, Col, Spin, Tag } from "antd";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const { Title, Text } = Typography;
 
 const ViewExam = () => {
   const { examId } = useParams();
-  const { data: singleData, isLoading } = useGetSingleExamQuery(Number(examId));
+  const { data: singleData, isLoading } = useGetSingleExamQuery<any>(
+    examId ? { examId: Number(examId) } : skipToken
+  );
+  // const { data: singleData, isLoading } = useGetSingleExamQuery(Number(examId));
 
   if (isLoading) {
     return (

@@ -42,7 +42,10 @@ const Table = <T extends object>({
       bordered
       rowKey={rowKey}
       size="small"
-      scroll={{ x: true, y: total && total * 13 >= 650 ? 650 : undefined }}
+      scroll={{
+        x: "max-content",
+        y: total && total * 13 >= 650 ? 650 : undefined,
+      }}
       pagination={{
         total,
         showSizeChanger: true,

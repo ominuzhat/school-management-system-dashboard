@@ -63,11 +63,14 @@ const CreateExam = () => {
       start_date: dayjs(values.start_date).format("YYYY-MM-DD"),
       end_date: dayjs(values.end_date).format("YYYY-MM-DD"),
       comment: values.comment,
-      timetables: Object.keys(formData).map((key: string) => {
-        const timetable = formData[key].timetables[0];
-        return {
+
+      timetables: Object.keys(formData).flatMap((key: string) =>
+        formData[key].timetables.map((timetable: any) => ({
           subject: timetable.subject,
           exam_date: dayjs(timetable.exam_date).format("YYYY-MM-DD"),
+          exam_mark_exp_date: dayjs(timetable.exam_mark_exp_date).format(
+            "YYYY-MM-DD"
+          ),
 
           start_time: timetable.start_time
             ? dayjs(timetable.start_time, "HH:mm").format("HH:mm:ss")
@@ -81,10 +84,9 @@ const CreateExam = () => {
           written_marks: timetable.written_marks,
           passing_marks: timetable.passing_marks,
           contribution_marks: timetable.contribution_marks,
-        };
-      }),
+        }))
+      ),
     };
-
     create(results);
   };
 
@@ -134,7 +136,11 @@ const CreateExam = () => {
             </Col>
 
             <Col xs={24} sm={12} lg={6}>
-              <Form.Item label="Select Session" name="session">
+              <Form.Item
+                label="Select Session"
+                name="session"
+                rules={[{ required: true, message: "session is required!" }]}
+              >
                 <Select placeholder="Select Session" className="w-full">
                   {Array.isArray(sessionData?.data) &&
                     sessionData?.data?.map((session: any) => (

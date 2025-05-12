@@ -45,10 +45,11 @@ const examMarkEndpoint = api.injectEndpoints({
 
     getSingleExamMarks: builder.query<
       ApiResponse<PaginatedResponse<IGetMarkExam>>,
-      number
+      FilterTypes
     >({
-      query: (roleId) => ({
+      query: ({ roleId, ...params }) => ({
         url: `/api/v1.0/exams/marks/mark-exam/?exam=${roleId}`,
+        params,
       }),
       providesTags: [
         {

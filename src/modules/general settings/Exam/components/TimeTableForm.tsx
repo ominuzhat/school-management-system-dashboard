@@ -11,6 +11,7 @@ import {
   Select,
 } from "antd";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
+import { useGetProfileQuery } from "../../../Profile/api/profileEndpoint";
 
 const TimeTableForm = ({
   selectedTab,
@@ -26,6 +27,8 @@ const TimeTableForm = ({
   });
 
   const [form] = Form.useForm();
+
+  const { data } = useGetProfileQuery();
 
   useEffect(() => {
     form.setFieldsValue(formData);
@@ -87,46 +90,6 @@ const TimeTableForm = ({
                         </Form.Item>
                       </Col>
 
-                      {/* Start Time */}
-                      <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item
-                          {...restField}
-                          label="Start Time"
-                          name={[name, "start_time"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please select Start time!",
-                            },
-                          ]}
-                        >
-                          <input
-                            type="time"
-                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
-                          ></input>
-                        </Form.Item>
-                      </Col>
-
-                      {/* End Time */}
-                      <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item
-                          {...restField}
-                          label="End Time"
-                          name={[name, "end_time"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please select End time!",
-                            },
-                          ]}
-                        >
-                          <input
-                            type="time"
-                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
-                          ></input>
-                        </Form.Item>
-                      </Col>
-
                       {/* Select Subject */}
                       <Col xs={24} sm={12} md={8} lg={6}>
                         <Form.Item
@@ -172,6 +135,34 @@ const TimeTableForm = ({
                         </Form.Item>
                       </Col>
 
+                      {/* Start Time */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="Start Time"
+                          name={[name, "start_time"]}
+                        >
+                          <input
+                            type="time"
+                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+                          ></input>
+                        </Form.Item>
+                      </Col>
+
+                      {/* End Time */}
+                      <Col xs={24} sm={12} md={8} lg={6}>
+                        <Form.Item
+                          {...restField}
+                          label="End Time"
+                          name={[name, "end_time"]}
+                        >
+                          <input
+                            type="time"
+                            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+                          ></input>
+                        </Form.Item>
+                      </Col>
+
                       {/* MCQ Marks */}
                       <Col xs={24} sm={12} md={8} lg={6}>
                         <Form.Item
@@ -203,6 +194,7 @@ const TimeTableForm = ({
                           />
                         </Form.Item>
                       </Col>
+
                       {/* Contribution Marks */}
                       <Col xs={24} sm={12} md={8} lg={6}>
                         <Form.Item
@@ -218,6 +210,22 @@ const TimeTableForm = ({
                           />
                         </Form.Item>
                       </Col>
+
+                      {/* exam_mark_exp_date */}
+                      {data?.data?.role?.name === "Admin" && (
+                        <Col xs={24} sm={12} md={8} lg={6}>
+                          <Form.Item
+                            {...restField}
+                            label="Exam Mark Expire Date"
+                            name={[name, "exam_mark_exp_date"]}
+                          >
+                            <DatePicker
+                              format="YYYY-MM-DD"
+                              className="w-full"
+                            />
+                          </Form.Item>
+                        </Col>
+                      )}
                     </Row>
                   </Card>
                 );
@@ -228,24 +236,35 @@ const TimeTableForm = ({
                 <Button
                   type="dashed"
                   onClick={() => {
-                    const existingTimetables =
-                      form.getFieldValue("timetables") || [];
-                    const lastEntry =
-                      existingTimetables.length > 0
-                        ? existingTimetables[existingTimetables.length - 1]
-                        : {
-                            mcq_marks: 0,
-                            written_marks: 0,
-                            passing_marks: 0,
-                            contribution_marks: 0,
-                          };
+                    try {
+                      // Validate all existing fields first
+                      form.validateFields().then(() => {
+                        const existingTimetables =
+                          form.getFieldValue("timetables") || [];
+                        const lastEntry = existingTimetables[
+                          existingTimetables.length - 1
+                        ] || {
+                          mcq_marks: 0,
+                          written_marks: 0,
+                          contribution_marks: 0,
+                          start_time: "",
+                          end_time: "",
+                          exam_mark_exp_date: null,
+                        };
 
-                    add({
-                      mcq_marks: lastEntry.mcq_marks || 0,
-                      written_marks: lastEntry.written_marks || 0,
-                      contribution_marks: lastEntry.contribution_marks || 0,
-                      passing_marks: lastEntry.passing_marks || 0,
-                    });
+                        add({
+                          mcq_marks: lastEntry.mcq_marks,
+                          written_marks: lastEntry.written_marks,
+                          contribution_marks: lastEntry.contribution_marks,
+                          start_time: lastEntry.start_time,
+                          end_time: lastEntry.end_time,
+                          exam_mark_exp_date: lastEntry.exam_mark_exp_date,
+                        });
+                      });
+                    } catch (error) {
+                      // Validation will automatically show error messages
+                      console.log("Validation failed:", error);
+                    }
                   }}
                   block
                   icon={<PlusOutlined />}

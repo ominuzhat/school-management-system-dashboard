@@ -1,4 +1,4 @@
-import { Card, Col, Row, Select, Form as AntForm, Input } from "antd";
+import { Card, Col, Row, Select, Form as AntForm, Input, Checkbox } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateAdmissionMutation } from "../api/admissionEndPoints";
 import { IAdmission } from "../type/admissionType";
@@ -26,28 +26,91 @@ const CreateOldStudent = () => {
     status: "open",
   });
   const { data: shiftData } = useGetShiftQuery({});
+  const [selectAll, setSelectAll] = useState(true);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-  const { data: subjectData } = useGetSubjectsQuery({
-    grade_level: gradeLevel,
-  });
-  const { data: sectionData } = useGetSectionQuery({
-    grade_level: gradeLevel,
-  });
+  const { data: subjectData, refetch: refetchSubjects } = useGetSubjectsQuery(
+    {
+      grade_level: gradeLevel,
+    },
+    { skip: !gradeLevel }
+  );
+  const { data: sectionData } = useGetSectionQuery(
+    {
+      grade_level: gradeLevel,
+    },
+    { skip: !gradeLevel }
+  );
   const { data: classData } = useGetClassesQuery({});
   const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
+
+  // Effect to handle subject selection when grade level changes
+  useEffect(() => {
+    if (gradeLevel) {
+      refetchSubjects();
+      setSelectAll(true);
+    } else {
+      setSelectedSubjects([]);
+      setSelectAll(false);
+    }
+  }, [gradeLevel, refetchSubjects]);
+
+  // Effect to update selections when selectAll or subjects change
+  useEffect(() => {
+    if (subjectData?.data?.results) {
+      if (selectAll) {
+        const allSubjectIds = subjectData.data.results.map(
+          (subject: any) => subject.id
+        );
+        setSelectedSubjects(allSubjectIds);
+        form.setFieldsValue({ subjects: allSubjectIds });
+      } else if (
+        !selectAll &&
+        selectedSubjects.length === subjectData.data.results.length
+      ) {
+        // Handle case where all were selected but selectAll was toggled off
+        setSelectedSubjects([]);
+        form.setFieldsValue({ subjects: [] });
+      }
+    }
+  }, [selectAll, subjectData, form]);
 
   const onFinish = (values: any): void => {
     create(values);
   };
 
-  const handleSubjectsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const options = Array.from(e.target.selectedOptions);
-    setSelectedSubjects(options.map((option) => option.value));
+  const handleSubjectsChange = (selectedValues: string[]) => {
+    setSelectedSubjects(selectedValues);
+    form.setFieldsValue({ subjects: selectedValues });
+
+    // Update selectAll state
+    if (subjectData?.data?.results) {
+      setSelectAll(selectedValues.length === subjectData.data.results.length);
+    }
+  };
+
+  const handleSelectAllChange = (e: any) => {
+    const shouldSelectAll = e.target.checked;
+    setSelectAll(shouldSelectAll);
+
+    if (subjectData?.data?.results) {
+      if (shouldSelectAll) {
+        const allSubjectIds = subjectData.data.results.map(
+          (subject: any) => subject.id
+        );
+        setSelectedSubjects(allSubjectIds);
+        form.setFieldsValue({ subjects: allSubjectIds });
+      } else {
+        setSelectedSubjects([]);
+        form.setFieldsValue({ subjects: [] });
+      }
+    }
   };
 
   useEffect(() => {
     if (isSuccess) {
       form.resetFields();
+      setSelectAll(true);
+      setSelectedSubjects([]);
     }
   }, [isSuccess, form]);
 
@@ -142,6 +205,11 @@ const CreateOldStudent = () => {
                   className="w-full"
                   placeholder="Select Class"
                   allowClear
+                  onChange={() => {
+                    // Reset subjects when class changes
+                    setSelectedSubjects([]);
+                    form.setFieldsValue({ subjects: [] });
+                  }}
                 >
                   {Array.isArray(classData?.data) &&
                     classData.data.map((data: IClasses) => (
@@ -183,33 +251,56 @@ const CreateOldStudent = () => {
               </Col>
             )}
 
-            {gradeLevel && (
-              <Col lg={8}>
+            {gradeLevel && subjectData?.data?.results && (
+              <Col lg={24}>
                 <Form.Item<IAdmission>
-                  label="Subject"
+                  label="Subjects"
                   name="subjects"
-                  rules={[{ required: true, message: "Subject" }]}
-                  getValueProps={() => ({
-                    value: selectedSubjects,
-                  })}
-                  getValueFromEvent={(e) =>
-                    Array.from(e.target.selectedOptions).map(
-                      (option: any) => option.value
-                    )
-                  }
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select at least one subject",
+                    },
+                  ]}
                 >
-                  <select
-                    className="custom-select"
-                    multiple
+                  <div style={{ marginBottom: 8 }}>
+                    <Checkbox
+                      checked={selectAll}
+                      onChange={handleSelectAllChange}
+                      indeterminate={
+                        !selectAll &&
+                        selectedSubjects.length > 0 &&
+                        selectedSubjects.length <
+                          subjectData.data.results.length
+                      }
+                    >
+                      Select All Subjects
+                    </Checkbox>
+                    {!selectAll && selectedSubjects.length > 0 && (
+                      <span style={{ marginLeft: 8 }}>
+                        ({selectedSubjects.length} selected)
+                      </span>
+                    )}
+                  </div>
+                  <Select
+                    mode="multiple"
+                    placeholder="Select subjects"
                     value={selectedSubjects}
                     onChange={handleSubjectsChange}
+                    style={{ width: "100%" }}
+                    optionFilterProp="children"
+                    filterOption={(input, option: any) =>
+                      (option?.children ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                   >
-                    {subjectData?.data?.results?.map((data: any) => (
-                      <option key={data.id} value={data.id}>
+                    {subjectData.data.results.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
                         {data.name} ({data?.grade_level?.name})
-                      </option>
+                      </Option>
                     ))}
-                  </select>
+                  </Select>
                 </Form.Item>
               </Col>
             )}
