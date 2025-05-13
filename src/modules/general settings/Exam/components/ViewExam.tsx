@@ -63,7 +63,7 @@ const ViewExam = () => {
         </Text>
       </div>
 
-      {/* Exam Details Card */}
+      {/* Exam Details Cards */}
       <Card bordered={false} className="shadow-lg rounded-lg mb-8">
         <Row gutter={[24, 24]}>
           <Col xs={24} sm={12}>

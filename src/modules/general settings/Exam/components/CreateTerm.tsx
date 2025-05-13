@@ -18,6 +18,7 @@ const CreateTerm = () => {
         initialValues={{ name: "" }}
       >
         <Row gutter={[16, 16]}>
+          {/* create term name */}
           <Col lg={12}>
             <Form.Item
               label="Term Name"

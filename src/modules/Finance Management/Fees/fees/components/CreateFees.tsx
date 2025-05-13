@@ -39,6 +39,7 @@ const guidelineContentBn = (
 
 const CreateFees = () => {
   const [search, setSearch] = useState("");
+  // ee
 
   const [create, { isLoading, isSuccess }] = useCreateFeesMutation();
   const { data: classData, isLoading: classLoading } = useGetClassesQuery({});

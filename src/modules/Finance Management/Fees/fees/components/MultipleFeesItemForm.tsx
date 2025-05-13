@@ -26,7 +26,7 @@ const MultipleFeesItemForm = () => {
                   </Form.Item>
                 </Col>
 
-                {/* Amount Field */}
+                {/* Amount Fields */}
                 <Col span={9}>
                   <Form.Item
                     {...restField}

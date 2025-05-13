@@ -21,7 +21,7 @@ const SubjectsPage = () => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const columns = useSubjectColumns();
   const dispatch = useDispatch();
-  const { page_size, page } = useAppSelector(FilterState);
+  const { page } = useAppSelector(FilterState);
 
   const {
     data: getSubjectsData,
@@ -29,7 +29,7 @@ const SubjectsPage = () => {
     isFetching,
     refetch,
   } = useGetSubjectsQuery({
-    page_size: page_size,
+    page_size: 900,
     page: Number(page) || undefined,
   });
 
