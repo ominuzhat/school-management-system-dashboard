@@ -44,6 +44,23 @@ const admissionEndPoint = api.injectEndpoints({
       ],
     }),
 
+    createAdmissionFee: builder.mutation<any, any>({
+      query: (data) => ({
+        url: "api/v1.0/fees/student-fee/",
+        method: "POST",
+        body: data,
+      }),
+      // async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+      //   await handleOnQueryStarted(queryFulfilled, dispatch);
+      // },
+      invalidatesTags: [
+        {
+          type: TagTypes.ADMISSION,
+          id: TagTypes.ADMISSION + "_ID",
+        },
+      ],
+    }),
+
     getSingleAdmission: builder.query<ApiResponse<ISingleAdmission>, number>({
       query: (admissionId) => ({
         url: `api/v1.0/admissions/${admissionId}/`,
@@ -60,8 +77,8 @@ const admissionEndPoint = api.injectEndpoints({
     getSingleAdmissionForm: builder.query<Blob, number>({
       query: (admissionId) => ({
         url: `/api/v1.0/admissions/generate-admission-form/?admission_id=${admissionId}`,
-        responseHandler: async (response) => response.blob(), // Convert to Blob
-        cache: "no-cache", // Ensures fresh data
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
       }),
       providesTags: [
         {
@@ -114,4 +131,5 @@ export const {
   useUpdateAdmissionMutation,
   useGetSingleAdmissionFormQuery,
   useDeleteAdmissionMutation,
+  useCreateAdmissionFeeMutation,
 } = admissionEndPoint;

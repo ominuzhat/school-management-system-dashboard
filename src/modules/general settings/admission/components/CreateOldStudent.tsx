@@ -1,6 +1,23 @@
-import { Card, Col, Row, Select, Form as AntForm, Input, Checkbox } from "antd";
+import {
+  Card,
+  Col,
+  Row,
+  Select,
+  Form as AntForm,
+  Input,
+  Checkbox,
+  Badge,
+  Switch,
+  Space,
+  Typography,
+  Alert,
+  Divider,
+} from "antd";
 import { Form } from "../../../../common/CommonAnt";
-import { useCreateAdmissionMutation } from "../api/admissionEndPoints";
+import {
+  useCreateAdmissionFeeMutation,
+  useCreateAdmissionMutation,
+} from "../api/admissionEndPoints";
 import { IAdmission } from "../type/admissionType";
 import { useGetStudentsQuery } from "../../../members/students/api/studentEndPoints";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
@@ -11,39 +28,67 @@ import { useGetAdmissionSessionQuery } from "../../admission session/api/admissi
 import { debounce } from "lodash";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
 import { useGetShiftQuery } from "../../shift/api/shiftEndPoints";
+import CustomFeeForm from "./CustomFeeForm";
+import dayjs from "dayjs";
+import { LoadingOutlined } from "@ant-design/icons";
+import AdmissionFeeForm from "./AdmissionFeeForm";
 
+const { Title, Text } = Typography;
 const { Option } = Select;
 
 const CreateOldStudent = () => {
   const [form] = AntForm.useForm();
+  const [isRegularFee, setIsRegularFee] = useState(true);
   const [search, setSearch] = useState("");
-  const gradeLevel = AntForm.useWatch("grade_level", form);
-  const { data: studentData, isFetching } = useGetStudentsQuery({
-    search: search,
-    is_active: true,
-  });
-  const { data: sessionData } = useGetAdmissionSessionQuery({
-    status: "open",
-  });
-  const { data: shiftData } = useGetShiftQuery({});
   const [selectAll, setSelectAll] = useState(true);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-  const { data: subjectData, refetch: refetchSubjects } = useGetSubjectsQuery(
-    {
-      grade_level: gradeLevel,
-    },
-    { skip: !gradeLevel }
-  );
-  const { data: sectionData } = useGetSectionQuery(
-    {
-      grade_level: gradeLevel,
-    },
-    { skip: !gradeLevel }
-  );
-  const { data: classData } = useGetClassesQuery({});
-  const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
+  const gradeLevel = AntForm.useWatch("grade_level", form);
+  const discountType = AntForm.useWatch("discount_type", form);
+  const feeType = AntForm.useWatch("fee_type", form);
 
-  // Effect to handle subject selection when grade level changes
+  // API calls
+  const { data: studentData, isFetching: isFetchingStudents } =
+    useGetStudentsQuery({
+      search: search,
+      is_active: true,
+    });
+  const [createAdmissionFee, { data: admissionFee }] =
+    useCreateAdmissionFeeMutation();
+
+  console.log(admissionFee?.data);
+
+  useEffect(() => {
+    if (gradeLevel && selectedSubjects && feeType) {
+      createAdmissionFee({
+        grade_level: gradeLevel,
+        subjects: selectedSubjects,
+        fee_type: feeType,
+      } as any);
+    }
+  }, [gradeLevel, selectedSubjects, feeType]);
+
+  const { data: sessionData, isFetching: isFetchingSessions } =
+    useGetAdmissionSessionQuery({
+      status: "open",
+    });
+  const { data: shiftData, isFetching: isFetchingShifts } = useGetShiftQuery(
+    {}
+  );
+  const { data: classData, isFetching: isFetchingClasses } = useGetClassesQuery(
+    {}
+  );
+  const { data: sectionData, isFetching: isFetchingSections } =
+    useGetSectionQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
+  const {
+    data: subjectData,
+    isFetching: isFetchingSubjects,
+    refetch: refetchSubjects,
+  } = useGetSubjectsQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
+
+  const [create, { isLoading, isSuccess, error }] =
+    useCreateAdmissionMutation();
+
+  // Handle subject selection when grade level changes
   useEffect(() => {
     if (gradeLevel) {
       refetchSubjects();
@@ -54,7 +99,7 @@ const CreateOldStudent = () => {
     }
   }, [gradeLevel, refetchSubjects]);
 
-  // Effect to update selections when selectAll or subjects change
+  // Update selections when selectAll or subjects change
   useEffect(() => {
     if (subjectData?.data?.results) {
       if (selectAll) {
@@ -67,7 +112,6 @@ const CreateOldStudent = () => {
         !selectAll &&
         selectedSubjects.length === subjectData.data.results.length
       ) {
-        // Handle case where all were selected but selectAll was toggled off
         setSelectedSubjects([]);
         form.setFieldsValue({ subjects: [] });
       }
@@ -75,7 +119,18 @@ const CreateOldStudent = () => {
   }, [selectAll, subjectData, form]);
 
   const onFinish = (values: any): void => {
-    create(values);
+    // Format dates and prepare data
+    const formattedValues = {
+      ...values,
+      admission_date: dayjs().format("YYYY-MM-DD"),
+      fees: values.fees?.map((fee: any) => ({
+        ...fee,
+        effective_from: dayjs(fee.effective_from).format("YYYY-MM-DD"),
+        is_active: true,
+      })),
+    };
+
+    create(formattedValues);
   };
 
   const handleSubjectsChange = (selectedValues: string[]) => {
@@ -106,16 +161,50 @@ const CreateOldStudent = () => {
     }
   };
 
+  // Reset form on success
   useEffect(() => {
     if (isSuccess) {
       form.resetFields();
       setSelectAll(true);
       setSelectedSubjects([]);
+      setIsRegularFee(true);
     }
   }, [isSuccess, form]);
 
+  useEffect(() => {
+    if (admissionFee?.data?.fees) {
+      form.setFieldsValue({
+        admissionFees: admissionFee.data.fees,
+      });
+    }
+  }, [admissionFee?.data?.fees, form]);
+
   return (
-    <div>
+    <div className="p-4">
+      <Title level={3} className="mb-6">
+        Admission Form for Existing Student
+      </Title>
+
+      {error && (
+        <Alert
+          message="Error"
+          description="There was an error processing your request. Please try again."
+          type="error"
+          showIcon
+          className="mb-4"
+        />
+      )}
+
+      {isSuccess && (
+        <Alert
+          message="Success"
+          description="Admission created successfully!"
+          type="success"
+          showIcon
+          className="mb-4"
+        />
+      )}
+
       <Form
         form={form}
         onFinish={onFinish}
@@ -126,124 +215,135 @@ const CreateOldStudent = () => {
           status: "approved",
           discount_type: "amount",
           discount_value: 0,
+          fees: [
+            {
+              name: "",
+              amount: 0,
+              one_time: false,
+              effective_from: dayjs(),
+            },
+          ],
+          admission_date: dayjs(),
+          admissionFees: admissionFee?.data?.fees || [{}],
         }}
       >
-        <Card>
+        <Card bordered={false} className="shadow-sm">
+          <Title level={4} className="mb-4">
+            Student Information
+          </Title>
+
           <Row gutter={[16, 16]}>
-            <Col lg={8}>
+            {/* Student Selection */}
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission>
                 label="Student"
                 name="student"
-                rules={[{ required: true, message: "Student" }]}
+                rules={[{ required: true, message: "Please select a student" }]}
               >
                 <Select
-                  className="w-full"
-                  placeholder="Select Student"
-                  allowClear
                   showSearch
-                  onSearch={debounce(setSearch, 500)}
+                  placeholder="Search student by name"
+                  optionFilterProp="children"
                   filterOption={false}
-                  loading={isFetching}
+                  onSearch={debounce(setSearch, 500)}
+                  loading={isFetchingStudents}
                   notFoundContent={
-                    Array?.isArray(studentData?.data?.results) &&
-                    studentData?.data?.results?.length === 0
-                      ? "No Students found"
-                      : null
+                    isFetchingStudents ? (
+                      <LoadingOutlined />
+                    ) : (
+                      "No students found"
+                    )
                   }
                 >
-                  {studentData?.data?.results?.map((data: any) => (
-                    <Option key={data.id} value={data.id}>
-                      {data?.first_name} {data?.last_name}
+                  {studentData?.data?.results?.map((student: any) => (
+                    <Option key={student.id} value={student.id}>
+                      {`${student.first_name} ${student.last_name}`}
                     </Option>
                   ))}
                 </Select>
               </Form.Item>
             </Col>
-            <Col lg={8}>
+
+            {/* Session Selection */}
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission>
                 label="Session"
                 name="session"
-                rules={[{ required: true, message: "Session" }]}
+                rules={[{ required: true, message: "Please select a session" }]}
               >
                 <Select
-                  className="w-full"
-                  placeholder="Select Session"
-                  allowClear
-                  showSearch
+                  loading={isFetchingSessions}
+                  placeholder="Select admission session"
                 >
                   {Array.isArray(sessionData?.data) &&
-                    sessionData?.data?.map((data: any) => (
-                      <Option key={data.id} value={data.id}>
-                        {data?.name}
+                    sessionData?.data?.map((session: any) => (
+                      <Option key={session.id} value={session.id}>
+                        {session.name}
                       </Option>
                     ))}
                 </Select>
               </Form.Item>
             </Col>
 
-            <Col lg={8}>
-              <Form.Item<IAdmission>
-                label="Fee Type"
-                name="fee_type"
-                rules={[{ required: true, message: "Fee Type" }]}
-              >
-                <Select className="w-full" placeholder="Select Fee Type">
-                  <Option value="class">Class</Option>
-                  <Option value="subject">Subjects</Option>
-                  <Option value="student">Student</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col lg={8}>
+            {/* Class Selection */}
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission>
                 label="Class"
                 name="grade_level"
-                rules={[{ required: true, message: "Class" }]}
+                rules={[{ required: true, message: "Please select a class" }]}
               >
                 <Select
-                  className="w-full"
-                  placeholder="Select Class"
-                  allowClear
+                  loading={isFetchingClasses}
+                  placeholder="Select class"
                   onChange={() => {
-                    // Reset subjects when class changes
                     setSelectedSubjects([]);
-                    form.setFieldsValue({ subjects: [] });
+                    form.setFieldsValue({ subjects: [], section: undefined });
                   }}
                 >
                   {Array.isArray(classData?.data) &&
-                    classData.data.map((data: IClasses) => (
-                      <Option key={data.id} value={data.id}>
-                        {data.name}
+                    classData?.data?.map((classItem: IClasses) => (
+                      <Option key={classItem.id} value={classItem.id}>
+                        {classItem.name}
                       </Option>
                     ))}
                 </Select>
               </Form.Item>
             </Col>
 
-            <Col lg={8}>
-              <Form.Item<IAdmission> label="Roll" name="roll">
-                <Input placeholder="Enter Roll" />
+            {/* Roll Number */}
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+              <Form.Item<IAdmission>
+                label="Roll Number"
+                name="roll"
+                rules={[
+                  {
+                    pattern: /^[0-9]+$/,
+                    message: "Please enter a valid roll number",
+                  },
+                ]}
+              >
+                <Input placeholder="Enter roll number" />
               </Form.Item>
             </Col>
 
+            {/* Section (conditionally rendered) */}
             {gradeLevel && (
-              <Col lg={8}>
+              <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                 <Form.Item<IAdmission>
                   label="Section"
                   name="section"
-                  rules={[{ required: true, message: "Section" }]}
+                  rules={[
+                    { required: true, message: "Please select a section" },
+                  ]}
                 >
                   <Select
-                    className="w-full"
-                    placeholder="Select Section"
-                    allowClear
-                    showSearch
+                    loading={isFetchingSections}
+                    placeholder="Select section"
                   >
                     {Array.isArray(sectionData?.data) &&
-                      sectionData?.data?.map((data: any) => (
-                        <Option key={data.id} value={data.id}>
-                          {data?.name}
+                      sectionData?.data?.map((section: any) => (
+                        <Option key={section.id} value={section.id}>
+                          {section.name}
                         </Option>
                       ))}
                   </Select>
@@ -251,117 +351,193 @@ const CreateOldStudent = () => {
               </Col>
             )}
 
-            {gradeLevel && subjectData?.data?.results && (
-              <Col lg={24}>
-                <Form.Item<IAdmission>
-                  label="Subjects"
-                  name="subjects"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select at least one subject",
-                    },
-                  ]}
-                >
-                  <div style={{ marginBottom: 8 }}>
-                    <Checkbox
-                      checked={selectAll}
-                      onChange={handleSelectAllChange}
-                      indeterminate={
-                        !selectAll &&
-                        selectedSubjects.length > 0 &&
-                        selectedSubjects.length <
-                          subjectData.data.results.length
-                      }
-                    >
-                      Select All Subjects
-                    </Checkbox>
-                    {!selectAll && selectedSubjects.length > 0 && (
-                      <span style={{ marginLeft: 8 }}>
-                        ({selectedSubjects.length} selected)
-                      </span>
-                    )}
-                  </div>
-                  <Select
-                    mode="multiple"
-                    placeholder="Select subjects"
-                    value={selectedSubjects}
-                    onChange={handleSubjectsChange}
-                    style={{ width: "100%" }}
-                    optionFilterProp="children"
-                    filterOption={(input, option: any) =>
-                      (option?.children ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                  >
-                    {subjectData.data.results.map((data: any) => (
-                      <Option key={data.id} value={data.id}>
-                        {data.name} ({data?.grade_level?.name})
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            )}
-
-            <Col lg={8}>
-              <Form.Item<IAdmission> label="Status" name="status">
-                <Select
-                  placeholder="Status"
-                  options={[
-                    { value: "pending", label: "Pending" },
-                    { value: "approved", label: "Approved" },
-                    { value: "rejected", label: "Rejected" },
-                    { value: "passed", label: "Passed" },
-                    { value: "withdrawn", label: "Withdrawn" },
-                    { value: "failed", label: "Failed" },
-                    { value: "on_hold", label: "On Hold" },
-                  ]}
-                />
-              </Form.Item>
-            </Col>
-
-            <Col lg={8}>
+            {/* Shift Selection */}
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission>
                 label="Shift"
                 name="shift"
-                rules={[{ required: true, message: "Shift" }]}
+                rules={[{ required: true, message: "Please select a shift" }]}
               >
-                <Select
-                  className="w-full"
-                  placeholder="Select Shift"
-                  allowClear
-                >
+                <Select loading={isFetchingShifts} placeholder="Select shift">
                   {Array.isArray(shiftData?.data) &&
-                    shiftData.data.map((data: IClasses) => (
-                      <Option key={data.id} value={data.id}>
-                        {data.name}
+                    shiftData?.data?.map((shift: any) => (
+                      <Option key={shift.id} value={shift.id}>
+                        {shift.name}
                       </Option>
                     ))}
                 </Select>
               </Form.Item>
             </Col>
 
-            <Col lg={8}>
-              <Form.Item<IAdmission> label="Discount Type" name="discount_type">
-                <Select className="w-full" placeholder="Discount Type">
-                  <Option value="amount">Amount</Option>
-                  <Option value="percent">Percent</Option>
+            {/* Status */}
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+              <Form.Item<IAdmission> label="Status" name="status">
+                <Select placeholder="Select status">
+                  <Option value="pending">Pending</Option>
+                  <Option value="approved">Approved</Option>
+                  <Option value="rejected">Rejected</Option>
+                  <Option value="passed">Passed</Option>
+                  <Option value="withdrawn">Withdrawn</Option>
+                  <Option value="failed">Failed</Option>
+                  <Option value="on_hold">On Hold</Option>
                 </Select>
               </Form.Item>
             </Col>
+          </Row>
 
-            <Col lg={8}>
+          {/* Subjects Section */}
+          {gradeLevel && subjectData?.data?.results && (
+            <div className="mt-6">
+              <Title level={4} className="mb-4">
+                Subject Selection
+              </Title>
+              <Row gutter={[16, 16]}>
+                <Col span={24}>
+                  <Form.Item<IAdmission>
+                    label="Subjects"
+                    name="subjects"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select at least one subject",
+                        type: "array",
+                        min: 1,
+                      },
+                    ]}
+                  >
+                    <div className="mb-4">
+                      <Checkbox
+                        checked={selectAll}
+                        onChange={handleSelectAllChange}
+                        indeterminate={
+                          !selectAll &&
+                          selectedSubjects.length > 0 &&
+                          selectedSubjects.length <
+                            subjectData.data.results.length
+                        }
+                      >
+                        <Text strong>Select All Subjects</Text>
+                      </Checkbox>
+                      {!selectAll && selectedSubjects.length > 0 && (
+                        <Text type="secondary" className="ml-2">
+                          ({selectedSubjects.length} selected)
+                        </Text>
+                      )}
+                    </div>
+                    <Select
+                      mode="multiple"
+                      placeholder="Select subjects"
+                      value={selectedSubjects}
+                      onChange={handleSubjectsChange}
+                      loading={isFetchingSubjects}
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        String(option?.children ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                    >
+                      {subjectData.data.results.map((subject: any) => (
+                        <Option key={subject.id} value={subject.id}>
+                          {subject.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </div>
+          )}
+
+          {/* Discount Section */}
+          <Divider />
+          <Title level={4} className="mb-4">
+            Discount Information
+          </Title>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={12} lg={8} xl={12} xxl={12}>
+              <Form.Item<IAdmission> label="Discount Type" name="discount_type">
+                <Select>
+                  <Option value="amount">Fixed Amount</Option>
+                  <Option value="percent">Percentage</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={8} xl={12} xxl={12}>
               <Form.Item<IAdmission>
-                label="Discount Value"
+                label={`Discount Value (${
+                  discountType === "percent" ? "%" : "৳"
+                })`}
                 name="discount_value"
+                rules={[
+                  { required: true, message: "Please enter discount value" },
+                  () => ({
+                    validator(_, value) {
+                      if (discountType === "percent" && value > 100) {
+                        return Promise.reject(
+                          new Error("Discount cannot exceed 100%")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  }),
+                ]}
               >
-                <Input type="number" placeholder="Discount Value" />
+                <Input type="number" min={0} />
               </Form.Item>
             </Col>
           </Row>
+
+          {/* Fee Configuration Section */}
+          <Divider />
+          <Title level={4} className="mb-4">
+            Fee Configuration
+          </Title>
+          <Row gutter={[16, 16]} align="middle">
+            <Col span={24}>
+              <Space>
+                <Text strong>Fee Type:</Text>
+                <Switch
+                  checked={isRegularFee}
+                  onChange={setIsRegularFee}
+                  checkedChildren="Regular Fee"
+                  unCheckedChildren="Custom Fee"
+                />
+              </Space>
+            </Col>
+
+            {isRegularFee ? (
+              <Col span={24}>
+                <Form.Item
+                  label="Fee Structure Type"
+                  name="fee_type"
+                  rules={[
+                    { required: true, message: "Please select fee type" },
+                  ]}
+                >
+                  <Select>
+                    <Option value="class">Class Fee</Option>
+                    <Option value="subject">Subject Fee</Option>
+                    {/* <Option value="student">Student-specific Fee</Option> */}
+                  </Select>
+                </Form.Item>
+              </Col>
+            ) : (
+              <Col span={24}>
+                <Badge.Ribbon text="Custom Fee" color="blue" placement="start">
+                  <Card className="mt-4">
+                    <CustomFeeForm />
+                  </Card>
+                </Badge.Ribbon>
+              </Col>
+            )}
+          </Row>
         </Card>
+        {admissionFee?.data && isRegularFee && (
+          <Card>
+            <AdmissionFeeForm data={admissionFee?.data} />
+          </Card>
+        )}
       </Form>
     </div>
   );

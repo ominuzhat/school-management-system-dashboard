@@ -38,6 +38,7 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
     if (record?.data) {
       form.setFieldsValue({
         name: record?.data?.name || "",
+        prefix: record?.data?.prefix || "",
         address: record?.data?.address || "",
         contact_email: record?.data?.contact_email || "",
         phone_number: record?.data?.phone_number || "",
@@ -216,6 +217,14 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
                             </Option>
                             <Option value="Other">Other</Option>
                           </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item<IInstituteProfile>
+                          label="Prefix"
+                          name="prefix"
+                        >
+                          <Input placeholder="Prefix" />
                         </Form.Item>
                       </Col>
                     </Row>

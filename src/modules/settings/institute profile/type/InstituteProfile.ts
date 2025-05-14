@@ -17,6 +17,7 @@ export interface IInstituteProfile {
   num_students: number;
   accreditations: string;
   ownership_type: string;
+  prefix: string;
   latitude: number;
   longitude: number;
 }

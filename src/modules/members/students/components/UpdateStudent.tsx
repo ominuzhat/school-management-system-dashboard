@@ -19,7 +19,6 @@ import {
 } from "../api/studentEndPoints";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
-import PasswordInput from "../../../../common/Password/input";
 import { phoneValidator } from "../../../../utilities/validator";
 import GenderSelect, {
   ReligionSelect,
@@ -38,7 +37,6 @@ const UpdateStudent = () => {
   const [imageFileList, setImageFileList] = useState<any>([]);
 
   // const [originalImages, setOriginalImages] = useState<any[]>([]);
-  const canLogin = AntForm.useWatch("can_login", form);
 
   const phoneFields = [
     "contact_phone_number",
@@ -211,20 +209,6 @@ const UpdateStudent = () => {
                           <Input placeholder="Last Name." />
                         </Form.Item>
                       </Col>
-
-                      {canLogin === true && (
-                        <>
-                          {" "}
-                          <Col lg={8}>
-                            <Form.Item<any> label="Username" name="username">
-                              <Input placeholder="Username." disabled />
-                            </Form.Item>
-                          </Col>
-                          <Col lg={8}>
-                            <PasswordInput isRequired={false} />
-                          </Col>
-                        </>
-                      )}
 
                       <Col lg={8}>
                         <Form.Item

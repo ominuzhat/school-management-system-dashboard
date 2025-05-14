@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import { useCreateStudentMutation } from "../api/studentEndPoints";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import PasswordInput from "../../../../common/Password/input";
 import { phoneValidator } from "../../../../utilities/validator";
 import GenderSelect, {
   ReligionSelect,
@@ -38,7 +37,6 @@ const CreateStudent = () => {
     );
   };
 
-  const canLogin = AntForm.useWatch("can_login", form);
 
   const handleCancel = () => setPreviewVisible(false);
 
@@ -169,20 +167,7 @@ const CreateStudent = () => {
                         </Form.Item>
                       </Col>
 
-                      {canLogin === true && (
-                        <>
-                          {" "}
-                          <Col lg={8}>
-                            <Form.Item<any> label="Username" name="username">
-                              <Input placeholder="Username." />
-                            </Form.Item>
-                          </Col>
-                          <Col lg={8}>
-                            <PasswordInput isRequired={true} />
-                          </Col>
-                        </>
-                      )}
-
+       
                       <Col lg={8}>
                         <Form.Item
                           label="Can Login"
@@ -216,6 +201,8 @@ const CreateStudent = () => {
                           />
                         </Form.Item>
                       </Col>
+
+                      
                     </Row>
                   </Col>
                 </Row>
