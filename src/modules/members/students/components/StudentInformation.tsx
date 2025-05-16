@@ -27,6 +27,11 @@ const StudentInformation = ({ data }: { data: any }) => {
     permanent_address,
     present_address,
     user,
+    current_grade_level,
+    current_session,
+    current_section,
+    current_shift,
+    current_roll,
     religion,
   } = data || {};
 
@@ -34,6 +39,31 @@ const StudentInformation = ({ data }: { data: any }) => {
     {
       title: "Student Information",
       data: [
+        {
+          fieldName: "Current Grade Level",
+          text: current_grade_level?.name || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Current Section",
+          text: current_section?.name || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Current Session",
+          text: current_session?.name || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Current Shift",
+          text: current_shift?.name || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Current Roll",
+          text: current_roll || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
         {
           fieldName: "Gender",
           text: gender || "N/A",

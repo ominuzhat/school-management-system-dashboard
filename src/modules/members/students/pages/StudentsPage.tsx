@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Card, Col, Row, Select } from "antd";
 import { IoGridOutline } from "react-icons/io5";
 import { PlusOutlined } from "@ant-design/icons";
-import { FaListUl } from "react-icons/fa6";
+import { FaGraduationCap, FaListUl, FaUser } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
@@ -24,15 +24,33 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
+import { useGetClassesQuery } from "../../../general settings/classes/api/classesEndPoints";
+import { useGetShiftQuery } from "../../../general settings/shift/api/shiftEndPoints";
+import { useGetSectionQuery } from "../../../general settings/Section/api/sectionEndPoints";
+import { useGetAdmissionSessionQuery } from "../../../general settings/admission session/api/admissionSessionEndPoints";
+
+const { Option } = Select;
 
 const StudentsPage = () => {
   // const dispatch = useDispatch();
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const columns = useStudentColumns();
   const [layout, setLayout] = useState("grid");
-  const [filters, setFilters] = useState({ search: "", is_active: "" });
+  const [filters, setFilters] = useState({
+    search: "",
+    is_active: "",
+    current_grade_level: "",
+    current_section: "",
+    current_session: "",
+    current_shift: "",
+  });
   const { page_size, page } = useAppSelector(FilterState);
-
+  const { data: classData } = useGetClassesQuery({});
+  const { data: shiftData } = useGetShiftQuery({});
+  const { data: sectionData } = useGetSectionQuery({});
+  const { data: sessionData } = useGetAdmissionSessionQuery({
+    status: "open",
+  });
   // Fetch students data with pagination
   const {
     data: studentData,
@@ -41,6 +59,10 @@ const StudentsPage = () => {
     isFetching,
   } = useGetStudentsQuery({
     search: filters.search,
+    current_grade_level: filters.current_grade_level,
+    current_section: filters.current_section,
+    current_session: filters.current_session,
+    current_shift: filters.current_shift,
     is_active: filters.is_active,
     page_size: page_size,
     page: Number(page) || undefined,
@@ -66,15 +88,17 @@ const StudentsPage = () => {
     actionNames.add
   );
 
+  console.log(studentData?.data?.results);
+
   return (
     <div className="space-y-5">
       <div className="my-5">
         <BreadCrumb />
       </div>
       <Card>
-        <Row justify="space-between" gutter={[10, 10]}>
+        <Row wrap gutter={[12, 12]} align="middle" justify="space-between">
           {createPermission && (
-            <Col lg={4} xs={24}>
+            <Col xs={24} sm={12} md={8} lg={4}>
               <Link to={"/students/create"}>
                 <Button
                   type="primary"
@@ -86,10 +110,93 @@ const StudentsPage = () => {
               </Link>
             </Col>
           )}
+          <Col xs={24} sm={12} md={18} lg={18}>
+            <Row gutter={[12, 12]} align="middle" justify="space-between">
+              <Col xs={24} sm={12} md={4} lg={4}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Class"
+                  allowClear
+                  onChange={(value) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      current_grade_level: value,
+                    }))
+                  }
+                >
+                  {Array.isArray(classData?.data) &&
+                    classData?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
 
-          <Col lg={10} xs={24}>
-            <Row justify="space-between" gutter={[16, 0]}>
-              <Col lg={8} xs={12}>
+              <Col xs={24} sm={12} md={8} lg={4}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Section"
+                  allowClear
+                  onChange={(value) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      current_section: value,
+                    }))
+                  }
+                >
+                  {Array.isArray(sectionData?.data) &&
+                    sectionData?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+
+              <Col xs={24} sm={12} md={8} lg={4}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Session"
+                  allowClear
+                  onChange={(value) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      current_session: value,
+                    }))
+                  }
+                >
+                  {Array.isArray(sessionData?.data) &&
+                    sessionData?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+
+              <Col xs={24} sm={12} md={8} lg={4}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Shift"
+                  allowClear
+                  onChange={(value) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      current_shift: value,
+                    }))
+                  }
+                >
+                  {Array.isArray(shiftData?.data) &&
+                    shiftData?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+
+              <Col xs={24} sm={12} md={8} lg={4}>
                 <Select
                   placeholder="Select Active"
                   className="w-full"
@@ -102,7 +209,8 @@ const StudentsPage = () => {
                   <Select.Option value={false}>INACTIVE</Select.Option>
                 </Select>
               </Col>
-              <Col lg={16} xs={12}>
+
+              <Col xs={24} sm={24} md={12} lg={4}>
                 <SearchComponent
                   onSearch={(value) =>
                     setFilters((prev) => ({ ...prev, search: value }))
@@ -142,33 +250,72 @@ const StudentsPage = () => {
           }
         >
           {layout !== "grid" ? (
-            <Row gutter={[16, 16]}>
-              {studentData?.data?.results?.map((student: any, index) => (
-                <Col key={index} span={3} xs={12} lg={8} xxl={3}>
-                  <div className="border py-8 px-2 rounded-lg space-y-2 text-center">
-                    <img src={no_img} alt="student" className="mx-auto" />
-                    <p className="font-serif">
-                      {student?.first_name} {student?.last_name}
-                    </p>
-                    <div className="space-x-2">
-                      <ViewButton to={`student-view/${student?.id}`} />
-                      <Link to={`/students/update/${student.id}`}>
-                        <Button
-                          title="Edit"
-                          size="small"
-                          type="default"
-                          style={{
-                            color: "#FFA500",
-                            border: "1px solid #FFA500",
-                          }}
-                        >
-                          <FaEdit />
-                        </Button>
-                      </Link>
-                      <DeleteButton
-                        onConfirm={() => handleDelete(student?.id)}
-                        onCancel={() => console.log("Cancel delete")}
+            <Row gutter={[16, 24]} className="p-4">
+              {studentData?.data?.results?.map((student: any) => (
+                <Col
+                  key={student.id}
+                  xs={24}
+                  sm={12}
+                  md={8}
+                  lg={6}
+                  xl={4}
+                  xxl={3}
+                >
+                  <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
+                    {/* Student Image */}
+                    <div className="relative pt-[100%] bg-gray-100">
+                      <img
+                        src={student?.image || no_img}
+                        alt={`${student?.first_name} ${student?.last_name}`}
+                        className="absolute top-0 left-0 w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = no_img;
+                        }}
                       />
+                    </div>
+
+                    {/* Student Info */}
+                    <div className="p-4 space-y-2">
+                      <h3 className="text-base font-semibold text-gray-800 truncate">
+                        {student?.first_name} {student?.last_name}
+                      </h3>
+
+                      <div className="text-sm text-gray-600 space-y-1">
+                        <p className="flex items-center">
+                          <FaUser className="mr-2" />
+                          <span>ID: {student?.user?.username}</span>
+                        </p>
+                        <p className="flex items-center">
+                          <FaGraduationCap className="mr-2" />
+                          <span>
+                            Class: {student?.current_grade_level?.name || "N/A"}
+                          </span>
+                        </p>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center justify-center space-x-3 pt-3 border-t border-gray-100">
+                        <ViewButton
+                          to={`student-view/${student?.id}`}
+                          className="text-blue-600 hover:text-blue-800"
+                        />
+
+                        <Link
+                          to={`/students/update/${student.id}`}
+                          className="text-orange-500 hover:text-orange-700"
+                        >
+                          <Button
+                            type="text"
+                            icon={<FaEdit />}
+                            className="hover:bg-orange-50"
+                          />
+                        </Link>
+
+                        <DeleteButton
+                          onConfirm={() => handleDelete(student?.id)}
+                          onCancel={() => console.log("Cancel delete")}
+                        />
+                      </div>
                     </div>
                   </div>
                 </Col>

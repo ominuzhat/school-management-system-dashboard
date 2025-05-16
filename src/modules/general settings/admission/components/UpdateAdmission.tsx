@@ -13,13 +13,13 @@ const UpdateAdmission = () => {
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "Old Student",
-      children: <UpdateOldAdmissionStudent />,
+      label: "New Student",
+      children: <UpdateNewAdmissionStudent />,
     },
     {
       key: "2",
-      label: "New Student",
-      children: <UpdateNewAdmissionStudent />,
+      label: "Old Student",
+      children: <UpdateOldAdmissionStudent />,
     },
   ];
 

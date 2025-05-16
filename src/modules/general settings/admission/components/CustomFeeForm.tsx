@@ -1,12 +1,20 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Form, Input, Row, Switch, Divider } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Row,
+  Switch,
+  Divider,
+} from "antd";
 import dayjs from "dayjs";
-
 
 const CustomFeeForm = () => {
   return (
     <div>
-      <Form.List name="fees">
+      <Form.List name="customFees">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
@@ -20,7 +28,7 @@ const CustomFeeForm = () => {
                       name={[name, "name"]}
                       rules={[
                         { required: true, message: "Please enter fee name" },
-                        { max: 50, message: "Maximum 50 characters allowed" }
+                        { max: 50, message: "Maximum 50 characters allowed" },
                       ]}
                     >
                       <Input placeholder="e.g., Admission Fee, Tuition Fee" />
@@ -40,7 +48,7 @@ const CustomFeeForm = () => {
                           min: 1,
                           message: "Amount must be at least ৳1",
                           transform: (value) => Number(value),
-                        }
+                        },
                       ]}
                     >
                       <Input type="number" placeholder="0.00" />
@@ -54,12 +62,14 @@ const CustomFeeForm = () => {
                       label="Effective From"
                       name={[name, "effective_from"]}
                       rules={[
-                        { required: true, message: "Please select date" }
+                        { required: true, message: "Please select date" },
                       ]}
                     >
-                      <DatePicker 
-                        style={{ width: '100%' }} 
-                        disabledDate={(current) => current && current < dayjs().startOf('day')}
+                      <DatePicker
+                        style={{ width: "100%" }}
+                        disabledDate={(current) =>
+                          current && current < dayjs().startOf("day")
+                        }
                       />
                     </Form.Item>
                   </Col>
@@ -96,12 +106,14 @@ const CustomFeeForm = () => {
             <Form.Item>
               <Button
                 type="dashed"
-                onClick={() => add({
-                  name: "",
-                  amount: 0,
-                  one_time: false,
-                  effective_from: dayjs(),
-                })}
+                onClick={() =>
+                  add({
+                    name: "",
+                    amount: 0,
+                    one_time: false,
+                    effective_from: dayjs(),
+                  })
+                }
                 block
                 icon={<PlusOutlined />}
               >

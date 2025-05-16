@@ -2,7 +2,7 @@ import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import CreateOldStudent from "./CreateOldStudent";
-import CreateNewStudent from "./CreateNewStudent";
+import CreateNewStudent from "./new student admission/CreateNewStudent";
 
 const CreateAdmission = () => {
   const onChange = (key: string) => {
@@ -12,13 +12,13 @@ const CreateAdmission = () => {
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "Old Student",
-      children: <CreateOldStudent />,
+      label: "New Student",
+      children: <CreateNewStudent />,
     },
     {
       key: "2",
-      label: "New Student",
-      children: <CreateNewStudent />,
+      label: "Old Student",
+      children: <CreateOldStudent />,
     },
   ];
 

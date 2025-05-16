@@ -14,6 +14,7 @@ import {
 } from "../../../../utilities/permissionConstant";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import { useDeleteTeacherMutation } from "../api/teachersEndPoints";
+import dayjs from "dayjs";
 
 const useTeacherColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -53,13 +54,13 @@ const useTeacherColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Full Name",
       dataIndex: "first_name",
-      align: "center",
+      align: "left",
       render: (_: any, record: any) =>
         `${record?.first_name} ${record?.last_name}`,
     },
     {
       key: "2",
-      title: "User Name",
+      title: "User ID",
       dataIndex: "user",
       align: "center",
       sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
@@ -88,7 +89,8 @@ const useTeacherColumns = (): ColumnsType<any> => {
       sorter: (a, b) =>
         new Date(a.hire_date || 0).getTime() -
         new Date(b.hire_date || 0).getTime(),
-      render: (hire_date) => (hire_date ? hire_date : "N/A"),
+      render: (hire_date) =>
+        hire_date ? dayjs(hire_date).format("DD MMMM YYYY") : "N/A",
     },
     {
       key: "6",

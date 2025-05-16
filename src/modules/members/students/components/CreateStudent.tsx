@@ -8,6 +8,7 @@ import {
   Row,
   Switch,
   Form as AntForm,
+  Select,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
@@ -20,14 +21,30 @@ import { phoneValidator } from "../../../../utilities/validator";
 import GenderSelect, {
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
+import { useGetClassesQuery } from "../../../general settings/classes/api/classesEndPoints";
+import { useGetAdmissionSessionQuery } from "../../../general settings/admission session/api/admissionSessionEndPoints";
+import { useGetSectionQuery } from "../../../general settings/Section/api/sectionEndPoints";
+import { useGetShiftQuery } from "../../../general settings/shift/api/shiftEndPoints";
+
+const { Option } = Select;
 
 const CreateStudent = () => {
+  const [form] = AntForm.useForm();
   const navigate = useNavigate();
+  const gradeLevel = AntForm.useWatch("grade_level", form);
   const [create, { isLoading, isSuccess }] = useCreateStudentMutation();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [form] = AntForm.useForm();
+
+  const { data: classData } = useGetClassesQuery({});
+  const { data: shiftData } = useGetShiftQuery({});
+  const { data: sectionData } = useGetSectionQuery({
+    grade_level: gradeLevel,
+  });
+  const { data: sessionData } = useGetAdmissionSessionQuery({
+    status: "open",
+  });
 
   const handlePreview = async (file: any) => {
     setPreviewImage(file.thumbUrl || file.url);
@@ -36,7 +53,6 @@ const CreateStudent = () => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-
 
   const handleCancel = () => setPreviewVisible(false);
 
@@ -86,6 +102,7 @@ const CreateStudent = () => {
 
     create(formData);
   };
+
   useEffect(() => {
     if (isSuccess) {
       navigate("/students");
@@ -167,7 +184,97 @@ const CreateStudent = () => {
                         </Form.Item>
                       </Col>
 
-       
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Grade Level"
+                          name="current_grade_level"
+                          rules={[
+                            { required: true, message: "Current Grade Level!" },
+                          ]}
+                        >
+                          <Select className="w-full" placeholder="Select Class">
+                            {Array.isArray(classData?.data) &&
+                              classData?.data?.map((data: any) => (
+                                <Option key={data.id} value={data.id}>
+                                  {data.name}
+                                </Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Session"
+                          name="current_session"
+                          rules={[
+                            { required: true, message: "Current Session!" },
+                          ]}
+                        >
+                          <Select
+                            className="w-full"
+                            placeholder="Select Session"
+                          >
+                            {Array.isArray(sessionData?.data) &&
+                              sessionData?.data?.map((data: any) => (
+                                <Option key={data.id} value={data.id}>
+                                  {data.name}
+                                </Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Section"
+                          name="current_section"
+                          rules={[
+                            { required: true, message: "Current Section!" },
+                          ]}
+                        >
+                          <Select
+                            className="w-full"
+                            placeholder="Select Section"
+                          >
+                            {Array.isArray(sectionData?.data) &&
+                              sectionData?.data?.map((data: any) => (
+                                <Option key={data.id} value={data.id}>
+                                  {data.name}
+                                </Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Shift"
+                          name="current_shift"
+                          rules={[
+                            { required: true, message: "Current Shift!" },
+                          ]}
+                        >
+                          <Select className="w-full" placeholder="Select Shift">
+                            {Array.isArray(shiftData?.data) &&
+                              shiftData?.data?.map((data: any) => (
+                                <Option key={data.id} value={data.id}>
+                                  {data.name}
+                                </Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Roll"
+                          name="current_roll"
+                        >
+                          <Input placeholder="Current Roll." />
+                        </Form.Item>
+                      </Col>
+
                       <Col lg={8}>
                         <Form.Item
                           label="Can Login"
@@ -186,6 +293,7 @@ const CreateStudent = () => {
                           />
                         </Form.Item>
                       </Col>
+
                       <Col lg={8}>
                         <Form.Item
                           label="Status"
@@ -201,8 +309,6 @@ const CreateStudent = () => {
                           />
                         </Form.Item>
                       </Col>
-
-                      
                     </Row>
                   </Col>
                 </Row>
@@ -287,7 +393,6 @@ const CreateStudent = () => {
                       />
                     </Form.Item>
                   </Col>
-
                   <Col lg={5}>
                     <Form.Item<any> label="Email" name="email">
                       <Input placeholder="Email" />

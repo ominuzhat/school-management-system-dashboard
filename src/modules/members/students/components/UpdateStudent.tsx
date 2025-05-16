@@ -10,6 +10,7 @@ import {
   DatePicker,
   Switch,
   Avatar,
+  Select,
 } from "antd";
 import { useState, useEffect } from "react";
 import { Form } from "../../../../common/CommonAnt";
@@ -23,6 +24,12 @@ import { phoneValidator } from "../../../../utilities/validator";
 import GenderSelect, {
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
+import { useGetClassesQuery } from "../../../general settings/classes/api/classesEndPoints";
+import { useGetShiftQuery } from "../../../general settings/shift/api/shiftEndPoints";
+import { useGetSectionQuery } from "../../../general settings/Section/api/sectionEndPoints";
+import { useGetAdmissionSessionQuery } from "../../../general settings/admission session/api/admissionSessionEndPoints";
+
+const { Option } = Select;
 
 const UpdateStudent = () => {
   const { studentId } = useParams();
@@ -35,6 +42,13 @@ const UpdateStudent = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [imageFileList, setImageFileList] = useState<any>([]);
+
+  const { data: classData } = useGetClassesQuery({});
+  const { data: shiftData } = useGetShiftQuery({});
+  const { data: sectionData } = useGetSectionQuery({});
+  const { data: sessionData } = useGetAdmissionSessionQuery({
+    status: "open",
+  });
 
   // const [originalImages, setOriginalImages] = useState<any[]>([]);
 
@@ -80,6 +94,10 @@ const UpdateStudent = () => {
 
       form.setFieldsValue({
         ...data,
+        current_grade_level: data?.current_grade_level?.id || "",
+        current_session: data?.current_session?.id || "",
+        current_section: data?.current_section?.id || "",
+        current_shift: data?.current_shift?.id || "",
         username: data?.user?.username || "",
         date_of_birth: data?.date_of_birth
           ? dayjs(data?.date_of_birth)
@@ -207,6 +225,97 @@ const UpdateStudent = () => {
                       <Col lg={8}>
                         <Form.Item<any> label="Last Name" name="last_name">
                           <Input placeholder="Last Name." />
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Grade Level"
+                          name="current_grade_level"
+                          rules={[
+                            { required: true, message: "Current Grade Level!" },
+                          ]}
+                        >
+                          <Select className="w-full" placeholder="Select Class">
+                            {Array.isArray(classData?.data) &&
+                              classData?.data?.map((data: any) => (
+                                <Option key={data.id} value={data.id}>
+                                  {data.name}
+                                </Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Session"
+                          name="current_session"
+                          rules={[
+                            { required: true, message: "Current Session!" },
+                          ]}
+                        >
+                          <Select
+                            className="w-full"
+                            placeholder="Select Session"
+                          >
+                            {Array.isArray(sessionData?.data) &&
+                              sessionData?.data?.map((data: any) => (
+                                <Option key={data.id} value={data.id}>
+                                  {data.name}
+                                </Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Section"
+                          name="current_section"
+                          rules={[
+                            { required: true, message: "Current Section!" },
+                          ]}
+                        >
+                          <Select
+                            className="w-full"
+                            placeholder="Select Section"
+                          >
+                            {Array.isArray(sectionData?.data) &&
+                              sectionData?.data?.map((data: any) => (
+                                <Option key={data.id} value={data.id}>
+                                  {data.name}
+                                </Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Shift"
+                          name="current_shift"
+                          rules={[
+                            { required: true, message: "Current Shift!" },
+                          ]}
+                        >
+                          <Select className="w-full" placeholder="Select Shift">
+                            {Array.isArray(shiftData?.data) &&
+                              shiftData?.data?.map((data: any) => (
+                                <Option key={data.id} value={data.id}>
+                                  {data.name}
+                                </Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item<any>
+                          label="Current Roll"
+                          name="current_roll"
+                        >
+                          <Input placeholder="Current Roll." />
                         </Form.Item>
                       </Col>
 

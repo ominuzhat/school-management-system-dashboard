@@ -342,6 +342,9 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
               </Card>
             </Badge.Ribbon>
           </Col>
+
+
+          
         </Row>
       </Form>
     </div>

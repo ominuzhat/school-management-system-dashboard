@@ -8,7 +8,11 @@ import {
   Row,
   Select,
   Switch,
+  Checkbox,
+  Divider,
+  Typography,
 } from "antd";
+
 import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 import { Form } from "../../../../common/CommonAnt";
@@ -22,16 +26,46 @@ import GenderSelect, {
   BloodGroupSelect,
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
+import { useGetClassesQuery } from "../../../general settings/classes/api/classesEndPoints";
 
 const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
-  const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery(
-    {}
-  );
+  const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery({
+    page_size: 650,
+  });
+
+  const { data: classData } = useGetClassesQuery<any>({});
+
+  const [selectedSubjects, setSelectedSubjects] = useState<number[]>([]);
 
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+
+  // Group subjects by class
+  const groupedSubjects = classData?.data?.reduce(
+    (acc: any, classItem: any) => {
+      const classSubjects: any = subjectData?.data?.results?.filter(
+        (subject: any) => subject.grade_level?.id === classItem.id
+      );
+
+      if (classSubjects?.length > 0) {
+        acc.push({
+          className: classItem.name,
+          classId: classItem.id,
+          subjects: classSubjects,
+        });
+      }
+      return acc;
+    },
+    []
+  );
+
+  const handleSubjectChange = (subjectId: number, checked: boolean) => {
+    setSelectedSubjects((prev) =>
+      checked ? [...prev, subjectId] : prev.filter((id) => id !== subjectId)
+    );
+  };
 
   const handlePreview = async (file: any) => {
     setPreviewImage(file.thumbUrl || file.url);
@@ -81,6 +115,7 @@ const CreateTeacher = () => {
       password: values.password,
     };
     formData.append("user", JSON.stringify(user));
+    formData.append("subjects", JSON.stringify(selectedSubjects));
 
     // Submit the form data
     create(formData);
@@ -340,6 +375,47 @@ const CreateTeacher = () => {
                     </Form.Item>
                   </Col>
                 </Row>
+              </Card>
+            </Badge.Ribbon>
+          </Col>
+
+          <Col lg={24}>
+            <Badge.Ribbon text="Subjects Permissions" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Typography.Title level={5} style={{ marginBottom: 24 }}>
+                  Select subjects you teach:
+                </Typography.Title>
+
+                {groupedSubjects?.map((classInfo: any) => (
+                  <Card key={classInfo.classId}>
+                    <Typography.Title level={5} style={{ marginBottom: 8 }}>
+                      {classInfo.className}
+                    </Typography.Title>
+                    <Divider style={{ marginTop: 0, marginBottom: 12 }} />
+
+                    <Row gutter={[16, 16]}>
+                      {classInfo.subjects.map((subject: any) => (
+                        <Col
+                          key={subject.id}
+                          xs={24}
+                          sm={12}
+                          md={8}
+                          lg={6}
+                          xl={6}
+                        >
+                          <Checkbox
+                            onChange={(e) =>
+                              handleSubjectChange(subject.id, e.target.checked)
+                            }
+                            checked={selectedSubjects.includes(subject.id)}
+                          >
+                            {subject.name}
+                          </Checkbox>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Card>
+                ))}
               </Card>
             </Badge.Ribbon>
           </Col>

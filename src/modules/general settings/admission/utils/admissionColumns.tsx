@@ -19,6 +19,7 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import dayjs from "dayjs";
 
 const useAdmissionColumns = (): ColumnsType<any> => {
   const navigate = useNavigate();
@@ -118,7 +119,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       sorter: (a, b) =>
         new Date(a.admission_date || 0).getTime() -
         new Date(b.admission_date || 0).getTime(),
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? dayjs(title).format("DD MMMM YYYY") : "N/A"),
     },
 
     {

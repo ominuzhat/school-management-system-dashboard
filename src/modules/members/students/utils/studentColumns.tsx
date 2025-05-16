@@ -48,13 +48,13 @@ const useStudentColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Full Name",
       dataIndex: "first_name",
-      align: "center",
+      align: "left",
       render: (_: any, record: any) =>
         `${record?.first_name} ${record?.last_name}`,
     },
     {
       key: "2",
-      title: "User Name",
+      title: "User ID",
       dataIndex: "user",
       align: "center",
       sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
@@ -62,12 +62,46 @@ const useStudentColumns = (): ColumnsType<any> => {
     },
     {
       key: "3",
-      title: "Email",
-      dataIndex: "email",
+      title: "Class",
+      dataIndex: "current_grade_level",
       align: "center",
-      sorter: (a, b) => (a.email || "").localeCompare(b.email || ""),
-      render: (email) => (email ? email : "N/A"),
+      sorter: (a, b) =>
+        (a.current_grade_level || "").localeCompare(
+          b.current_grade_level || ""
+        ),
+      render: (current_grade_level) =>
+        current_grade_level ? current_grade_level?.name : "N/A",
     },
+    {
+      key: "55",
+      title: "Section",
+      dataIndex: "current_section",
+      align: "center",
+      sorter: (a, b) =>
+        (a.current_section || "").localeCompare(b.current_section || ""),
+      render: (current_section) =>
+        current_section ? current_section?.name : "N/A",
+    },
+    {
+      key: "44",
+      title: "Session",
+      dataIndex: "current_session",
+      align: "center",
+      sorter: (a, b) =>
+        (a.current_session || "").localeCompare(b.current_session || ""),
+      render: (current_session) =>
+        current_session ? current_session?.name : "N/A",
+    },
+    {
+      key: "66",
+      title: "Shift",
+      dataIndex: "current_shift",
+      align: "center",
+      sorter: (a, b) =>
+        (a.current_shift || "").localeCompare(b.current_shift || ""),
+      render: (current_shift) => (current_shift ? current_shift?.name : "N/A"),
+    },
+
     {
       key: "4",
       title: "Phone",

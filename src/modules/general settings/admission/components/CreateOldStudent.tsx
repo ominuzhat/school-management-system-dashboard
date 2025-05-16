@@ -7,11 +7,10 @@ import {
   Input,
   Checkbox,
   Badge,
-  Switch,
-  Space,
   Typography,
-  Alert,
   Divider,
+  Space,
+  Switch,
 } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import {
@@ -38,6 +37,7 @@ const { Option } = Select;
 
 const CreateOldStudent = () => {
   const [form] = AntForm.useForm();
+  const [forceUpdate, setForceUpdate] = useState(0);
   const [isRegularFee, setIsRegularFee] = useState(true);
   const [search, setSearch] = useState("");
   const [selectAll, setSelectAll] = useState(true);
@@ -45,6 +45,7 @@ const CreateOldStudent = () => {
   const gradeLevel = AntForm.useWatch("grade_level", form);
   const discountType = AntForm.useWatch("discount_type", form);
   const feeType = AntForm.useWatch("fee_type", form);
+  const customFees = AntForm.useWatch("customFees", form);
 
   // API calls
   const { data: studentData, isFetching: isFetchingStudents } =
@@ -55,17 +56,19 @@ const CreateOldStudent = () => {
   const [createAdmissionFee, { data: admissionFee }] =
     useCreateAdmissionFeeMutation();
 
-  console.log(admissionFee?.data);
-
   useEffect(() => {
-    if (gradeLevel && selectedSubjects && feeType) {
+    if (
+      gradeLevel &&
+      selectedSubjects &&
+      (feeType === "class" || feeType === "subject")
+    ) {
       createAdmissionFee({
         grade_level: gradeLevel,
         subjects: selectedSubjects,
         fee_type: feeType,
       } as any);
     }
-  }, [gradeLevel, selectedSubjects, feeType]);
+  }, [gradeLevel, selectedSubjects, feeType, createAdmissionFee]);
 
   const { data: sessionData, isFetching: isFetchingSessions } =
     useGetAdmissionSessionQuery({
@@ -85,8 +88,7 @@ const CreateOldStudent = () => {
     refetch: refetchSubjects,
   } = useGetSubjectsQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
 
-  const [create, { isLoading, isSuccess, error }] =
-    useCreateAdmissionMutation();
+  const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
 
   // Handle subject selection when grade level changes
   useEffect(() => {
@@ -117,21 +119,6 @@ const CreateOldStudent = () => {
       }
     }
   }, [selectAll, subjectData, form]);
-
-  const onFinish = (values: any): void => {
-    // Format dates and prepare data
-    const formattedValues = {
-      ...values,
-      admission_date: dayjs().format("YYYY-MM-DD"),
-      fees: values.fees?.map((fee: any) => ({
-        ...fee,
-        effective_from: dayjs(fee.effective_from).format("YYYY-MM-DD"),
-        is_active: true,
-      })),
-    };
-
-    create(formattedValues);
-  };
 
   const handleSubjectsChange = (selectedValues: string[]) => {
     setSelectedSubjects(selectedValues);
@@ -172,39 +159,44 @@ const CreateOldStudent = () => {
   }, [isSuccess, form]);
 
   useEffect(() => {
-    if (admissionFee?.data?.fees) {
-      form.setFieldsValue({
-        admissionFees: admissionFee.data.fees,
-      });
-    }
-  }, [admissionFee?.data?.fees, form]);
+    const setupFees = () => {
+      if (admissionFee?.data?.fees) {
+        form.setFieldsValue({ fees: admissionFee.data.fees });
+      }
+
+      setForceUpdate((prev) => prev + 1);
+    };
+
+    setupFees();
+  }, [feeType, admissionFee?.data?.fees, form]);
+
+  const onFinish = (values: any): void => {
+    const isCustom =
+      customFees && Array.isArray(customFees) && customFees.length > 0;
+
+    const sourceFees = isCustom ? customFees : values.fees || [];
+
+    const formattedValues = {
+      ...values,
+      admission_date: dayjs().format("YYYY-MM-DD"),
+      fee_type: isCustom ? "custom" : values?.fee_type,
+      fees: sourceFees.map((fee: any) => ({
+        ...fee,
+        effective_from: isCustom
+          ? dayjs(fee.effective_from).format("YYYY-MM-DD")
+          : undefined,
+        is_active: true,
+      })),
+    };
+
+    // Remove customFees from payload (clean up)
+    delete formattedValues.customFees;
+
+    create(formattedValues);
+  };
 
   return (
     <div className="p-4">
-      <Title level={3} className="mb-6">
-        Admission Form for Existing Student
-      </Title>
-
-      {error && (
-        <Alert
-          message="Error"
-          description="There was an error processing your request. Please try again."
-          type="error"
-          showIcon
-          className="mb-4"
-        />
-      )}
-
-      {isSuccess && (
-        <Alert
-          message="Success"
-          description="Admission created successfully!"
-          type="success"
-          showIcon
-          className="mb-4"
-        />
-      )}
-
       <Form
         form={form}
         onFinish={onFinish}
@@ -215,16 +207,22 @@ const CreateOldStudent = () => {
           status: "approved",
           discount_type: "amount",
           discount_value: 0,
-          fees: [
+          customFees: [
             {
-              name: "",
-              amount: 0,
+              name: "Registration Fee",
+              amount: 999,
+              one_time: true,
+              effective_from: dayjs(),
+            },
+            {
+              name: "Monthly Fee",
+              amount: 599,
               one_time: false,
               effective_from: dayjs(),
             },
           ],
           admission_date: dayjs(),
-          admissionFees: admissionFee?.data?.fees || [{}],
+          fees: [],
         }}
       >
         <Card bordered={false} className="shadow-sm">
@@ -518,6 +516,7 @@ const CreateOldStudent = () => {
                   <Select>
                     <Option value="class">Class Fee</Option>
                     <Option value="subject">Subject Fee</Option>
+                    {/* <Option value="custom">Custom Fee</Option> */}
                     {/* <Option value="student">Student-specific Fee</Option> */}
                   </Select>
                 </Form.Item>
@@ -525,7 +524,7 @@ const CreateOldStudent = () => {
             ) : (
               <Col span={24}>
                 <Badge.Ribbon text="Custom Fee" color="blue" placement="start">
-                  <Card className="mt-4">
+                  <Card className="pt-4">
                     <CustomFeeForm />
                   </Card>
                 </Badge.Ribbon>
@@ -535,7 +534,12 @@ const CreateOldStudent = () => {
         </Card>
         {admissionFee?.data && isRegularFee && (
           <Card>
-            <AdmissionFeeForm data={admissionFee?.data} />
+            {/* <AdmissionFeeForm
+              data={admissionFee.data}
+              form={form}
+              feeType={feeType}
+            /> */}
+            <AdmissionFeeForm key={forceUpdate} />
           </Card>
         )}
       </Form>
