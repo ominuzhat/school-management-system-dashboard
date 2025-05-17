@@ -46,7 +46,7 @@ const CreateNewStudent = () => {
     <Card>
       <Steps current={current} items={items} />
       <div style={contentStyle}>{steps[current].content}</div>
-      <div style={{ marginTop: 24 }}>
+      <div style={{ marginTop: 24 }} className=" flex justify-between">
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>
             Next

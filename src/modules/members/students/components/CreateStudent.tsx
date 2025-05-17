@@ -1,5 +1,4 @@
 import {
-  Badge,
   Card,
   Col,
   DatePicker,
@@ -9,8 +8,13 @@ import {
   Switch,
   Form as AntForm,
   Select,
+  Typography,
+  Divider,
+  Avatar,
+  UploadProps,
+  message,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useEffect, useState } from "react";
@@ -26,6 +30,7 @@ import { useGetAdmissionSessionQuery } from "../../../general settings/admission
 import { useGetSectionQuery } from "../../../general settings/Section/api/sectionEndPoints";
 import { useGetShiftQuery } from "../../../general settings/shift/api/shiftEndPoints";
 
+const { Title, Text } = Typography;
 const { Option } = Select;
 
 const CreateStudent = () => {
@@ -36,6 +41,7 @@ const CreateStudent = () => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [fileList, setFileList] = useState<any[]>([]);
 
   const { data: classData } = useGetClassesQuery({});
   const { data: shiftData } = useGetShiftQuery({});
@@ -56,6 +62,29 @@ const CreateStudent = () => {
 
   const handleCancel = () => setPreviewVisible(false);
 
+  const uploadProps: UploadProps = {
+    beforeUpload: (file) => {
+      const isImage = file.type.startsWith("image/");
+      if (!isImage) {
+        message.error("You can only upload image files!");
+        return Upload.LIST_IGNORE;
+      }
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        message.error("Image must be smaller than 2MB!");
+        return Upload.LIST_IGNORE;
+      }
+      return false;
+    },
+    onChange: ({ fileList: newFileList }) => {
+      setFileList(newFileList);
+    },
+    fileList,
+    maxCount: 1,
+    listType: "picture-card",
+    onPreview: handlePreview,
+  };
+
   const onFinish = (values: any): void => {
     const formData: FormData = new FormData();
 
@@ -69,7 +98,7 @@ const CreateStudent = () => {
 
     Object.entries(values).forEach(([key, value]) => {
       if (value === undefined || value === null) {
-        return; // Skip empty values (prevents pushing empty data)
+        return;
       }
 
       if (key === "image") {
@@ -83,7 +112,6 @@ const CreateStudent = () => {
       } else if (key === "date_of_birth") {
         formData.append(key, dayjs(value as any).format("YYYY-MM-DD"));
       } else if (phoneFields.includes(key) && value) {
-        // Add "880" prefix ONLY IF value exists
         const phoneNumber = value.toString().trim();
         if (phoneNumber) {
           formData.append(key, `880${phoneNumber}`);
@@ -105,12 +133,23 @@ const CreateStudent = () => {
 
   useEffect(() => {
     if (isSuccess) {
+      message.success("Student created successfully!");
       navigate("/students");
     }
   }, [isSuccess, navigate]);
 
   return (
-    <div>
+    <div className="create-student-form">
+      <div className="form-header">
+        <Title level={3} className="form-title">
+          Create New Student
+        </Title>
+        <Text type="secondary">
+          Fill in all required fields to register a new student
+        </Text>
+        <Divider />
+      </div>
+
       <Form
         form={form}
         onFinish={onFinish}
@@ -121,417 +160,578 @@ const CreateStudent = () => {
           can_login: false,
         }}
       >
-        <Row gutter={[16, 16]}>
-          <Col lg={24}>
-            <Badge.Ribbon text="Student Information" placement="start">
-              <Card style={{ paddingTop: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col span={6}>
-                    <Card>
-                      <Form.Item
-                        label="Picture"
-                        name="image"
-                        valuePropName="fileList"
-                        getValueFromEvent={(e) => {
-                          if (Array.isArray(e)) {
-                            return e;
-                          }
-                          return e?.fileList;
+        <Row gutter={[24, 24]}>
+          {/* Student Information Section */}
+          <Col xs={24}>
+            <Card
+              title={<span className="section-title">Student Information</span>}
+              className="form-section-card"
+              headStyle={{ borderBottom: "1px solid #f0f0f0" }}
+            >
+              <Row gutter={[24, 16]}>
+                <Col xs={24} md={8} lg={6} xl={5}>
+                  <Card className="upload-card">
+                    <Form.Item
+                      name="image"
+                      valuePropName="fileList"
+                      getValueFromEvent={(e) => {
+                        if (Array.isArray(e)) {
+                          return e;
+                        }
+                        return e?.fileList;
+                      }}
+                    >
+                      <Upload {...uploadProps}>
+                        {fileList.length >= 1 ? null : (
+                          <div className="upload-placeholder">
+                            <Avatar
+                              size={100}
+                              icon={<UserOutlined />}
+                              className="avatar-upload"
+                            />
+                            <Text className="upload-text">
+                              Click to upload photo
+                            </Text>
+                            <Text type="secondary">(Max 2MB)</Text>
+                          </div>
+                        )}
+                      </Upload>
+                    </Form.Item>
+                    <Modal
+                      open={previewVisible}
+                      title={previewTitle}
+                      footer={null}
+                      onCancel={handleCancel}
+                      width={600}
+                    >
+                      <img
+                        alt="preview"
+                        style={{
+                          width: "100%",
+                          maxHeight: "70vh",
+                          objectFit: "contain",
                         }}
+                        src={previewImage}
+                      />
+                    </Modal>
+                  </Card>
+                </Col>
+
+                <Col xs={24} md={16} lg={18} xl={19}>
+                  <Row gutter={[16, 16]}>
+                    <Col xs={24} sm={12}>
+                      <Form.Item<any>
+                        label={<span className="form-label">First Name</span>}
+                        name="first_name"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input first name!",
+                          },
+                        ]}
                       >
-                        <Upload
-                          beforeUpload={() => false}
-                          maxCount={1}
-                          listType="picture-card"
-                          onPreview={handlePreview}
-                          showUploadList={{ showRemoveIcon: true }}
-                        >
-                          <PlusOutlined />
-                        </Upload>
-                      </Form.Item>
-                      <Modal
-                        visible={previewVisible}
-                        title={previewTitle}
-                        footer={null}
-                        onCancel={handleCancel}
-                      >
-                        <img
-                          alt="example"
-                          style={{ width: "100%" }}
-                          src={previewImage}
+                        <Input
+                          placeholder="First name"
+                          size="large"
+                          className="form-input"
                         />
-                      </Modal>
-                    </Card>
-                  </Col>
-                  <Col span={18}>
-                    <Row gutter={[16, 16]}>
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="First Name"
-                          name="first_name"
-                          rules={[{ required: true, message: "First Name!" }]}
-                        >
-                          <Input placeholder="First Name." />
-                        </Form.Item>
-                      </Col>
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Last Name"
-                          name="last_name"
-                          rules={[{ required: true, message: "Last Name!" }]}
-                        >
-                          <Input placeholder="Last Name." />
-                        </Form.Item>
-                      </Col>
+                      </Form.Item>
+                    </Col>
 
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Current Grade Level"
-                          name="current_grade_level"
-                          rules={[
-                            { required: true, message: "Current Grade Level!" },
-                          ]}
-                        >
-                          <Select className="w-full" placeholder="Select Class">
-                            {Array.isArray(classData?.data) &&
-                              classData?.data?.map((data: any) => (
-                                <Option key={data.id} value={data.id}>
-                                  {data.name}
-                                </Option>
-                              ))}
-                          </Select>
-                        </Form.Item>
-                      </Col>
+                    <Col xs={24} sm={12}>
+                      <Form.Item<any>
+                        label={<span className="form-label">Last Name</span>}
+                        name="last_name"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input last name!",
+                          },
+                        ]}
+                      >
+                        <Input
+                          placeholder="Last name"
+                          size="large"
+                          className="form-input"
+                        />
+                      </Form.Item>
+                    </Col>
 
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Current Session"
-                          name="current_session"
-                          rules={[
-                            { required: true, message: "Current Session!" },
-                          ]}
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item<any>
+                        label={
+                          <span className="form-label">
+                            Current Grade Level
+                          </span>
+                        }
+                        name="current_grade_level"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please select grade level!",
+                          },
+                        ]}
+                      >
+                        <Select
+                          size="large"
+                          placeholder="Select Class"
+                          className="form-select"
+                          showSearch
+                          optionFilterProp="children"
                         >
-                          <Select
-                            className="w-full"
-                            placeholder="Select Session"
-                          >
-                            {Array.isArray(sessionData?.data) &&
-                              sessionData?.data?.map((data: any) => (
-                                <Option key={data.id} value={data.id}>
-                                  {data.name}
-                                </Option>
-                              ))}
-                          </Select>
-                        </Form.Item>
-                      </Col>
+                          {Array.isArray(classData?.data) &&
+                            classData?.data?.map((data: any) => (
+                              <Option key={data.id} value={data.id}>
+                                {data.name}
+                              </Option>
+                            ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
 
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Current Section"
-                          name="current_section"
-                          rules={[
-                            { required: true, message: "Current Section!" },
-                          ]}
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item<any>
+                        label={
+                          <span className="form-label">Current Session</span>
+                        }
+                        name="current_session"
+                        rules={[
+                          { required: true, message: "Please select session!" },
+                        ]}
+                      >
+                        <Select
+                          size="large"
+                          placeholder="Select Session"
+                          className="form-select"
                         >
-                          <Select
-                            className="w-full"
-                            placeholder="Select Section"
-                          >
-                            {Array.isArray(sectionData?.data) &&
-                              sectionData?.data?.map((data: any) => (
-                                <Option key={data.id} value={data.id}>
-                                  {data.name}
-                                </Option>
-                              ))}
-                          </Select>
-                        </Form.Item>
-                      </Col>
+                          {Array.isArray(sessionData?.data) &&
+                            sessionData?.data?.map((data: any) => (
+                              <Option key={data.id} value={data.id}>
+                                {data.name}
+                              </Option>
+                            ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
 
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Current Shift"
-                          name="current_shift"
-                          rules={[
-                            { required: true, message: "Current Shift!" },
-                          ]}
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item<any>
+                        label={
+                          <span className="form-label">Current Section</span>
+                        }
+                        name="current_section"
+                        rules={[
+                          { required: true, message: "Please select section!" },
+                        ]}
+                      >
+                        <Select
+                          size="large"
+                          placeholder="Select Section"
+                          className="form-select"
                         >
-                          <Select className="w-full" placeholder="Select Shift">
-                            {Array.isArray(shiftData?.data) &&
-                              shiftData?.data?.map((data: any) => (
-                                <Option key={data.id} value={data.id}>
-                                  {data.name}
-                                </Option>
-                              ))}
-                          </Select>
-                        </Form.Item>
-                      </Col>
+                          {Array.isArray(sectionData?.data) &&
+                            sectionData?.data?.map((data: any) => (
+                              <Option key={data.id} value={data.id}>
+                                {data.name}
+                              </Option>
+                            ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
 
-                      <Col lg={8}>
-                        <Form.Item<any>
-                          label="Current Roll"
-                          name="current_roll"
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item<any>
+                        label={
+                          <span className="form-label">Current Shift</span>
+                        }
+                        name="current_shift"
+                        rules={[
+                          { required: true, message: "Please select shift!" },
+                        ]}
+                      >
+                        <Select
+                          size="large"
+                          placeholder="Select Shift"
+                          className="form-select"
                         >
-                          <Input placeholder="Current Roll." />
-                        </Form.Item>
-                      </Col>
+                          {Array.isArray(shiftData?.data) &&
+                            shiftData?.data?.map((data: any) => (
+                              <Option key={data.id} value={data.id}>
+                                {data.name}
+                              </Option>
+                            ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
 
-                      <Col lg={8}>
-                        <Form.Item
-                          label="Can Login"
-                          name="can_login"
-                          valuePropName="checked"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Can LogIn is required!",
-                            },
-                          ]}
-                        >
-                          <Switch
-                            checkedChildren="Active"
-                            unCheckedChildren="Inactive"
-                          />
-                        </Form.Item>
-                      </Col>
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item<any>
+                        label={<span className="form-label">Current Roll</span>}
+                        name="current_roll"
+                      >
+                        <Input
+                          placeholder="Roll number"
+                          size="large"
+                          className="form-input"
+                        />
+                      </Form.Item>
+                    </Col>
 
-                      <Col lg={8}>
-                        <Form.Item
-                          label="Status"
-                          name="is_active"
-                          valuePropName="checked"
-                          rules={[
-                            { required: true, message: "Status is required!" },
-                          ]}
-                        >
-                          <Switch
-                            checkedChildren="Active"
-                            unCheckedChildren="Inactive"
-                          />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Card>
-            </Badge.Ribbon>
-          </Col>
-          <Col lg={24}>
-            <Badge.Ribbon text="Contact Information" placement="start">
-              <Card style={{ paddingTop: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col lg={12}>
-                    <Form.Item<any>
-                      label="Mobile No for SMS"
-                      name="contact_phone_number"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Enter Mobile No for SMS",
-                        },
-                        { validator: phoneValidator },
-                      ]}
-                    >
-                      <Input
-                        addonBefore="880"
-                        type="tel"
-                        placeholder="Enter Mobile Number"
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={12}>
-                    <Form.Item<any>
-                      label="Relation Name"
-                      name="contact_phone_number_relation"
-                    >
-                      <Input placeholder="Relation Name" />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
-            </Badge.Ribbon>
-          </Col>
-          <Col lg={24}>
-            <Badge.Ribbon text="Other Information" placement="start">
-              <Card style={{ paddingTop: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col lg={4}>
-                    <Form.Item<any>
-                      label="Date of Birth"
-                      name="date_of_birth"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Date of Birth is required!",
-                        },
-                      ]}
-                    >
-                      <DatePicker
-                        placeholder="Select Date"
-                        format="YYYY-MM-DD"
-                        className="w-full"
-                        disabledDate={(current) => {
-                          return current && current > dayjs().endOf("day");
-                        }}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={5}>
-                    <GenderSelect />
-                  </Col>
-                  <Col lg={5}>
-                    <ReligionSelect />
-                  </Col>
-                  <Col lg={5}>
-                    <Form.Item<any>
-                      label="Phone Number"
-                      name="phone_number"
-                      rules={[{ validator: phoneValidator }]}
-                    >
-                      <Input
-                        addonBefore="880"
-                        placeholder="Enter Mobile Number"
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={5}>
-                    <Form.Item<any> label="Email" name="email">
-                      <Input placeholder="Email" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={12}>
-                    <Form.Item<any>
-                      label="Present Address"
-                      name="present_address"
-                    >
-                      <Input placeholder="Present Address" />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={12}>
-                    <Form.Item<any>
-                      label="Permanent Address"
-                      name="permanent_address"
-                    >
-                      <Input placeholder="Permanent Address" />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
-            </Badge.Ribbon>
-          </Col>
-          <Col span={24}>
-            <Badge.Ribbon text="Father Information" placement="start">
-              <Card style={{ paddingTop: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-                    <Form.Item
-                      label="Father Name"
-                      name="father_name"
-                      rules={[{ required: true, message: "Father Name!" }]}
-                    >
-                      <Input placeholder="Enter Father Name" />
-                    </Form.Item>
-                  </Col>
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item
+                        label={<span className="form-label">Can Login</span>}
+                        name="can_login"
+                        valuePropName="checked"
+                      >
+                        <Switch
+                          checkedChildren="Yes"
+                          unCheckedChildren="No"
+                          className="form-switch"
+                        />
+                      </Form.Item>
+                    </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-                    <Form.Item
-                      label="Phone Number"
-                      name="father_number"
-                      rules={[{ validator: phoneValidator }]}
-                    >
-                      <Input
-                        addonBefore="880"
-                        placeholder="Enter Father Phone Number"
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-                    <Form.Item
-                      label="Father Profession"
-                      name="father_profession"
-                    >
-                      <Input placeholder="Enter Father Profession" />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
-            </Badge.Ribbon>
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item
+                        label={<span className="form-label">Status</span>}
+                        name="is_active"
+                        valuePropName="checked"
+                      >
+                        <Switch
+                          checkedChildren="Active"
+                          unCheckedChildren="Inactive"
+                          className="form-switch"
+                          defaultChecked
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Card>
           </Col>
 
-          <Col span={24}>
-            <Badge.Ribbon text="Mother Information" placement="start">
-              <Card style={{ paddingTop: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-                    <Form.Item
-                      label="Mother Name"
-                      name="mother_name"
-                      rules={[{ required: true, message: "Mother Name!" }]}
-                    >
-                      <Input placeholder="Enter Mother Name" />
-                    </Form.Item>
-                  </Col>
+          {/* Contact Information Section */}
+          <Col xs={24}>
+            <Card
+              title={<span className="section-title">Contact Information</span>}
+              className="form-section-card"
+              headStyle={{ borderBottom: "1px solid #f0f0f0" }}
+            >
+              <Row gutter={[16, 16]}>
+                <Col xs={24} sm={12}>
+                  <Form.Item<any>
+                    label={
+                      <span className="form-label">Mobile No for SMS</span>
+                    }
+                    name="contact_phone_number"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input mobile number!",
+                      },
+                      { validator: phoneValidator },
+                    ]}
+                  >
+                    <Input
+                      addonBefore="+880"
+                      size="large"
+                      placeholder="1XXXXXXXXX"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-                    <Form.Item
-                      label="Phone Number"
-                      name="mother_phone_number"
-                      rules={[{ validator: phoneValidator }]}
-                    >
-                      <Input
-                        addonBefore="880"
-                        placeholder="Enter Phone Number"
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-                    <Form.Item
-                      label="Mother Profession"
-                      name="mother_profession"
-                    >
-                      <Input placeholder="Enter Mother Profession" />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
-            </Badge.Ribbon>
+                <Col xs={24} sm={12}>
+                  <Form.Item<any>
+                    label={
+                      <span className="form-label">Relation to Student</span>
+                    }
+                    name="contact_phone_number_relation"
+                  >
+                    <Input
+                      placeholder="Father/Mother/Guardian"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
           </Col>
 
-          <Col lg={24}>
-            <Badge.Ribbon text="Local Guardian Information" placement="start">
-              <Card style={{ paddingTop: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col lg={8}>
-                    <Form.Item<any>
-                      label="Local Guardian Name"
-                      name="local_guardian_name"
-                    >
-                      <Input placeholder="Local Guardian Name." />
-                    </Form.Item>
-                  </Col>
+          {/* Personal Information Section */}
+          <Col xs={24}>
+            <Card
+              title={
+                <span className="section-title">Personal Information</span>
+              }
+              className="form-section-card"
+              headStyle={{ borderBottom: "1px solid #f0f0f0" }}
+            >
+              <Row gutter={[16, 16]}>
+                <Col xs={24} sm={12} md={8} lg={6}>
+                  <Form.Item<any>
+                    label={<span className="form-label">Date of Birth</span>}
+                    name="date_of_birth"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select date of birth!",
+                      },
+                    ]}
+                  >
+                    <DatePicker
+                      placeholder="Select date"
+                      format="YYYY-MM-DD"
+                      size="large"
+                      className="w-full"
+                      disabledDate={(current) =>
+                        current && current > dayjs().endOf("day")
+                      }
+                    />
+                  </Form.Item>
+                </Col>
 
-                  <Col lg={8}>
-                    <Form.Item<any>
-                      label="Local Guardian Phone Number"
-                      name="local_guardian_phone_number"
-                      rules={[{ validator: phoneValidator }]}
-                    >
-                      <Input
-                        addonBefore="880"
-                        placeholder="Local Guardian Phone Number"
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col lg={8}>
-                    <Form.Item<any>
-                      label="Local Guardian Relation"
-                      name="local_guardian_relation"
-                    >
-                      <Input placeholder="Local Guardian Relation" />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
-            </Badge.Ribbon>
+                <Col xs={24} sm={12} md={8} lg={6}>
+                  <GenderSelect />
+                </Col>
+
+                <Col xs={24} sm={12} md={8} lg={6}>
+                  <ReligionSelect />
+                </Col>
+
+                <Col xs={24} sm={12} md={8} lg={6}>
+                  <Form.Item<any>
+                    label={<span className="form-label">Phone Number</span>}
+                    name="phone_number"
+                    rules={[{ validator: phoneValidator }]}
+                  >
+                    <Input
+                      addonBefore="+880"
+                      placeholder="1XXXXXXXXX"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12} md={8} lg={6}>
+                  <Form.Item<any>
+                    label={<span className="form-label">Email</span>}
+                    name="email"
+                    rules={[
+                      { type: "email", message: "Please enter a valid email!" },
+                    ]}
+                  >
+                    <Input
+                      placeholder="student@example.com"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12}>
+                  <Form.Item<any>
+                    label={<span className="form-label">Present Address</span>}
+                    name="present_address"
+                  >
+                    <Input
+                      placeholder="Current residential address"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12}>
+                  <Form.Item<any>
+                    label={
+                      <span className="form-label">Permanent Address</span>
+                    }
+                    name="permanent_address"
+                  >
+                    <Input
+                      placeholder="Permanent home address"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+
+          {/* Parent Information - Split into two columns on larger screens */}
+          <Col xs={24} lg={12}>
+            <Card
+              title={<span className="section-title">Father Information</span>}
+              className="form-section-card"
+              headStyle={{ borderBottom: "1px solid #f0f0f0" }}
+            >
+              <Row gutter={[16, 16]}>
+                <Col xs={24}>
+                  <Form.Item
+                    label={<span className="form-label">Father's Name</span>}
+                    name="father_name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input father's name!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Father's full name"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label={<span className="form-label">Phone Number</span>}
+                    name="father_number"
+                    rules={[{ validator: phoneValidator }]}
+                  >
+                    <Input
+                      addonBefore="+880"
+                      placeholder="1XXXXXXXXX"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label={<span className="form-label">Profession</span>}
+                    name="father_profession"
+                  >
+                    <Input
+                      placeholder="Occupation"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+
+          <Col xs={24} lg={12}>
+            <Card
+              title={<span className="section-title">Mother Information</span>}
+              className="form-section-card"
+              headStyle={{ borderBottom: "1px solid #f0f0f0" }}
+            >
+              <Row gutter={[16, 16]}>
+                <Col xs={24}>
+                  <Form.Item
+                    label={<span className="form-label">Mother's Name</span>}
+                    name="mother_name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input mother's name!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Mother's full name"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label={<span className="form-label">Phone Number</span>}
+                    name="mother_phone_number"
+                    rules={[{ validator: phoneValidator }]}
+                  >
+                    <Input
+                      addonBefore="+880"
+                      placeholder="1XXXXXXXXX"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label={<span className="form-label">Profession</span>}
+                    name="mother_profession"
+                  >
+                    <Input
+                      placeholder="Occupation"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+
+          {/* Local Guardian Information */}
+          <Col xs={24}>
+            <Card
+              title={
+                <span className="section-title">
+                  Local Guardian Information
+                </span>
+              }
+              className="form-section-card"
+              headStyle={{ borderBottom: "1px solid #f0f0f0" }}
+            >
+              <Row gutter={[16, 16]}>
+                <Col xs={24} sm={12} md={8}>
+                  <Form.Item<any>
+                    label={<span className="form-label">Guardian Name</span>}
+                    name="local_guardian_name"
+                  >
+                    <Input
+                      placeholder="Full name"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12} md={8}>
+                  <Form.Item<any>
+                    label={<span className="form-label">Phone Number</span>}
+                    name="local_guardian_phone_number"
+                    rules={[{ validator: phoneValidator }]}
+                  >
+                    <Input
+                      addonBefore="+880"
+                      placeholder="1XXXXXXXXX"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col xs={24} sm={12} md={8}>
+                  <Form.Item<any>
+                    label={<span className="form-label">Relation</span>}
+                    name="local_guardian_relation"
+                  >
+                    <Input
+                      placeholder="Relationship to student"
+                      size="large"
+                      className="form-input"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
           </Col>
         </Row>
       </Form>

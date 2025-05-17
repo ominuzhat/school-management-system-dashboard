@@ -148,3 +148,260 @@ abbr[title] {
 .ant-table-row:hover {
   background-color: #f1f1f1; /* Light hover color */
 }
+
+.create-student-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.form-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.form-title {
+  color: #1890ff;
+  margin-bottom: 8px !important;
+}
+
+.form-section-card {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.form-input {
+  border-radius: 6px;
+}
+
+.form-select {
+  width: 100%;
+  border-radius: 6px;
+}
+
+.form-switch {
+  min-width: 80px;
+}
+
+.upload-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+  background: #fafafa;
+  padding: 16px;
+  height: 100%;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.avatar-upload {
+  background-color: #f0f2f5;
+  color: #999;
+}
+
+.upload-text {
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .create-student-form {
+    padding: 10px;
+  }
+
+  .form-title {
+    font-size: 20px;
+  }
+}
+
+.update-student-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.form-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.form-title {
+  color: #1890ff;
+  margin-bottom: 8px !important;
+}
+
+.form-section-card {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.form-input {
+  border-radius: 6px;
+}
+
+.form-select {
+  width: 100%;
+  border-radius: 6px;
+}
+
+.form-switch {
+  min-width: 80px;
+}
+
+.upload-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+  background: #fafafa;
+  padding: 16px;
+  height: 100%;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.avatar-upload {
+  background-color: #f0f2f5;
+  color: #999;
+}
+
+.upload-text {
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .update-student-form {
+    padding: 10px;
+  }
+
+  .form-title {
+    font-size: 20px;
+  }
+}
+  .admission-view-container {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+
+        .page-header {
+          margin-bottom: 24px;
+        }
+
+        .page-title {
+          color: #1890ff;
+          margin-top: 16px !important;
+        }
+
+        .summary-cards {
+          margin-bottom: 24px;
+        }
+
+        .summary-card {
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+          border: none;
+        }
+
+        .detail-card {
+          margin-bottom: 16px;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+          border: none;
+        }
+
+        .profile-card {
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+          border: none;
+        }
+
+        .profile-header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          margin-bottom: 16px;
+        }
+
+        .profile-avatar {
+          margin-bottom: 16px;
+          background-color: #1890ff;
+        }
+
+        .profile-name {
+          margin-bottom: 4px !important;
+        }
+
+        .profile-role {
+          font-size: 14px;
+        }
+
+        .section-title {
+          color: #595959;
+          margin-bottom: 16px !important;
+        }
+
+        .detail-tabs .ant-tabs-nav {
+          margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+          .admission-view-container {
+            padding: 12px;
+          }
+
+          .page-title {
+            font-size: 20px;
+          }
+
+          .summary-card,
+          .detail-card,
+          .profile-card {
+            border-radius: 6px;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .page-title {
+            font-size: 18px;
+          }
+        }

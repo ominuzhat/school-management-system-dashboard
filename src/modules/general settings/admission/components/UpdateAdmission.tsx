@@ -2,7 +2,6 @@ import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 
-import UpdateNewAdmissionStudent from "./UpdateNewAdmissionStudent";
 import UpdateOldAdmissionStudent from "./UpdateOldAdmissionStudent";
 
 const UpdateAdmission = () => {
@@ -13,11 +12,6 @@ const UpdateAdmission = () => {
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "New Student",
-      children: <UpdateNewAdmissionStudent />,
-    },
-    {
-      key: "2",
       label: "Old Student",
       children: <UpdateOldAdmissionStudent />,
     },

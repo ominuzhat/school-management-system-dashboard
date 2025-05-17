@@ -255,7 +255,9 @@ const CreateOldStudent = () => {
                 >
                   {studentData?.data?.results?.map((student: any) => (
                     <Option key={student.id} value={student.id}>
-                      {`${student.first_name} ${student.last_name}`}
+                      {`${student.first_name} ${student.last_name} - (${
+                        student?.current_grade_level?.name || "N/A"
+                      })`}
                     </Option>
                   ))}
                 </Select>
