@@ -47,18 +47,22 @@ const CreateNewStudent = () => {
     <Card>
       <Steps current={current} items={items} />
       <div style={contentStyle}>{steps[current].content}</div>
-      <div style={{ marginTop: 24 }} className=" flex justify-between">
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Next
-          </Button>
-        )}
+      <div
+        style={{ marginTop: 24 }}
+        className=" flex justify-between flex-row-reverse "
+      >
+        {" "}
         {current === steps.length - 1 && (
           <Button
             type="primary"
             onClick={() => message.success("Processing complete!")}
           >
             Done
+          </Button>
+        )}{" "}
+        {current < steps.length - 1 && (
+          <Button type="primary" onClick={() => next()}>
+            Next
           </Button>
         )}
         {current > 0 && (

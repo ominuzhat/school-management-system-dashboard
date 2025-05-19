@@ -13,25 +13,17 @@ interface StudentState {
     last_name: string;
     mother_name: string;
     father_name: string;
-    mother_email: string;
-    father_email: string;
     mother_profession: string;
-    mother_designation: string;
-    mother_education_qualification: string;
     father_profession: string;
-    father_designation: string;
-    father_education_qualification: string;
     mother_phone_number: string;
     phone_number: string;
     father_number: string;
     date_of_birth: string;
     local_guardian_name: string;
-    local_guardian_email: string;
     local_guardian_phone_number: string;
     local_guardian_relation: string;
     gender: string;
     religion: string;
-    nationality: string;
     present_address: string;
     permanent_address: string;
     is_active: boolean;
@@ -54,7 +46,6 @@ interface StudentState {
     discount_type: string;
     discount_value: number;
     fees: Fee[];
-    subjects: number[];
     [key: string]: any;
   };
 }
@@ -69,22 +60,15 @@ const initialState: StudentState = {
     mother_name: "",
     father_name: "",
     gender: "",
-    mother_email: "",
-    father_email: "",
     mother_profession: "",
-    mother_designation: "",
-    mother_education_qualification: "",
     father_profession: "",
     father_designation: "",
-    father_education_qualification: "",
     mother_phone_number: "",
     father_number: "",
     local_guardian_name: "",
-    local_guardian_email: "",
     local_guardian_phone_number: "",
     local_guardian_relation: "",
     religion: "",
-    nationality: "",
     present_address: "",
     permanent_address: "",
     is_active: false,
@@ -104,7 +88,6 @@ const initialState: StudentState = {
     discount_type: "percent",
     discount_value: 0,
     fees: [],
-    subjects: [],
   },
 };
 
@@ -130,6 +113,16 @@ const studentSlice = createSlice({
     ) => {
       state.admission[action.payload.field] = action.payload.value;
     },
+    updateFeeField: (
+      state,
+      action: PayloadAction<{
+        field: keyof StudentState["fee"];
+        value: any;
+      }>
+    ) => {
+      state.fee[action.payload.field] = action.payload.value;
+    },
+
     addFee: (state, action: PayloadAction<Fee>) => {
       state.admission.fees.push(action.payload);
     },
@@ -146,6 +139,7 @@ export const {
   addFee,
   setSubjects,
   resetStudent,
+  updateFeeField,
 } = studentSlice.actions;
 
 export default studentSlice.reducer;

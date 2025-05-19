@@ -6,25 +6,14 @@ import {
   Form as AntForm,
   Input,
   Checkbox,
-  Badge,
   Typography,
-  Divider,
-  Space,
-  Switch,
   Form,
 } from "antd";
 
 import { useEffect, useState } from "react";
 
-import { debounce } from "lodash";
-
 import dayjs from "dayjs";
-import { LoadingOutlined } from "@ant-design/icons";
-import { useGetStudentsQuery } from "../../../../members/students/api/studentEndPoints";
-import {
-  useCreateAdmissionFeeMutation,
-  useCreateAdmissionMutation,
-} from "../../api/admissionEndPoints";
+import { useCreateAdmissionFeeMutation } from "../../api/admissionEndPoints";
 import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";
 import { useGetShiftQuery } from "../../../shift/api/shiftEndPoints";
 import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
@@ -45,14 +34,13 @@ const CreateStudentAdmission = () => {
 
   const [form] = AntForm.useForm();
   const [forceUpdate, setForceUpdate] = useState(0);
-  const [isRegularFee, setIsRegularFee] = useState(true);
   const [selectAll, setSelectAll] = useState(true);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const gradeLevel = AntForm.useWatch("grade_level", form);
-  const discountType = AntForm.useWatch("discount_type", form);
   const feeType = AntForm.useWatch("fee_type", form);
   const customFees = AntForm.useWatch("customFees", form);
 
+  console.log(forceUpdate);
   // API calls
 
   const [createAdmissionFee, { data: admissionFee }] =
@@ -89,8 +77,6 @@ const CreateStudentAdmission = () => {
     isFetching: isFetchingSubjects,
     refetch: refetchSubjects,
   } = useGetSubjectsQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
-
-  const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
 
   // Handle subject selection when grade level changes
   useEffect(() => {
@@ -161,22 +147,11 @@ const CreateStudentAdmission = () => {
     }
   };
 
-  // Reset form on success
-  useEffect(() => {
-    if (isSuccess) {
-      form.resetFields();
-      setSelectAll(true);
-      setSelectedSubjects([]);
-      setIsRegularFee(true);
-    }
-  }, [isSuccess, form]);
-
   useEffect(() => {
     const setupFees = () => {
       if (admissionFee?.data?.fees) {
         form.setFieldsValue({ fees: admissionFee.data.fees });
       }
-
       setForceUpdate((prev) => prev + 1);
     };
 
@@ -204,8 +179,6 @@ const CreateStudentAdmission = () => {
 
     // Remove customFees from payload (clean up)
     delete formattedValues.customFees;
-
-    create(formattedValues);
   };
 
   const admission = useAppSelector((state) => state.student.admission);

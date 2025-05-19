@@ -9,7 +9,6 @@ import {
   Upload,
   Modal,
   Typography,
-  message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
@@ -32,13 +31,10 @@ const CreateStudentInformation = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
 
   // Color constants
   const cardHeaderBg = "#f0f7ff";
   const activeSwitchColor = "#1890ff";
-  const dividerColor = "#f0f0f0";
-  const primaryButtonColor = "#1890ff";
 
   // const errorColor = "#ff4d4f";
 
@@ -60,7 +56,7 @@ const CreateStudentInformation = () => {
                   ? { originFileObj: (img as any).originFileObj || undefined }
                   : {}),
               }))
-            : [],
+            : null,
       });
     }
   }, [student, form]);
@@ -87,18 +83,7 @@ const CreateStudentInformation = () => {
   const handleCancel = () => setPreviewVisible(false);
 
   const onFinish = async (values: any) => {
-    setLoading(true);
-    try {
-      // Here you would typically call your API
-      console.log("Form values:", values);
-      message.success("Student information saved successfully!");
-      form.resetFields();
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      message.error("Failed to save student information");
-    } finally {
-      setLoading(false);
-    }
+    console.log(values);
   };
 
   const uploadButton = (
@@ -263,24 +248,6 @@ const CreateStudentInformation = () => {
                         dispatch(
                           updateStudentField({
                             field: "can_login",
-                            value: checked,
-                          })
-                        )
-                      }
-                    />
-                  </Item>
-                </Col>
-
-                <Col xs={24} sm={12} md={4} lg={4} xl={4}>
-                  <Item label="Status" name="is_active" valuePropName="checked">
-                    <Switch
-                      checkedChildren="Active"
-                      unCheckedChildren="Inactive"
-                      style={{ backgroundColor: activeSwitchColor }}
-                      onChange={(checked) =>
-                        dispatch(
-                          updateStudentField({
-                            field: "is_active",
                             value: checked,
                           })
                         )
