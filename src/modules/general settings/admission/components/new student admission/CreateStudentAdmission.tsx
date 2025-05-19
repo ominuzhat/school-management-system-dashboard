@@ -11,6 +11,7 @@ import {
   Divider,
   Space,
   Switch,
+  Form,
 } from "antd";
 
 import { useEffect, useState } from "react";
@@ -29,20 +30,22 @@ import { useGetShiftQuery } from "../../../shift/api/shiftEndPoints";
 import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
 import { useGetSectionQuery } from "../../../Section/api/sectionEndPoints";
 import { useGetSubjectsQuery } from "../../../subjects/api/subjectsEndPoints";
-import { Form } from "../../../../../common/CommonAnt";
 import { IAdmission } from "../../type/admissionType";
 import { IClasses } from "../../../classes/type/classesType";
-import CustomFeeForm from "../CustomFeeForm";
-import AdmissionFeeForm from "../AdmissionFeeForm";
+
+import { useDispatch } from "react-redux";
+import { updateAdmissionField } from "../../../../../app/features/studentAdmissionSlice";
+import { useAppSelector } from "../../../../../app/store";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 const CreateStudentAdmission = () => {
+  const dispatch = useDispatch();
+
   const [form] = AntForm.useForm();
   const [forceUpdate, setForceUpdate] = useState(0);
   const [isRegularFee, setIsRegularFee] = useState(true);
-  const [search, setSearch] = useState("");
   const [selectAll, setSelectAll] = useState(true);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const gradeLevel = AntForm.useWatch("grade_level", form);
@@ -51,11 +54,7 @@ const CreateStudentAdmission = () => {
   const customFees = AntForm.useWatch("customFees", form);
 
   // API calls
-  const { data: studentData, isFetching: isFetchingStudents } =
-    useGetStudentsQuery({
-      search: search,
-      is_active: true,
-    });
+
   const [createAdmissionFee, { data: admissionFee }] =
     useCreateAdmissionFeeMutation();
 
@@ -133,6 +132,17 @@ const CreateStudentAdmission = () => {
     }
   };
 
+  useEffect(() => {
+    const numericValues = selectedSubjects.map(Number);
+
+    dispatch(
+      updateAdmissionField({
+        field: "subjects",
+        value: numericValues,
+      })
+    );
+  }, [selectedSubjects, dispatch]);
+
   const handleSelectAllChange = (e: any) => {
     const shouldSelectAll = e.target.checked;
     setSelectAll(shouldSelectAll);
@@ -198,13 +208,22 @@ const CreateStudentAdmission = () => {
     create(formattedValues);
   };
 
+  const admission = useAppSelector((state) => state.student.admission);
+
+  useEffect(() => {
+    if (admission) {
+      form.setFieldsValue({
+        ...admission,
+      });
+    }
+  }, [admission, form]);
+
   return (
     <div className="p-4">
       <Form
         form={form}
         onFinish={onFinish}
-        isLoading={isLoading}
-        isSuccess={isSuccess}
+        layout="vertical"
         initialValues={{
           subjects: selectedSubjects,
           status: "approved",
@@ -232,41 +251,7 @@ const CreateStudentAdmission = () => {
           <Title level={4} className="mb-4">
             Student Information
           </Title>
-
           <Row gutter={[16, 16]}>
-            {/* Student Selection */}
-            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-              <Form.Item<IAdmission>
-                label="Student"
-                name="student"
-                rules={[{ required: true, message: "Please select a student" }]}
-              >
-                <Select
-                  showSearch
-                  placeholder="Search student by name"
-                  optionFilterProp="children"
-                  filterOption={false}
-                  onSearch={debounce(setSearch, 500)}
-                  loading={isFetchingStudents}
-                  notFoundContent={
-                    isFetchingStudents ? (
-                      <LoadingOutlined />
-                    ) : (
-                      "No students found"
-                    )
-                  }
-                >
-                  {studentData?.data?.results?.map((student: any) => (
-                    <Option key={student.id} value={student.id}>
-                      {`${student.first_name} ${student.last_name} - (${
-                        student?.current_grade_level?.name || "N/A"
-                      })`}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-
             {/* Session Selection */}
             <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission>
@@ -277,6 +262,14 @@ const CreateStudentAdmission = () => {
                 <Select
                   loading={isFetchingSessions}
                   placeholder="Select admission session"
+                  onChange={(value) =>
+                    dispatch(
+                      updateAdmissionField({
+                        field: "session",
+                        value,
+                      })
+                    )
+                  }
                 >
                   {Array.isArray(sessionData?.data) &&
                     sessionData?.data?.map((session: any) => (
@@ -298,9 +291,15 @@ const CreateStudentAdmission = () => {
                 <Select
                   loading={isFetchingClasses}
                   placeholder="Select class"
-                  onChange={() => {
+                  onChange={(value) => {
                     setSelectedSubjects([]);
                     form.setFieldsValue({ subjects: [], section: undefined });
+                    dispatch(
+                      updateAdmissionField({
+                        field: "grade_level",
+                        value,
+                      })
+                    );
                   }}
                 >
                   {Array.isArray(classData?.data) &&
@@ -315,17 +314,18 @@ const CreateStudentAdmission = () => {
 
             {/* Roll Number */}
             <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-              <Form.Item<IAdmission>
-                label="Roll Number"
-                name="roll"
-                rules={[
-                  {
-                    pattern: /^[0-9]+$/,
-                    message: "Please enter a valid roll number",
-                  },
-                ]}
-              >
-                <Input placeholder="Enter roll number" />
+              <Form.Item<IAdmission> label="Roll Number" name="roll">
+                <Input
+                  placeholder="Enter roll number"
+                  onChange={(e) =>
+                    dispatch(
+                      updateAdmissionField({
+                        field: "roll",
+                        value: e.target.value,
+                      })
+                    )
+                  }
+                />
               </Form.Item>
             </Col>
 
@@ -342,6 +342,14 @@ const CreateStudentAdmission = () => {
                   <Select
                     loading={isFetchingSections}
                     placeholder="Select section"
+                    onChange={(value) =>
+                      dispatch(
+                        updateAdmissionField({
+                          field: "section",
+                          value,
+                        })
+                      )
+                    }
                   >
                     {Array.isArray(sectionData?.data) &&
                       sectionData?.data?.map((section: any) => (
@@ -361,7 +369,18 @@ const CreateStudentAdmission = () => {
                 name="shift"
                 rules={[{ required: true, message: "Please select a shift" }]}
               >
-                <Select loading={isFetchingShifts} placeholder="Select shift">
+                <Select
+                  loading={isFetchingShifts}
+                  placeholder="Select shift"
+                  onChange={(value) =>
+                    dispatch(
+                      updateAdmissionField({
+                        field: "shift",
+                        value,
+                      })
+                    )
+                  }
+                >
                   {Array.isArray(shiftData?.data) &&
                     shiftData?.data?.map((shift: any) => (
                       <Option key={shift.id} value={shift.id}>
@@ -375,7 +394,17 @@ const CreateStudentAdmission = () => {
             {/* Status */}
             <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission> label="Status" name="status">
-                <Select placeholder="Select status">
+                <Select
+                  placeholder="Select status"
+                  onChange={(value) =>
+                    dispatch(
+                      updateAdmissionField({
+                        field: "status",
+                        value,
+                      })
+                    )
+                  }
+                >
                   <Option value="pending">Pending</Option>
                   <Option value="approved">Approved</Option>
                   <Option value="rejected">Rejected</Option>
@@ -387,7 +416,6 @@ const CreateStudentAdmission = () => {
               </Form.Item>
             </Col>
           </Row>
-
           {/* Subjects Section */}
           {gradeLevel && subjectData?.data?.results && (
             <div className="mt-6">
@@ -451,8 +479,7 @@ const CreateStudentAdmission = () => {
               </Row>
             </div>
           )}
-
-          {/* Discount Section */}
+          {/* Discount Section
           <Divider />
           <Title level={4} className="mb-4">
             Discount Information
@@ -490,8 +517,7 @@ const CreateStudentAdmission = () => {
               </Form.Item>
             </Col>
           </Row>
-
-          {/* Fee Configuration Section */}
+          Fee Configuration Section
           <Divider />
           <Title level={4} className="mb-4">
             Fee Configuration
@@ -533,13 +559,13 @@ const CreateStudentAdmission = () => {
                 </Badge.Ribbon>
               </Col>
             )}
-          </Row>
+          </Row> */}
         </Card>
-        {admissionFee?.data && isRegularFee && (
+        {/* {admissionFee?.data && isRegularFee && (
           <Card>
             <AdmissionFeeForm key={forceUpdate} />
           </Card>
-        )}
+        )} */}
       </Form>
     </div>
   );

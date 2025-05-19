@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Card, message, Steps, theme } from "antd";
 import CreateStudentInformation from "./CreateStudentInformation";
 import CreateStudentAdmission from "./CreateStudentAdmission";
+import CreateNewStudentFee from "./CreateNewStudentFee";
 
 const steps = [
   {
@@ -14,7 +15,7 @@ const steps = [
   },
   {
     title: "Student Fee",
-    content: "Last-content",
+    content: <CreateNewStudentFee />,
   },
 ];
 

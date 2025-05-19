@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   Col,
   DatePicker,
@@ -9,22 +8,26 @@ import {
   Switch,
   Upload,
   Modal,
-  Divider,
   Typography,
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { phoneValidator } from "../../../../../utilities/validator";
 import GenderSelect, {
   ReligionSelect,
 } from "../../../../../common/commonField/commonFeild";
+import { useDispatch } from "react-redux";
+import { updateStudentField } from "../../../../../app/features/studentAdmissionSlice";
+import { useAppSelector } from "../../../../../app/store";
 
 const { Item } = Form;
 const { Title } = Typography;
 
 const CreateStudentInformation = () => {
+  const dispatch = useDispatch();
+
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -36,7 +39,31 @@ const CreateStudentInformation = () => {
   const activeSwitchColor = "#1890ff";
   const dividerColor = "#f0f0f0";
   const primaryButtonColor = "#1890ff";
+
   // const errorColor = "#ff4d4f";
+
+  const student = useAppSelector((state) => state.student.student);
+
+  useEffect(() => {
+    if (student) {
+      form.setFieldsValue({
+        ...student,
+        date_of_birth: student.date_of_birth
+          ? dayjs(student.date_of_birth)
+          : null,
+        image:
+          Array.isArray(student.image) && student.image.length > 0
+            ? student.image.map((img) => ({
+                ...img,
+                // Only add originFileObj if it exists on img
+                ...(typeof img === "object" && "originFileObj" in img
+                  ? { originFileObj: (img as any).originFileObj || undefined }
+                  : {}),
+              }))
+            : [],
+      });
+    }
+  }, [student, form]);
 
   const handlePreview = async (file: any) => {
     if (!file.url && !file.preview) {
@@ -111,9 +138,6 @@ const CreateStudentInformation = () => {
                 name="image"
                 valuePropName="fileList"
                 getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}
-                rules={[
-                  { required: true, message: "Profile picture is required" },
-                ]}
               >
                 <Upload
                   listType="picture-card"
@@ -122,6 +146,14 @@ const CreateStudentInformation = () => {
                   onPreview={handlePreview}
                   className="avatar-uploader"
                   accept="image/*"
+                  onChange={({ fileList }) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "image",
+                        value: fileList,
+                      })
+                    )
+                  }
                 >
                   {uploadButton}
                 </Upload>
@@ -151,7 +183,18 @@ const CreateStudentInformation = () => {
                       { required: true, message: "First name is required" },
                     ]}
                   >
-                    <Input placeholder="First name" className="w-full" />
+                    <Input
+                      placeholder="First name"
+                      className="w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "first_name",
+                            value: e.target.value,
+                          })
+                        )
+                      }
+                    />
                   </Item>
                 </Col>
                 <Col xs={24} sm={12} md={8} lg={8} xl={6}>
@@ -162,7 +205,18 @@ const CreateStudentInformation = () => {
                       { required: true, message: "Last name is required" },
                     ]}
                   >
-                    <Input placeholder="Last name" className="w-full" />
+                    <Input
+                      placeholder="Last name"
+                      className="w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "last_name",
+                            value: e.target.value,
+                          })
+                        )
+                      }
+                    />
                   </Item>
                 </Col>
                 <Col xs={24} sm={12} md={6} lg={6} xl={6}>
@@ -183,6 +237,14 @@ const CreateStudentInformation = () => {
                     <DatePicker
                       className="w-full"
                       disabledDate={(current) => current > dayjs().endOf("day")}
+                      onChange={(date) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "date_of_birth",
+                            value: date ? date.format("YYYY-MM-DD") : null,
+                          })
+                        )
+                      }
                     />
                   </Item>
                 </Col>
@@ -197,6 +259,14 @@ const CreateStudentInformation = () => {
                       checkedChildren="Yes"
                       unCheckedChildren="No"
                       style={{ backgroundColor: activeSwitchColor }}
+                      onChange={(checked) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "can_login",
+                            value: checked,
+                          })
+                        )
+                      }
                     />
                   </Item>
                 </Col>
@@ -207,6 +277,14 @@ const CreateStudentInformation = () => {
                       checkedChildren="Active"
                       unCheckedChildren="Inactive"
                       style={{ backgroundColor: activeSwitchColor }}
+                      onChange={(checked) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "is_active",
+                            value: checked,
+                          })
+                        )
+                      }
                     />
                   </Item>
                 </Col>
@@ -240,6 +318,14 @@ const CreateStudentInformation = () => {
                   addonBefore="+880"
                   placeholder="1XXXXXXXXX"
                   className="w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "contact_phone_number",
+                        value: e.target.value,
+                      })
+                    )
+                  }
                 />
               </Item>
             </Col>
@@ -249,7 +335,18 @@ const CreateStudentInformation = () => {
                 name="contact_phone_number_relation"
                 rules={[{ required: true, message: "Relation is required" }]}
               >
-                <Input placeholder="Relation to student" className="w-full" />
+                <Input
+                  placeholder="Relation to student"
+                  className="w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "contact_phone_number_relation",
+                        value: e.target.value,
+                      })
+                    )
+                  }
+                />
               </Item>
             </Col>
           </Row>
@@ -275,7 +372,18 @@ const CreateStudentInformation = () => {
                   { type: "email", message: "Please enter a valid email" },
                 ]}
               >
-                <Input placeholder="student@example.com" className="w-full" />
+                <Input
+                  placeholder="student@example.com"
+                  className="w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "email",
+                        value: e.target.value,
+                      })
+                    )
+                  }
+                />
               </Item>
             </Col>
 
@@ -289,6 +397,14 @@ const CreateStudentInformation = () => {
                   addonBefore="+880"
                   placeholder="1XXXXXXXXX"
                   className="w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "phone_number",
+                        value: e.target.value,
+                      })
+                    )
+                  }
                 />
               </Item>
             </Col>
@@ -300,9 +416,18 @@ const CreateStudentInformation = () => {
                   rows={2}
                   showCount
                   maxLength={200}
+                  onChange={(e) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "present_address",
+                        value: e.target.value,
+                      })
+                    )
+                  }
                 />
               </Item>
             </Col>
+
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Item label="Permanent Address" name="permanent_address">
                 <Input.TextArea
@@ -310,6 +435,14 @@ const CreateStudentInformation = () => {
                   rows={2}
                   showCount
                   maxLength={200}
+                  onChange={(e) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "permanent_address",
+                        value: e.target.value,
+                      })
+                    )
+                  }
                 />
               </Item>
             </Col>
@@ -341,6 +474,14 @@ const CreateStudentInformation = () => {
                     <Input
                       placeholder="Father's full name"
                       className="w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "father_name",
+                            value: e.target.value,
+                          })
+                        )
+                      }
                     />
                   </Item>
                 </Col>
@@ -348,32 +489,36 @@ const CreateStudentInformation = () => {
                   <Item
                     label="Phone Number"
                     name="father_number"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Father's phone number is required",
-                      },
-                      { validator: phoneValidator },
-                    ]}
+                    rules={[{ validator: phoneValidator }]}
                   >
                     <Input
                       addonBefore="+880"
                       placeholder="1XXXXXXXXX"
                       className="w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "father_number",
+                            value: e.target.value,
+                          })
+                        )
+                      }
                     />
                   </Item>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                  <Item
-                    label="Profession"
-                    name="father_profession"
-                    rules={[
-                      { required: true, message: "Profession is required" },
-                    ]}
-                  >
+                  <Item label="Profession" name="father_profession">
                     <Input
                       placeholder="Father's profession"
                       className="w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "father_profession",
+                            value: e.target.value,
+                          })
+                        )
+                      }
                     />
                   </Item>
                 </Col>
@@ -404,6 +549,14 @@ const CreateStudentInformation = () => {
                     <Input
                       placeholder="Mother's full name"
                       className="w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "mother_name",
+                            value: e.target.value,
+                          })
+                        )
+                      }
                     />
                   </Item>
                 </Col>
@@ -411,32 +564,36 @@ const CreateStudentInformation = () => {
                   <Item
                     label="Phone Number"
                     name="mother_phone_number"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Mother's phone number is required",
-                      },
-                      { validator: phoneValidator },
-                    ]}
+                    rules={[{ validator: phoneValidator }]}
                   >
                     <Input
                       addonBefore="+880"
                       placeholder="1XXXXXXXXX"
                       className="w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "mother_phone_number",
+                            value: e.target.value,
+                          })
+                        )
+                      }
                     />
                   </Item>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                  <Item
-                    label="Profession"
-                    name="mother_profession"
-                    rules={[
-                      { required: true, message: "Profession is required" },
-                    ]}
-                  >
+                  <Item label="Profession" name="mother_profession">
                     <Input
                       placeholder="Mother's profession"
                       className="w-full"
+                      onChange={(e) =>
+                        dispatch(
+                          updateStudentField({
+                            field: "mother_profession",
+                            value: e.target.value,
+                          })
+                        )
+                      }
                     />
                   </Item>
                 </Col>
@@ -458,66 +615,60 @@ const CreateStudentInformation = () => {
         >
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <Item
-                label="Guardian Name"
-                name="local_guardian_name"
-                rules={[
-                  { required: true, message: "Guardian name is required" },
-                ]}
-              >
-                <Input placeholder="Guardian's full name" className="w-full" />
+              <Item label="Guardian Name" name="local_guardian_name">
+                <Input
+                  placeholder="Guardian's full name"
+                  className="w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "local_guardian_name",
+                        value: e.target.value,
+                      })
+                    )
+                  }
+                />
               </Item>
             </Col>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
               <Item
                 label="Phone Number"
                 name="local_guardian_phone_number"
-                rules={[
-                  { required: true, message: "Phone number is required" },
-                  { validator: phoneValidator },
-                ]}
+                rules={[{ validator: phoneValidator }]}
               >
                 <Input
                   addonBefore="+880"
                   placeholder="1XXXXXXXXX"
                   className="w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "local_guardian_phone_number",
+                        value: e.target.value,
+                      })
+                    )
+                  }
                 />
               </Item>
             </Col>
             <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <Item
-                label="Relation"
-                name="local_guardian_relation"
-                rules={[{ required: true, message: "Relation is required" }]}
-              >
+              <Item label="Relation" name="local_guardian_relation">
                 <Input
                   placeholder="Relationship to student"
                   className="w-full"
+                  onChange={(e) =>
+                    dispatch(
+                      updateStudentField({
+                        field: "local_guardian_relation",
+                        value: e.target.value,
+                      })
+                    )
+                  }
                 />
               </Item>
             </Col>
           </Row>
         </Card>
-
-        {/* Form Submission */}
-        <Divider style={{ borderColor: dividerColor }} />
-        <Row justify="end" className="mt-6">
-          <Col>
-            <Button
-              type="primary"
-              htmlType="submit"
-              size="large"
-              loading={loading}
-              style={{
-                backgroundColor: primaryButtonColor,
-                width: 150,
-                height: 40,
-              }}
-            >
-              Submit
-            </Button>
-          </Col>
-        </Row>
       </Form>
     </div>
   );

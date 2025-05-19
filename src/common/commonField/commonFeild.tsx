@@ -1,9 +1,23 @@
 import { Select, Form } from "antd";
+import { updateStudentField } from "../../app/features/studentAdmissionSlice";
+import { useDispatch } from "react-redux";
 
 const GenderSelect = ({ label = "Gender", name = "gender" }) => {
+  const dispatch = useDispatch();
   return (
     <Form.Item<any> label={label} name={name}>
-      <Select placeholder="Select Gender" className="w-full">
+      <Select
+        placeholder="Select Gender"
+        className="w-full"
+        onChange={(value) =>
+          dispatch(
+            updateStudentField({
+              field: "gender",
+              value,
+            })
+          )
+        }
+      >
         <Select.Option value="M">Male</Select.Option>
         <Select.Option value="F">Female</Select.Option>
         <Select.Option value="O">Other</Select.Option>
@@ -15,9 +29,21 @@ const GenderSelect = ({ label = "Gender", name = "gender" }) => {
 export default GenderSelect;
 
 export const ReligionSelect = ({ label = "Religion", name = "religion" }) => {
+  const dispatch = useDispatch();
   return (
     <Form.Item label={label} name={name}>
-      <Select placeholder="Select Religion" className="w-full">
+      <Select
+        placeholder="Select Religion"
+        className="w-full"
+        onChange={(value) =>
+          dispatch(
+            updateStudentField({
+              field: "religion",
+              value: value,
+            })
+          )
+        }
+      >
         <Select.Option value="Islam">Islam</Select.Option>
         <Select.Option value="Christianity">Christianity</Select.Option>
         <Select.Option value="Hinduism">Hinduism</Select.Option>
