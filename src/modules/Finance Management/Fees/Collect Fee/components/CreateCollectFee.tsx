@@ -18,7 +18,7 @@ import dayjs from "dayjs";
 import { useCreateCollectFeesMutation } from "../api/collectFeeEndPoints";
 import { useGetAdditionalFeesQuery } from "../../Additional Fee/api/additionalFeeEndPoints";
 import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import { TbCoinTaka } from "react-icons/tb";
 import { useGetAccountQuery } from "../../../Accounts/account/api/accountEndPoints";
@@ -26,6 +26,10 @@ import { useGetAccountQuery } from "../../../Accounts/account/api/accountEndPoin
 const { Title, Text } = Typography;
 
 const CreateCollectFee = () => {
+  const [searchParams] = useSearchParams();
+  const admissionId = searchParams.get("admission_id");
+  console.log(admissionId);
+
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [selectedFees, setSelectedFees] = useState([]);
@@ -54,49 +58,60 @@ const CreateCollectFee = () => {
   }, [selectedAdditionalFee]);
 
   useEffect(() => {
-    if (admission) {
-      const foundAdmission: any = admissionData?.data?.results.find(
+    let foundAdmission: any;
+
+    if (admissionId) {
+      foundAdmission = admissionData?.data?.results.find(
+        (data: any) => data?.id === Number(admissionId)
+      );
+    } else if (admission) {
+      foundAdmission = admissionData?.data?.results.find(
         (data: any) => data?.id === admission
       );
+    }
 
-      // Calculate the total due amount including additional fees
-      const totalDueAmount =
-        (selectedStudent?.due_amount || 0) + totalAmountOfAdditionalFees;
+    console.log(foundAdmission);
 
-      // Calculate the discounted amount based on the discount type
-      let discountedAmount = 0;
-      if (discountType === "amount") {
-        discountedAmount = discountAmount || 0;
-      } else if (discountType === "percent") {
-        discountedAmount = (totalDueAmount * (discountAmount || 0)) / 100;
-      }
+    // Calculate the total due amount including additional fees
+    const totalDueAmount =
+      (selectedStudent?.due_amount || 0) + totalAmountOfAdditionalFees;
 
-      // Calculate the final due amount after discount and paid amount
-      const calculatedDueAmount =
-        totalDueAmount - discountedAmount - (paidAmount || 0);
+    // Calculate the discounted amount based on the discount type
+    let discountedAmount = 0;
+    if (discountType === "amount") {
+      discountedAmount = discountAmount || 0;
+    } else if (discountType === "percent") {
+      discountedAmount = (totalDueAmount * (discountAmount || 0)) / 100;
+    }
 
-      // Ensure the final due amount is not negative
-      setFinalDueAmount(Math.max(calculatedDueAmount, 0));
+    // Calculate the final due amount after discount and paid amount
+    const calculatedDueAmount =
+      totalDueAmount - discountedAmount - (paidAmount || 0);
 
-      const foundAdditionalData: any =
-        Array.isArray(additionalData?.data) &&
-        additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
+    // Ensure the final due amount is not negative
+    setFinalDueAmount(Math.max(calculatedDueAmount, 0));
 
-      if (foundAdmission) {
-        form.setFieldsValue({
-          class: foundAdmission?.grade_level,
-          session: foundAdmission?.session?.name,
-        });
-        setSelectedFees(foundAdmission?.fees || []);
-        setSelectedStudent(foundAdmission);
-        setSelectedAdditionalFee(foundAdditionalData || []);
-      }
+    const foundAdditionalData: any =
+      Array.isArray(additionalData?.data) &&
+      additionalData?.data?.filter((data: any) => addOns?.includes(data?.id));
+
+    if (foundAdmission) {
+      form.setFieldsValue({
+        admission: foundAdmission?.id,
+        class: foundAdmission?.grade_level,
+        session: foundAdmission?.session?.name,
+      });
+
+      setSelectedFees(foundAdmission?.fees || []);
+      setSelectedStudent(foundAdmission);
+      setSelectedAdditionalFee(foundAdditionalData || []);
     }
   }, [
     addOns,
     additionalData?.data,
     admission,
     admissionData?.data?.results,
+    admissionId,
     discountAmount,
     discountType,
     form,
@@ -104,6 +119,7 @@ const CreateCollectFee = () => {
     selectedStudent?.due_amount,
     totalAmountOfAdditionalFees,
   ]);
+
   const onFinish = (values: any): void => {
     const results = {
       admission: values?.admission,
@@ -394,7 +410,6 @@ const CreateCollectFee = () => {
                     {finalDueAmount || 0}
                   </p>
                 </div>
-
 
                 <div className="flex justify-end">
                   {/* <Form.Item

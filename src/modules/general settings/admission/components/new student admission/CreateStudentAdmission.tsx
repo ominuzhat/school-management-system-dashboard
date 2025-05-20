@@ -29,7 +29,13 @@ import { useAppSelector } from "../../../../../app/store";
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const CreateStudentAdmission = () => {
+interface CreateStudentInformationProps {
+  onValidationChange: (isValid: boolean) => void;
+}
+
+const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
+  onValidationChange,
+}) => {
   const dispatch = useDispatch();
 
   const [form] = AntForm.useForm();
@@ -39,6 +45,21 @@ const CreateStudentAdmission = () => {
   const gradeLevel = AntForm.useWatch("grade_level", form);
   const feeType = AntForm.useWatch("fee_type", form);
   const customFees = AntForm.useWatch("customFees", form);
+
+  const allValues = Form.useWatch([], form);
+
+  useEffect(() => {
+    const validate = async () => {
+      try {
+        await form.validateFields(); // Only validates required fields
+        onValidationChange(true);
+      } catch {
+        onValidationChange(false);
+      }
+    };
+
+    validate();
+  }, [allValues]);
 
   console.log(forceUpdate);
   // API calls
@@ -200,24 +221,6 @@ const CreateStudentAdmission = () => {
         initialValues={{
           subjects: selectedSubjects,
           status: "approved",
-          discount_type: "amount",
-          discount_value: 0,
-          customFees: [
-            {
-              name: "Registration Fee",
-              amount: 999,
-              one_time: true,
-              effective_from: dayjs(),
-            },
-            {
-              name: "Monthly Fee",
-              amount: 599,
-              one_time: false,
-              effective_from: dayjs(),
-            },
-          ],
-          admission_date: dayjs(),
-          fees: [],
         }}
       >
         <Card bordered={false} className="shadow-sm">

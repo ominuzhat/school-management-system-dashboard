@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Space, Tag } from "antd";
+import { Button, Space, Tag, Tooltip } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
@@ -73,7 +73,10 @@ const useAdmissionColumns = (): ColumnsType<any> => {
   const handleForm = (id: number) => {
     setAdmissionId(id);
   };
-
+  const renderBreakdownList = (items: any) =>
+    items?.length
+      ? items.map((item: any) => `${item.month}: ${item.amount}`).join("\n")
+      : "No data";
   return [
     {
       key: "0",
@@ -83,7 +86,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Student Name",
+      title: "Name",
       dataIndex: "student",
       align: "center",
       render: (title) =>
@@ -170,22 +173,68 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     },
     {
       key: "9",
-      title: "Total Paid Amount",
-      dataIndex: "total_paid_amount",
+      title: "Paid",
+      dataIndex: "payment_breakdown",
       align: "center",
-      render: (title) => (title ? <Tag color="green">{title}</Tag> : 0),
+      render: (payment_breakdown) =>
+        payment_breakdown?.total_paid ? (
+          <Tooltip
+            title={
+              <pre style={{ margin: 0 }}>
+                {renderBreakdownList(payment_breakdown.paid_months)}
+              </pre>
+            }
+          >
+            <Tag color="green">{payment_breakdown.total_paid}</Tag>
+          </Tooltip>
+        ) : (
+          0
+        ),
     },
     {
       key: "10",
       title: "Due",
-      dataIndex: "due_amount",
+      dataIndex: "payment_breakdown",
       align: "center",
-      render: (title) => (title ? <Tag color="red">{title}</Tag> : 0),
+      render: (payment_breakdown) =>
+        payment_breakdown?.total_due ? (
+          <Tooltip
+            title={
+              <pre style={{ margin: 0 }}>
+                {renderBreakdownList(payment_breakdown.due_months)}
+              </pre>
+            }
+          >
+            <Tag color="red">{payment_breakdown.total_due}</Tag>
+          </Tooltip>
+        ) : (
+          0
+        ),
+    },
+    {
+      key: "100",
+      title: "Advance",
+      dataIndex: "payment_breakdown",
+      align: "center",
+      render: (payment_breakdown) =>
+        payment_breakdown?.total_advance ? (
+          <Tooltip
+            title={
+              <pre style={{ margin: 0 }}>
+                {renderBreakdownList(payment_breakdown.advance_months)}
+              </pre>
+            }
+          >
+            <Tag color="blue">{payment_breakdown.total_advance}</Tag>
+          </Tooltip>
+        ) : (
+          0
+        ),
     },
 
     {
       key: "11",
-      title: "Total Discount Amount",
+      title: "Discount",
       dataIndex: "total_discounted_amount",
       align: "center",
       render: (title) => (title ? <Tag color="orange">{title}</Tag> : 0),

@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 
 export interface ApiResponse<T> {
+  admission: any;
+  id: boolean;
   data?: T | PaginatedResponse<T>; 
   message?: string;
   success: boolean;

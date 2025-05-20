@@ -37,6 +37,7 @@ const UpdateCollectFee = () => {
     discountValue: 0,
   });
 
+
   const [paidAmount, setPaidAmount] = useState<number | null>(null);
   const [addOns, setAddOns] = useState<string[]>([]); // Ensure it's always an array
   const [search, setSearch] = useState("");
@@ -45,6 +46,8 @@ const UpdateCollectFee = () => {
   const { data: singleData } = useGetCollectSingleFeesQuery(
     Number(collectFeeId)
   );
+
+
   const [update, { isLoading, isSuccess }] = useUpdateCollectFeesMutation();
   const { data: additionalData } = useGetAdditionalFeesQuery({});
   const { data: admissionData, isFetching } = useGetAdmissionQuery({

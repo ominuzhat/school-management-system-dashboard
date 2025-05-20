@@ -24,13 +24,56 @@ import { useAppSelector } from "../../../../../app/store";
 const { Item } = Form;
 const { Title } = Typography;
 
-const CreateStudentInformation = () => {
+interface CreateStudentInformationProps {
+  onValidationChange: (isValid: boolean) => void;
+}
+
+const CreateStudentInformation: React.FC<CreateStudentInformationProps> = ({
+  onValidationChange,
+}) => {
   const dispatch = useDispatch();
 
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [form] = Form.useForm();
+
+  // useEffect(() => {
+  //   form
+  //     .validateFields()
+  //     .then(() => onValidationChange(true))
+  //     .catch(() => onValidationChange(false));
+  // }, []);
+
+  // const allValues = Form.useWatch([], form);
+
+  // useEffect(() => {
+  //   const validate = async () => {
+  //     try {
+  //       await form.validateFields(); // Only validates required fields
+  //       onValidationChange(true);
+  //     } catch {
+  //       onValidationChange(false);
+  //     }
+  //   };
+
+  //   validate();
+  // }, [allValues]);
+
+  const allValues = Form.useWatch([], form);
+
+  useEffect(() => {
+    const validate = async () => {
+      try {
+        await form.validateFields();
+        onValidationChange(true);
+      } catch {
+        onValidationChange(false);
+      }
+    };
+
+    validate();
+  }, [allValues]);
 
   // Color constants
   const cardHeaderBg = "#f0f7ff";
@@ -98,6 +141,13 @@ const CreateStudentInformation = () => {
       <Form
         form={form}
         onFinish={onFinish}
+        // validateTrigger={["onChange", "onBlur"]}
+        // onValuesChange={() => {
+        //   form
+        //     .validateFields()
+        //     .then(() => onValidationChange(true))
+        //     .catch(() => onValidationChange(false));
+        // }}
         initialValues={{
           is_active: true,
           can_login: true,
@@ -332,13 +382,7 @@ const CreateStudentInformation = () => {
         >
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Item
-                label="Email"
-                name="email"
-                rules={[
-                  { type: "email", message: "Please enter a valid email" },
-                ]}
-              >
+              <Item label="Email" name="email">
                 <Input
                   placeholder="student@example.com"
                   className="w-full"
@@ -358,7 +402,7 @@ const CreateStudentInformation = () => {
               <Item
                 label="Phone Number"
                 name="phone_number"
-                rules={[{ validator: phoneValidator }]}
+                // rules={[{ validator: phoneValidator }]}
               >
                 <Input
                   addonBefore="+880"
@@ -456,7 +500,7 @@ const CreateStudentInformation = () => {
                   <Item
                     label="Phone Number"
                     name="father_number"
-                    rules={[{ validator: phoneValidator }]}
+                    // rules={[{ validator: phoneValidator }]}
                   >
                     <Input
                       addonBefore="+880"
@@ -531,7 +575,7 @@ const CreateStudentInformation = () => {
                   <Item
                     label="Phone Number"
                     name="mother_phone_number"
-                    rules={[{ validator: phoneValidator }]}
+                    // rules={[{ validator: phoneValidator }]}
                   >
                     <Input
                       addonBefore="+880"
