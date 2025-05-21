@@ -117,7 +117,6 @@ const CreateTeacher = () => {
     formData.append("user", JSON.stringify(user));
     formData.append("subjects", JSON.stringify(selectedSubjects));
 
-    // Submit the form data
     create(formData);
   };
 

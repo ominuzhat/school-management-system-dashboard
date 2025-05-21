@@ -402,7 +402,7 @@ const CreateStudentInformation: React.FC<CreateStudentInformationProps> = ({
               <Item
                 label="Phone Number"
                 name="phone_number"
-                // rules={[{ validator: phoneValidator }]}
+                rules={[{ validator: phoneValidator }]}
               >
                 <Input
                   addonBefore="+880"
@@ -500,7 +500,7 @@ const CreateStudentInformation: React.FC<CreateStudentInformationProps> = ({
                   <Item
                     label="Phone Number"
                     name="father_number"
-                    // rules={[{ validator: phoneValidator }]}
+                    rules={[{ validator: phoneValidator }]}
                   >
                     <Input
                       addonBefore="+880"
@@ -575,7 +575,7 @@ const CreateStudentInformation: React.FC<CreateStudentInformationProps> = ({
                   <Item
                     label="Phone Number"
                     name="mother_phone_number"
-                    // rules={[{ validator: phoneValidator }]}
+                    rules={[{ validator: phoneValidator }]}
                   >
                     <Input
                       addonBefore="+880"

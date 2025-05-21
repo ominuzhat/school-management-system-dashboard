@@ -116,18 +116,6 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
     setupFees();
   }, [feeType, admissionFee?.data.fees, form, dispatch, admission.feeType]);
 
-  // Handle toggle
-  // const handleToggleFeeType = (checked: boolean) => {
-  //   setIsRegularFee(checked);
-
-  //   dispatch(
-  //     updateFeeField({
-  //       field: "fee_type",
-  //       value: checked ? "" : "custom", // class/subject will be selected via dropdown later
-  //     })
-  //   );
-  // };
-
   // Handle fee_type dropdown (for regular fee only)
   const handleFeeTypeChange = (value: string) => {
     console.log(value);
@@ -250,32 +238,6 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
               </Select>
             </AntForm.Item>
           </Col>
-
-          {/* {isRegularFee ? (
-            <Col span={24}>
-              <AntForm.Item
-                label="Fee Structure Type"
-                name="fee_type"
-                rules={[{ required: true, message: "Please select fee type" }]}
-              >
-                <Select
-                  placeholder="Select fee type"
-                  onChange={handleFeeTypeChange}
-                >
-                  <Select.Option value="class">Class Fee</Select.Option>
-                  <Select.Option value="subject">Subject Fee</Select.Option>
-                </Select>
-              </AntForm.Item>
-            </Col>
-          ) : (
-            <Col span={24}>
-              <Badge.Ribbon text="Custom Fee" color="blue">
-                <Card className="pt-4">
-                  <CustomFeeForm />
-                </Card>
-              </Badge.Ribbon>
-            </Col>
-          )} */}
         </Row>
 
         {admissionFee?.data && (
