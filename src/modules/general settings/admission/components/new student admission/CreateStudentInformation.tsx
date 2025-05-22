@@ -60,21 +60,40 @@ const CreateStudentInformation: React.FC<CreateStudentInformationProps> = ({
   //   validate();
   // }, [allValues]);
 
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Solution: Watch all form values
   const allValues = Form.useWatch([], form);
 
   useEffect(() => {
-    const validate = async () => {
-      try {
-        await form.validateFields();
-        onValidationChange(true);
-      } catch {
-        onValidationChange(false);
-      }
-    };
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
-    validate();
-  }, [allValues]);
+  useEffect(() => {
+    if (!isMounted) return;
 
+    const timer = setTimeout(() => {
+      form
+        .validateFields()
+        .then(() => onValidationChange(true))
+        .catch(() => onValidationChange(false));
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [allValues, isMounted, form, onValidationChange]);
+
+  // Additional check when component mounts/updates
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      form
+        .validateFields()
+        .then(() => onValidationChange(true))
+        .catch(() => onValidationChange(false));
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [form, onValidationChange]);
   // Color constants
   const cardHeaderBg = "#f0f7ff";
   const activeSwitchColor = "#1890ff";
@@ -151,6 +170,7 @@ const CreateStudentInformation: React.FC<CreateStudentInformationProps> = ({
         initialValues={{
           is_active: true,
           can_login: true,
+          gender: "M",
         }}
         layout="vertical"
       >

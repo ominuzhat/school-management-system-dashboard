@@ -34,7 +34,7 @@ const AdmissionFeeForm = () => {
                       label="Fee Name"
                       rules={[{ required: true, message: "Required" }]}
                     >
-                      <Input placeholder="Fee name" />
+                      <Input placeholder="Fee name" disabled />
                     </Form.Item>
                   </Col>
 
@@ -46,7 +46,7 @@ const AdmissionFeeForm = () => {
                       label="Amount (৳)"
                       rules={[{ required: true, message: "Required" }]}
                     >
-                      <Input type="number" placeholder="0.00" />
+                      <Input type="number" placeholder="0.00" disabled />
                     </Form.Item>
                   </Col>
 
@@ -58,7 +58,7 @@ const AdmissionFeeForm = () => {
                       label="One-Time"
                       valuePropName="checked"
                     >
-                      <Switch />
+                      <Switch disabled />
                     </Form.Item>
                   </Col>
 

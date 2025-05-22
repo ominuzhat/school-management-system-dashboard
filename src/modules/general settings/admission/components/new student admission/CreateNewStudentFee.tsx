@@ -8,6 +8,9 @@ import {
   Typography,
   Form,
   Button,
+  Space,
+  Switch,
+  Badge,
 } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -24,8 +27,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { showModal } from "../../../../../app/features/modalSlice";
 import NewStudentAdmissionPreview from "./NewStudentAdmissionPreview";
+import CustomFeeForm from "../CustomFeeForm";
+import dayjs from "dayjs";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 interface CreateStudentInformationProps {
   onValidationChange: (isValid: boolean) => void;
@@ -37,9 +42,21 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   const navigate = useNavigate();
   const [form] = AntForm.useForm();
   const dispatch = useDispatch();
+  const [isRegularFee, setIsRegularFee] = useState(true);
   const admission = useAppSelector((state) => state.student.admission);
   const student = useAppSelector((state) => state.student.student);
   const fee = useAppSelector((state) => state.student.fee);
+  const [create, { data: newStudentData, isSuccess }] =
+    useCreateNewStudentAdmissionMutation();
+  const customFees = AntForm.useWatch("customFees", form);
+  const [createAdmissionFee, { data: admissionFee }] =
+    useCreateAdmissionFeeMutation();
+
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  const discountType = AntForm.useWatch("discount_type", form);
+  const feeType = AntForm.useWatch("fee_type", form);
+  const fees = AntForm.useWatch("fees", form);
 
   const allValues = Form.useWatch([], form);
 
@@ -55,18 +72,6 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
 
     validate();
   }, [allValues]);
-
-  const [create, { data: newStudentData, isSuccess }] =
-    useCreateNewStudentAdmissionMutation();
-
-  const [forceUpdate, setForceUpdate] = useState(0);
-
-  const discountType = AntForm.useWatch("discount_type", form);
-  const feeType = AntForm.useWatch("fee_type", form);
-  const fees = AntForm.useWatch("fees", form);
-
-  const [createAdmissionFee, { data: admissionFee }] =
-    useCreateAdmissionFeeMutation();
 
   useEffect(() => {
     if (
@@ -96,7 +101,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   useEffect(() => {
     const setupFees = () => {
       if (admissionFee?.data?.fees?.length) {
-        const incomingFees = admissionFee.data.fees;
+        const incomingFees = admissionFee?.data?.fees;
 
         // Set form values
         form.setFieldsValue({ fees: incomingFees });
@@ -117,20 +122,25 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   }, [feeType, admissionFee?.data.fees, form, dispatch, admission.feeType]);
 
   // Handle fee_type dropdown (for regular fee only)
-  const handleFeeTypeChange = (value: string) => {
-    console.log(value);
-    dispatch(
-      updateFeeField({
-        field: "fee_type",
-        value,
-      })
-    );
-  };
+  // const handleFeeTypeChange = (value: string) => {
+  //   dispatch(
+  //     updateFeeField({
+  //       field: "fee_type",
+  //       value,
+  //     })
+  //   );
+  // };
 
   const onFinish = (values: any): void => {
     const formData = new FormData();
 
-    console.log(values);
+    const isCustom =
+      customFees && Array.isArray(customFees) && customFees.length > 0;
+
+    const sourceFees = isCustom ? customFees : values.fees || [];
+
+    console.log(isCustom, sourceFees);
+
     const formattedData: any = {
       student: {
         first_name: student.first_name || null,
@@ -162,12 +172,20 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
       ...(fee && {
         admission: {
           ...fee,
+          fee_type: feeType ? feeType : "custom",
           status: admission.status,
           subjects: admission.subjects || [],
-          fees: fee.fees?.map((f: any) => ({
-            ...f,
-            // effective_from: dayjs(f.effective_from).format("YYYY-MM-DD"),
+          fees: sourceFees.map((fee: any) => ({
+            ...fee,
+            effective_from: isCustom
+              ? dayjs(fee.effective_from).format("YYYY-MM-DD")
+              : undefined,
+            is_active: true,
           })),
+          // fees: fee.fees?.map((f: any) => ({
+          //   ...f,
+          //   // effective_from: dayjs(f.effective_from).format("YYYY-MM-DD"),
+          // })),
         },
       }),
     };
@@ -192,6 +210,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
     if (isSuccess && newStudentData?.admission?.id) {
       dispatch(resetStudent());
       navigate(`/collect-fee?admission_id=${newStudentData?.admission?.id}`);
+      setIsRegularFee(true);
     }
   }, [isSuccess, newStudentData?.admission?.id, dispatch, navigate]);
 
@@ -205,23 +224,85 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
           discount_value: 0,
           discount_type: "amount",
           fee_type: "class",
+          customFees: [
+            {
+              name: "Registration Fee",
+              amount: 100,
+              one_time: true,
+              effective_from: dayjs(),
+            },
+            {
+              name: "Monthly Fee",
+              amount: 500,
+              one_time: false,
+              effective_from: dayjs(),
+            },
+          ],
+          fees: [],
         }}
       >
         {/* Discount Section */}
 
         <Title level={4}>Fee Configuration</Title>
         <Row gutter={[16, 16]}>
-          {/* <Col span={24}>
+          <Col span={24}>
             <Space>
               <Text strong>Fee Type:</Text>
               <Switch
                 checked={isRegularFee}
-                onChange={handleToggleFeeType}
+                onChange={setIsRegularFee}
+                checkedChildren="Regular Fee"
+                unCheckedChildren="Custom Fee"
+              />
+            </Space>
+          </Col>
+
+          {isRegularFee ? (
+            <Col span={24}>
+              <Form.Item
+                label="Fee Structure Type"
+                name="fee_type"
+                rules={[{ required: true, message: "Please select fee type" }]}
+              >
+                <Select>
+                  <Select.Option value="class">Class Fee</Select.Option>
+                  <Select.Option value="subject">Subject Fee</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          ) : (
+            <Col span={24}>
+              <Badge.Ribbon text="Custom Fee" color="blue" placement="start">
+                <Card className="pt-4">
+                  <CustomFeeForm />
+                </Card>
+              </Badge.Ribbon>
+            </Col>
+          )}
+        </Row>
+
+        {admissionFee?.data && isRegularFee && (
+          <Card>
+            {/* <AdmissionFeeForm
+              data={admissionFee.data}
+              form={form}
+              feeType={feeType}
+            /> */}
+            <AdmissionFeeForm key={forceUpdate} />
+          </Card>
+        )}
+
+        {/* <Col span={24}>
+            <Space>
+              <Text strong>Fee Type:</Text>
+              <Switch
+                checked={isRegularFee}
+                // onChange={handleToggleFeeType}
                 checkedChildren="Regular"
                 unCheckedChildren="Custom"
               />
             </Space>
-          </Col> */}
+          </Col>
 
           <Col span={24}>
             <AntForm.Item
@@ -244,7 +325,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
           <Card className="mt-4">
             <AdmissionFeeForm key={forceUpdate} />
           </Card>
-        )}
+        )} */}
 
         <br />
         <Title level={4}>Discount Information</Title>

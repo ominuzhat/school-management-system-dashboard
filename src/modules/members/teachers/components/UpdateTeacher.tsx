@@ -10,6 +10,9 @@ import {
   Select,
   DatePicker,
   Switch,
+  Typography,
+  Divider,
+  Checkbox,
 } from "antd";
 import React, { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
@@ -27,28 +30,42 @@ import GenderSelect, {
   BloodGroupSelect,
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
+import { useGetClassesQuery } from "../../../general settings/classes/api/classesEndPoints";
 
 interface Props {
   record: any;
 }
 
 const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
+  const [form] = AntForm.useForm();
   const { data: singleTeacher } = useGetSingleSTeacherQuery(record?.id);
   const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery(
     {}
   );
-
+  const { data: classData } = useGetClassesQuery<any>({});
+  const [selectedSubjects, setSelectedSubjects] = useState<number[]>([]);
   const [update, { isLoading }] = useUpdateTeacherMutation();
-  const [form] = AntForm.useForm();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
-  // const [originalImages, setOriginalImages] = useState<any[]>([]);
-  // console.log(originalImages);
-
   useEffect(() => {
     if (singleTeacher) {
+      const phoneNumber = singleTeacher?.data?.phone_number?.startsWith("880")
+        ? singleTeacher.data.phone_number.substring(3)
+        : singleTeacher?.data?.phone_number;
+
+      // Extract subject IDs from the subjects array
+      const subjectSpecializationIds =
+        singleTeacher?.data?.subject_specializations?.map(
+          (subject: any) => subject.id
+        ) || [];
+      const subjectIds =
+        singleTeacher?.data?.subjects?.map((subject: any) => subject.id) || [];
+
+      // Update the selectedSubjects state
+      setSelectedSubjects(subjectIds);
+
       const initialImages =
         singleTeacher?.data?.image &&
         typeof singleTeacher?.data?.image === "string"
@@ -61,16 +78,16 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
               },
             ]
           : [];
-      // setOriginalImages(initialImages);
+
       form.setFieldsValue({
         ...singleTeacher.data,
         username: singleTeacher?.data?.user?.username,
         hire_date: dayjs(singleTeacher?.data?.hire_date),
         date_of_birth: dayjs(singleTeacher?.data?.date_of_birth),
-        subject_specialization: singleTeacher?.data?.subject?.map(
-          (level: any) => level?.id
-        ),
+        subject_specialization: subjectSpecializationIds,
+        subjects: subjectIds,
         image: initialImages,
+        phone_number: phoneNumber,
       });
     }
   }, [form, singleTeacher]);
@@ -90,11 +107,10 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
 
     Object.entries(values).forEach(([key, value]) => {
       if (key === "image") {
-        // Handle image field separately
         if (Array.isArray(value) && value.length > 0) {
           value.forEach((file) => {
             if (file?.originFileObj && file.originFileObj instanceof File) {
-              formData.append(key, file.originFileObj); // Append the file
+              formData.append(key, file.originFileObj);
             }
           });
         }
@@ -113,28 +129,48 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
       }
     });
 
-    // update(formData);
+    // Append selected subjects
+    selectedSubjects.forEach((subjectId: number) => {
+      formData.append("subjects", subjectId.toString());
+    });
+
     update({ id: record?.id, data: formData });
+  };
+
+  // Group subjects by class
+  const groupedSubjects = classData?.data?.reduce(
+    (acc: any, classItem: any) => {
+      const classSubjects: any = subjectData?.data?.results?.filter(
+        (subject: any) => subject.grade_level?.id === classItem.id
+      );
+
+      if (classSubjects?.length > 0) {
+        acc.push({
+          className: classItem.name,
+          classId: classItem.id,
+          subjects: classSubjects,
+        });
+      }
+      return acc;
+    },
+    []
+  );
+
+  const handleSubjectChange = (subjectId: number, checked: boolean) => {
+    setSelectedSubjects((prev) =>
+      checked ? [...prev, subjectId] : prev.filter((id) => id !== subjectId)
+    );
   };
 
   return (
     <div>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        isLoading={isLoading}
-        initialValues={
-          {
-            // is_active: true,
-          }
-        }
-      >
+      <Form form={form} onFinish={onFinish} isLoading={isLoading}>
         <Row gutter={[16, 16]}>
-          <Col lg={24}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Badge.Ribbon text="Teacher Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col span={6}>
+                  <Col xs={24} sm={24} md={8} lg={6} xl={6} xxl={6}>
                     <Card>
                       <Form.Item
                         label="Picture"
@@ -171,25 +207,25 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                       </Modal>
                     </Card>
                   </Col>
-                  <Col span={18}>
+                  <Col xs={24} sm={24} md={16} lg={18} xl={18} xxl={18}>
                     <Row gutter={[16, 16]}>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any> label="First Name" name="first_name">
                           <Input placeholder="First Name." />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any> label="Last Name" name="last_name">
                           <Input placeholder="Last Name." />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any> label="Email" name="email">
                           <Input placeholder="Email" />
                         </Form.Item>
                       </Col>
 
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any> label="Hire Date" name="hire_date">
                           <DatePicker
                             placeholder="Select Date"
@@ -198,7 +234,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                           />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any>
                           label="Phone Number"
                           name="phone_number"
@@ -210,20 +246,20 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                           />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any> label="Base Salary" name="base_salary">
                           <Input placeholder="Base Salary." type="number" />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item label="Username" name="username">
                           <Input placeholder="Username." disabled />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <PasswordInput isRequired={false} />
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item
                           label="Status"
                           name="is_active"
@@ -242,11 +278,11 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
             </Badge.Ribbon>
           </Col>
 
-          <Col lg={24}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Badge.Ribbon text="Other Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any>
                       label="Date of Birth"
                       name="date_of_birth"
@@ -267,7 +303,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any>
                       label="Teacher Birth ID / NID"
                       name="national_id"
@@ -275,7 +311,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                       <Input placeholder="Teacher Birth ID / NID" />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any>
                       label="Father / Husband Name"
                       name="father_or_husband_name"
@@ -283,7 +319,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                       <Input placeholder="Father / Husband Name" />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any>
                       label="Education Qualification"
                       name="education"
@@ -291,23 +327,23 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                       <Input placeholder="Education" />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any> label="Experience" name="experience">
                       <Input placeholder="Experience" />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <GenderSelect />
                   </Col>
 
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <ReligionSelect />
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <BloodGroupSelect />
                   </Col>
 
-                  <Col lg={6}>
+                  <Col xs={24} sm={24} md={12} lg={12} xl={6} xxl={6}>
                     <Form.Item
                       label="Subject Specialization"
                       name="subject_specialization"
@@ -333,7 +369,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={24} md={24} lg={12} xl={6} xxl={6}>
                     <Form.Item<any> label="Address" name="home_address">
                       <Input placeholder="Address" />
                     </Form.Item>
@@ -343,8 +379,47 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
             </Badge.Ribbon>
           </Col>
 
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+            <Badge.Ribbon text="Subjects Permissions" placement="start">
+              <Card style={{ paddingTop: "20px" }}>
+                <Typography.Title level={5} style={{ marginBottom: 24 }}>
+                  Select subjects you teach:
+                </Typography.Title>
 
-          
+                {groupedSubjects?.map((classInfo: any) => (
+                  <Card key={classInfo.classId}>
+                    <Typography.Title level={5} style={{ marginBottom: 8 }}>
+                      {classInfo.className}
+                    </Typography.Title>
+                    <Divider style={{ marginTop: 0, marginBottom: 12 }} />
+
+                    <Row gutter={[16, 16]}>
+                      {classInfo.subjects.map((subject: any) => (
+                        <Col
+                          key={subject.id}
+                          xs={24}
+                          sm={12}
+                          md={8}
+                          lg={6}
+                          xl={6}
+                          xxl={4}
+                        >
+                          <Checkbox
+                            onChange={(e) =>
+                              handleSubjectChange(subject.id, e.target.checked)
+                            }
+                            checked={selectedSubjects.includes(subject.id)}
+                          >
+                            {subject.name}
+                          </Checkbox>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Card>
+                ))}
+              </Card>
+            </Badge.Ribbon>
+          </Col>
         </Row>
       </Form>
     </div>

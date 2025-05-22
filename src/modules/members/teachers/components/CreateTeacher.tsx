@@ -6,13 +6,11 @@ import {
   Input,
   Modal,
   Row,
-  Select,
   Switch,
   Checkbox,
   Divider,
   Typography,
 } from "antd";
-
 import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 import { Form } from "../../../../common/CommonAnt";
@@ -30,14 +28,11 @@ import { useGetClassesQuery } from "../../../general settings/classes/api/classe
 
 const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
-  const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery({
+  const { data: subjectData } = useGetSubjectsQuery({
     page_size: 650,
   });
-
   const { data: classData } = useGetClassesQuery<any>({});
-
   const [selectedSubjects, setSelectedSubjects] = useState<number[]>([]);
-
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -115,7 +110,12 @@ const CreateTeacher = () => {
       password: values.password,
     };
     formData.append("user", JSON.stringify(user));
-    formData.append("subjects", JSON.stringify(selectedSubjects));
+    selectedSubjects.forEach((subjectId: any) => {
+      formData.append("subjects", subjectId);
+    });
+    // values?.subject_specializations.forEach((subjectId: any) => {
+    //   formData.append("subject_specializations", subjectId);
+    // });
 
     create(formData);
   };
@@ -132,11 +132,11 @@ const CreateTeacher = () => {
         }}
       >
         <Row gutter={[16, 16]}>
-          <Col lg={24}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Badge.Ribbon text="Teacher Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col span={6}>
+                  <Col xs={24} sm={24} md={8} lg={6} xl={6} xxl={6}>
                     <Card>
                       <Form.Item
                         label="Picture"
@@ -173,9 +173,9 @@ const CreateTeacher = () => {
                       </Modal>
                     </Card>
                   </Col>
-                  <Col span={18}>
+                  <Col xs={24} sm={24} md={16} lg={18} xl={18} xxl={18}>
                     <Row gutter={[16, 16]}>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any>
                           label="First Name"
                           name="first_name"
@@ -184,7 +184,7 @@ const CreateTeacher = () => {
                           <Input placeholder="First Name." />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any>
                           label="Last Name"
                           name="last_name"
@@ -193,7 +193,7 @@ const CreateTeacher = () => {
                           <Input placeholder="Last Name." />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any>
                           label="Email"
                           name="email"
@@ -203,7 +203,7 @@ const CreateTeacher = () => {
                         </Form.Item>
                       </Col>
 
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any>
                           label="Hire Date"
                           name="hire_date"
@@ -216,7 +216,7 @@ const CreateTeacher = () => {
                           />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any>
                           label="Phone Number"
                           name="phone_number"
@@ -234,7 +234,7 @@ const CreateTeacher = () => {
                           />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any>
                           label="Base Salary"
                           name="base_salary"
@@ -243,7 +243,7 @@ const CreateTeacher = () => {
                           <Input placeholder="Base Salary." type="number" />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any>
                           label="Username"
                           name="username"
@@ -252,11 +252,11 @@ const CreateTeacher = () => {
                           <Input placeholder="Username." />
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <PasswordInput isRequired={true} />
                       </Col>
 
-                      <Col lg={8}>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item
                           label="Status"
                           name="is_active"
@@ -278,11 +278,11 @@ const CreateTeacher = () => {
             </Badge.Ribbon>
           </Col>
 
-          <Col lg={24}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Badge.Ribbon text="Other Information" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Row gutter={[16, 16]}>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any>
                       label="Date of Birth"
                       name="date_of_birth"
@@ -303,7 +303,7 @@ const CreateTeacher = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any>
                       label="Teacher Birth ID / NID"
                       name="national_id"
@@ -311,7 +311,7 @@ const CreateTeacher = () => {
                       <Input placeholder="Teacher Birth ID / NID" />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any>
                       label="Father / Husband Name"
                       name="father_or_husband_name"
@@ -319,7 +319,7 @@ const CreateTeacher = () => {
                       <Input placeholder="Father / Husband Name" />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any>
                       label="Education Qualification"
                       name="education"
@@ -327,24 +327,27 @@ const CreateTeacher = () => {
                       <Input placeholder="Education" />
                     </Form.Item>
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <Form.Item<any> label="Experience" name="experience">
                       <Input placeholder="Experience" />
                     </Form.Item>
                   </Col>
-                  <GenderSelect />
 
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
+                    <GenderSelect />
+                  </Col>
+
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <ReligionSelect />
                   </Col>
-                  <Col lg={6}>
+                  <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                     <BloodGroupSelect />
                   </Col>
 
-                  <Col lg={6}>
+                  {/* <Col xs={24} sm={24} md={12} lg={12} xl={6} xxl={6}>
                     <Form.Item
-                      label="Subject Specialization"
-                      name="subject_specialization"
+                      label="Subject Specializations"
+                      name="subject_specializations"
                     >
                       <Select
                         mode="multiple"
@@ -354,7 +357,7 @@ const CreateTeacher = () => {
                         placeholder={
                           subjectLoading
                             ? "Loading Subjects..."
-                            : "Please Select Specialization"
+                            : "Please Select Specializations"
                         }
                         options={
                           subjectData?.data?.results?.map(
@@ -366,9 +369,9 @@ const CreateTeacher = () => {
                         }
                       />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
 
-                  <Col lg={6}>
+                  <Col xs={24} sm={24} md={24} lg={12} xl={6} xxl={6}>
                     <Form.Item<any> label="Address" name="home_address">
                       <Input placeholder="Address" />
                     </Form.Item>
@@ -378,7 +381,7 @@ const CreateTeacher = () => {
             </Badge.Ribbon>
           </Col>
 
-          <Col lg={24}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Badge.Ribbon text="Subjects Permissions" placement="start">
               <Card style={{ paddingTop: "20px" }}>
                 <Typography.Title level={5} style={{ marginBottom: 24 }}>
@@ -401,6 +404,7 @@ const CreateTeacher = () => {
                           md={8}
                           lg={6}
                           xl={6}
+                          xxl={4}
                         >
                           <Checkbox
                             onChange={(e) =>

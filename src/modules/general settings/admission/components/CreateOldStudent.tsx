@@ -207,16 +207,17 @@ const CreateOldStudent = () => {
           status: "approved",
           discount_type: "amount",
           discount_value: 0,
+          fee_type: "class",
           customFees: [
             {
               name: "Registration Fee",
-              amount: 999,
+              amount: 1000,
               one_time: true,
               effective_from: dayjs(),
             },
             {
               name: "Monthly Fee",
-              amount: 599,
+              amount: 500,
               one_time: false,
               effective_from: dayjs(),
             },

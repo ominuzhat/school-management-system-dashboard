@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Badge, Button, Card, Col, Form, Row, Select, Switch } from "antd";
+import { Badge, Button, Card, Col, Form, Row, Select } from "antd";
 import { useState, useEffect } from "react";
 import {
   useGetSingleFeesQuery,
@@ -41,8 +41,6 @@ const UpdateFees = ({ record }: { record: any }) => {
   const [form] = Form.useForm();
 
   const onFinish = (values: any): void => {
-    console.log(values, "result");
-
     updateFees({ id: record, data: { ...values } });
   };
 
@@ -157,11 +155,11 @@ const UpdateFees = ({ record }: { record: any }) => {
               </Form.Item>
             </Col>
           )}
-          <Col>
+          {/* <Col>
             <Form.Item label="Package" name="package" valuePropName="checked">
               <Switch />
             </Form.Item>
-          </Col>
+          </Col> */}
 
           <Col lg={24}>
             <Badge.Ribbon text="Particulars" color="blue" placement="start">

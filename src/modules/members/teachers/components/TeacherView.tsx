@@ -21,7 +21,7 @@ const TeacherView = () => {
       </div>
       <Card>
         <Row gutter={[24, 16]}>
-          <Col lg={16}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={16}>
             <TeacherInformation data={data?.data && data?.data} />
             <Row>
               <Col span={24} className="my-2">
@@ -34,7 +34,7 @@ const TeacherView = () => {
               </Col>
             </Row>
           </Col>
-          <Col lg={8}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={8}>
             <TeacherAttendance />
             <TeacherPerformance />
           </Col>

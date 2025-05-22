@@ -4,6 +4,8 @@ import TextView from "../../../../common/components/TextView";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 
 const TeacherInformation = ({ data }: { data: any }) => {
+  console.log(data);
+
   const {
     first_name,
     last_name,
@@ -24,6 +26,7 @@ const TeacherInformation = ({ data }: { data: any }) => {
     religion,
     blood_group,
     home_address,
+    subject_specializations,
   } = data || {};
 
   const information = [
@@ -107,6 +110,16 @@ const TeacherInformation = ({ data }: { data: any }) => {
         },
       ],
     },
+    {
+      title: "Subjects Specialization",
+      data: [
+        {
+          fieldName: "Subjects Specialization",
+          text: subject_specializations || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+      ],
+    },
   ];
 
   return (
@@ -140,7 +153,15 @@ const TeacherInformation = ({ data }: { data: any }) => {
               <Card className="pt-2">
                 <Row gutter={[16, 16]}>
                   {section.data.map((item, idx) => (
-                    <Col xs={24} sm={12} md={8} key={idx}>
+                    <Col
+                      xs={24}
+                      sm={12}
+                      md={12}
+                      lg={12}
+                      xl={12}
+                      xxl={8}
+                      key={idx}
+                    >
                       <TextView
                         fieldName={item.fieldName}
                         text={item.text}

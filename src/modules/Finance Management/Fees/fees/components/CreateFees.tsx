@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Col, Row, Select, Switch, Tooltip } from "antd";
+import { Badge, Button, Card, Col, Row, Select, Tooltip } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import { useCreateFeesMutation } from "../api/feesEndpoints";
 import { useState } from "react";
@@ -176,11 +176,11 @@ const CreateFees = () => {
               </Form.Item>
             </Col>
           )}
-          <Col>
+          {/* <Col>
             <Form.Item label="Package" name="package" valuePropName="checked">
               <Switch />
             </Form.Item>
-          </Col>
+          </Col> */}
           <Col className="flex items-center justify-center">
             <Tooltip
               className="text-black"

@@ -17,13 +17,6 @@ const useTeacherSubjectsColumns = (): ColumnsType<any> => {
     },
     {
       key: "2",
-      title: "Marks",
-      dataIndex: "marks",
-      align: "center",
-      render: (marks) => (marks ? marks : "N/A"),
-    },
-    {
-      key: "3",
       title: "Class",
       dataIndex: "grade_level",
       align: "center",

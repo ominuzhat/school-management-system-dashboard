@@ -16,6 +16,7 @@ import {
   Space,
   Collapse,
   Tabs,
+  Grid,
 } from "antd";
 import {
   UserOutlined,
@@ -35,11 +36,13 @@ import { capitalize } from "../../../../common/capitalize/Capitalize";
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 const { TabPane } = Tabs;
+const { useBreakpoint } = Grid;
 
 const AdmissionView = () => {
   const { admissionId } = useParams();
   const { data: singleAdmissionData, isLoading } =
     useGetSingleAdmissionQuery<any>(Number(admissionId));
+  const screens = useBreakpoint();
 
   if (isLoading) {
     return (
@@ -67,20 +70,24 @@ const AdmissionView = () => {
     registration_number,
     previous_registration_number,
     roll,
-    one_time_fee,
-    monthly_fee,
     session,
     grade_level,
     shift,
     section,
-    due_amount,
-    total_paid_amount,
     status,
     attendance_percent,
     total_present,
     total_absent,
   } = singleAdmission;
 
+  // Get financial data from the first admission record
+  const admissionData = student?.admissions?.[0] || {};
+  const actualPaidAmount = admissionData.total_paid_amount || 0;
+  const actualDueAmount = admissionData.due_amount || 0;
+  const actualMonthlyFee = admissionData.monthly_fee || 0;
+  const actualOneTimeFee = admissionData.one_time_fee || 0;
+
+  // Then use these actual values in your components
   const subjectColumns = [
     {
       title: "Subject",
@@ -101,12 +108,14 @@ const AdmissionView = () => {
     },
   ];
 
-  const formattedFee = (amount: number) =>
-    new Intl.NumberFormat("en-BD", {
+  const formattedFee = (amount: number | string | undefined | null) => {
+    const numAmount = Number(amount) || 0;
+    return new Intl.NumberFormat("en-BD", {
       style: "currency",
       currency: "BDT",
       minimumFractionDigits: 2,
-    }).format(amount);
+    }).format(numAmount);
+  };
 
   const getStatusTag = (status: string) => {
     switch (status?.toLowerCase()) {
@@ -127,11 +136,76 @@ const AdmissionView = () => {
     }
   };
 
+  // Responsive layout configurations
+  const summaryCardColSpan = {
+    xs: 24,
+    sm: 12,
+    md: 8,
+    lg: 6,
+    xl: 6,
+    xxl: 4,
+  };
+
+  const mainContentColSpan = {
+    xs: 24,
+    sm: 24,
+    md: 24,
+    lg: 16,
+    xl: 16,
+    xxl: 16,
+  };
+
+  const profileColSpan = {
+    xs: 24,
+    sm: 24,
+    md: 24,
+    lg: 8,
+    xl: 8,
+    xxl: 8,
+  };
+
+  const statisticColSpan = {
+    xs: 24,
+    sm: 12,
+    md: 12,
+    lg: 12,
+    xl: 12,
+    xxl: 12,
+  };
+
+  const attendanceColSpan = {
+    xs: 24,
+    sm: 8,
+    md: 8,
+    lg: 8,
+    xl: 8,
+    xxl: 8,
+  };
+
+  const descriptionColumn = {
+    xs: 1,
+    sm: 1,
+    md: 1,
+    lg: 2,
+    xl: 2,
+    xxl: 2,
+  };
+
   return (
-    <div className="admission-view-container">
+    <div
+      className="admission-view-container"
+      style={{ padding: screens.xs ? "8px" : "24px" }}
+    >
       <div className="page-header">
         <BreadCrumb />
-        <Title level={2} className="page-title">
+        <Title
+          level={screens.xs ? 4 : screens.sm ? 3 : 2}
+          className="page-title"
+          style={{
+            marginTop: screens.xs ? "8px" : "16px",
+            marginBottom: screens.xs ? "16px" : "24px",
+          }}
+        >
           Admission Details
         </Title>
       </div>
@@ -139,43 +213,49 @@ const AdmissionView = () => {
       <div className="admission-content">
         {/* Summary Cards Row */}
         <Row gutter={[16, 16]} className="summary-cards">
-          <Col xs={24} sm={12} md={8} lg={6}>
+          <Col {...summaryCardColSpan}>
             <Card className="summary-card" hoverable>
               <Statistic
                 title="Admission Date"
                 value={admission_date}
                 prefix={<CalendarOutlined />}
-                valueStyle={{ fontSize: 16 }}
+                valueStyle={{ fontSize: screens.xs ? 14 : 16 }}
               />
             </Card>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6}>
+          <Col {...summaryCardColSpan}>
             <Card className="summary-card" hoverable>
               <Statistic
                 title="Registration No"
                 value={registration_number}
                 prefix={<IdcardOutlined />}
-                valueStyle={{ fontSize: 16 }}
+                valueStyle={{ fontSize: screens.xs ? 14 : 16 }}
               />
             </Card>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6}>
+          <Col {...summaryCardColSpan}>
             <Card className="summary-card" hoverable>
               <Statistic
                 title="One-Time Fee"
-                value={formattedFee(one_time_fee)}
+                value={formattedFee(actualOneTimeFee)}
                 prefix={<DollarOutlined />}
-                valueStyle={{ fontSize: 16, color: "#3f8600" }}
+                valueStyle={{
+                  fontSize: screens.xs ? 14 : 16,
+                  color: "#3f8600",
+                }}
               />
             </Card>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6}>
+          <Col {...summaryCardColSpan}>
             <Card className="summary-card" hoverable>
               <Statistic
                 title="Monthly Fee"
-                value={formattedFee(monthly_fee)}
+                value={formattedFee(actualMonthlyFee)}
                 prefix={<DollarOutlined />}
-                valueStyle={{ fontSize: 16, color: "#cf1322" }}
+                valueStyle={{
+                  fontSize: screens.xs ? 14 : 16,
+                  color: "#cf1322",
+                }}
               />
             </Card>
           </Col>
@@ -183,14 +263,14 @@ const AdmissionView = () => {
 
         <Row gutter={[24, 24]} className="main-content">
           {/* Left Column */}
-          <Col xs={24} lg={16}>
+          <Col {...mainContentColSpan}>
             <Tabs defaultActiveKey="1" className="detail-tabs">
               <TabPane tab="Admission Information" key="1">
                 <Card className="detail-card">
                   <Descriptions
                     bordered
-                    column={{ xs: 1, sm: 2 }}
-                    size="middle"
+                    column={descriptionColumn}
+                    size={screens.xs ? "small" : "middle"}
                     labelStyle={{ fontWeight: 600 }}
                   >
                     <Descriptions.Item label="Fee Type">
@@ -224,17 +304,17 @@ const AdmissionView = () => {
 
                 <Card title="Financial Summary" className="detail-card">
                   <Row gutter={16}>
-                    <Col xs={24} sm={12}>
+                    <Col {...statisticColSpan}>
                       <Statistic
                         title="Total Due"
-                        value={formattedFee(due_amount)}
+                        value={formattedFee(actualDueAmount)}
                         valueStyle={{ color: "#cf1322" }}
                       />
                     </Col>
-                    <Col xs={24} sm={12}>
+                    <Col {...statisticColSpan}>
                       <Statistic
                         title="Total Paid"
-                        value={formattedFee(total_paid_amount)}
+                        value={formattedFee(actualPaidAmount)}
                         valueStyle={{ color: "#3f8600" }}
                       />
                     </Col>
@@ -243,17 +323,17 @@ const AdmissionView = () => {
 
                 <Card title="Attendance Summary" className="detail-card">
                   <Row gutter={16}>
-                    <Col xs={24} sm={8}>
+                    <Col {...attendanceColSpan}>
                       <Statistic
                         title="Attendance %"
                         value={attendance_percent}
                         suffix="%"
                       />
                     </Col>
-                    <Col xs={24} sm={8}>
+                    <Col {...attendanceColSpan}>
                       <Statistic title="Present" value={total_present} />
                     </Col>
-                    <Col xs={24} sm={8}>
+                    <Col {...attendanceColSpan}>
                       <Statistic title="Absent" value={total_absent} />
                     </Col>
                   </Row>
@@ -268,7 +348,8 @@ const AdmissionView = () => {
                     rowKey="id"
                     pagination={false}
                     bordered
-                    size="middle"
+                    size={screens.xs ? "small" : "middle"}
+                    scroll={screens.xs ? { x: true } : undefined}
                   />
                 </Card>
               </TabPane>
@@ -276,16 +357,20 @@ const AdmissionView = () => {
           </Col>
 
           {/* Right Column - Student Profile */}
-          <Col xs={24} lg={8}>
+          <Col {...profileColSpan}>
             <Card className="profile-card">
-              <div className="profile-header">
+              <div className="profile-header" style={{ textAlign: "center" }}>
                 <Avatar
-                  size={80}
+                  size={screens.xs ? 64 : 80}
                   icon={<UserOutlined />}
                   src={student?.image}
                   className="profile-avatar"
                 />
-                <Title level={4} className="profile-name">
+                <Title
+                  level={screens.xs ? 5 : 4}
+                  className="profile-name"
+                  style={{ marginTop: screens.xs ? "8px" : "16px" }}
+                >
                   {student?.first_name} {student?.last_name}
                 </Title>
                 <Text type="secondary" className="profile-role">
@@ -336,7 +421,11 @@ const AdmissionView = () => {
 
               <Divider />
 
-              <Title level={5} className="section-title">
+              <Title
+                level={screens.xs ? 5 : 5}
+                className="section-title"
+                style={{ marginBottom: "16px" }}
+              >
                 <BankOutlined /> Institution Details
               </Title>
               <Descriptions column={1} size="small">
@@ -362,7 +451,11 @@ const AdmissionView = () => {
 
               <Divider />
 
-              <Title level={5} className="section-title">
+              <Title
+                level={screens.xs ? 5 : 5}
+                className="section-title"
+                style={{ marginBottom: "16px" }}
+              >
                 Parent Information
               </Title>
               <Collapse ghost>
