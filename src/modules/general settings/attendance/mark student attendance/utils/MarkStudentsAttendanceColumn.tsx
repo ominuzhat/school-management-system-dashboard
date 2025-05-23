@@ -5,14 +5,10 @@ const useMarkStudentsAttendanceColumns = ({
   attendanceData,
   formData,
   setResult,
-  gradeLevel,
-  session,
 }: {
   attendanceData: any[];
   formData: any;
   setResult: any;
-  gradeLevel: any;
-  session: any;
 }) => {
   const [admission, setAdmission] = useState<any[]>([]);
   const [statusMap, setStatusMap] = useState<Record<string, string>>({});
@@ -87,6 +83,12 @@ const useMarkStudentsAttendanceColumns = ({
 
   return [
     {
+      key: "0",
+      title: "SL No.",
+      align: "center",
+      render: (_text: any, _record: any, index: any) => index + 1,
+    },
+    {
       title: "Student Name",
       dataIndex: "admission",
       key: "student",
@@ -98,25 +100,27 @@ const useMarkStudentsAttendanceColumns = ({
       ),
     },
     {
-      title: "Registration Number",
+      title: "User ID",
       dataIndex: "admission",
-      key: "registration_number",
-      align: "left",
-      render: (admission: any) => <span>{admission?.registration_number}</span>,
+      key: "username",
+      align: "center",
+      render: (admission: any) => (
+        <span>{admission?.student?.user?.username}</span>
+      ),
     },
     {
-      title: "Class",
+      title: "Shift",
       dataIndex: "admission",
-      key: "grade_level",
+      key: "shift",
       align: "center",
-      render: () => <span>{gradeLevel?.name}</span>,
+      render: (admission: any) => <span>{admission?.shift?.name}</span>,
     },
     {
-      title: "Session",
+      title: "Section",
       dataIndex: "admission",
-      key: "session",
+      key: "section",
       align: "center",
-      render: () => <span>{session?.name}</span>,
+      render: (admission: any) => <span>{admission?.section?.name}</span>,
     },
     {
       title: (

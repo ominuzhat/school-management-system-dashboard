@@ -37,6 +37,7 @@ const UpdateCollectFee = () => {
     discountValue: 0,
   });
 
+  console.log(finalDueAmount, setDiscount);
 
   const [paidAmount, setPaidAmount] = useState<number | null>(null);
   const [addOns, setAddOns] = useState<string[]>([]); // Ensure it's always an array
@@ -46,7 +47,6 @@ const UpdateCollectFee = () => {
   const { data: singleData } = useGetCollectSingleFeesQuery(
     Number(collectFeeId)
   );
-
 
   const [update, { isLoading, isSuccess }] = useUpdateCollectFeesMutation();
   const { data: additionalData } = useGetAdditionalFeesQuery({});
@@ -68,8 +68,9 @@ const UpdateCollectFee = () => {
       form.setFieldsValue({
         admission: singleData?.data?.admission?.id,
         class: singleData?.data?.admission?.grade_level,
+        // discount_value: singleData?.data?.discount_value,
+        discount_type: singleData?.data?.discount_type,
         paid_amount: singleData?.data?.paid_amount,
-        discount_value: singleData?.data?.discount_value,
         payment_method: singleData?.data?.payment_method,
         session: singleData?.data?.admission?.session?.name,
         due_amount: singleData?.data?.admission?.due_amount,
@@ -102,7 +103,8 @@ const UpdateCollectFee = () => {
 
   useEffect(() => {
     const totalDueAmount =
-      (singleData?.data?.due_amount || 0) + totalAmountOfAdditionalFees;
+      (singleData?.data?.admission?.due_amount || 0) +
+      totalAmountOfAdditionalFees;
 
     let discountedAmount = 0;
 
@@ -120,7 +122,8 @@ const UpdateCollectFee = () => {
     discount.discountType,
     discount.discountValue,
     paidAmount,
-    singleData?.data?.due_amount,
+    singleData?.data?.admission?.due_amount,
+    singleData?.data.due_amount,
     totalAmountOfAdditionalFees,
   ]);
 
@@ -311,24 +314,24 @@ const UpdateCollectFee = () => {
 
             <div className="flex justify-end gap-10 pt-4">
               <div className="flex flex-col gap-3">
-                <Text strong className="text-lg text-red-600">
+                {/* <Text strong className="text-lg text-red-600">
                   Total Due :
-                </Text>
-                <Text strong className="text-lg text-yellow-600">
+                </Text> */}
+                {/* <Text strong className="text-lg text-yellow-600">
                   Total Discount :
-                </Text>
+                </Text> */}
                 <Text strong className="text-lg text-green-600">
                   Paid :
                 </Text>
               </div>
 
               <div className="flex flex-col gap-3  ">
-                <div className="flex justify-end">
+                {/* <div className="flex justify-end">
                   <p className="border-red-600 border shadow-lg rounded text-center text-lg font-semibold w-24">
                     {finalDueAmount || 0}
                   </p>
-                </div>
-
+                </div> */}
+                {/* 
                 <div className="flex items-center gap-5">
                   <Form.Item
                     name="discount_type"
@@ -370,7 +373,7 @@ const UpdateCollectFee = () => {
                       prefix={<TbCoinTaka />}
                     />
                   </Form.Item>
-                </div>
+                </div> */}
 
                 <div className="flex items-center gap-5">
                   <Form.Item

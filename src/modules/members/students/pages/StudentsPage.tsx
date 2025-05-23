@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
-import { Button, Card, Col, Row, Select } from "antd";
+import { Button, Card, Col, Row, Select, Tag } from "antd";
 import { IoGridOutline } from "react-icons/io5";
-import { PlusOutlined } from "@ant-design/icons";
 import { FaGraduationCap, FaListUl, FaUser } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -82,22 +81,18 @@ const StudentsPage = () => {
     moduleNames.student,
     actionNames.view
   );
-  const createPermission = GetPermission(
-    dashboardData?.data?.permissions,
-    moduleNames.student,
-    actionNames.add
-  );
-
-  console.log(studentData?.data?.results);
+  // const createPermission = GetPermission(
+  //   dashboardData?.data?.permissions,
+  //   moduleNames.student,
+  //   actionNames.add
+  // );
 
   return (
     <div className="space-y-5">
       <div className="my-5">
         <BreadCrumb />
       </div>
-      <Card>
-        <Row wrap gutter={[12, 12]} align="middle" justify="space-between">
-          {createPermission && (
+      {/* {createPermission && (
             <Col xs={24} sm={12} md={8} lg={4}>
               <Link to={"/students/create"}>
                 <Button
@@ -109,14 +104,25 @@ const StudentsPage = () => {
                 </Button>
               </Link>
             </Col>
-          )}
-          <Col xs={24} sm={12} md={18} lg={18}>
-            <Row gutter={[12, 12]} align="middle" justify="space-between">
-              <Col xs={24} sm={12} md={4} lg={4}>
+          )} */}
+      <Card
+        bodyStyle={{
+          padding: "16px",
+          borderRadius: "8px",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Row gutter={[16, 16]} align="middle" justify="space-between">
+          {/* Filters Section */}
+          <Col xs={24} sm={24} md={16} lg={18} xl={20}>
+            <Row gutter={[12, 12]} align="middle">
+              {/* Class Selector */}
+              <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                 <Select
                   className="w-full"
-                  placeholder="Select Class"
+                  placeholder="Class"
                   allowClear
+                
                   onChange={(value) =>
                     setFilters((prev) => ({
                       ...prev,
@@ -133,11 +139,13 @@ const StudentsPage = () => {
                 </Select>
               </Col>
 
-              <Col xs={24} sm={12} md={8} lg={4}>
+              {/* Section Selector */}
+              <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                 <Select
                   className="w-full"
-                  placeholder="Select Section"
+                  placeholder="Section"
                   allowClear
+
                   onChange={(value) =>
                     setFilters((prev) => ({
                       ...prev,
@@ -154,10 +162,11 @@ const StudentsPage = () => {
                 </Select>
               </Col>
 
-              <Col xs={24} sm={12} md={8} lg={4}>
+              {/* Session Selector */}
+              <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                 <Select
                   className="w-full"
-                  placeholder="Select Session"
+                  placeholder="Session"
                   allowClear
                   onChange={(value) =>
                     setFilters((prev) => ({
@@ -175,10 +184,11 @@ const StudentsPage = () => {
                 </Select>
               </Col>
 
-              <Col xs={24} sm={12} md={8} lg={4}>
+              {/* Shift Selector */}
+              <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                 <Select
                   className="w-full"
-                  placeholder="Select Shift"
+                  placeholder="Shift"
                   allowClear
                   onChange={(value) =>
                     setFilters((prev) => ({
@@ -196,33 +206,38 @@ const StudentsPage = () => {
                 </Select>
               </Col>
 
-              <Col xs={24} sm={12} md={8} lg={4}>
+              {/* Status Selector */}
+              <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                 <Select
-                  placeholder="Select Active"
                   className="w-full"
+                  placeholder="Status"
                   allowClear
                   onChange={(value) =>
                     setFilters((prev) => ({ ...prev, is_active: value }))
                   }
                 >
-                  <Select.Option value={true}>ACTIVE</Select.Option>
-                  <Select.Option value={false}>INACTIVE</Select.Option>
+                  <Option value={true}>
+                    <Tag color="green">ACTIVE</Tag>
+                  </Option>
+                  <Option value={false}>
+                    <Tag color="red">INACTIVE</Tag>
+                  </Option>
                 </Select>
-              </Col>
-
-              <Col xs={24} sm={24} md={12} lg={4}>
-                <SearchComponent
-                  onSearch={(value) =>
-                    setFilters((prev) => ({ ...prev, search: value }))
-                  }
-                  placeholder="Search students"
-                />
               </Col>
             </Row>
           </Col>
+
+          {/* Search Section */}
+          <Col xs={24} sm={24} md={8} lg={6} xl={4}>
+            <SearchComponent
+              onSearch={(value) =>
+                setFilters((prev) => ({ ...prev, search: value }))
+              }
+              placeholder="Search students..."
+            />
+          </Col>
         </Row>
       </Card>
-
       {viewPermission ? (
         <Card
           title={

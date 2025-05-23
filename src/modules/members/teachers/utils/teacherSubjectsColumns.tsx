@@ -1,6 +1,24 @@
 import type { ColumnsType } from "antd/es/table";
+import { Tag } from "antd";
 
-const useTeacherSubjectsColumns = (): ColumnsType<any> => {
+interface Subject {
+  id: number;
+  name: string;
+  grade_level: {
+    id: number;
+    name: string;
+    description: string;
+    class_teacher: any;
+  };
+}
+
+interface ClassGroup {
+  key: number;
+  className: string;
+  subjects: string[];
+}
+
+const useTeacherSubjectsColumns = (): ColumnsType<ClassGroup> => {
   return [
     {
       key: "0",
@@ -10,19 +28,84 @@ const useTeacherSubjectsColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Subjects Name",
-      dataIndex: "name",
+      title: "Class",
+      dataIndex: "className",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (className) => (
+        <span style={{ fontWeight: 600 }}>{className || "N/A"}</span>
+      ),
     },
     {
       key: "2",
-      title: "Class",
-      dataIndex: "grade_level",
+      title: "Subjects",
+      dataIndex: "subjects",
       align: "center",
-      render: (grade_level) => (grade_level ? grade_level?.name : "N/A"),
+      render: (subjects: string[]) => (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+            justifyContent: "center",
+          }}
+        >
+          {subjects.map((subject, idx) => (
+            <Tag key={idx} color="blue" style={{ margin: 0 }}>
+              {subject}
+            </Tag>
+          ))}
+        </div>
+      ),
     },
   ];
 };
 
+// Helper function to transform your data into the grouped format
+export const groupSubjectsByClass = (subjects: Subject[]): ClassGroup[] => {
+  const classMap = new Map<string, string[]>();
+
+  subjects.forEach((subject) => {
+    const className = subject.grade_level?.name || "Unknown Class";
+    if (!classMap.has(className)) {
+      classMap.set(className, []);
+    }
+    classMap.get(className)?.push(subject.name);
+  });
+
+  return Array.from(classMap.entries()).map(([className, subjects], index) => ({
+    key: index + 1,
+    className,
+    subjects,
+  }));
+};
+
 export default useTeacherSubjectsColumns;
+
+// import type { ColumnsType } from "antd/es/table";
+
+// const useTeacherSubjectsColumns = (): ColumnsType<any> => {
+//   return [
+//     {
+//       key: "0",
+//       title: "SL",
+//       align: "center",
+//       render: (_text, _record, index) => index + 1,
+//     },
+//     {
+//       key: "1",
+//       title: "Subjects Name",
+//       dataIndex: "name",
+//       align: "center",
+//       render: (name) => (name ? name : "N/A"),
+//     },
+//     {
+//       key: "2",
+//       title: "Class",
+//       dataIndex: "grade_level",
+//       align: "center",
+//       render: (grade_level) => (grade_level ? grade_level?.name : "N/A"),
+//     },
+//   ];
+// };
+
+// export default useTeacherSubjectsColumns;

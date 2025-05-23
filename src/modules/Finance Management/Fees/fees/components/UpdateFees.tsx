@@ -9,12 +9,20 @@ import { useGetClassesQuery } from "../../../../general settings/classes/api/cla
 import { useGetStudentsQuery } from "../../../../members/students/api/studentEndPoints";
 import { useGetSubjectsQuery } from "../../../../general settings/subjects/api/subjectsEndPoints";
 import MultipleFeesItemForm from "./MultipleFeesItemForm";
+import { debounce } from "lodash";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const UpdateFees = ({ record }: { record: any }) => {
   const { data: feeData } = useGetSingleFeesQuery(Number(record));
   const [updateFees, { isLoading }] = useUpdateFeesMutation();
 
-  const { data: classData, isLoading: classLoading } = useGetClassesQuery({});
+  const [search, setSearch] = useState("");
+  const {
+    data: classData,
+    isLoading: classLoading,
+    isFetching: isFetchingClasses,
+  } = useGetClassesQuery({ search: search });
+
   const { data: studentData, isLoading: studentLoading } = useGetStudentsQuery(
     {}
   );
@@ -55,7 +63,7 @@ const UpdateFees = ({ record }: { record: any }) => {
         }}
       >
         <Row gutter={[16, 16]}>
-          <Col lg={8}>
+          {/* <Col lg={8}>
             <Form.Item
               label="Select Fee Type"
               name="fee_type"
@@ -68,13 +76,12 @@ const UpdateFees = ({ record }: { record: any }) => {
                 className="w-full"
                 onChange={(value) => setFeeType(value)}
               >
-                {/* <Select.Option value="all">Alls</Select.Option> */}
                 <Select.Option value="class">Class</Select.Option>
                 <Select.Option value="student">Student</Select.Option>
                 <Select.Option value="subject">Subjects</Select.Option>
               </Select>
             </Form.Item>
-          </Col>
+          </Col> */}
 
           {feeType === "class" && (
             <Col lg={8}>
@@ -90,6 +97,13 @@ const UpdateFees = ({ record }: { record: any }) => {
                   style={{ width: "100%" }}
                   placeholder={
                     classLoading ? "Loading classes..." : "Please select"
+                  }
+                  optionFilterProp="children"
+                  filterOption={false}
+                  onSearch={debounce(setSearch, 500)}
+                  loading={isFetchingClasses}
+                  notFoundContent={
+                    isFetchingClasses ? <LoadingOutlined /> : "No Class found"
                   }
                   options={
                     (Array.isArray(classData?.data) &&

@@ -25,7 +25,7 @@ const subjectsEndpoint = api.injectEndpoints({
 
     createSubjects: builder.mutation<ApiResponse<ISubjects>, FormData>({
       query: (data) => ({
-        url: "/api/v1.0/institutions/subjects/",
+        url: "/api/v1.0/institutions/subjects/bulk-create/",
         method: "POST",
         body: data,
       }),

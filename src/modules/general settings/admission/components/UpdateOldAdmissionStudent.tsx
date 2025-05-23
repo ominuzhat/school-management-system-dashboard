@@ -41,7 +41,6 @@ const UpdateOldAdmissionStudent = () => {
   const [selectAll, setSelectAll] = useState(true);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const gradeLevel = AntForm.useWatch("grade_level", form);
-  const discountType = AntForm.useWatch("discount_type", form);
   const feeType = AntForm.useWatch("fee_type", form);
   // const customFees = AntForm.useWatch("customFees", form);
   console.log(setForceUpdate);
@@ -400,7 +399,7 @@ const UpdateOldAdmissionStudent = () => {
           )}
 
           {/* Discount Section */}
-          <Divider />
+          {/* <Divider />
           <Title level={4} className="mb-4">
             Discount Information
           </Title>
@@ -423,7 +422,7 @@ const UpdateOldAdmissionStudent = () => {
                 <Input type="number" min={0} />
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
 
           {/* Fee Configuration Section */}
           <Divider />

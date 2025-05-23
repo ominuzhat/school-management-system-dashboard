@@ -41,6 +41,7 @@ const CreateCollectFee = () => {
   const { data: admissionData, isFetching } = useGetAdmissionQuery({
     search: search,
     status: "approved",
+    page_size: 900,
   });
   const [form] = AntForm.useForm();
   const { data: accountList } = useGetAccountQuery({});
@@ -56,6 +57,8 @@ const CreateCollectFee = () => {
       ? selectedAdditionalFee.reduce((sum, data: any) => sum + data?.amount, 0)
       : 0;
   }, [selectedAdditionalFee]);
+
+  console.log(admissionData?.data?.results);
 
   useEffect(() => {
     let foundAdmission: any;

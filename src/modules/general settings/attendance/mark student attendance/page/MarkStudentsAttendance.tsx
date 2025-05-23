@@ -30,6 +30,8 @@ import {
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
+import { useGetShiftQuery } from "../../../shift/api/shiftEndPoints";
+import { useGetSectionQuery } from "../../../Section/api/sectionEndPoints";
 
 const { Option } = Select;
 
@@ -39,14 +41,17 @@ const MarkStudentsAttendance = () => {
     date: dayjs().format("YYYY-MM-DD"),
     grade_level: undefined,
     session: undefined,
+    shift: undefined,
+    section: undefined,
   });
   const [create] = useCreateStudentAttendanceMutation();
   const { data: sessionData } = useGetAdmissionSessionQuery({});
   const { data: classData } = useGetClassesQuery({});
+  const { data: shiftData } = useGetShiftQuery({});
+  const { data: sectionData } = useGetSectionQuery({});
   const [fetchAdmissionData, { data: attendanceData, isLoading }] =
     useLazyGetMarkStudentAttendanceQuery<any>({});
 
-  // Move hook call to top level
   const columns = useMarkStudentsAttendanceColumns({
     attendanceData: (attendanceData?.data?.records as any) || [],
     gradeLevel: (attendanceData?.data?.grade_level as any) || {},
@@ -105,27 +110,17 @@ const MarkStudentsAttendance = () => {
       </div>
       {viewPermission && (
         <Link to="/attendance/mark-student-attendance-list">
-          <p
-            style={{
-              fontSize: "14px",
-              fontWeight: "400",
-              color: "#1890ff",
-              padding: "8px 16px",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-            }}
-            className="flex items-center gap-2  w-64"
-          >
+          <p className="flex items-center gap-2 text-sm sm:text-base md:text-sm lg:text-sm xl:text-sm 2xl:text-sm text-blue-500 p-2 sm:p-3 md:p-2 lg:p-2 xl:p-2 2xl:p-2 cursor-pointer transition-all w-full sm:w-64">
             View List of Attendance{" "}
             <MdOutlineArrowRightAlt className="text-xl" />
           </p>
         </Link>
       )}
       <Card>
-        <Row justify="space-between" align="middle" gutter={[10, 10]}>
-          <Col lg={20}>
+        <Row gutter={[16, 16]} justify="space-between" align="middle">
+          <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20}>
             <Row gutter={[16, 16]}>
-              <Col lg={4} xs={24}>
+              <Col xs={24} sm={24} md={12} lg={6} xl={4} xxl={4}>
                 <DatePicker
                   className="w-full"
                   defaultValue={dayjs()}
@@ -138,21 +133,8 @@ const MarkStudentsAttendance = () => {
                   }
                 />
               </Col>
-              <Col lg={4} xs={24}>
-                <Select
-                  className="w-full"
-                  placeholder="Select Class"
-                  onChange={(value) => handleChange("grade_level", value)}
-                >
-                  {Array.isArray(classData?.data) &&
-                    classData?.data?.map((data: any) => (
-                      <Option key={data.id} value={data.id}>
-                        {data.name}
-                      </Option>
-                    ))}
-                </Select>
-              </Col>
-              <Col lg={4} xs={24}>
+
+              <Col xs={24} sm={24} md={12} lg={6} xl={4} xxl={4}>
                 <Select
                   className="w-full"
                   placeholder="Select Session"
@@ -168,10 +150,58 @@ const MarkStudentsAttendance = () => {
                     ))}
                 </Select>
               </Col>
+
+              <Col xs={24} sm={24} md={12} lg={6} xl={4} xxl={4}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Class"
+                  onChange={(value) => handleChange("grade_level", value)}
+                  allowClear
+                >
+                  {Array.isArray(classData?.data) &&
+                    classData?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+
+              <Col xs={24} sm={24} md={12} lg={6} xl={4} xxl={4}>
+                <Select
+                  className="w-full"
+                  placeholder="Select shift"
+                  onChange={(value) => handleChange("shift", value)}
+                  allowClear
+                >
+                  {Array.isArray(shiftData?.data) &&
+                    shiftData?.data?.map((shift: any) => (
+                      <Option key={shift.id} value={shift.id}>
+                        {shift.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+
+              <Col xs={24} sm={24} md={12} lg={6} xl={4} xxl={4}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Section"
+                  onChange={(value) => handleChange("section", value)}
+                  allowClear
+                >
+                  {Array.isArray(sectionData?.data) &&
+                    sectionData?.data?.map((shift: any) => (
+                      <Option key={shift.id} value={shift.id}>
+                        {shift.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
             </Row>
           </Col>
 
-          <Col lg={4} xs={24}>
+          <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4}>
             <Button
               type="primary"
               htmlType="button"
@@ -179,7 +209,7 @@ const MarkStudentsAttendance = () => {
               className="w-full"
               onClick={handleSearch}
             >
-              Search Student
+              <span className="xs:hidden">Search</span>
             </Button>
           </Col>
         </Row>
@@ -187,15 +217,18 @@ const MarkStudentsAttendance = () => {
       <Card>
         {createPermission ? (
           <>
-            <Table
-              loading={isLoading}
-              dataSource={attendanceData?.data?.records || []}
-              columns={columns}
-              pagination={false}
-              rowKey="id"
-            />
+            <div className="overflow-x-auto">
+              <Table
+                loading={isLoading}
+                dataSource={attendanceData?.data?.records || []}
+                columns={columns}
+                pagination={false}
+                rowKey="id"
+                scroll={{ x: true }}
+              />
+            </div>
             <Button
-              className="mt-5"
+              className="mt-5 w-full sm:w-auto"
               type="primary"
               onClick={handleAttendanceSubmit}
             >

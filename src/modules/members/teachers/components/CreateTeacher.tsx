@@ -29,7 +29,7 @@ import { useGetClassesQuery } from "../../../general settings/classes/api/classe
 const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
   const { data: subjectData } = useGetSubjectsQuery({
-    page_size: 650,
+    page_size: 900,
   });
   const { data: classData } = useGetClassesQuery<any>({});
   const [selectedSubjects, setSelectedSubjects] = useState<number[]>([]);

@@ -2,9 +2,7 @@ import {
   Card,
   Col,
   Row,
-  Select,
   Form as AntForm,
-  Input,
   Typography,
   Form,
   Button,
@@ -42,7 +40,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   const navigate = useNavigate();
   const [form] = AntForm.useForm();
   const dispatch = useDispatch();
-  const [isRegularFee, setIsRegularFee] = useState(true);
+  const [isRegularFee, setIsRegularFee] = useState<boolean>(true);
   const admission = useAppSelector((state) => state.student.admission);
   const student = useAppSelector((state) => state.student.student);
   const fee = useAppSelector((state) => state.student.fee);
@@ -54,7 +52,6 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
 
   const [forceUpdate, setForceUpdate] = useState(0);
 
-  const discountType = AntForm.useWatch("discount_type", form);
   const feeType = AntForm.useWatch("fee_type", form);
   const fees = AntForm.useWatch("fees", form);
 
@@ -74,18 +71,14 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   }, [allValues]);
 
   useEffect(() => {
-    if (
-      admission.grade_level &&
-      admission.subjects &&
-      (feeType === "class" || feeType === "subject")
-    ) {
+    if (admission.grade_level && admission.subjects) {
       createAdmissionFee({
         grade_level: admission.grade_level || "",
         subjects: admission.subjects || [],
-        fee_type: feeType,
+        fee_type: "class",
       } as any);
     }
-  }, [feeType, createAdmissionFee, admission.grade_level, admission.subjects]);
+  }, [createAdmissionFee, admission.grade_level, admission.subjects]);
 
   useEffect(() => {
     if (fees) {
@@ -139,7 +132,6 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
 
     const sourceFees = isCustom ? customFees : values.fees || [];
 
-    console.log(isCustom, sourceFees);
 
     const formattedData: any = {
       student: {
@@ -172,7 +164,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
       ...(fee && {
         admission: {
           ...fee,
-          fee_type: feeType ? feeType : "custom",
+          fee_type: isRegularFee ? "class" : "custom",
           status: admission.status,
           subjects: admission.subjects || [],
           fees: sourceFees.map((fee: any) => ({
@@ -204,6 +196,10 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
     }
 
     create(formData);
+  };
+
+  const handleFeeTypeChange = (checked: boolean) => {
+    setIsRegularFee(checked);
   };
 
   useEffect(() => {
@@ -250,14 +246,44 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
               <Text strong>Fee Type:</Text>
               <Switch
                 checked={isRegularFee}
-                onChange={setIsRegularFee}
-                checkedChildren="Regular Fee"
+                onChange={handleFeeTypeChange}
+                checkedChildren="Class Fee"
                 unCheckedChildren="Custom Fee"
               />
             </Space>
           </Col>
 
           {isRegularFee ? (
+            <Card className="w-full">
+              <AdmissionFeeForm key={forceUpdate} />
+            </Card>
+          ) : (
+            // <Col span={24}>
+            //   <Form.Item
+            //     label="Fee Structure Type"
+            //     name="fee_type"
+            //     rules={[
+            //       { required: true, message: "Please select fee type" },
+            //     ]}
+            //   >
+            //     <Select>
+            //       <Option value="class">Class Fee</Option>
+            //       <Option value="subject">Subject Fee</Option>
+            //       <Option value="custom">Custom Fee</Option>
+            //       <Option value="student">Student-specific Fee</Option>
+            //     </Select>
+            //   </Form.Item>
+            // </Col>
+            <Col span={24}>
+              <Badge.Ribbon text="Custom Fee" color="blue" placement="start">
+                <Card className="pt-4">
+                  <CustomFeeForm />
+                </Card>
+              </Badge.Ribbon>
+            </Col>
+          )}
+
+          {/* {isRegularFee ? (
             <Col span={24}>
               <Form.Item
                 label="Fee Structure Type"
@@ -278,19 +304,15 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
                 </Card>
               </Badge.Ribbon>
             </Col>
-          )}
+          )} */}
         </Row>
 
-        {admissionFee?.data && isRegularFee && (
+        {/* {admissionFee?.data && isRegularFee && (
           <Card>
-            {/* <AdmissionFeeForm
-              data={admissionFee.data}
-              form={form}
-              feeType={feeType}
-            /> */}
+    
             <AdmissionFeeForm key={forceUpdate} />
           </Card>
-        )}
+        )} */}
 
         {/* <Col span={24}>
             <Space>
@@ -327,7 +349,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
           </Card>
         )} */}
 
-        <br />
+        {/* <br />
         <Title level={4}>Discount Information</Title>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12}>
@@ -379,7 +401,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
               />
             </AntForm.Item>
           </Col>
-        </Row>
+        </Row> */}
 
         {/* Submit Button */}
         <Row justify="end" gutter={[16, 16]}>

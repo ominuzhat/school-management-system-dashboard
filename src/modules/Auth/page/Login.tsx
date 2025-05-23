@@ -1,6 +1,5 @@
-import { Card, Col, Input, Row, Typography, Button, Form } from "antd";
+import { Card, Col, Input, Row, Typography, Button, Form, Alert } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { useLoginMutation } from "../api/loginEndpoint";
 import {
   clearMessage,
@@ -10,7 +9,6 @@ import {
 import { openNotification } from "../../../app/features/notificationSlice";
 import { RootState } from "../../../app/store";
 import { schoolBag, mainLogo } from "../../../utilities/images";
-import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import "../styles/Login.css";
 import { LoginTypes } from "../types/authTypes";
 import { TOKEN_NAME } from "../../../utilities/baseQuery";
@@ -53,72 +51,153 @@ const Login: React.FC = () => {
     dispatch(clearMessage());
   };
   return (
-    <div className="flex justify-center items-center min-h-screen  px-4">
-      <Card className=" shadow-2xl p-8 rounded-xl glassy-card">
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col lg={12} className="w-full ">
-            <img src={schoolBag} alt="bag" className="mx-auto" />
-          </Col>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 relative">
+      {/* Main content container */}
+      <div className="flex flex-col min-h-screen">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 left-0 w-32 h-32 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+        </div>
 
-          <Col lg={12} sm={24} className=" w-full">
-            <div className="text-center">
-              <img src={mainLogo} alt="Logo" className="w-40 mx-auto mb-4" />
-              {/* <Typography.Title level={3} className="">
-                Welcome Patthoshala
-              </Typography.Title> */}
-              <Typography.Text className="">
-                Login to your account below
-              </Typography.Text>
-            </div>
-
-            <div className="mt-4">
-              <Form onFinish={onFinish} layout="vertical">
-                <Form.Item name="username" rules={[{ required: true }]}>
-                  <Input
-                    onFocus={handleOnFocus}
-                    prefix={<Iconify name="ph:user" />}
-                    placeholder="Username"
-                    className="input-style"
+        {/* Centered login card */}
+        <div className="flex-grow flex justify-center items-center px-4 py-8 z-10">
+          <Card className="shadow-2xl p-8 rounded-2xl bg-white/90 backdrop-blur-sm border border-white/20 w-full max-w-4xl transition-all duration-300 hover:shadow-3xl">
+            <Row gutter={[24, 24]} align="middle" justify="space-between">
+              {/* Illustration Column */}
+              <Col
+                xs={0}
+                sm={0}
+                md={0}
+                lg={12}
+                xl={12}
+                xxl={12}
+                className="hidden lg:block"
+              >
+                <div className="relative h-full flex items-center justify-center p-4">
+                  <img
+                    src={schoolBag}
+                    alt="Education illustration"
+                    className="w-full max-w-md object-contain transition-transform duration-500 hover:scale-105"
                   />
-                </Form.Item>
+                </div>
+              </Col>
 
-                <Form.Item name="password" rules={[{ required: true }]}>
-                  <Input.Password
-                    onFocus={handleOnFocus}
-                    prefix={<Iconify name="ant-design:lock-outlined" />}
-                    placeholder="Password"
-                    className="input-style"
+              {/* Login Form Column */}
+              <Col
+                xs={24}
+                sm={24}
+                md={24}
+                lg={12}
+                xl={12}
+                xxl={12}
+                className="px-4"
+              >
+                <div className="text-center">
+                  <img
+                    src={mainLogo}
+                    alt="Logo"
+                    className="w-40 mx-auto mb-2 transition-all duration-300 hover:scale-110"
                   />
-                </Form.Item>
+                  <Typography.Title
+                    level={3}
+                    className="!mb-1 !font-semibold !text-gray-800"
+                  >
+                    Welcome Back
+                  </Typography.Title>
+                  <Typography.Text className="text-gray-500">
+                    Login to access your dashboard
+                  </Typography.Text>
+                </div>
 
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  loading={isLoading}
-                  className="login-btn"
-                >
-                  Login
-                </Button>
-              </Form>
+                <div className="mt-6">
+                  <Form onFinish={onFinish} layout="vertical" size="large">
+                    <Form.Item
+                      name="username"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your username!",
+                        },
+                      ]}
+                      className="!mb-5"
+                    >
+                      <Input
+                        onFocus={handleOnFocus}
+                        // prefix={<Iconify icon="ph:user" className="text-gray-400" />}
+                        placeholder="Username"
+                        className="!py-3 !rounded-lg hover:!border-blue-400 focus:!border-blue-500 focus:!shadow-blue-200"
+                      />
+                    </Form.Item>
 
-              <div className="text-right mt-3">
-                <Link to="/send-otp">
-                  <Typography.Link className="text-gray-300 hover:text-white">
-                    Forgot Password?
-                  </Typography.Link>
-                </Link>
-              </div>
+                    <Form.Item
+                      name="password"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your password!",
+                        },
+                      ]}
+                      className="!mb-1"
+                    >
+                      <Input.Password
+                        onFocus={handleOnFocus}
+                        // prefix={<Iconify icon="ant-design:lock-outlined" className="text-gray-400" />}
+                        placeholder="Password"
+                        className="!py-3 !rounded-lg hover:!border-blue-400 focus:!border-blue-500 focus:!shadow-blue-200"
+                      />
+                    </Form.Item>
+                    <br />
+                    {/* <div className="flex justify-end items-center mb-6">
+                      <Link to="/send-otp">
+                        <Typography.Link className="!text-gray-600 hover:!text-blue-500">
+                          Forgot Password?
+                        </Typography.Link>
+                      </Link>
+                    </div> */}
 
-              {message && (
-                <Typography.Text type="danger" className="block mt-2">
-                  {message}
-                </Typography.Text>
-              )}
-            </div>
-          </Col>
-        </Row>
-      </Card>
+                    <Form.Item>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        block
+                        loading={isLoading}
+                        className="!h-12 !rounded-lg !bg-gradient-to-r !from-blue-500 !to-indigo-600 hover:!from-blue-600 hover:!to-indigo-700 !border-none !text-white !font-medium !shadow-lg hover:!shadow-blue-500/30 transition-all duration-300"
+                      >
+                        {isLoading ? "Logging in..." : "Login"}
+                      </Button>
+                    </Form.Item>
+
+                    {message && (
+                      <Alert
+                        message={message}
+                        type="error"
+                        showIcon
+                        className="!mt-4 !rounded-lg"
+                      />
+                    )}
+                  </Form>
+                </div>
+              </Col>
+            </Row>
+          </Card>
+        </div>
+
+        {/* Footer */}
+        <div className="py-4 text-center z-10">
+          <Typography.Text className="text-gray-600 text-sm">
+            © {new Date().getFullYear()} Powered by{" "}
+            <Typography.Link
+              href="https://codecanvascreation.com"
+              target="_blank"
+              className="!text-blue-600 hover:!text-blue-800 "
+            >
+              Code Canvas Creation
+            </Typography.Link>
+          </Typography.Text>
+        </div>
+      </div>
     </div>
   );
 };

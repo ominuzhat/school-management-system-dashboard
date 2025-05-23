@@ -8,14 +8,8 @@ const BasicInformation = ({
 }: {
   data: IInstituteProfile | undefined;
 }) => {
-  const {
-    address,
-    city,
-    contact_email,
-    phone_number,
-    institution_type,
-    prefix,
-  } = data || {};
+  const { address, city, contact_email, phone_number, institution_type } =
+    data || {};
 
   const basicInfo = [
     {
@@ -48,11 +42,6 @@ const BasicInformation = ({
     {
       fieldName: "Institution Type",
       text: institution_type || "N/A",
-      Icon: MdOutlineSubdirectoryArrowRight,
-    },
-    {
-      fieldName: "Prefix",
-      text: prefix || "N/A",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
   ];

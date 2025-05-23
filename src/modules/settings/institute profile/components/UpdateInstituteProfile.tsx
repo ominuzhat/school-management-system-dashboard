@@ -219,14 +219,6 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
                           </Select>
                         </Form.Item>
                       </Col>
-                      <Col lg={8}>
-                        <Form.Item<IInstituteProfile>
-                          label="Prefix"
-                          name="prefix"
-                        >
-                          <Input placeholder="Prefix" />
-                        </Form.Item>
-                      </Col>
                     </Row>
                   </Col>
                 </Row>
@@ -323,8 +315,9 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
                       name="ownership_type"
                     >
                       <Select placeholder="Select Ownership type">
-                        <Option value="public">Public</Option>
-                        <Option value="private">Private</Option>
+                        <Option value="Public">Public</Option>
+                        <Option value="Private">Private</Option>
+                        <Option value="Non-profit">Non Profit</Option>
                       </Select>
                     </Form.Item>
                   </Col>

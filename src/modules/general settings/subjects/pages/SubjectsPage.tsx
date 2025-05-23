@@ -1,9 +1,8 @@
-import { Button, Card, Col, Row } from "antd";
+import { Button, Card, Col, Row, Table } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
-import { Table } from "../../../../common/CommonAnt";
 import CreateSubjects from "../components/CreateSubjects";
 import { useGetSubjectsQuery } from "../api/subjectsEndPoints";
 import useSubjectColumns from "../utils/SubjectsColumns";
@@ -27,7 +26,6 @@ const SubjectsPage = () => {
     data: getSubjectsData,
     isLoading,
     isFetching,
-    refetch,
   } = useGetSubjectsQuery({
     page_size: 900,
     page: Number(page) || undefined,
@@ -110,12 +108,11 @@ const SubjectsPage = () => {
       <Card>
         {viewPermission ? (
           <Table
-            rowKey="id" // This matches the key we set in transformedData
+            rowKey="id"
             loading={isLoading || isFetching}
-            refetch={refetch}
-            total={getSubjectsData?.data?.count}
             dataSource={transformedData}
             columns={columns}
+            pagination={false}
           />
         ) : (
           <NoPermissionData />

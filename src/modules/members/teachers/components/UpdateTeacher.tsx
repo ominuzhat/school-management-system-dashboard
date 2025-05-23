@@ -39,9 +39,9 @@ interface Props {
 const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
   const [form] = AntForm.useForm();
   const { data: singleTeacher } = useGetSingleSTeacherQuery(record?.id);
-  const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery(
-    {}
-  );
+  const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery({
+    page_size: 900,
+  });
   const { data: classData } = useGetClassesQuery<any>({});
   const [selectedSubjects, setSelectedSubjects] = useState<number[]>([]);
   const [update, { isLoading }] = useUpdateTeacherMutation();
@@ -155,6 +155,9 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
     },
     []
   );
+
+  console.log(subjectData?.data?.results);
+  // console.log(groupedSubjects);
 
   const handleSubjectChange = (subjectId: number, checked: boolean) => {
     setSelectedSubjects((prev) =>

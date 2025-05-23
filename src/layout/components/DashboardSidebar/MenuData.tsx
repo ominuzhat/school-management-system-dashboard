@@ -152,20 +152,20 @@ const MenuData: React.FC = () => {
         label: "Fees",
         icon: <TbCoinTaka />,
         children: [
-          hasPermissionForModule(permissions, "feestructure") && {
-            label: <Link to="/fees">Config</Link>,
-            icon: <BiSolidUserAccount />,
-            key: "/fees",
+          hasPermissionForModule(permissions, "fees") && {
+            label: <Link to="/collect-fee">Collect Fee</Link>,
+            icon: <RiSecurePaymentLine />,
+            key: "/collect-fee",
           },
           hasPermissionForModule(permissions, "admissionfeestructure") && {
             label: <Link to="/additional-fee">Additional Fee</Link>,
             icon: <HiOutlineCash />,
             key: "/additional-fee",
           },
-          hasPermissionForModule(permissions, "fees") && {
-            label: <Link to="/collect-fee">Collect Fee</Link>,
-            icon: <RiSecurePaymentLine />,
-            key: "/collect-fee",
+          hasPermissionForModule(permissions, "feestructure") && {
+            label: <Link to="/fees">Configuration</Link>,
+            icon: <BiSolidUserAccount />,
+            key: "/fees",
           },
         ],
       },
