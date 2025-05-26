@@ -405,3 +405,15 @@ abbr[title] {
             font-size: 18px;
           }
         }
+
+/* .custom-tabs .ant-tabs-tab {
+  @apply h-14 px-4 rounded-lg text-sm font-medium text-gray-700 transition;
+}
+
+.custom-tabs .ant-tabs-tab-active {
+  @apply bg-blue-600 text-white;
+}
+
+.custom-tabs .ant-tabs-nav {
+  @apply flex flex-wrap justify-start lg:justify-between;
+} */

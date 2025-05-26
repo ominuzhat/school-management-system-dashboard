@@ -153,6 +153,11 @@ const MenuData: React.FC = () => {
         icon: <TbCoinTaka />,
         children: [
           hasPermissionForModule(permissions, "fees") && {
+            label: <Link to="/new-fee">New Fee</Link>,
+            icon: <RiSecurePaymentLine />,
+            key: "/new-fee",
+          },
+          hasPermissionForModule(permissions, "fees") && {
             label: <Link to="/collect-fee">Collect Fee</Link>,
             icon: <RiSecurePaymentLine />,
             key: "/collect-fee",

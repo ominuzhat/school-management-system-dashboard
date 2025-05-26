@@ -77,6 +77,7 @@ import WithPermission from "./withPermissionRouter";
 import ListOfResultMigration from "../modules/general settings/Exam/Result Migration/pages/ListOfResultMigration";
 import CashPage from "../modules/Finance Management/Accounts/cash management/pages/CashPage";
 import MigrationResultView from "../modules/general settings/Exam/Result Migration/Components/MigrationResultView";
+import NewFees from "../modules/Finance Management/NewFees/page/NewFees";
 
 const router = createBrowserRouter([
   {
@@ -438,6 +439,27 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <FeesPage />,
+          },
+
+          {
+            path: "view/:feesId",
+            element: <FeesView />,
+          },
+        ],
+      },
+
+      // New Fees
+      {
+        path: "/new-fee",
+        element: (
+          <WithPermission requiredPermission="feestructure">
+            <Accounts />
+          </WithPermission>
+        ),
+        children: [
+          {
+            path: "",
+            element: <NewFees />,
           },
 
           {
