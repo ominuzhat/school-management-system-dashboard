@@ -78,6 +78,7 @@ import ListOfResultMigration from "../modules/general settings/Exam/Result Migra
 import CashPage from "../modules/Finance Management/Accounts/cash management/pages/CashPage";
 import MigrationResultView from "../modules/general settings/Exam/Result Migration/Components/MigrationResultView";
 import NewFees from "../modules/Finance Management/NewFees/page/NewFees";
+import CreateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateNewCollectFee";
 
 const router = createBrowserRouter([
   {
@@ -470,6 +471,11 @@ const router = createBrowserRouter([
       },
 
       // collect fee
+
+      {
+        path: "/new-collect-fee",
+        element: <CreateNewCollectFee />,
+      },
       {
         path: "/collect-fee",
         element: (

@@ -47,7 +47,7 @@ const cardData = [
 
 const BasicOverview = () => {
   return (
-    <Row gutter={[16, 16]} className="mb-8">
+    <Row gutter={[16, 16]} className="">
       {cardData.map((card, idx) => (
         <Col
           key={idx}

@@ -7,6 +7,19 @@ import { ICreateCollectFee } from "../type/collectFeeType";
 
 const collectFeeEndPoints = api.injectEndpoints({
   endpoints: (builder) => ({
+    getNewCollectFees: builder.query<ApiResponse<any>, FilterTypes>({
+      query: (params) => ({
+        url: "/api/v1.0/admissions/collect-fees/collect-fee-by-month/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.COLLECT_FEE,
+          id: TagTypes.COLLECT_FEE + "_ID",
+        },
+      ],
+    }),
+
     getCollectFees: builder.query<ApiResponse<any>, FilterTypes>({
       query: (params) => ({
         url: "/api/v1.0/admissions/collect-fees/",
@@ -110,4 +123,5 @@ export const {
   useGetCollectSingleFeesQuery,
   useUpdateCollectFeesMutation,
   useGetCollectSingleFeesFormQuery,
+  useGetNewCollectFeesQuery,
 } = collectFeeEndPoints;

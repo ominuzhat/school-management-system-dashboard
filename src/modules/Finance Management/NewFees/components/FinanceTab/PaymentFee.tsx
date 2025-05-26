@@ -1,3 +1,4 @@
+"use client";
 import { Card, Button, Input, Select, Table, Tag, Statistic } from "antd";
 import {
   SearchOutlined,
@@ -16,8 +17,8 @@ import { debounce } from "lodash";
 
 const { Option } = Select;
 
-export const FeeCollection = () => {
-  const students = [
+export const PaymentFee = () => {
+  const payments = [
     {
       id: 1,
       name: "Rahul Sharma",
@@ -39,39 +40,6 @@ export const FeeCollection = () => {
       pending: 2400,
       status: "Partial",
       dueDate: "2024-01-10",
-    },
-    {
-      id: 3,
-      name: "Amit Kumar",
-      class: "Class 12-A",
-      rollNo: "312",
-      totalFee: 6200,
-      paid: 0,
-      pending: 6200,
-      status: "Pending",
-      dueDate: "2024-01-05",
-    },
-    {
-      id: 4,
-      name: "Sneha Singh",
-      class: "Class 8-C",
-      rollNo: "183",
-      totalFee: 4200,
-      paid: 4200,
-      pending: 0,
-      status: "Paid",
-      dueDate: "2024-01-20",
-    },
-    {
-      id: 5,
-      name: "Vikash Gupta",
-      class: "Class 11-B",
-      rollNo: "267",
-      totalFee: 5800,
-      paid: 1450,
-      pending: 4350,
-      status: "Partial",
-      dueDate: "2024-01-08",
     },
   ];
 
@@ -141,22 +109,23 @@ export const FeeCollection = () => {
       ),
     },
   ];
+
   const [search, setSearch] = useState("");
 
   const {
     data: classData,
     isLoading: classLoading,
     isFetching: isFetchingClasses,
-  } = useGetClassesQuery({ search: search });
+  } = useGetClassesQuery({ search });
 
   return (
     <div className="space-y-6">
-      {/* Fee Collection Summary */}
+      {/* Payment Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0">
           <Statistic
-            title={<span className="text-green-100">Total Collected</span>}
-            value="₹2,45,680"
+            title={<span className="text-green-100">Total Paid</span>}
+            value="₹1,20,000"
             valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
             prefix={<DollarOutlined className="text-green-100" />}
           />
@@ -164,8 +133,8 @@ export const FeeCollection = () => {
 
         <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">
           <Statistic
-            title={<span className="text-yellow-100">Pending Amount</span>}
-            value="₹89,420"
+            title={<span className="text-yellow-100">Amount Pending</span>}
+            value="₹35,400"
             valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
             prefix={<ExclamationCircleOutlined className="text-yellow-100" />}
           />
@@ -173,8 +142,8 @@ export const FeeCollection = () => {
 
         <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0">
           <Statistic
-            title={<span className="text-blue-100">Students Paid</span>}
-            value="1,091"
+            title={<span className="text-blue-100">Total Transactions</span>}
+            value="821"
             valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
             prefix={<UserOutlined className="text-blue-100" />}
           />
@@ -182,8 +151,8 @@ export const FeeCollection = () => {
 
         <Card className="bg-gradient-to-r from-purple-500 to-violet-500 text-white border-0">
           <Statistic
-            title={<span className="text-purple-100">Due This Week</span>}
-            value="156"
+            title={<span className="text-purple-100">Upcoming Dues</span>}
+            value="48"
             valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
             prefix={<CalendarOutlined className="text-purple-100" />}
           />
@@ -191,10 +160,8 @@ export const FeeCollection = () => {
       </div>
 
       {/* Search and Filters */}
-      <Card className=" border-blue-100">
-        <h1 className="my-4 text-xl font-semibold">
-          Fee Collection Management
-        </h1>
+      <Card className="bg-white/60 backdrop-blur-sm border-blue-100">
+        <h1 className="my-4 text-xl font-semibold">Payment Fee Records</h1>
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="flex-1">
             <Input
@@ -208,20 +175,16 @@ export const FeeCollection = () => {
             mode="multiple"
             allowClear
             showSearch
-            placeholder={
-              classLoading ? "Loading classes..." : "Filter by class"
-            }
+            placeholder={classLoading ? "Loading classes..." : "Filter by class"}
             optionFilterProp="children"
             filterOption={false}
             onSearch={debounce(setSearch, 500)}
             loading={isFetchingClasses}
-            notFoundContent={
-              isFetchingClasses ? <LoadingOutlined /> : "No Class found"
-            }
+            notFoundContent={isFetchingClasses ? <LoadingOutlined /> : "No Class found"}
             className="w-full md:w-48"
             options={
-              (Array?.isArray(classData?.data) &&
-                classData?.data?.map((classItem: any) => ({
+              (Array.isArray(classData?.data) &&
+                classData.data.map((classItem: any) => ({
                   label: classItem.name,
                   value: classItem.id,
                 }))) ||
@@ -229,37 +192,29 @@ export const FeeCollection = () => {
             }
           />
 
-          {/* <Select placeholder="Filter by class" className="w-full md:w-48">
-            <Option value="all">All Classes</Option>
-            <Option value="class8">Class 8</Option>
-            <Option value="class9">Class 9</Option>
-            <Option value="class10">Class 10</Option>
-            <Option value="class11">Class 11</Option>
-            <Option value="class12">Class 12</Option>
-          </Select> */}
           <Select placeholder="Payment status" className="w-full md:w-48">
             <Option value="all">All Status</Option>
             <Option value="paid">Paid</Option>
             <Option value="partial">Partial</Option>
             <Option value="pending">Pending</Option>
           </Select>
+
           <div className="flex gap-2">
             <Button icon={<FilterOutlined />}>More Filters</Button>
             <Button icon={<DownloadOutlined />}>Export</Button>
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600"
+              className="bg-gradient-to-r from-green-600 to-emerald-600"
             >
-              Collect Fee
+              Make Payment
             </Button>
           </div>
         </div>
 
-        {/* Students Table */}
         <Table
           columns={columns}
-          dataSource={students}
+          dataSource={payments}
           rowKey="id"
           className="rounded-lg border border-gray-200"
         />

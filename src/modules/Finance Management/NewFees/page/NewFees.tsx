@@ -10,6 +10,9 @@ import {
 } from "react-icons/fa";
 import BasicOverview from "../components/Home/BasicOverview";
 import { FeeCollection } from "../components/FinanceTab/CollectFee";
+import { PaymentFee } from "../components/FinanceTab/PaymentFee";
+import { ExpenseTracking } from "../components/FinanceTab/Expense";
+import { AccountTransfer } from "../components/FinanceTab/TransferFee";
 
 const tabs = [
   { key: "overview", label: "ওভারভিউ", icon: <FaChartPie /> },
@@ -24,9 +27,9 @@ const TabComponent = () => {
   const [activeTab, setActiveTab] = useState("fees");
 
   return (
-    <>
+    <div className="">
       <BasicOverview />
-      <div className="">
+      <div className="my-10">
         <div className="bg-white/80 backdrop-blur-md border border-[#A2C3FF] rounded-lg shadow-xl p-2">
           <div className="grid grid-cols-3 lg:grid-cols-6 gap-2">
             {tabs.map((tab) => (
@@ -47,17 +50,16 @@ const TabComponent = () => {
             ))}
           </div>
         </div>
-
-        <div className="mt-6">
-          {activeTab === "overview" && <div>Overview Content</div>}
-          {activeTab === "fees" && <FeeCollection />}
-          {activeTab === "payments" && <div>Payment Management Content</div>}
-          {activeTab === "expenses" && <div>Expense Tracking Content</div>}
-          {activeTab === "transfers" && <div>Account Transfer Content</div>}
-          {activeTab === "ledger" && <div>Ledger Reports Content</div>}
-        </div>
       </div>
-    </>
+      <div className="">
+        {activeTab === "overview" && <div>Overview Content</div>}
+        {activeTab === "fees" && <FeeCollection />}
+        {activeTab === "payments" && <PaymentFee />}
+        {activeTab === "expenses" && <ExpenseTracking />}
+        {activeTab === "transfers" && <AccountTransfer />}
+        {activeTab === "ledger" && <div>Ledger Reports Content</div>}
+      </div>
+    </div>
   );
 };
 
