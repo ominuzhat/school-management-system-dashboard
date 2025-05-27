@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -11,12 +12,13 @@ import {
   Card,
   Typography,
   message,
+  Switch,
 } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import dayjs from "dayjs";
 import {
-  useCreateCollectFeesMutation,
+  useCreateNewCollectFeesMutation,
   useGetNewCollectFeesQuery,
 } from "../api/collectFeeEndPoints";
 import { debounce } from "lodash";
@@ -24,7 +26,7 @@ import {
   useGetAdmissionQuery,
   useGetSingleAdmissionQuery,
 } from "../../../../general settings/admission/api/admissionEndPoints";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
 import { TbCoinTaka } from "react-icons/tb";
 import { useGetAdditionalFeesQuery } from "../../Additional Fee/api/additionalFeeEndPoints";
@@ -39,7 +41,7 @@ const CreateNewCollectFee = () => {
   const [search, setSearch] = useState("");
   const { data: accountList } = useGetAccountQuery({});
   const navigate = useNavigate();
-  const [create, { isLoading, isSuccess }] = useCreateCollectFeesMutation();
+  const [create, { isLoading, isSuccess }] = useCreateNewCollectFeesMutation();
   const { data: additionalData } = useGetAdditionalFeesQuery({});
   const { data: admissionData, isFetching } = useGetAdmissionQuery({
     search: search,
@@ -48,6 +50,35 @@ const CreateNewCollectFee = () => {
 
   const admission = AntForm.useWatch("admission", form);
   const month = AntForm.useWatch("month", form);
+  const particulars = AntForm.useWatch("particulars", form);
+  const [totals, setTotals] = useState({
+    amount: 0,
+    due_amount: 0,
+    paid_amount: 0,
+  });
+
+  // Update totals dynamically when particulars change
+  useEffect(() => {
+    const formValues = form.getFieldValue("particulars");
+
+    if (Array.isArray(formValues)) {
+      const amount = formValues.reduce(
+        (sum, item) => sum + Number(item?.amount || 0),
+        0
+      );
+      const due_amount = formValues.reduce(
+        (sum, item) => sum + Number(item?.due_amount || 0),
+        0
+      );
+      const paid_amount = formValues.reduce((sum, item) => {
+        const paid = Number(item?.paid_amount || 0);
+        const due = Number(item?.due_amount || 0);
+        return sum + (paid > due ? due : paid);
+      }, 0);
+
+      setTotals({ amount, due_amount, paid_amount });
+    }
+  }, [form, form.getFieldValue("particulars")]);
 
   const { data: getSingleAdmission } = useGetSingleAdmissionQuery<any>(
     admissionId || admission,
@@ -60,8 +91,6 @@ const CreateNewCollectFee = () => {
     admission: admissionId || admission,
     month: month ? dayjs(month).format("YYYY-MM-01") : undefined,
   });
-
-  console.log("newCollectFeeData", newCollectFeeData);
 
   useEffect(() => {
     if (getSingleAdmission?.data) {
@@ -95,9 +124,13 @@ const CreateNewCollectFee = () => {
       payment_method: "cash",
       account: values?.account,
       paid_amount: values?.paid_amount,
-      payment_date: dayjs(values?.payment_date).format("YYYY-MM-DD"),
-      month: dayjs(values?.month).format("YYYY-MM-DD"),
+      payment_date: dayjs(values?.payment_date).format("YYYY-MM-01"),
+      month: dayjs(values?.month).format("YYYY-MM-01"),
+      particulars,
     };
+
+    console.log(values);
+    console.log(results, " results");
 
     create(results)
       .unwrap()
@@ -129,6 +162,18 @@ const CreateNewCollectFee = () => {
         isSuccess={isSuccess}
         layout="vertical"
         buttonLabel="Collect Fee"
+        onValuesChange={(_changedValues: any, allValues) => {
+          const updatedParticulars = allValues.particulars.map((item: any) => {
+            const amount = Number(item?.amount || 0);
+            const paid = Number(item?.paid_amount || 0);
+            const due = amount - paid;
+            return {
+              ...item,
+              due_amount: due < 0 ? 0 : due,
+            };
+          });
+          form.setFieldsValue({ particulars: updatedParticulars });
+        }}
       >
         <Card className="mb-6 shadow-lg rounded-lg">
           <Row gutter={[16, 16]}>
@@ -250,6 +295,7 @@ const CreateNewCollectFee = () => {
             </Col>
           </Row>
         </Card>
+
         {newCollectFeeData?.data?.particulars?.length > 0 && (
           <Card title="Fee Particulars">
             <AntForm.List
@@ -259,24 +305,31 @@ const CreateNewCollectFee = () => {
               {(fields: any) => (
                 <table style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead>
-                    <tr style={{ background: "#f5f5f5", textAlign: "left" }}>
+                    <tr style={{ background: "#eff", textAlign: "left" }}>
                       <th style={{ padding: "8px", border: "1px solid #ddd" }}>
                         SL
                       </th>
                       <th style={{ padding: "8px", border: "1px solid #ddd" }}>
                         Particular Name
+                      </th>{" "}
+                      <th style={{ padding: "8px", border: "1px solid #ddd" }}>
+                        One Time
+                      </th>
+                      <th style={{ padding: "8px", border: "1px solid #ddd" }}>
+                        Is Add-on
                       </th>
                       <th style={{ padding: "8px", border: "1px solid #ddd" }}>
                         Total Amount
                       </th>
                       <th style={{ padding: "8px", border: "1px solid #ddd" }}>
-                        Paid Amount
+                        Due Amount
                       </th>
                       <th style={{ padding: "8px", border: "1px solid #ddd" }}>
-                        Due Amount
+                        Paid Amount
                       </th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {fields.map(
                       (
@@ -287,60 +340,197 @@ const CreateNewCollectFee = () => {
                         }: { key: number; name: number; [key: string]: any },
                         index: number
                       ) => (
-                        <tr key={key}>
+                        <tr
+                          key={key}
+                          style={{
+                            backgroundColor:
+                              index % 2 === 0 ? "#fff" : "#f9fafb",
+                            borderBottom: "1px solid #f0f0f0",
+                          }}
+                        >
                           <td
-                            style={{ padding: "8px", border: "1px solid #ddd" }}
+                          // style={{ padding: "8px", border: "1px solid #ddd" }}
                           >
                             {index + 1}
                           </td>
-                          <td
-                            style={{ padding: "8px", border: "1px solid #ddd" }}
-                          >
+                          <td style={{ padding: "8px" }}>
                             <AntForm.Item
                               {...restField}
                               name={[name, "name"]}
                               style={{ marginBottom: 0 }}
                             >
-                              <Input disabled />
+                              <Input  className="collect-fee" />
+                            </AntForm.Item>
+                          </td>
+                          <td>
+                            <AntForm.Item
+                              {...restField}
+                              name={[name, "one_time"]}
+                              style={{ marginBottom: 0 }}
+                              valuePropName="checked"
+                            >
+                              <Switch disabled />
+                            </AntForm.Item>
+                          </td>
+                          <td>
+                            <AntForm.Item
+                              {...restField}
+                              name={[name, "is_add_on"]}
+                              style={{ marginBottom: 0 }}
+                              valuePropName="checked"
+                            >
+                              <Switch disabled />
                             </AntForm.Item>
                           </td>
                           <td
-                            style={{ padding: "8px", border: "1px solid #ddd" }}
+                          // style={{ padding: "8px", border: "1px solid #ddd" }}
                           >
                             <AntForm.Item
                               {...restField}
                               name={[name, "amount"]}
                               style={{ marginBottom: 0 }}
                             >
-                              <Input disabled prefix={<TbCoinTaka />} />
+                              <Input
+                                disabled
+                                prefix={<TbCoinTaka />}
+                                style={{
+                                  color: "green",
+                                  background: "none",
+                                  border: "none",
+                                  boxShadow: "none",
+                                  padding: 0,
+                                  cursor: "default",
+                                }}
+                              />
                             </AntForm.Item>
                           </td>
                           <td
-                            style={{ padding: "8px", border: "1px solid #ddd" }}
-                          >
-                            <AntForm.Item
-                              {...restField}
-                              name={[name, "paid_amount"]}
-                              style={{ marginBottom: 0 }}
-                            >
-                              <Input prefix={<TbCoinTaka />} />
-                            </AntForm.Item>
-                          </td>
-                          <td
-                            style={{ padding: "8px", border: "1px solid #ddd" }}
+                            style={{
+                              // padding: "8px",
+                              // border: "1px solid #ddd",
+                              color: "red",
+                            }}
                           >
                             <AntForm.Item
                               {...restField}
                               name={[name, "due_amount"]}
                               style={{ marginBottom: 0 }}
                             >
-                              <Input disabled prefix={<TbCoinTaka />} />
+                              <Input
+                                disabled
+                                prefix={<TbCoinTaka />}
+                                style={{
+                                  color: "red",
+                                  background: "none",
+                                  border: "none",
+                                  boxShadow: "none",
+                                  padding: 0,
+                                  cursor: "default",
+                                }}
+                              />
+                            </AntForm.Item>
+                          </td>{" "}
+                          <td
+                          // style={{ padding: "8px", border: "1px solid #ddd" }}
+                          >
+                            <AntForm.Item
+                              {...restField}
+                              name={[name, "paid_amount"]}
+                              style={{ marginBottom: 0 }}
+                              rules={[
+                                {
+                                  validator: (_, value) => {
+                                    const due = form.getFieldValue([
+                                      "particulars",
+                                      name,
+                                      "due_amount",
+                                    ]);
+                                    if (value > due) {
+                                      return Promise.reject(
+                                        new Error(
+                                          "Paid amount can't exceed due amount"
+                                        )
+                                      );
+                                    }
+                                    return Promise.resolve();
+                                  },
+                                },
+                              ]}
+                            >
+                              <Input prefix={<TbCoinTaka />} />
                             </AntForm.Item>
                           </td>
                         </tr>
                       )
                     )}
                   </tbody>
+
+                  <tfoot>
+                    <tr
+                      style={{
+                        backgroundColor: "#FFFFFF",
+                        borderTop: "2px solid #ddd",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <td
+                        // style={{ padding: "8px", border: "1px solid #ddd" }}
+                        colSpan={4}
+                      >
+                        Total
+                      </td>
+
+                      <td
+                        //  style={{ padding: "8px", border: "1px solid #ddd" }}
+                        style={{
+                          color: "green",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                          }}
+                        >
+                          <TbCoinTaka />
+                          {totals.amount}
+                        </div>
+                      </td>
+
+                      <td
+                        style={{
+                          color: "red",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                          }}
+                        >
+                          <TbCoinTaka />
+                          {totals.due_amount}
+                        </div>
+                      </td>
+
+                      <td
+                      // style={{ padding: "8px", border: "1px solid #ddd" }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                          }}
+                        >
+                          <TbCoinTaka />
+                          {totals.paid_amount}
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
                 </table>
               )}
             </AntForm.List>

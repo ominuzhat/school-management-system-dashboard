@@ -163,3 +163,11 @@ tr:nth-child(even) {
     margin-bottom: 16px;
   }
 }
+.collect-fee {
+  border: none !important;
+  background: none !important;
+  padding: 0  !important;
+  cursor: default   !important;
+  /* color: inherit  !important; */
+  box-shadow: none  !important;
+}

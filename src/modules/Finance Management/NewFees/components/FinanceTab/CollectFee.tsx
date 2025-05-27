@@ -13,6 +13,7 @@ import {
 import { useGetClassesQuery } from "../../../../general settings/classes/api/classesEndPoints";
 import { useState } from "react";
 import { debounce } from "lodash";
+import { Link } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -229,14 +230,6 @@ export const FeeCollection = () => {
             }
           />
 
-          {/* <Select placeholder="Filter by class" className="w-full md:w-48">
-            <Option value="all">All Classes</Option>
-            <Option value="class8">Class 8</Option>
-            <Option value="class9">Class 9</Option>
-            <Option value="class10">Class 10</Option>
-            <Option value="class11">Class 11</Option>
-            <Option value="class12">Class 12</Option>
-          </Select> */}
           <Select placeholder="Payment status" className="w-full md:w-48">
             <Option value="all">All Status</Option>
             <Option value="paid">Paid</Option>
@@ -246,13 +239,15 @@ export const FeeCollection = () => {
           <div className="flex gap-2">
             <Button icon={<FilterOutlined />}>More Filters</Button>
             <Button icon={<DownloadOutlined />}>Export</Button>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600"
-            >
-              Collect Fee
-            </Button>
+            <Link to={"/new-collect-fee"}>
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600"
+              >
+                Collect Fee
+              </Button>
+            </Link>
           </div>
         </div>
 
