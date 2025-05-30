@@ -2,7 +2,7 @@ import type { ColumnsType } from "antd/es/table";
 
 import { capitalize } from "../../../../../common/capitalize/Capitalize";
 import dayjs from "dayjs";
-import { Space } from "antd";
+import { Space, Tag } from "antd";
 import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 import UpdateCash from "../components/UpdateCash";
 import { useDispatch } from "react-redux";
@@ -54,7 +54,30 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Payment Method",
       dataIndex: "payment_method",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      render: (method: string) => {
+        const lowerMethod = method?.toLowerCase();
+        let color: string;
+
+        switch (lowerMethod) {
+          case "card":
+            color = "blue";
+            break;
+          case "cash":
+            color = "orange";
+            break;
+          case "online":
+            color = "purple";
+            break;
+          default:
+            color = "default";
+        }
+
+        return (
+          <Tag color={color} className="uppercase">
+            {method ? method.toLowerCase() : "N/A"}
+          </Tag>
+        );
+      },
     },
     {
       key: "3",
@@ -69,7 +92,16 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Amount",
       dataIndex: "amount",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (amount: number) => {
+        const isPositive = Number(amount) > 0;
+        const color = isPositive ? "green" : "red";
+
+        return (
+          <Tag color={color}>
+            {amount !== null && amount !== undefined ? amount : "N/A"}
+          </Tag>
+        );
+      },
     },
 
     {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Card,
   Col,
@@ -30,20 +31,21 @@ import {
   useUpdateAdmissionMutation,
 } from "../api/admissionEndPoints";
 import UpdatedAdmissionFeeForm from "./UpdatedAdmissionFeeForm";
+import UpdateCustomFeeForm from "./UpdateCustomFeeForm";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 const UpdateOldAdmissionStudent = () => {
   const [form] = AntForm.useForm();
-  const [forceUpdate, setForceUpdate] = useState(0);
+  const [forceUpdate, _setForceUpdate] = useState(0);
   const [search, setSearch] = useState("");
   const [selectAll, setSelectAll] = useState(true);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const gradeLevel = AntForm.useWatch("grade_level", form);
   const feeType = AntForm.useWatch("fee_type", form);
   // const customFees = AntForm.useWatch("customFees", form);
-  console.log(setForceUpdate);
+  // console.log(setForceUpdate);
 
   const { admissionId } = useParams();
   const { data: singleAdmissionData } = useGetSingleAdmissionQuery(
@@ -117,10 +119,8 @@ const UpdateOldAdmissionStudent = () => {
       const formattedCustomFees = isCustomFee
         ? singleAdmission?.fees?.map((fee: any) => ({
             ...fee,
-            effective_from: fee.effective_from
-              ? dayjs(fee.effective_from).isValid()
-                ? dayjs(fee.effective_from)
-                : dayjs()
+            effective_from: dayjs(fee?.effective_from).isValid()
+              ? dayjs(fee.effective_from)
               : dayjs(),
           }))
         : [];
@@ -177,14 +177,13 @@ const UpdateOldAdmissionStudent = () => {
   };
 
   const onFinish = (values: any): void => {
-    const isCustom = values.fee_type === "custom";
+    const isCustom = values?.fee_type === "custom";
     const sourceFees = isCustom
       ? values.customFees.map((fee: any) => ({
           ...fee,
-          effective_from:
-            fee.effective_from && dayjs(fee.effective_from).isValid()
-              ? dayjs(fee.effective_from).format("YYYY-MM-DD")
-              : dayjs().format("YYYY-MM-DD"),
+          effective_from: fee?.effective_from
+            ? dayjs(fee.effective_from).format("YYYY-MM-01")
+            : dayjs().format("YYYY-MM-01"),
         }))
       : values.fees || [];
 
@@ -196,6 +195,8 @@ const UpdateOldAdmissionStudent = () => {
 
     // Remove customFees from payload (clean up)
     delete formattedValues.customFees;
+
+    console.log(formattedValues, "formattedValues");
 
     updateAdmission({ id: singleAdmission?.id, data: formattedValues });
   };
@@ -445,7 +446,7 @@ const UpdateOldAdmissionStudent = () => {
           <Card>
             <Badge.Ribbon text="Custom Fee" color="blue" placement="start">
               <Card className="pt-4">
-                <CustomFeeForm />
+                <UpdateCustomFeeForm />
               </Card>
             </Badge.Ribbon>
           </Card>

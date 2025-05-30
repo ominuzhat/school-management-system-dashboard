@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useDispatch } from "react-redux";
 import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
@@ -59,7 +59,16 @@ const useAccountColumns = (): ColumnsType<any> => {
       title: "Balance",
       dataIndex: "balance",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (balance: number) => {
+        const isPositive = Number(balance) > 0;
+        const color = isPositive ? "green" : "red";
+
+        return (
+          <Tag color={color}>
+            {balance !== null && balance !== undefined ? balance : "N/A"}
+          </Tag>
+        );
+      },
     },
 
     {

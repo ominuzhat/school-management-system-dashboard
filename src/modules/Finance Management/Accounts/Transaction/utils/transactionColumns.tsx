@@ -1,7 +1,9 @@
 import type { ColumnsType } from "antd/es/table";
+import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 
 import { capitalize } from "../../../../../common/capitalize/Capitalize";
 import dayjs from "dayjs";
+import { Tag } from "antd";
 
 const useTransactionColumns = (): ColumnsType<any> => {
   // const dispatch = useDispatch();
@@ -26,24 +28,57 @@ const useTransactionColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Account Type",
+      title: "From",
       dataIndex: "account",
       align: "center",
-      render: (title) => (title ? capitalize(title?.account_type) : "N/A"),
+      render: (text: any) => (
+        <div className="flex items-center">
+          <ArrowUpOutlined className="text-red-500 mr-2" />
+          {capitalize(text?.account_type)} ({text?.balance})
+          {/* {text} */}
+        </div>
+      ),
+    },
+    {
+      key: "22",
+      title: "To",
+      dataIndex: "amount",
+      align: "center",
+      render: (text: any) => (
+        <div className="flex items-center">
+          <ArrowDownOutlined className="text-green-500 mr-2" />
+          {text}
+        </div>
+      ),
+      // render: (title) => (title ? title : "N/A"),
     },
     {
       key: "2",
       title: "Amount",
       dataIndex: "amount",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (text: any) => <div className="flex items-center">৳ {text}</div>,
+      // render: (title) => (title ? title : "N/A"),
     },
     {
       key: "3",
       title: "Transaction Type",
       dataIndex: "transaction_type",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      render: (type: string) => {
+        const lowerType = type?.toLowerCase();
+
+        let color = "default";
+        if (lowerType === "credit") color = "green";
+        else if (lowerType === "debit") color = "red";
+        else if (lowerType === "transfer") color = "blue";
+
+        return (
+          <Tag color={color} className="uppercase">
+            {lowerType || "N/A"}
+          </Tag>
+        );
+      },
     },
     {
       key: "4",
@@ -51,13 +86,6 @@ const useTransactionColumns = (): ColumnsType<any> => {
       dataIndex: "transaction_date",
       align: "center",
       render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
-    },
-    {
-      key: "5",
-      title: "Description",
-      dataIndex: "description",
-      align: "center",
-      render: (title) => (title ? title : "N/A"),
     },
 
     // {

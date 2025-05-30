@@ -9,7 +9,6 @@ import {
   Switch,
   Divider,
 } from "antd";
-import dayjs from "dayjs";
 
 const CustomFeeForm = () => {
   return (
@@ -67,9 +66,10 @@ const CustomFeeForm = () => {
                     >
                       <DatePicker
                         style={{ width: "100%" }}
-                        disabledDate={(current) =>
-                          current && current < dayjs().startOf("day")
-                        }
+                        picker="month"
+                        // disabledDate={(current) =>
+                        //   current && current < dayjs().startOf("day")
+                        // }
                       />
                     </Form.Item>
                   </Col>
@@ -111,7 +111,7 @@ const CustomFeeForm = () => {
                     name: "",
                     amount: 0,
                     one_time: false,
-                    effective_from: dayjs(),
+                    // effective_from: dayjs()?.isValid(),
                   })
                 }
                 block

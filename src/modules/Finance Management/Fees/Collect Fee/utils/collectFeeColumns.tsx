@@ -1,4 +1,4 @@
-import { Button, Space } from "antd";
+import { Button, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 import DeleteButton from "../../../../../common/CommonAnt/Button/DeleteButton";
@@ -82,14 +82,15 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
           : "N/A",
     },
     {
-      key: "11111",
-      title: "REG No.",
+      key: "4",
+      title: "User Name",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title?.registration_number : "N/A"),
+      render: (title) => (title ? title.student?.user?.username : "N/A"),
     },
+
     {
-      key: "11111",
+      key: "111115",
       title: "Session",
       dataIndex: "admission",
       align: "center",
@@ -98,29 +99,15 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
 
     {
       key: "2",
-      title: "Student Phone Number",
+      title: "Phone",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title.student?.phone_number : "N/A"),
+      render: (admission) => {
+        const phone = admission?.student?.phone_number;
+        return phone ? phone.replace(/^880/, "0") : "N/A";
+      },
     },
 
-    {
-      key: "3",
-      title: "Enrollment Date",
-      dataIndex: "admission",
-      align: "center",
-      render: (title) =>
-        title
-          ? dayjs(title.student?.enrollment_date).format("DD MMM YYYY")
-          : "N/A",
-    },
-    {
-      key: "4",
-      title: "User Name",
-      dataIndex: "admission",
-      align: "center",
-      render: (title) => (title ? title.student?.user?.username : "N/A"),
-    },
     {
       key: "5",
       title: "Class",
@@ -135,26 +122,41 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (month) => (month ? dayjs(month).format("MMMM") : "N/A"),
     },
-    {
-      key: "7",
-      title: "Payment Method",
-      dataIndex: "payment_method",
-      align: "center",
-      render: (title) => (title ? title : "N/A"),
-    },
+
     {
       key: "8",
-      title: "Payment Amount",
-      dataIndex: "paid_amount",
+      title: "Paid Amount",
+      dataIndex: "total_paid",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "0"),
+
+      // render: (amount) => {
+      //   if (!amount) return <Tag color="cyan">N/A</Tag>;
+
+      //   const value = String(amount).toLowerCase();
+
+      //   if (value === "paid") {
+      //     return <Tag color="green">Paid</Tag>;
+      //   } else if (value === "partial") {
+      //     return <Tag color="yellow">Partial</Tag>;
+      //   } else {
+      //     return <Tag color="cyan">{amount}</Tag>;
+      //   }
+      // },
+    },
+    {
+      key: "99",
+      title: "Net Amount",
+      dataIndex: "net_amount",
+      align: "center",
+      render: (title) => (title ? title : "0"),
     },
     {
       key: "9",
       title: "Discount Amount",
-      dataIndex: "discount_value",
+      dataIndex: "discount_amount",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "0"),
     },
     {
       key: "10",
@@ -166,9 +168,35 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
     {
       key: "11",
       title: "Due Amount",
-      dataIndex: "admission",
+      dataIndex: "total_due",
       align: "center",
-      render: (amount) => (amount ? amount?.due_amount : "N/A"),
+      render: (amount) => (amount ? amount : "0"),
+    },
+    {
+      key: "110",
+      title: "Total Amount",
+      dataIndex: "total_amount",
+      align: "center",
+      render: (amount) => (amount ? amount : "0"),
+    },
+    {
+      key: "110",
+      title: "Status",
+      dataIndex: "status",
+      align: "center",
+      render: (status) => {
+        if (!status) return <Tag color="cyan">N/A</Tag>;
+
+        const value = String(status).toLowerCase();
+
+        if (value === "paid") {
+          return <Tag color="green">Paid</Tag>;
+        } else if (value === "partial") {
+          return <Tag color="blue">Partial</Tag>;
+        } else {
+          return <Tag color="red">{status}</Tag>;
+        }
+      },
     },
 
     {

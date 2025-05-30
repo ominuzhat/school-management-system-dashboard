@@ -69,6 +69,23 @@ const collectFeeEndPoints = api.injectEndpoints({
       ],
     }),
 
+    createClaimFees: builder.mutation<ApiResponse<any>, any>({
+      query: (data) => ({
+        url: "/api/v1.0/admissions/collect-fees/generate-fees/",
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.CLAIM,
+          id: TagTypes.CLAIM + "_ID",
+        },
+      ],
+    }),
+
     getCollectSingleFees: builder.query<ApiResponse<any>, number>({
       query: (collectFeeId) => ({
         url: `/api/v1.0/admissions/collect-fees/${collectFeeId}/`,
@@ -143,5 +160,6 @@ export const {
   useUpdateCollectFeesMutation,
   useGetCollectSingleFeesFormQuery,
   useGetNewCollectFeesQuery,
-  useCreateNewCollectFeesMutation
+  useCreateNewCollectFeesMutation,
+  useCreateClaimFeesMutation,
 } = collectFeeEndPoints;

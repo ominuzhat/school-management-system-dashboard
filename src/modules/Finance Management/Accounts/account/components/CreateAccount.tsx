@@ -1,31 +1,34 @@
-import { Col, Input, Row, Select } from "antd";
+import { Col, Input, Row, Select, Form as AntForm } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import { useCreateAccountMutation } from "../api/accountEndPoints";
 import { AccountType, ICreateAccount } from "../types/accountTypes";
+import { useEffect } from "react";
 
 const CreateAccount = () => {
   const [create, { isLoading, isSuccess }] = useCreateAccountMutation();
+  const [form] = AntForm.useForm();
 
   const onFinish = (values: any): void => {
     create(values);
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      form.resetFields();
+    }
+  }, [form, isSuccess]);
+
   return (
     <div>
-      <Form
-        onFinish={onFinish}
-        isLoading={isLoading}
-        isSuccess={isSuccess}
-        initialValues={{ account_type: "", balance: "" }}
-      >
+      <Form onFinish={onFinish} isLoading={isLoading} isSuccess={isSuccess}>
         <Row gutter={[16, 16]}>
-          <Col lg={12}>
+          <Col lg={24}>
             <Form.Item<ICreateAccount>
-              label="Select Account Type"
+              label="Select Account"
               name="account_type"
-              rules={[{ required: true, message: "Account Type is required!" }]}
+              rules={[{ required: true, message: "Account is required!" }]}
             >
-              <Select placeholder="Select Account Type" className="w-full">
+              <Select placeholder="Select Account" className="w-full">
                 {Object.entries(AccountType).map(([key, value]) => (
                   <Select.Option key={value} value={value}>
                     {key.replace(/_/g, " ")}
@@ -34,7 +37,7 @@ const CreateAccount = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col lg={12}>
+          <Col lg={24}>
             <Form.Item<ICreateAccount>
               label="Balance"
               name="balance"

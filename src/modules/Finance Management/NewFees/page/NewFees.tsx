@@ -5,7 +5,6 @@ import {
   FaCreditCard,
   FaArrowDown,
   FaArrowUp,
-  FaChartPie,
   FaSitemap,
 } from "react-icons/fa";
 import BasicOverview from "../components/Home/BasicOverview";
@@ -13,13 +12,16 @@ import { FeeCollection } from "../components/FinanceTab/CollectFee";
 import { PaymentFee } from "../components/FinanceTab/PaymentFee";
 import { ExpenseTracking } from "../components/FinanceTab/Expense";
 import { AccountTransfer } from "../components/FinanceTab/TransferFee";
+import AccountList from "../components/FinanceTab/Account";
+import { MdAccountBalanceWallet } from "react-icons/md";
 
 const tabs = [
-  { key: "overview", label: "ওভারভিউ", icon: <FaChartPie /> },
-  { key: "fees", label: "ফি সংগ্রহ", icon: <FaFileAlt /> },
-  { key: "payments", label: "পেমেন্ট", icon: <FaCreditCard /> },
-  { key: "expenses", label: "খরচ", icon: <FaArrowDown /> },
-  { key: "transfers", label: "ট্রান্সফার", icon: <FaArrowUp /> },
+  // { key: "overview", label: "ওভারভিউ", icon: <FaChartPie /> },
+  { key: "fees", label: "Collect Fee", icon: <FaFileAlt /> },
+  { key: "payments", label: "Payroll", icon: <FaCreditCard /> },
+  { key: "expenses", label: "Cash Management", icon: <FaArrowDown /> },
+  { key: "transfers", label: "Transfer", icon: <FaArrowUp /> },
+  { key: "account", label: "Account", icon: <MdAccountBalanceWallet /> },
   { key: "ledger", label: "খাতা", icon: <FaSitemap /> },
 ];
 
@@ -27,8 +29,8 @@ const TabComponent = () => {
   const [activeTab, setActiveTab] = useState("fees");
 
   return (
-    <div className="">
-      <BasicOverview />
+    <div>
+      {/* <BasicOverview /> */}
       <div className="my-10">
         <div className="bg-white/80 backdrop-blur-md border border-[#A2C3FF] rounded-lg shadow-xl p-2">
           <div className="grid grid-cols-3 lg:grid-cols-6 gap-2">
@@ -51,12 +53,13 @@ const TabComponent = () => {
           </div>
         </div>
       </div>
-      <div className="">
+      <div>
         {activeTab === "overview" && <div>Overview Content</div>}
         {activeTab === "fees" && <FeeCollection />}
         {activeTab === "payments" && <PaymentFee />}
         {activeTab === "expenses" && <ExpenseTracking />}
         {activeTab === "transfers" && <AccountTransfer />}
+        {activeTab === "account" && <AccountList />}
         {activeTab === "ledger" && <div>Ledger Reports Content</div>}
       </div>
     </div>

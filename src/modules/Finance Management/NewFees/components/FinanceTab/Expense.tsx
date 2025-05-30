@@ -1,83 +1,29 @@
+import { Card, Button, Statistic, Progress, Row, Col, Divider } from "antd";
 import {
-  Card,
-  Button,
-  Input,
-  Select,
-  Table,
-  Tag,
-  Statistic,
-  Progress,
-  Row,
-  Col,
-  Space,
-  Divider,
-} from "antd";
-import {
-  SearchOutlined,
   PlusOutlined,
   ArrowDownOutlined,
   FileTextOutlined,
   CalendarOutlined,
   PieChartOutlined,
-  DownloadOutlined,
 } from "@ant-design/icons";
-
-const { Option } = Select;
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../../../../../app/store";
+import { FilterState } from "../../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import useCashColumns from "../../../Accounts/cash management/utils/cashColumns";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
+import { useGetCashQuery } from "../../../Accounts/cash management/api/cashEndPoints";
+import { IGetCash } from "../../../Accounts/cash management/types/cashTypes";
+import { showModal } from "../../../../../app/features/modalSlice";
+import CreateCash from "../../../Accounts/cash management/components/CreateCash";
+import NoPermissionData from "../../../../../utilities/NoPermissionData";
+import { Table } from "../../../../../common/CommonAnt";
 
 export const ExpenseTracking = () => {
-  const expenses = [
-    {
-      id: 1,
-      date: "2024-01-24",
-      category: "Utilities",
-      description: "Monthly electricity bill",
-      amount: 8500,
-      method: "Bank Transfer",
-      receipt: "ELEC-001",
-      approvedBy: "Principal",
-    },
-    {
-      id: 2,
-      date: "2024-01-23",
-      category: "Stationery",
-      description: "Office supplies and printing materials",
-      amount: 3200,
-      method: "Cash",
-      receipt: "STAT-045",
-      approvedBy: "Admin Head",
-    },
-    {
-      id: 3,
-      date: "2024-01-22",
-      category: "Maintenance",
-      description: "Classroom furniture repair",
-      amount: 12000,
-      method: "Cheque",
-      receipt: "MAIN-012",
-      approvedBy: "Principal",
-    },
-    {
-      id: 4,
-      date: "2024-01-21",
-      category: "Transportation",
-      description: "School bus fuel and maintenance",
-      amount: 15000,
-      method: "Bank Transfer",
-      receipt: "TRANS-003",
-      approvedBy: "Transport Head",
-    },
-    {
-      id: 5,
-      date: "2024-01-20",
-      category: "Food & Beverage",
-      description: "Cafeteria supplies and groceries",
-      amount: 7800,
-      method: "Cash",
-      receipt: "FOOD-018",
-      approvedBy: "Cafeteria Manager",
-    },
-  ];
-
   const categoryColors = {
     Utilities: "blue",
     Stationery: "green",
@@ -97,49 +43,39 @@ export const ExpenseTracking = () => {
     { category: "Technology", amount: 7000, percentage: 5 },
   ];
 
-  const expenseColumns = [
-    {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category: any) => (
-        <Tag color={categoryColors[category as keyof typeof categoryColors]}>
-          {category}
-        </Tag>
-      ),
-    },
-    {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-    },
-    {
-      title: "Amount",
-      dataIndex: "amount",
-      key: "amount",
-      render: (amount: any) => (
-        <span className="text-red-600 font-medium">
-          -₹{amount.toLocaleString()}
-        </span>
-      ),
-    },
-    {
-      title: "Details",
-      key: "details",
-      render: (_: any, record: any) => (
-        <div className="text-sm text-gray-500">
-          <div>Payment: {record.method}</div>
-          <div>Receipt: {record.receipt}</div>
-          <div>Approved by: {record.approvedBy}</div>
-        </div>
-      ),
-    },
-  ];
+  const dispatch = useDispatch();
+
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const columns = useCashColumns();
+
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.financialentry,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.financialentry,
+    actionNames.add
+  );
+
+  const {
+    data: transactionList,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetCashQuery({
+    page_size: page_size,
+    page: Number(page) || undefined,
+  });
+
+  const dataLength =
+    (transactionList?.data?.results as IGetCash[] | undefined)?.length ?? 0;
+
+  const dataSource =
+    (transactionList?.data?.results as IGetCash[] | undefined) ?? [];
 
   return (
     <div className="space-y-6">
@@ -207,19 +143,31 @@ export const ExpenseTracking = () => {
         {/* Expense List */}
         <Col xs={24} lg={16}>
           <Card
-            title="Daily Expense Tracking"
+            title="Daily Cash Tracking"
             className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
             extra={
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600"
-              >
-                Add Expense
-              </Button>
+              <>
+                {createPermission && (
+                  <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={() =>
+                      dispatch(
+                        showModal({
+                          title: "Add Cash",
+                          content: <CreateCash />,
+                        })
+                      )
+                    }
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600"
+                  >
+                    Add Cash
+                  </Button>
+                )}
+              </>
             }
           >
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <Space size="middle">
                 <Input
                   placeholder="Search expenses..."
@@ -235,16 +183,19 @@ export const ExpenseTracking = () => {
                   <Option value="food">Food & Beverage</Option>
                 </Select>
               </Space>
-            </div>
-
-            <Table
-              columns={expenseColumns}
-              dataSource={expenses}
-              rowKey="id"
-              pagination={false}
-              size="middle"
-              className="rounded-lg border border-gray-200"
-            />
+            </div> */}
+            {viewPermission ? (
+              <Table
+                rowKey={"id"}
+                loading={isLoading || isFetching}
+                refetch={refetch}
+                total={dataLength}
+                dataSource={dataSource}
+                columns={columns}
+              />
+            ) : (
+              <NoPermissionData />
+            )}
           </Card>
         </Col>
 
@@ -277,7 +228,7 @@ export const ExpenseTracking = () => {
               </div>
             ))}
           </Card>
-
+          {/* 
           <Card
             title="Quick Actions"
             className="bg-white/60 backdrop-blur-sm border-blue-100"
@@ -297,7 +248,7 @@ export const ExpenseTracking = () => {
                 View Analytics
               </Button>
             </Space>
-          </Card>
+          </Card> */}
         </Col>
       </Row>
     </div>

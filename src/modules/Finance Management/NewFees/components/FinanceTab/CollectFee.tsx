@@ -1,23 +1,38 @@
-import { Card, Button, Input, Select, Table, Tag, Statistic } from "antd";
+import { Card, Button, Select, Tag, Statistic } from "antd";
 import {
-  SearchOutlined,
-  FilterOutlined,
-  DownloadOutlined,
   PlusOutlined,
   CalendarOutlined,
   UserOutlined,
   DollarOutlined,
   ExclamationCircleOutlined,
-  LoadingOutlined,
 } from "@ant-design/icons";
 import { useGetClassesQuery } from "../../../../general settings/classes/api/classesEndPoints";
 import { useState } from "react";
-import { debounce } from "lodash";
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../../../app/store";
+import { showModal } from "../../../../../app/features/modalSlice";
+import CreateClaimFee from "../CreateClaimFee";
+import NoPermissionData from "../../../../../utilities/NoPermissionData";
+import { FilterState } from "../../../../../app/features/filterSlice";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import useCollectFeeColumns from "../../../Fees/Collect Fee/utils/collectFeeColumns";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
+import { useGetCollectFeesQuery } from "../../../Fees/Collect Fee/api/collectFeeEndPoints";
+import { Table } from "../../../../../common/CommonAnt";
+import { SearchComponent } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
+import { useGetShiftQuery } from "../../../../general settings/shift/api/shiftEndPoints";
+import { useGetSectionQuery } from "../../../../general settings/Section/api/sectionEndPoints";
+import { useGetAdmissionSessionQuery } from "../../../../general settings/admission session/api/admissionSessionEndPoints";
 
 const { Option } = Select;
 
 export const FeeCollection = () => {
+  const dispatch = useAppDispatch();
+
   const students = [
     {
       id: 1,
@@ -142,13 +157,56 @@ export const FeeCollection = () => {
       ),
     },
   ];
-  const [search, setSearch] = useState("");
+
+  const { data: classData } = useGetClassesQuery({});
+  const { data: shiftData } = useGetShiftQuery({});
+  const { data: sectionData } = useGetSectionQuery({});
+  const { data: sessionData } = useGetAdmissionSessionQuery({
+    status: "open",
+  });
+
+  const [filters, setFilters] = useState({
+    search: "",
+    is_active: "",
+    current_grade_level: "",
+    current_section: "",
+    current_session: "",
+    current_shift: "",
+    status: "",
+  });
+
+  const { page_size, page } = useAppSelector(FilterState);
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+  const collectFeeColumns = useCollectFeeColumns();
+
+  const viewPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.fees,
+    actionNames.view
+  );
+  const createPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.fees,
+    actionNames.add
+  );
 
   const {
-    data: classData,
-    isLoading: classLoading,
-    isFetching: isFetchingClasses,
-  } = useGetClassesQuery({ search: search });
+    data: collectFee,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetCollectFeesQuery({
+    search: filters.search,
+    admission__grade_level: filters.current_grade_level,
+    admission__section: filters.current_section,
+    admission__session: filters.current_session,
+    admission__shift: filters.current_shift,
+    status: filters.status,
+    is_active: filters.is_active,
+    page_size: page_size,
+    page: Number(page) || undefined,
+  });
 
   return (
     <div className="space-y-6">
@@ -198,66 +256,155 @@ export const FeeCollection = () => {
         </h1>
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="flex-1">
-            <Input
-              placeholder="Search by student name, roll number, or class..."
-              prefix={<SearchOutlined />}
-              className="w-full"
+            <SearchComponent
+              onSearch={(value) =>
+                setFilters((prev) => ({ ...prev, search: value }))
+              }
+              placeholder="Search Collect Fee"
             />
           </div>
 
           <Select
-            mode="multiple"
-            allowClear
-            showSearch
-            placeholder={
-              classLoading ? "Loading classes..." : "Filter by class"
-            }
-            optionFilterProp="children"
-            filterOption={false}
-            onSearch={debounce(setSearch, 500)}
-            loading={isFetchingClasses}
-            notFoundContent={
-              isFetchingClasses ? <LoadingOutlined /> : "No Class found"
-            }
             className="w-full md:w-48"
-            options={
-              (Array?.isArray(classData?.data) &&
-                classData?.data?.map((classItem: any) => ({
-                  label: classItem.name,
-                  value: classItem.id,
-                }))) ||
-              []
+            placeholder="Class"
+            allowClear
+            onChange={(value) =>
+              setFilters((prev) => ({
+                ...prev,
+                current_grade_level: value,
+              }))
             }
-          />
+          >
+            {Array.isArray(classData?.data) &&
+              classData?.data?.map((data: any) => (
+                <Option key={data.id} value={data.id}>
+                  {data.name}
+                </Option>
+              ))}
+          </Select>
 
-          <Select placeholder="Payment status" className="w-full md:w-48">
-            <Option value="all">All Status</Option>
+          <Select
+            className="w-full md:w-48"
+            placeholder="Section"
+            allowClear
+            onChange={(value) =>
+              setFilters((prev) => ({
+                ...prev,
+                current_section: value,
+              }))
+            }
+          >
+            {Array.isArray(sectionData?.data) &&
+              sectionData?.data?.map((data: any) => (
+                <Option key={data.id} value={data.id}>
+                  {data.name}
+                </Option>
+              ))}
+          </Select>
+
+          <Select
+            className="w-full md:w-48"
+            placeholder="Session"
+            allowClear
+            onChange={(value) =>
+              setFilters((prev) => ({
+                ...prev,
+                current_session: value,
+              }))
+            }
+          >
+            {Array.isArray(sessionData?.data) &&
+              sessionData?.data?.map((data: any) => (
+                <Option key={data.id} value={data.id}>
+                  {data.name}
+                </Option>
+              ))}
+          </Select>
+
+          <Select
+            className="w-full md:w-48"
+            placeholder="Shift"
+            allowClear
+            onChange={(value) =>
+              setFilters((prev) => ({
+                ...prev,
+                current_shift: value,
+              }))
+            }
+          >
+            {Array.isArray(shiftData?.data) &&
+              shiftData?.data?.map((data: any) => (
+                <Option key={data.id} value={data.id}>
+                  {data.name}
+                </Option>
+              ))}
+          </Select>
+
+          <Select
+            allowClear
+            placeholder="Payment status"
+            className="w-full md:w-48"
+            onChange={(value) =>
+              setFilters((prev) => ({
+                ...prev,
+                status: value,
+              }))
+            }
+          >
             <Option value="paid">Paid</Option>
             <Option value="partial">Partial</Option>
             <Option value="pending">Pending</Option>
           </Select>
           <div className="flex gap-2">
-            <Button icon={<FilterOutlined />}>More Filters</Button>
-            <Button icon={<DownloadOutlined />}>Export</Button>
-            <Link to={"/new-collect-fee"}>
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600"
-              >
-                Collect Fee
-              </Button>
-            </Link>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600"
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Add Claim Fee",
+                    content: <CreateClaimFee />,
+                  })
+                )
+              }
+            >
+              Claim Fee
+            </Button>
+            {createPermission && (
+              <Link to={"/new-collect-fee"}>
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600"
+                >
+                  Collect Fee
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
 
+        {viewPermission ? (
+          <Table
+            rowKey={"id"}
+            loading={isLoading || isFetching}
+            refetch={refetch}
+            total={collectFee?.data?.count}
+            dataSource={collectFee?.data?.results}
+            columns={collectFeeColumns}
+          />
+        ) : (
+          <NoPermissionData />
+        )}
+
         {/* Students Table */}
-        <Table
+        {/* <Table
           columns={columns}
           dataSource={students}
           rowKey="id"
           className="rounded-lg border border-gray-200"
-        />
+        /> */}
       </Card>
     </div>
   );

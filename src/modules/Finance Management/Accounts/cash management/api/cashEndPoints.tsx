@@ -40,6 +40,10 @@ const cashEndPoints = api.injectEndpoints({
           type: TagTypes.CASH,
           id: TagTypes.CASH + "_ID",
         },
+        {
+          type: TagTypes.ACCOUNT,
+          id: TagTypes.ACCOUNT + "_ID",
+        },
       ],
     }),
 

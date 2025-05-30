@@ -191,7 +191,7 @@ const MenuData: React.FC = () => {
             icon: <AiOutlineAccountBook />,
             key: "/account/transactions",
           },
-          hasPermissionForModule(permissions, "transaction") && {
+          hasPermissionForModule(permissions, "financialentry") && {
             label: <Link to="/account/cash">Cash Management</Link>,
             icon: <AiOutlineAccountBook />,
             key: "/account/cash",

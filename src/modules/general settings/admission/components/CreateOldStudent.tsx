@@ -191,7 +191,7 @@ const CreateOldStudent = () => {
       fees: sourceFees.map((fee: any) => ({
         ...fee,
         effective_from: isCustom
-          ? dayjs(fee.effective_from).format("YYYY-MM-DD")
+          ? dayjs(fee.effective_from).format("YYYY-MM-01")
           : undefined,
         is_active: true,
       })),

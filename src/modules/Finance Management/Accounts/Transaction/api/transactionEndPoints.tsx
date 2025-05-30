@@ -40,6 +40,10 @@ const transactionENdPoints = api.injectEndpoints({
           type: TagTypes.TRANSACTION,
           id: TagTypes.TRANSACTION + "_ID",
         },
+        {
+          type: TagTypes.ACCOUNT,
+          id: TagTypes.ACCOUNT + "_ID",
+        },
       ],
     }),
 

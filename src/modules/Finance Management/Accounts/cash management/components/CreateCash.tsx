@@ -12,6 +12,7 @@ import {
   PaymentMethodEnum,
 } from "../types/cashTypes";
 import dayjs from "dayjs";
+import { useEffect } from "react";
 
 const CreateCash = () => {
   const [create, { isLoading, isSuccess }] = useCreateCashMutation();
@@ -29,6 +30,12 @@ const CreateCash = () => {
     create(results);
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      form.resetFields();
+    }
+  }, [form, isSuccess]);
+
   return (
     <div>
       <Form
@@ -36,17 +43,16 @@ const CreateCash = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={{ account_type: "", balance: "" }}
       >
         <Row gutter={[16, 16]}>
           <Col lg={8}>
             <Form.Item<ICreateCash>
-              label="Select Account Type"
+              label="Select Account "
               name="account"
-              rules={[{ required: true, message: "Account Type is required!" }]}
+              rules={[{ required: true, message: "Account is required!" }]}
             >
               <Select
-                placeholder="Select Account Type"
+                placeholder="Select Account "
                 className="w-full"
                 allowClear
               >
@@ -120,7 +126,11 @@ const CreateCash = () => {
           </Col>
 
           <Col lg={24}>
-            <Form.Item<ICreateCash> label="Description" name="description">
+            <Form.Item<ICreateCash>
+              label="Description"
+              name="description"
+              rules={[{ required: true, message: "Description is required!" }]}
+            >
               <Input.TextArea placeholder="Enter Description" rows={4} />
             </Form.Item>
           </Col>

@@ -12,7 +12,7 @@ import {
   Card,
   Typography,
   message,
-  Switch,
+  Tag,
 } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
@@ -57,20 +57,17 @@ const CreateNewCollectFee = () => {
     paid_amount: 0,
   });
 
-  // Update totals dynamically when particulars change
   useEffect(() => {
-    const formValues = form.getFieldValue("particulars");
-
-    if (Array.isArray(formValues)) {
-      const amount = formValues.reduce(
+    if (Array.isArray(particulars)) {
+      const amount = particulars.reduce(
         (sum, item) => sum + Number(item?.amount || 0),
         0
       );
-      const due_amount = formValues.reduce(
+      const due_amount = particulars.reduce(
         (sum, item) => sum + Number(item?.due_amount || 0),
         0
       );
-      const paid_amount = formValues.reduce((sum, item) => {
+      const paid_amount = particulars.reduce((sum, item) => {
         const paid = Number(item?.paid_amount || 0);
         const due = Number(item?.due_amount || 0);
         return sum + (paid > due ? due : paid);
@@ -78,7 +75,7 @@ const CreateNewCollectFee = () => {
 
       setTotals({ amount, due_amount, paid_amount });
     }
-  }, [form, form.getFieldValue("particulars")]);
+  }, [form, particulars]);
 
   const { data: getSingleAdmission } = useGetSingleAdmissionQuery<any>(
     admissionId || admission,
@@ -86,11 +83,15 @@ const CreateNewCollectFee = () => {
       skip: !admissionId && !admission,
     }
   );
-
-  const { data: newCollectFeeData } = useGetNewCollectFeesQuery({
-    admission: admissionId || admission,
-    month: month ? dayjs(month).format("YYYY-MM-01") : undefined,
-  });
+  const { data: newCollectFeeData } = useGetNewCollectFeesQuery<any>(
+    {
+      admission: admissionId || admission,
+      month: month ? dayjs(month).format("YYYY-MM-01") : undefined,
+    },
+    {
+      skip: !admissionId && !admission,
+    }
+  );
 
   useEffect(() => {
     if (getSingleAdmission?.data) {
@@ -102,18 +103,56 @@ const CreateNewCollectFee = () => {
     }
   }, [form, getSingleAdmission?.data]);
 
+  // useEffect(() => {
+  //   if (newCollectFeeData?.data?.particulars?.length > 0) {
+  //     form.setFieldsValue({
+  //       particulars: newCollectFeeData?.data?.particulars.map((item: any) => ({
+  //         id: item.id,
+  //         name: item.name,
+  //         amount: item.amount,
+  //         paid_amount: parseInt(item.paid_amount) || 0,
+  //         due_amount: item.due_amount || item.amount - (item.paid_amount || 0),
+  //         one_time: item.one_time || false,
+  //         is_add_on: item.is_add_on || false,
+  //       })),
+  //     });
+  //   }
+  // }, [newCollectFeeData?.data?.particulars, form]);
+
   useEffect(() => {
     if (newCollectFeeData?.data?.particulars?.length > 0) {
-      form.setFieldsValue({
-        particulars: newCollectFeeData?.data?.particulars.map((item: any) => ({
-          name: item.name,
-          amount: item.amount,
-          paid_amount: item.paid_amount || 0,
-          due_amount: item.due_amount || item.amount - (item.paid_amount || 0),
-        })),
-      });
+      const combinedParticulars = [
+        ...(newCollectFeeData?.data?.particulars || []),
+        ...(newCollectFeeData?.data?.carried_forward_dues || []),
+      ].map((item: any) => ({
+        id: item.id,
+        name: `${item.name} ${
+          item?.is_carried_forward
+            ? `(${dayjs(item.due_month).format("MMM")})`
+            : ""
+        }`,
+        amount: item.amount,
+        paid_amount: parseInt(item.paid_amount) || 0,
+        due_amount: item.due_amount || item.amount - (item.paid_amount || 0),
+        one_time: item.one_time || false,
+        is_add_on: item.is_add_on || false,
+        is_carried_forward: item?.is_carried_forward || false,
+      }));
+
+      form.setFieldsValue({ particulars: combinedParticulars });
     }
-  }, [newCollectFeeData?.data?.particulars, form]);
+  }, [
+    newCollectFeeData?.data?.particulars,
+    newCollectFeeData?.data?.carried_forward_dues,
+    form,
+  ]);
+
+  const currentMonthParticulars = particulars?.filter(
+    (item: any) => !item?.is_carried_forward
+  );
+  const carriedForwardParticulars = particulars?.filter(
+    (item: any) => item?.is_carried_forward
+  );
 
   const onFinish = (values: any): void => {
     const results = {
@@ -123,14 +162,23 @@ const CreateNewCollectFee = () => {
       discount_value: values?.discount_value,
       payment_method: "cash",
       account: values?.account,
-      paid_amount: values?.paid_amount,
       payment_date: dayjs(values?.payment_date).format("YYYY-MM-01"),
       month: dayjs(values?.month).format("YYYY-MM-01"),
-      particulars,
+      particulars:
+        currentMonthParticulars.map((item: any) => ({
+          id: item?.id,
+          name: item?.name,
+          amount: item?.amount,
+          paid_amount: Number(item?.paid_amount) || 0,
+        })) || [],
+      carried_forward_dues:
+        carriedForwardParticulars.map((item: any) => ({
+          id: item?.id,
+          name: item?.name,
+          amount: item?.amount,
+          paid_amount: Number(item?.paid_amount) || 0,
+        })) || [],
     };
-
-    console.log(values);
-    console.log(results, " results");
 
     create(results)
       .unwrap()
@@ -162,18 +210,45 @@ const CreateNewCollectFee = () => {
         isSuccess={isSuccess}
         layout="vertical"
         buttonLabel="Collect Fee"
-        onValuesChange={(_changedValues: any, allValues) => {
-          const updatedParticulars = allValues.particulars.map((item: any) => {
-            const amount = Number(item?.amount || 0);
+        onValuesChange={(changedValues, allValues) => {
+          const particulars = allValues.particulars || [];
+
+          const amount = particulars.reduce(
+            (sum: number, item: any) => sum + Number(item?.amount || 0),
+            0
+          );
+          const due_amount = particulars.reduce(
+            (sum: number, item: any) => sum + Number(item?.due_amount || 0),
+            0
+          );
+          const paid_amount = particulars.reduce((sum: number, item: any) => {
             const paid = Number(item?.paid_amount || 0);
-            const due = amount - paid;
-            return {
-              ...item,
-              due_amount: due < 0 ? 0 : due,
-            };
-          });
-          form.setFieldsValue({ particulars: updatedParticulars });
+            const due = Number(item?.due_amount || 0);
+            return sum + (paid > due ? due : paid);
+          }, 0);
+
+          setTotals({ amount, due_amount, paid_amount });
         }}
+        // onValuesChange={(_changedValues: any, allValues) => {
+        //   const updatedParticulars = allValues?.particulars?.map(
+        //     (item: any) => {
+        //       const dueAmount = Number(item?.due_amount || 0);
+        //       const paid = Number(item?.paid_amount || 0);
+        //       const due = dueAmount - paid;
+
+        //       console.log("allValues", allValues);
+        //       console.log("dueAmount", dueAmount);
+        //       console.log("paid", paid);
+        //       console.log("due", due);
+
+        //       return {
+        //         ...item,
+        //         due_amount: due < 0 ? 0 : due,
+        //       };
+        //     }
+        //   );
+        //   form.setFieldsValue({ particulars: updatedParticulars });
+        // }}
       >
         <Card className="mb-6 shadow-lg rounded-lg">
           <Row gutter={[16, 16]}>
@@ -287,7 +362,7 @@ const CreateNewCollectFee = () => {
                   {Array.isArray(accountList?.data) &&
                     accountList?.data?.map((account: any) => (
                       <Select.Option key={account?.id} value={account?.id}>
-                        {account?.account_type} - {account?.balance}
+                        {account?.account_type} ({account?.balance})
                       </Select.Option>
                     ))}
                 </Select>
@@ -311,13 +386,13 @@ const CreateNewCollectFee = () => {
                       </th>
                       <th style={{ padding: "8px", border: "1px solid #ddd" }}>
                         Particular Name
-                      </th>{" "}
-                      <th style={{ padding: "8px", border: "1px solid #ddd" }}>
+                      </th>
+                      {/* <th style={{ padding: "8px", border: "1px solid #ddd" }}>
                         One Time
                       </th>
                       <th style={{ padding: "8px", border: "1px solid #ddd" }}>
                         Is Add-on
-                      </th>
+                      </th> */}
                       <th style={{ padding: "8px", border: "1px solid #ddd" }}>
                         Total Amount
                       </th>
@@ -359,17 +434,37 @@ const CreateNewCollectFee = () => {
                               name={[name, "name"]}
                               style={{ marginBottom: 0 }}
                             >
-                              <Input  className="collect-fee" />
+                              <Input className="collect-fee" />
                             </AntForm.Item>
                           </td>
-                          <td>
+
+                          {/* <td>
                             <AntForm.Item
                               {...restField}
                               name={[name, "one_time"]}
                               style={{ marginBottom: 0 }}
-                              valuePropName="checked"
                             >
-                              <Switch disabled />
+                              {({ getFieldValue }) => {
+                                const value = getFieldValue([
+                                  "particulars",
+                                  name,
+                                  "one_time",
+                                ]);
+                                return (
+                                  <Tag
+                                    color={value ? "green" : "red"}
+                                    style={{
+                                      margin: 0,
+                                      minWidth: 60,
+                                      textAlign: "center",
+                                      fontWeight: 500,
+                                      textTransform: "uppercase",
+                                    }}
+                                  >
+                                    {value ? "Yes" : "No"}
+                                  </Tag>
+                                );
+                              }}
                             </AntForm.Item>
                           </td>
                           <td>
@@ -377,11 +472,31 @@ const CreateNewCollectFee = () => {
                               {...restField}
                               name={[name, "is_add_on"]}
                               style={{ marginBottom: 0 }}
-                              valuePropName="checked"
                             >
-                              <Switch disabled />
+                              {({ getFieldValue }) => {
+                                const value = getFieldValue([
+                                  "particulars",
+                                  name,
+                                  "is_add_on",
+                                ]);
+                                return (
+                                  <Tag
+                                    color={value ? "blue" : "orange"}
+                                    style={{
+                                      margin: 0,
+                                      minWidth: 60,
+                                      textAlign: "center",
+                                      fontWeight: 500,
+                                      textTransform: "uppercase",
+                                    }}
+                                  >
+                                    {value ? "Yes" : "No"}
+                                  </Tag>
+                                );
+                              }}
                             </AntForm.Item>
-                          </td>
+                          </td> */}
+
                           <td
                           // style={{ padding: "8px", border: "1px solid #ddd" }}
                           >
@@ -429,7 +544,7 @@ const CreateNewCollectFee = () => {
                                 }}
                               />
                             </AntForm.Item>
-                          </td>{" "}
+                          </td>
                           <td
                           // style={{ padding: "8px", border: "1px solid #ddd" }}
                           >
@@ -457,7 +572,7 @@ const CreateNewCollectFee = () => {
                                 },
                               ]}
                             >
-                              <Input prefix={<TbCoinTaka />} />
+                              <Input prefix={<TbCoinTaka />} type="number" />
                             </AntForm.Item>
                           </td>
                         </tr>
@@ -475,7 +590,7 @@ const CreateNewCollectFee = () => {
                     >
                       <td
                         // style={{ padding: "8px", border: "1px solid #ddd" }}
-                        colSpan={4}
+                        colSpan={2}
                       >
                         Total
                       </td>
@@ -542,105 +657,3 @@ const CreateNewCollectFee = () => {
 };
 
 export default CreateNewCollectFee;
-
-{
-  /* {admission && (
-  <Card className="p-4 shadow-lg rounded-lg">
-    <div className="mb-6">
-      <div className="grid grid-cols-12 gap-4 border-b py-2 font-semibold">
-        <div className="col-span-1">SL</div>
-        <div className="col-span-4">Particular</div>
-
-        <div className="col-span-2">One Time</div>
-        <div className="col-span-2">Amount</div>
-      </div>
-
-      {newCollectFeeData?.data?.particulars?.map(
-        (item: any, index: number) => (
-          <div
-            key={index}
-            className="grid grid-cols-12 gap-4 border-b py-3 items-center"
-          >
-            <div className="col-span-1">{index + 1}</div>
-            <div className="col-span-4">{item.name}</div>
-
-            <div className="col-span-2">
-              <Switch
-                checked={item.one_time}
-                disabled
-                checkedChildren="Yes"
-                unCheckedChildren="No"
-              />
-            </div>
-            <div className="col-span-2">{item.amount}</div>
-          </div>
-        )
-      )}
-    </div>
-
-    <div className="flex justify-between items-center pt-4">
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-4">
-          <Text strong className="text-lg text-yellow-600 w-32">
-            Discount Type:
-          </Text>
-          <Form.Item
-            name="discount_type"
-            className="mb-0 w-40"
-            rules={[{ required: true, message: "Please select" }]}
-            initialValue="amount"
-          >
-            <Select>
-              <Select.Option value="amount">Amount</Select.Option>
-              <Select.Option value="percent">Percent</Select.Option>
-            </Select>
-          </Form.Item>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Text strong className="text-lg text-yellow-600 w-32">
-            Discount Value:
-          </Text>
-          <Form.Item name="discount_value" className="mb-0">
-            <Input
-              type="number"
-              placeholder="0"
-              className="w-40"
-              prefix={<TbCoinTaka />}
-            />
-          </Form.Item>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-4">
-          <Text strong className="text-lg text-red-600 w-32">
-            Total Due:
-          </Text>
-          <div className="w-40 text-center font-semibold border border-red-200 rounded px-4 py-1">
-            {finalDueAmount || 0}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Text strong className="text-lg text-green-600 w-32">
-            Paid Amount:
-          </Text>
-          <Form.Item
-            name="paid_amount"
-            className="mb-0"
-            rules={[{ required: true, message: "Please enter amount" }]}
-          >
-            <Input
-              type="number"
-              placeholder="0"
-              className="w-40"
-              prefix={<TbCoinTaka />}
-            />
-          </Form.Item>
-        </div>
-      </div>
-    </div>
-  </Card>
-)} */
-}
