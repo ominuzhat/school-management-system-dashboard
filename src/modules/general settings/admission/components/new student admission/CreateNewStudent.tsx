@@ -68,6 +68,7 @@ const CreateNewStudent = () => {
         style={{ marginTop: 24 }}
         className="flex justify-between flex-row-reverse"
       >
+        {/* step */}
         {/* {current === steps.length - 1 && (
           <Button
             type="primary"

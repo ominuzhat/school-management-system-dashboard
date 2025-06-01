@@ -126,6 +126,7 @@ const MenuData: React.FC = () => {
       },
   ].filter(Boolean);
 
+  // collect fee new
   const payroll = [
     hasPermissionForModule(permissions, "payroll") &&
       hasPermissionForModule(permissions, "payment") && {

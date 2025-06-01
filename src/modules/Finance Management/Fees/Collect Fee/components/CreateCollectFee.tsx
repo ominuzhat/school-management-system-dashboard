@@ -73,6 +73,7 @@ const CreateCollectFee = () => {
     console.log(foundAdmission);
 
     // Calculate the total due amount including additional fees
+    // Calculate the total due amount including additional fees
     const totalDueAmount =
       (selectedStudent?.due_amount || 0) + totalAmountOfAdditionalFees;
 

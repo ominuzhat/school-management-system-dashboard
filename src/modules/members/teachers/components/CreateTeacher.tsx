@@ -32,7 +32,7 @@ const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
   const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery({
     page_size: 650,
-  });
+  });  
 
   const { data: classData } = useGetClassesQuery<any>({});
 
