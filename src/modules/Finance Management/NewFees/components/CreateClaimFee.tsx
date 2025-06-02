@@ -105,7 +105,7 @@ const CreateClaimFee = () => {
 
           {/* Class (Grade Level) */}
           <Col xs={24} sm={24} md={12} lg={12}>
-            <Form.Item label="Grade Level" name="grade_level">
+            <Form.Item label="Class" name="grade_level">
               <Select placeholder="Select Class" allowClear>
                 {Array.isArray(classData?.data) &&
                   classData?.data?.map((data: any) => (

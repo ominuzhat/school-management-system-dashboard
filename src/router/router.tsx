@@ -46,7 +46,6 @@ import ViewSingleEmployeeAttendance from "../modules/general settings/attendance
 import AdditionalFeesPage from "../modules/Finance Management/Fees/Additional Fee/page/AdditionalFeesPage";
 import CollectFeePage from "../modules/Finance Management/Fees/Collect Fee/page/CollectFeePage";
 import CreateCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateCollectFee";
-import UpdateCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/UpdateCollectFee";
 import SingleCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/SingleCollectFee";
 import CreateStudent from "../modules/members/students/components/CreateStudent";
 import UpdateStudent from "../modules/members/students/components/UpdateStudent";
@@ -79,6 +78,7 @@ import CashPage from "../modules/Finance Management/Accounts/cash management/pag
 import MigrationResultView from "../modules/general settings/Exam/Result Migration/Components/MigrationResultView";
 import NewFees from "../modules/Finance Management/NewFees/page/NewFees";
 import CreateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateNewCollectFee";
+import UpdateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/UpdateNewCollectFee";
 
 const router = createBrowserRouter([
   {
@@ -494,7 +494,7 @@ const router = createBrowserRouter([
           },
           {
             path: ":collectFeeId",
-            element: <UpdateCollectFee />,
+            element: <UpdateNewCollectFee />,
           },
           {
             path: "view/:collectFeeId",

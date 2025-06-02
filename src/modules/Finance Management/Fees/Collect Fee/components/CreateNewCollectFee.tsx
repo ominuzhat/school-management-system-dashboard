@@ -102,28 +102,35 @@ const CreateNewCollectFee = () => {
   }, [form, getSingleAdmission?.data]);
 
   useEffect(() => {
-    if (newCollectFeeData?.data?.particulars?.length > 0) {
-      const combinedParticulars = [
-        ...(newCollectFeeData?.data?.particulars || []),
-        ...(newCollectFeeData?.data?.carried_forward_dues || []),
-      ].map((item: any) => ({
-        id: item.id,
-        name: `${item.name} ${
-          item?.is_carried_forward
-            ? `(${dayjs(item.due_month).format("MMM")})`
-            : ""
-        }`,
-        amount: item.amount,
-        paid_amount: parseInt(item.paid_amount) || 0,
-        due_amount: item.due_amount || item.amount - (item.paid_amount || 0),
-        one_time: item.one_time || false,
-        is_add_on: item.is_add_on || false,
-        is_carried_forward: item?.is_carried_forward || false,
-      }));
+    const particulars = newCollectFeeData?.data?.particulars || [];
+    const carriedForwardDues =
+      newCollectFeeData?.data?.carried_forward_dues || [];
+
+    if (particulars.length > 0 || carriedForwardDues.length > 0) {
+      const combinedParticulars = [...particulars, ...carriedForwardDues].map(
+        (item: any) => ({
+          id: item.id,
+          name: `${item.name} ${
+            item?.is_carried_forward
+              ? `(${dayjs(item.due_month).format("MMM")})`
+              : ""
+          }`,
+          amount: item.amount,
+          paid_amount: parseInt(item.paid_amount) || 0,
+          due_amount: item.due_amount || item.amount - (item.paid_amount || 0),
+          one_time: item.one_time || false,
+          is_add_on: item.is_add_on || false,
+          is_carried_forward: item?.is_carried_forward || false,
+        })
+      );
 
       form.setFieldsValue({ particulars: combinedParticulars });
+    } else {
+      // Set empty array if both particulars and carried_forward_dues are empty
+      form.setFieldsValue({ particulars: [] });
     }
   }, [
+    newCollectFeeData?.data,
     newCollectFeeData?.data?.particulars,
     newCollectFeeData?.data?.carried_forward_dues,
     form,
@@ -417,7 +424,7 @@ const CreateNewCollectFee = () => {
                     </th>
                   </tr>
                 </thead>
-
+                                                                                                                            
                 <tbody>
                   {fields.map(
                     (
@@ -444,7 +451,7 @@ const CreateNewCollectFee = () => {
                           key={key}
                           style={{
                             backgroundColor:
-                              index % 2 === 0 ? "#fff" : "#f9fafb",
+                            index % 2 === 0 ? "#fff" : "#f9fafb",
                             borderBottom: "1px solid #f0f0f0",
                           }}
                         >
@@ -458,7 +465,11 @@ const CreateNewCollectFee = () => {
                                 { required: true, message: "Name is required" },
                               ]}
                             >
-                              <Input className="collect-fee" />
+                              <Input
+                                className="collect-fee"
+                                disabled={!isAddOn}
+                                placeholder="Enter Particular Name"
+                              />
                             </AntForm.Item>
                           </td>
                           <td>
@@ -523,23 +534,23 @@ const CreateNewCollectFee = () => {
                                   required: true,
                                   message: "Paid amount is required",
                                 },
-                                // {
-                                //   validator: (_, value) => {
-                                //     const due = form.getFieldValue([
-                                //       "particulars",
-                                //       name,
-                                //       "due_amount",
-                                //     ]);
-                                //     if (value > due) {
-                                //       return Promise.reject(
-                                //         new Error(
-                                //           "Paid amount can't exceed due amount"
-                                //         )
-                                //       );
-                                //     }
-                                //     return Promise.resolve();
-                                //   },
-                                // },
+                                {
+                                  validator: (_, value) => {
+                                    const total = form.getFieldValue([
+                                      "particulars",
+                                      name,
+                                      "amount",
+                                    ]);
+                                    if (value > total) {
+                                      return Promise.reject(
+                                        new Error(
+                                          "Paid amount can't exceed total amount"
+                                        )
+                                      );
+                                    }
+                                    return Promise.resolve();
+                                  },
+                                },
                               ]}
                             >
                               <Input prefix={<TbCoinTaka />} type="number" />
