@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Col,
   DatePicker,
@@ -6,7 +7,6 @@ import {
   Select,
   Form as AntForm,
   Card,
-  Tag,
   Typography,
   message,
   Switch,
@@ -38,7 +38,8 @@ const CreateCollectFee = () => {
   const [form] = AntForm.useForm();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const [selectedFees, setSelectedFees] = useState([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setSelectedFees] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState<any>({});
   const [finalDueAmount, setFinalDueAmount] = useState<number | null>(null);
   const [selectedAdditionalFee, setSelectedAdditionalFee] = useState<any[]>([]);

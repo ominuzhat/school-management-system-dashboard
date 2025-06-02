@@ -7,7 +7,7 @@ import {
   FaArrowUp,
   FaSitemap,
 } from "react-icons/fa";
-import BasicOverview from "../components/Home/BasicOverview";
+// import BasicOverview from "../components/Home/BasicOverview";
 import { FeeCollection } from "../components/FinanceTab/CollectFee";
 import { PaymentFee } from "../components/FinanceTab/PaymentFee";
 import { ExpenseTracking } from "../components/FinanceTab/Expense";

@@ -24,15 +24,15 @@ import NoPermissionData from "../../../../../utilities/NoPermissionData";
 import { Table } from "../../../../../common/CommonAnt";
 
 export const ExpenseTracking = () => {
-  const categoryColors = {
-    Utilities: "blue",
-    Stationery: "green",
-    Maintenance: "orange",
-    Transportation: "purple",
-    "Food & Beverage": "pink",
-    Technology: "indigo",
-    Sports: "yellow",
-  };
+  // const categoryColors = {
+  //   Utilities: "blue",
+  //   Stationery: "green",
+  //   Maintenance: "orange",
+  //   Transportation: "purple",
+  //   "Food & Beverage": "pink",
+  //   Technology: "indigo",
+  //   Sports: "yellow",
+  // };
 
   const monthlyExpenses = [
     { category: "Transportation", amount: 45000, percentage: 32 },

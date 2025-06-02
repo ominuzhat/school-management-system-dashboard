@@ -32,6 +32,7 @@ import {
 } from "@ant-design/icons";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
+import dayjs from "dayjs";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -135,6 +136,75 @@ const AdmissionView = () => {
         return <Tag color="default">{status}</Tag>;
     }
   };
+  const feeColumns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text: string) => <Text strong>{text}</Text>,
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+      render: (amount: number) => formattedFee(amount),
+    },
+    {
+      title: "One-Time",
+      dataIndex: "one_time",
+      key: "one_time",
+      render: (oneTime: boolean) =>
+        oneTime ? <Tag color="green">Yes</Tag> : <Tag color="blue">No</Tag>,
+    },
+    {
+      title: "Effective From",
+      dataIndex: "effective_from",
+      key: "effective_from",
+    },
+    {
+      title: "Status",
+      dataIndex: "is_active",
+      key: "is_active",
+      render: (active: boolean) =>
+        active ? (
+          <Tag color="green">Active</Tag>
+        ) : (
+          <Tag color="red">Inactive</Tag>
+        ),
+    },
+  ];
+
+  const paymentParticularColumns = [
+    {
+      title: "Particular",
+      dataIndex: "name",
+      key: "name",
+      render: (text: string) => <Text>{text}</Text>,
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+      render: formattedFee,
+    },
+    {
+      title: "Paid",
+      dataIndex: "paid_amount",
+      key: "paid_amount",
+      render: formattedFee,
+    },
+    {
+      title: "Due",
+      dataIndex: "due_amount",
+      key: "due_amount",
+      render: formattedFee,
+    },
+    {
+      title: "Due Month",
+      dataIndex: "due_month",
+      key: "due_month",
+    },
+  ];
 
   // Responsive layout configurations
   const summaryCardColSpan = {
@@ -489,6 +559,49 @@ const AdmissionView = () => {
             </Card>
           </Col>
         </Row>
+        <Divider orientation="left">Fee Details</Divider>
+<Table
+  columns={feeColumns}
+  dataSource={singleAdmission?.fees || []}
+  rowKey="id"
+  pagination={false}
+  bordered
+  style={{ marginBottom: 32 }}
+/>
+
+<Divider orientation="left">Payment History</Divider>
+<Collapse accordion>
+  {(singleAdmission?.payments || []).map((payment: any) => (
+    <Panel
+      header={
+        <Space>
+          <Text strong>{dayjs(payment.month).format("MMM")}</Text>
+          <Tag color={payment.status === "pending" ? "orange" : "blue"}>{capitalize(payment.status)}</Tag>
+          <Text>Total: {formattedFee(payment.total_amount)}</Text>
+          <Text type="success">Paid: {formattedFee(payment.total_paid)}</Text>
+          <Text type="danger">Due: {formattedFee(payment.total_due)}</Text>
+        </Space>
+      }
+      key={payment.id}
+    >
+      <Descriptions bordered column={1} size="small">
+        <Descriptions.Item label="Payment Date">{payment.payment_date}</Descriptions.Item>
+        <Descriptions.Item label="Net Amount">{formattedFee(payment.net_amount)}</Descriptions.Item>
+        <Descriptions.Item label="Discount">{formattedFee(payment.discount_amount)}</Descriptions.Item>
+      </Descriptions>
+      <Divider dashed />
+      <Text strong>Particulars</Text>
+      <Table
+        columns={paymentParticularColumns}
+        dataSource={payment.particulars || []}
+        rowKey="id"
+        pagination={false}
+        size="small"
+      />
+    </Panel>
+  ))}
+</Collapse>
+
       </div>
     </div>
   );

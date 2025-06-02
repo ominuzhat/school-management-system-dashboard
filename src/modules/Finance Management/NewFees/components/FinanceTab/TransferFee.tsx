@@ -178,7 +178,7 @@ export const AccountTransfer = () => {
                       </div>
                     </div>
                   ),
-                  rowExpandable: (record) => true,
+                  rowExpandable: () => true,
                 }}
               />
             </Card>

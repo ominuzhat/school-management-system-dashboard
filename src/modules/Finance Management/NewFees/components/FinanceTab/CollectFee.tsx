@@ -1,4 +1,4 @@
-import { Card, Button, Select, Tag, Statistic } from "antd";
+import { Card, Button, Select, Statistic } from "antd";
 import {
   PlusOutlined,
   CalendarOutlined,
@@ -33,130 +33,130 @@ const { Option } = Select;
 export const FeeCollection = () => {
   const dispatch = useAppDispatch();
 
-  const students = [
-    {
-      id: 1,
-      name: "Rahul Sharma",
-      class: "Class 10-A",
-      rollNo: "101",
-      totalFee: 5500,
-      paid: 5500,
-      pending: 0,
-      status: "Paid",
-      dueDate: "2024-01-15",
-    },
-    {
-      id: 2,
-      name: "Priya Patel",
-      class: "Class 9-B",
-      rollNo: "205",
-      totalFee: 4800,
-      paid: 2400,
-      pending: 2400,
-      status: "Partial",
-      dueDate: "2024-01-10",
-    },
-    {
-      id: 3,
-      name: "Amit Kumar",
-      class: "Class 12-A",
-      rollNo: "312",
-      totalFee: 6200,
-      paid: 0,
-      pending: 6200,
-      status: "Pending",
-      dueDate: "2024-01-05",
-    },
-    {
-      id: 4,
-      name: "Sneha Singh",
-      class: "Class 8-C",
-      rollNo: "183",
-      totalFee: 4200,
-      paid: 4200,
-      pending: 0,
-      status: "Paid",
-      dueDate: "2024-01-20",
-    },
-    {
-      id: 5,
-      name: "Vikash Gupta",
-      class: "Class 11-B",
-      rollNo: "267",
-      totalFee: 5800,
-      paid: 1450,
-      pending: 4350,
-      status: "Partial",
-      dueDate: "2024-01-08",
-    },
-  ];
+  // const students = [
+  //   {
+  //     id: 1,
+  //     name: "Rahul Sharma",
+  //     class: "Class 10-A",
+  //     rollNo: "101",
+  //     totalFee: 5500,
+  //     paid: 5500,
+  //     pending: 0,
+  //     status: "Paid",
+  //     dueDate: "2024-01-15",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Priya Patel",
+  //     class: "Class 9-B",
+  //     rollNo: "205",
+  //     totalFee: 4800,
+  //     paid: 2400,
+  //     pending: 2400,
+  //     status: "Partial",
+  //     dueDate: "2024-01-10",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Amit Kumar",
+  //     class: "Class 12-A",
+  //     rollNo: "312",
+  //     totalFee: 6200,
+  //     paid: 0,
+  //     pending: 6200,
+  //     status: "Pending",
+  //     dueDate: "2024-01-05",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Sneha Singh",
+  //     class: "Class 8-C",
+  //     rollNo: "183",
+  //     totalFee: 4200,
+  //     paid: 4200,
+  //     pending: 0,
+  //     status: "Paid",
+  //     dueDate: "2024-01-20",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Vikash Gupta",
+  //     class: "Class 11-B",
+  //     rollNo: "267",
+  //     totalFee: 5800,
+  //     paid: 1450,
+  //     pending: 4350,
+  //     status: "Partial",
+  //     dueDate: "2024-01-08",
+  //   },
+  // ];
 
-  const columns = [
-    {
-      title: "Student Details",
-      dataIndex: "name",
-      key: "name",
-      render: (text: any, record: any) => (
-        <div>
-          <p className="font-medium">{text}</p>
-          <p className="text-sm text-gray-500">
-            {record.class} • Roll No: {record.rollNo}
-          </p>
-        </div>
-      ),
-    },
-    {
-      title: "Fee Structure",
-      dataIndex: "fee",
-      key: "fee",
-      render: (_: any, record: any) => (
-        <div>
-          <p className="text-sm font-medium">
-            Total: ₹{record.totalFee.toLocaleString()}
-          </p>
-          <p className="text-sm text-green-600">
-            Paid: ₹{record.paid.toLocaleString()}
-          </p>
-          {record.pending > 0 && (
-            <p className="text-sm text-red-600">
-              Pending: ₹{record.pending.toLocaleString()}
-            </p>
-          )}
-        </div>
-      ),
-    },
-    {
-      title: "Payment Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status: any) => {
-        let color = "";
-        if (status === "Paid") color = "green";
-        else if (status === "Partial") color = "orange";
-        else color = "red";
-        return <Tag color={color}>{status}</Tag>;
-      },
-    },
-    {
-      title: "Due Date",
-      dataIndex: "dueDate",
-      key: "dueDate",
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_: any, record: any) => (
-        <div className="flex gap-2">
-          <Button size="small">View</Button>
-          {record.pending > 0 && (
-            <Button type="primary" size="small" className="bg-blue-600">
-              Collect
-            </Button>
-          )}
-        </div>
-      ),
-    },
-  ];
+  // const columns = [
+  //   {
+  //     title: "Student Details",
+  //     dataIndex: "name",
+  //     key: "name",
+  //     render: (text: any, record: any) => (
+  //       <div>
+  //         <p className="font-medium">{text}</p>
+  //         <p className="text-sm text-gray-500">
+  //           {record.class} • Roll No: {record.rollNo}
+  //         </p>
+  //       </div>
+  //     ),
+  //   },
+  //   {
+  //     title: "Fee Structure",
+  //     dataIndex: "fee",
+  //     key: "fee",
+  //     render: (_: any, record: any) => (
+  //       <div>
+  //         <p className="text-sm font-medium">
+  //           Total: ₹{record.totalFee.toLocaleString()}
+  //         </p>
+  //         <p className="text-sm text-green-600">
+  //           Paid: ₹{record.paid.toLocaleString()}
+  //         </p>
+  //         {record.pending > 0 && (
+  //           <p className="text-sm text-red-600">
+  //             Pending: ₹{record.pending.toLocaleString()}
+  //           </p>
+  //         )}
+  //       </div>
+  //     ),
+  //   },
+  //   {
+  //     title: "Payment Status",
+  //     dataIndex: "status",
+  //     key: "status",
+  //     render: (status: any) => {
+  //       let color = "";
+  //       if (status === "Paid") color = "green";
+  //       else if (status === "Partial") color = "orange";
+  //       else color = "red";
+  //       return <Tag color={color}>{status}</Tag>;
+  //     },
+  //   },
+  //   {
+  //     title: "Due Date",
+  //     dataIndex: "dueDate",
+  //     key: "dueDate",
+  //   },
+  //   {
+  //     title: "Actions",
+  //     key: "actions",
+  //     render: (_: any, record: any) => (
+  //       <div className="flex gap-2">
+  //         <Button size="small">View</Button>
+  //         {record.pending > 0 && (
+  //           <Button type="primary" size="small" className="bg-blue-600">
+  //             Collect
+  //           </Button>
+  //         )}
+  //       </div>
+  //     ),
+  //   },
+  // ];
 
   const { data: classData } = useGetClassesQuery({});
   const { data: shiftData } = useGetShiftQuery({});
