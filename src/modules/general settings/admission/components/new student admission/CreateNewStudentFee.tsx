@@ -9,11 +9,13 @@ import {
   Space,
   Switch,
   Badge,
+  Modal,
 } from "antd";
 import { useEffect, useState } from "react";
 import {
   useCreateAdmissionFeeMutation,
   useCreateNewStudentAdmissionMutation,
+  useGetSingleAdmissionFormQuery,
 } from "../../api/admissionEndPoints";
 import { useAppSelector } from "../../../../../app/store";
 import AdmissionFeeForm from "../AdmissionFeeForm";
@@ -27,6 +29,13 @@ import { showModal } from "../../../../../app/features/modalSlice";
 import NewStudentAdmissionPreview from "./NewStudentAdmissionPreview";
 import CustomFeeForm from "../CustomFeeForm";
 import dayjs from "dayjs";
+import { FaFilePdf } from "react-icons/fa6";
+import { IoEyeOutline } from "react-icons/io5";
+import {
+  DollarOutlined,
+  SolutionOutlined,
+  FormOutlined,
+} from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
@@ -132,7 +141,6 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
 
     const sourceFees = isCustom ? customFees : values.fees || [];
 
-
     const formattedData: any = {
       student: {
         first_name: student.first_name || null,
@@ -202,13 +210,82 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
     setIsRegularFee(checked);
   };
 
+  const [triggerContinueAdmission, setTriggerContinueAdmission] =
+    useState(false);
+
   useEffect(() => {
-    if (isSuccess && newStudentData?.admission?.id) {
+    if (triggerContinueAdmission) {
+      console.log("first");
       dispatch(resetStudent());
-      navigate(`/collect-fee?admission_id=${newStudentData?.admission?.id}`);
       setIsRegularFee(true);
+      navigate("/admission/create-admission");
     }
+  }, [dispatch, navigate, triggerContinueAdmission]);
+
+  useEffect(() => {
+    // if (isSuccess && newStudentData?.admission?.id) {
+    //   Modal.confirm({
+    //     title: "Add Class",
+    //     content: "hello",
+    //     okText: "Confirm",
+    //     cancelText: "Cancel",
+    //     width: 800,
+    //     onOk() {
+    //       console.log("Modal confirmed");
+    //     },
+    //     onCancel() {
+    //       console.log("Modal cancelled");
+    //     },
+    //   });
+    //   console.log("Opening modal...");
+    //   dispatch(resetStudent());
+    //   setIsRegularFee(true);
+    //   // navigate(`/collect-fee?admission_id=${newStudentData?.admission?.id}`);
+    // }
   }, [isSuccess, newStudentData?.admission?.id, dispatch, navigate]);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleSubmit = () => {
+    // Any submission logic here
+    setIsModalVisible(true); // Show modal after submit
+  };
+
+  const [admissionId, setAdmissionId] = useState<number | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [shouldOpenPdf, setShouldOpenPdf] = useState(false);
+
+  const { data: singleAdmissionForm } = useGetSingleAdmissionFormQuery(
+    admissionId as number,
+    {
+      skip: admissionId === null,
+    }
+  );
+
+  // Effect to handle opening PDF only after fetching
+  useEffect(() => {
+    if (singleAdmissionForm && shouldOpenPdf) {
+      const url = URL.createObjectURL(singleAdmissionForm);
+      setPdfUrl(url);
+      window.open(url, "_blank");
+      setShouldOpenPdf(false); // Reset flag
+    }
+  }, [singleAdmissionForm, shouldOpenPdf]);
+
+  // Cleanup for blob URL
+  useEffect(() => {
+    return () => {
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl);
+      }
+    };
+  }, [pdfUrl]);
+
+  // Trigger fetch and set flag to open PDF
+  const handleForm = (id: number) => {
+    setShouldOpenPdf(true);
+    setAdmissionId(id);
+  };
 
   return (
     <Card>
@@ -426,12 +503,151 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
           </Col>
 
           <Col>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" onClick={handleSubmit}>
               Submit
             </Button>
           </Col>
         </Row>
       </AntForm>
+
+      <Modal
+        title={
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <SolutionOutlined style={{ color: "#1890ff", fontSize: "20px" }} />
+            <span style={{ fontSize: "18px", fontWeight: "600" }}>
+              Next Steps
+            </span>
+          </div>
+        }
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null} // Remove default footer
+        width={600}
+        centered
+        styles={{
+          body: { padding: "24px" },
+          header: { borderBottom: "1px solid #f0f0f0", padding: "16px 24px" },
+        }}
+      >
+        <div style={{ marginBottom: "24px" }}>
+          <p style={{ fontSize: "16px", marginBottom: "24px" }}>
+            What would you like to do next with this admission?
+          </p>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+              gap: "12px",
+            }}
+          >
+            {/* Print Button */}
+
+            {newStudentData?.admission?.id && (
+              <Button
+                size="large"
+                style={{
+                  color: "#c20a0a",
+                  border: "1px solid #ffccc7",
+                  background: "#fff2f0",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={() => handleForm(newStudentData?.admission?.id)}
+              >
+                <FaFilePdf style={{ fontSize: "24px", marginBottom: "8px" }} />
+                <span>Print Form</span>
+              </Button>
+            )}
+
+            {/* View Button */}
+
+            {newStudentData?.admission?.id && (
+              <Button
+                size="large"
+                style={{
+                  border: "1px solid #d9d9d9",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={() =>
+                  navigate(
+                    `/admission/admission-view/${newStudentData?.admission?.id}`
+                  )
+                }
+              >
+                <IoEyeOutline
+                  style={{ fontSize: "24px", marginBottom: "8px" }}
+                />
+                <span>View Details</span>
+              </Button>
+            )}
+
+            {/* Continue Admission Button */}
+            {newStudentData?.admission?.id && (
+              <Button
+                size="large"
+                style={{
+                  border: "1px solid #bae7ff",
+                  background: "#e6f7ff",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={() => setTriggerContinueAdmission(true)}
+              >
+                <FormOutlined
+                  style={{ fontSize: "24px", marginBottom: "8px" }}
+                />
+                <span>Continue Admission</span>
+              </Button>
+            )}
+
+            {/* Collect Fee Button - Conditionally Rendered */}
+            {newStudentData?.admission?.id && (
+              <Button
+                type="primary"
+                size="large"
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={() =>
+                  navigate(
+                    `/collect-fee?admission_id=${newStudentData?.admission?.id}`
+                  )
+                }
+              >
+                <DollarOutlined
+                  style={{ fontSize: "24px", marginBottom: "8px" }}
+                />
+                <span>Collect Fee</span>
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <div
+          style={{
+            textAlign: "right",
+            borderTop: "1px solid #f0f0f0",
+            paddingTop: "16px",
+          }}
+        >
+          <Button onClick={() => setIsModalVisible(false)}>Close</Button>
+        </div>
+      </Modal>
     </Card>
   );
 };

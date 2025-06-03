@@ -372,7 +372,7 @@ export const FeeCollection = () => {
               Claim Fee
             </Button>
             {createPermission && (
-              <Link to={"/new-collect-fee"}>
+              <Link to={"/collect-fee"}>
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}

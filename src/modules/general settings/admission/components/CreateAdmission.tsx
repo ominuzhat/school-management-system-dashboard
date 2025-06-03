@@ -1,4 +1,4 @@
-import { Tabs } from "antd";
+import { Card, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import CreateOldStudent from "./CreateOldStudent";
@@ -23,7 +23,7 @@ const CreateAdmission = () => {
   ];
 
   return (
-    <div>
+    <Card>
       <div className="my-5">
         <BreadCrumb />
       </div>
@@ -35,7 +35,7 @@ const CreateAdmission = () => {
         centered
         onChange={onChange}
       />
-    </div>
+    </Card>
   );
 };
 

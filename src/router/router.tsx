@@ -474,8 +474,10 @@ const router = createBrowserRouter([
 
       {
         path: "/new-collect-fee",
-        element: <CreateNewCollectFee />,
+        element: <CreateCollectFee />,
       },
+      // CreateCollectFee
+
       {
         path: "/collect-fee",
         element: (
@@ -486,7 +488,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <CreateCollectFee />,
+            element: <CreateNewCollectFee />,
           },
           {
             path: "list",

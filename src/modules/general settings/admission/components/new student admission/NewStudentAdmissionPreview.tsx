@@ -27,7 +27,7 @@ const NewStudentAdmissionPreview = () => {
   const { data: shiftData } = useGetShiftQuery({});
   const { data: classData } = useGetClassesQuery({});
   const { data: sectionData } = useGetSectionQuery({});
-  const { data: subjectData } = useGetSubjectsQuery({});
+  const { data: subjectData } = useGetSubjectsQuery({ page_size: 900 });
 
   const admission: any = useAppSelector((state) => state.student.admission);
   const student: any = useAppSelector((state) => state.student.student);
@@ -68,8 +68,8 @@ const NewStudentAdmissionPreview = () => {
   const subjectMap = useMemo(() => {
     const map: Record<number, string> = {};
     if (Array.isArray(subjectData?.data?.results)) {
-      subjectData.data.results.forEach((subject: any) => {
-        map[subject.id] = subject.name;
+      subjectData?.data?.results?.forEach((subject: any) => {
+        map[subject.id] = subject?.name;
       });
     }
     return map;
@@ -78,6 +78,7 @@ const NewStudentAdmissionPreview = () => {
   const getSubjectName = (id: number) => {
     return subjectMap[id] || id; // fallback to id if name not found
   };
+
   if (!shiftData || !classData || !sectionData || !subjectData) {
     return <Spin size="large" className="flex justify-center mt-10" />;
   }

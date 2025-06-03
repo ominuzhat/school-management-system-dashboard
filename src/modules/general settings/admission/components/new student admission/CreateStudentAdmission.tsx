@@ -218,10 +218,10 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        initialValues={{
-          subjects: selectedSubjects,
-          status: "approved",
-        }}
+        // initialValues={{
+        //   subjects: selectedSubjects,
+        //   status: "approved",
+        // }}
       >
         <Card bordered={false} className="shadow-sm">
           <Title level={4} className="mb-4">

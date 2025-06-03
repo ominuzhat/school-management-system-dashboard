@@ -91,10 +91,19 @@ const CreateNewCollectFee = () => {
     }
   );
 
+  console.log(getSingleAdmission?.data);
+
   useEffect(() => {
     if (getSingleAdmission?.data) {
       form.setFieldsValue({
-        admission: getSingleAdmission?.data?.id,
+        admission:
+          getSingleAdmission?.data?.student?.first_name +
+          " " +
+          getSingleAdmission?.data?.student?.last_name +
+          " " +
+          `(${getSingleAdmission?.data?.registration_number})` +
+          " " +
+          -getSingleAdmission?.data?.session?.name,
         class: getSingleAdmission?.data?.grade_level,
         session: getSingleAdmission?.data?.session?.name,
       });
@@ -424,7 +433,7 @@ const CreateNewCollectFee = () => {
                     </th>
                   </tr>
                 </thead>
-                                                                                                                            
+
                 <tbody>
                   {fields.map(
                     (
@@ -451,7 +460,7 @@ const CreateNewCollectFee = () => {
                           key={key}
                           style={{
                             backgroundColor:
-                            index % 2 === 0 ? "#fff" : "#f9fafb",
+                              index % 2 === 0 ? "#fff" : "#f9fafb",
                             borderBottom: "1px solid #f0f0f0",
                           }}
                         >
