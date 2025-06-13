@@ -178,7 +178,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
           fees: sourceFees.map((fee: any) => ({
             ...fee,
             effective_from: isCustom
-              ? dayjs(fee.effective_from).format("YYYY-MM-DD")
+              ? dayjs(fee.effective_from).format("YYYY-MM-01")
               : undefined,
             is_active: true,
           })),
@@ -215,10 +215,9 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
 
   useEffect(() => {
     if (triggerContinueAdmission) {
-      console.log("first");
       dispatch(resetStudent());
       setIsRegularFee(true);
-      navigate("/admission/create-admission");
+      navigate("/admission");
     }
   }, [dispatch, navigate, triggerContinueAdmission]);
 
@@ -246,7 +245,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     // Any submission logic here
     setIsModalVisible(true); // Show modal after submit
   };
@@ -481,14 +480,14 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
         </Row> */}
 
         {/* Submit Button */}
-        <Row justify="end" gutter={[16, 16]}>
+        <Row justify="end" gutter={[16, 16]} className="mt-4">
           {/* <Col>
             <Button type="dashed">Submit & Download PDF</Button>
           </Col> */}
 
           <Col>
             <Button
-              type="dashed"
+              className="bg-green-500 text-white w-32 h-12 font-bold"
               onClick={() =>
                 dispatch(
                   showModal({
@@ -503,89 +502,81 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
           </Col>
 
           <Col>
-            <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+            <Button
+              className="w-32 h-12 font-bold"
+              type="primary"
+              htmlType="submit"
+              onClick={handleSubmit}
+            >
               Submit
             </Button>
           </Col>
         </Row>
       </AntForm>
-
       <Modal
         title={
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <SolutionOutlined style={{ color: "#1890ff", fontSize: "20px" }} />
-            <span style={{ fontSize: "18px", fontWeight: "600" }}>
+          <div className="flex items-center gap-3">
+            <SolutionOutlined className="text-indigo-600 text-xl" />
+            <span className="text-lg font-semibold text-gray-800">
               Next Steps
             </span>
           </div>
         }
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
-        footer={null} // Remove default footer
-        width={600}
+        footer={null}
+        width={800}
         centered
-        styles={{
-          body: { padding: "24px" },
-          header: { borderBottom: "1px solid #f0f0f0", padding: "16px 24px" },
-        }}
+        className="[&_.ant-modal-header]:border-b-0 [&_.ant-modal-header]:py-4 [&_.ant-modal-header]:px-6 [&_.ant-modal-body]:px-6 [&_.ant-modal-body]:pb-6"
       >
-        <div style={{ marginBottom: "24px" }}>
-          <p style={{ fontSize: "16px", marginBottom: "24px" }}>
+        <div className="mb-6">
+          <p className="text-base mb-6 text-gray-600">
             What would you like to do next with this admission?
           </p>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-              gap: "12px",
-            }}
-          >
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {/* Print Button */}
-
             {newStudentData?.admission?.id && (
               <Button
                 size="large"
-                style={{
-                  color: "#c20a0a",
-                  border: "1px solid #ffccc7",
-                  background: "#fff2f0",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                className="h-full flex flex-col items-center justify-center p-4 border border-indigo-100 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-800 transition-colors"
                 onClick={() => handleForm(newStudentData?.admission?.id)}
               >
-                <FaFilePdf style={{ fontSize: "24px", marginBottom: "8px" }} />
+                <FaFilePdf className="text-2xl mb-2 text-indigo-600" />
                 <span>Print Form</span>
               </Button>
             )}
 
             {/* View Button */}
-
             {newStudentData?.admission?.id && (
               <Button
                 size="large"
-                style={{
-                  border: "1px solid #d9d9d9",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                className="h-full flex flex-col items-center justify-center p-4 border border-emerald-100 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 hover:text-emerald-800 transition-colors"
                 onClick={() =>
                   navigate(
                     `/admission/admission-view/${newStudentData?.admission?.id}`
                   )
                 }
               >
-                <IoEyeOutline
-                  style={{ fontSize: "24px", marginBottom: "8px" }}
-                />
+                <IoEyeOutline className="text-2xl mb-2 text-emerald-600" />
                 <span>View Details</span>
+              </Button>
+            )}
+
+            {/* Collect Fee Button */}
+            {newStudentData?.admission?.id && (
+              <Button
+                type="primary"
+                size="large"
+                className="h-full flex flex-col items-center justify-center p-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white shadow-sm hover:shadow-md transition-all"
+                onClick={() =>
+                  navigate(
+                    `/collect-fee?admission_id=${newStudentData?.admission?.id}`
+                  )
+                }
+              >
+                <DollarOutlined className="text-2xl mb-2 text-white" />
+                <span>Collect Fee</span>
               </Button>
             )}
 
@@ -593,59 +584,23 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
             {newStudentData?.admission?.id && (
               <Button
                 size="large"
-                style={{
-                  border: "1px solid #bae7ff",
-                  background: "#e6f7ff",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                className="h-full flex flex-col items-center justify-center p-4 border border-amber-100 bg-amber-50 hover:bg-amber-100 text-amber-700 hover:text-amber-800 transition-colors"
                 onClick={() => setTriggerContinueAdmission(true)}
               >
-                <FormOutlined
-                  style={{ fontSize: "24px", marginBottom: "8px" }}
-                />
+                <FormOutlined className="text-2xl mb-2 text-amber-600" />
                 <span>Continue Admission</span>
-              </Button>
-            )}
-
-            {/* Collect Fee Button - Conditionally Rendered */}
-            {newStudentData?.admission?.id && (
-              <Button
-                type="primary"
-                size="large"
-                style={{
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                onClick={() =>
-                  navigate(
-                    `/collect-fee?admission_id=${newStudentData?.admission?.id}`
-                  )
-                }
-              >
-                <DollarOutlined
-                  style={{ fontSize: "24px", marginBottom: "8px" }}
-                />
-                <span>Collect Fee</span>
               </Button>
             )}
           </div>
         </div>
 
-        <div
-          style={{
-            textAlign: "right",
-            borderTop: "1px solid #f0f0f0",
-            paddingTop: "16px",
-          }}
-        >
-          <Button onClick={() => setIsModalVisible(false)}>Close</Button>
+        <div className="border-t border-gray-100 pt-4 text-right">
+          <Button
+            onClick={() => setIsModalVisible(false)}
+            className="text-gray-600 hover:text-gray-800 hover:bg-gray-50 px-5"
+          >
+            Close
+          </Button>
         </div>
       </Modal>
     </Card>

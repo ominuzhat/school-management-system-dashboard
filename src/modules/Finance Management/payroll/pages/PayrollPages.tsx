@@ -1,7 +1,6 @@
 import { Button, Card, Col, Row } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
 import CreatePayrollModal from "../components/CreatePayrollModal";
 import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
@@ -52,9 +51,7 @@ const PayrollPage = () => {
 
   return (
     <div className="space-y-5">
-      <div className="my-5">
-        <BreadCrumb />
-      </div>
+  
       <Card>
         <Row justify="space-between">
           {createPermission && (

@@ -1,22 +1,18 @@
 import { Button, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
-import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
-import DeleteButton from "../../../../../common/CommonAnt/Button/DeleteButton";
-import {
-  useDeleteCollectItemMutation,
-  useGetCollectSingleFeesFormQuery,
-} from "../api/collectFeeEndPoints";
+import { useGetCollectSingleFeesFormQuery } from "../api/collectFeeEndPoints";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
 import { useEffect, useState } from "react";
-import { FaFilePdf } from "react-icons/fa6";
+import {  FaFilePdf } from "react-icons/fa6";
 import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
 import { GetPermission } from "../../../../../utilities/permission";
 import {
   actionNames,
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
+import { TbCoinTaka } from "react-icons/tb";
 
 const useCollectFeeColumns = (): ColumnsType<any> => {
   //   const dispatch = useDispatch();
@@ -57,12 +53,12 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
     setCollectFeeId(id);
   };
 
-  const [deleteItem] = useDeleteCollectItemMutation();
+  // const [deleteItem] = useDeleteCollectItemMutation();
 
-  const handleDelete = (id: number) => {
-    console.log(id);
-    deleteItem(id as any);
-  };
+  // const handleDelete = (id: number) => {
+  //   console.log(id);
+  //   deleteItem(id as any);
+  // };
   return [
     {
       key: "0",
@@ -205,15 +201,25 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       render: (record) => (
         <Space>
           {updatePermission && (
-            <EditButton
+            <Button
+              title="Update "
+              size="small"
+              type="default"
+              style={{
+                color: "green",
+                // background: "#3892E3",
+                border: "1px solid gray",
+              }}
               onClick={() => navigate(`/collect-fee/${record?.id}`)}
-            />
+            >
+              <TbCoinTaka />
+            </Button>
           )}
           <ViewButton to={`/collect-fee/view/${record?.id}`} />
-          <DeleteButton
+          {/* <DeleteButton
             onConfirm={() => handleDelete(record.id)}
             onCancel={() => ""}
-          />
+          /> */}
           <Button
             title="Invoice "
             size="small"

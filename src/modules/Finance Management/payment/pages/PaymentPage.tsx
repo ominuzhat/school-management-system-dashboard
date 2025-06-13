@@ -1,5 +1,4 @@
 import { Button, Card, Col, Row } from "antd";
-import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
@@ -47,9 +46,6 @@ const PaymentPage = () => {
 
   return (
     <div className="space-y-5">
-      <div className="my-5">
-        <BreadCrumb />
-      </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           {createPermission && (

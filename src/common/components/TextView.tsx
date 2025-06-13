@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React from "react";
 
 type TProps = {
@@ -23,3 +24,7 @@ const TextView: React.FC<TProps> = ({ fieldName, text, Icon }) => {
 };
 
 export default TextView;
+
+export const getMonthName = (monthValue: dayjs.Dayjs) => {
+  return monthValue ? monthValue.format("MMMM YYYY") : "Month";
+};

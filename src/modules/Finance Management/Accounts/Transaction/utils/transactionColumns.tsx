@@ -34,23 +34,22 @@ const useTransactionColumns = (): ColumnsType<any> => {
       render: (text: any) => (
         <div className="flex items-center">
           <ArrowUpOutlined className="text-red-500 mr-2" />
-          {capitalize(text?.account_type)} ({text?.balance})
-          {/* {text} */}
+          {capitalize(text?.account_type)} ({text?.balance}){/* {text} */}
         </div>
       ),
     },
     {
       key: "22",
       title: "To",
-      dataIndex: "amount",
+      dataIndex: "target_account",
       align: "center",
       render: (text: any) => (
         <div className="flex items-center">
           <ArrowDownOutlined className="text-green-500 mr-2" />
-          {text}
+
+          {text ? `${capitalize(text?.account_type)} (${text?.balance})` : null}
         </div>
       ),
-      // render: (title) => (title ? title : "N/A"),
     },
     {
       key: "2",

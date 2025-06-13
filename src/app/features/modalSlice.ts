@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { ReactNode } from "react";
 
 export type ModalInitialStateTypes = {
   open: boolean;
-  title: string | undefined;
+  title: ReactNode | undefined;
   content: React.ReactNode | undefined;
 };
 
@@ -22,7 +23,7 @@ const modalSlice = createSlice({
         payload,
       }: PayloadAction<
         | {
-            title: string | undefined;
+            title: ReactNode  | undefined;
             content: React.ReactNode | undefined;
           }
         | undefined

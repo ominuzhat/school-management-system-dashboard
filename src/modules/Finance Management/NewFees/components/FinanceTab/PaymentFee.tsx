@@ -13,98 +13,6 @@ export const PaymentFee = () => {
     { key: "payment", label: "Payment", icon: <FaCreditCard /> },
   ];
 
-  // const payments = [
-  //   {
-  //     id: 1,
-  //     name: "Rahul Sharma",
-  //     class: "Class 10-A",
-  //     rollNo: "101",
-  //     totalFee: 5500,
-  //     paid: 5500,
-  //     pending: 0,
-  //     status: "Paid",
-  //     dueDate: "2024-01-15",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Priya Patel",
-  //     class: "Class 9-B",
-  //     rollNo: "205",
-  //     totalFee: 4800,
-  //     paid: 2400,
-  //     pending: 2400,
-  //     status: "Partial",
-  //     dueDate: "2024-01-10",
-  //   },
-  // ];
-
-  // const columns = [
-  //   {
-  //     title: "Student Details",
-  //     dataIndex: "name",
-  //     key: "name",
-  //     render: (text: any, record: any) => (
-  //       <div>
-  //         <p className="font-medium">{text}</p>
-  //         <p className="text-sm text-gray-500">
-  //           {record.class} • Roll No: {record.rollNo}
-  //         </p>
-  //       </div>
-  //     ),
-  //   },
-  //   {
-  //     title: "Fee Structure",
-  //     dataIndex: "fee",
-  //     key: "fee",
-  //     render: (_: any, record: any) => (
-  //       <div>
-  //         <p className="text-sm font-medium">
-  //           Total: ₹{record.totalFee.toLocaleString()}
-  //         </p>
-  //         <p className="text-sm text-green-600">
-  //           Paid: ₹{record.paid.toLocaleString()}
-  //         </p>
-  //         {record.pending > 0 && (
-  //           <p className="text-sm text-red-600">
-  //             Pending: ₹{record.pending.toLocaleString()}
-  //           </p>
-  //         )}
-  //       </div>
-  //     ),
-  //   },
-  //   {
-  //     title: "Payment Status",
-  //     dataIndex: "status",
-  //     key: "status",
-  //     render: (status: any) => {
-  //       let color = "";
-  //       if (status === "Paid") color = "green";
-  //       else if (status === "Partial") color = "orange";
-  //       else color = "red";
-  //       return <Tag color={color}>{status}</Tag>;
-  //     },
-  //   },
-  //   {
-  //     title: "Due Date",
-  //     dataIndex: "dueDate",
-  //     key: "dueDate",
-  //   },
-  //   {
-  //     title: "Actions",
-  //     key: "actions",
-  //     render: (_: any, record: any) => (
-  //       <div className="flex gap-2">
-  //         <Button size="small">View</Button>
-  //         {record.pending > 0 && (
-  //           <Button type="primary" size="small" className="bg-blue-600">
-  //             Collect
-  //           </Button>
-  //         )}
-  //       </div>
-  //     ),
-  //   },
-  // ];
-
   const [activeTab, setActiveTab] = useState("payroll");
 
   return (
@@ -138,7 +46,7 @@ export const PaymentFee = () => {
           />
         </Card>
 
-        <Card className="bg-gradient-to-r from-purple-500 to-violet-500 text-white border-0">
+        <Card className="bg-gradient-to-r from-purple-500 to-violet-600 text-white border-0">
           <Statistic
             title={<span className="text-purple-100">Upcoming Dues</span>}
             value="48"
@@ -215,12 +123,12 @@ export const PaymentFee = () => {
       <div>
         <div className="my-10">
           <div className="bg-white/80 backdrop-blur-md border border-[#A2C3FF] rounded-md shadow-xl ">
-            <div className="grid grid-cols-2 lg:grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 lg:grid-cols-2 ">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-5 justify-center rounded-md px-2 py-2 text-md font-medium transition-all duration-200
+                  className={`flex items-center gap-5 justify-center  px-2 py-2 text-md font-medium transition-all duration-200
                   ${
                     activeTab === tab.key
                       ? "bg-blue-600 text-white shadow-md"

@@ -123,7 +123,7 @@ const AccountList = () => {
       <Row gutter={[16, 16]}>
         {/* Account Form */}
         {createPermission && (
-          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
             <Card
               className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
               title={
@@ -140,10 +140,10 @@ const AccountList = () => {
 
         {/* Account History */}
         {viewPermission ? (
-          <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
             <Card
               className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
-              title="Account History"
+              title="Accounts"
             >
               <Table
                 rowKey={"id"}

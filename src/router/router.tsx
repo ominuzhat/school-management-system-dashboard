@@ -451,7 +451,7 @@ const router = createBrowserRouter([
 
       // New Fees
       {
-        path: "/new-fee",
+        path: "/finance",
         element: (
           <WithPermission requiredPermission="feestructure">
             <Accounts />

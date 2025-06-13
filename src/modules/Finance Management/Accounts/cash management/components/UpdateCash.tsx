@@ -58,7 +58,7 @@ const UpdateCash = ({ record }: { record: any }) => {
                 {Array.isArray(accountList?.data) &&
                   accountList?.data?.map((account: any) => (
                     <Select.Option key={account?.id} value={account?.id}>
-                      {account?.account_type} - {account?.balance}
+                      {account?.account_type} - ({account?.balance})
                     </Select.Option>
                   ))}
               </Select>

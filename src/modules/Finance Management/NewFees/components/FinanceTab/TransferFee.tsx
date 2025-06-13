@@ -80,7 +80,6 @@ export const AccountTransfer = () => {
   const dataSource =
     (transactionList?.data?.results as IGetTransaction[] | undefined) ?? [];
 
-
   return (
     <div className="space-y-6">
       {/* Account Overview */}
@@ -166,7 +165,9 @@ export const AccountTransfer = () => {
                           <ArrowDownOutlined className="text-green-500 mr-2" />
                           <div>
                             <p className="text-sm font-medium">To</p>
-                            <p className="text-sm">{record.to}</p>
+                            <p className="text-sm">
+                              {record.target_account?.account_type}
+                            </p>
                           </div>
                         </div>
                       </div>

@@ -102,17 +102,17 @@ const useAdmissionColumns = (): ColumnsType<any> => {
         ),
       render: (student) => student?.user?.username || "N/A",
     },
-    {
-      key: "2",
-      title: "REG No.",
-      dataIndex: "registration_number",
-      align: "center",
-      sorter: (a, b) =>
-        (a.registration_number || "").localeCompare(
-          b.registration_number || ""
-        ),
-      render: (registration_number) => registration_number || "N/A",
-    },
+    // {
+    //   key: "2",
+    //   title: "REG No.",
+    //   dataIndex: "registration_number",
+    //   align: "center",
+    //   sorter: (a, b) =>
+    //     (a.registration_number || "").localeCompare(
+    //       b.registration_number || ""
+    //     ),
+    //   render: (registration_number) => registration_number || "N/A",
+    // },
     {
       key: "3",
       title: "Admission Date",
@@ -175,7 +175,8 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       title: "Due",
       dataIndex: "total_due",
       align: "center",
-      render: (title) => (title ? <span className="text-red-500">{title}</span> : 0),
+      render: (title) =>
+        title ? <span className="text-red-500">{title}</span> : 0,
     },
     {
       title: "Actions",

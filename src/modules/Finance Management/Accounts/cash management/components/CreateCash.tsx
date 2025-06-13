@@ -45,7 +45,7 @@ const CreateCash = () => {
         isSuccess={isSuccess}
       >
         <Row gutter={[16, 16]}>
-          <Col lg={8}>
+          <Col lg={24}>
             <Form.Item<ICreateCash>
               label="Select Account "
               name="account"
@@ -59,21 +59,21 @@ const CreateCash = () => {
                 {Array.isArray(accountList?.data) &&
                   accountList?.data?.map((account: any) => (
                     <Select.Option key={account?.id} value={account?.id}>
-                      {account?.account_type} - {account?.balance}
+                      {account?.account_type} - ({account?.balance})
                     </Select.Option>
                   ))}
               </Select>
             </Form.Item>
           </Col>
-          <Col lg={8}>
+          <Col lg={12}>
             <Form.Item<ICreateCash>
-              label="Select Payment Method"
+              label="Payment Method"
               name="payment_method"
               rules={[
                 { required: true, message: "Payment Method is required!" },
               ]}
             >
-              <Select placeholder="Select Payment Method" className="w-full">
+              <Select placeholder="Payment Method" className="w-full">
                 {Object.entries(PaymentMethodEnum).map(([key, value]) => (
                   <Select.Option key={value} value={value}>
                     {key.replace(/_/g, " ")}
@@ -82,13 +82,13 @@ const CreateCash = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col lg={8}>
+          <Col lg={12}>
             <Form.Item<ICreateCash>
-              label="Select Entry Type"
+              label="Entry Type"
               name="entry_type"
               rules={[{ required: true, message: "Entry Type is required!" }]}
             >
-              <Select placeholder="Select Entry Type" className="w-full">
+              <Select placeholder="Entry Type" className="w-full">
                 {Object.entries(EntryTypeEnum).map(([key, value]) => (
                   <Select.Option key={value} value={value}>
                     {key.replace(/_/g, " ")}
@@ -97,7 +97,7 @@ const CreateCash = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col lg={8}>
+          <Col lg={12}>
             <Form.Item<ICreateCash>
               label="Amount"
               name="amount"
@@ -110,7 +110,7 @@ const CreateCash = () => {
               />
             </Form.Item>
           </Col>
-          <Col lg={8}>
+          <Col lg={12}>
             <Form.Item<ICreateCash>
               label="Date"
               name="date"

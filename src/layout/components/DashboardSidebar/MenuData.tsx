@@ -7,11 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { ThemesTypes } from "../../../app/features/themeSlice";
 import SidebarButtom from "./SidebarButtom";
-import {
-  PiContactlessPaymentBold,
-  PiExamLight,
-  PiStudent,
-} from "react-icons/pi";
+import { PiExamLight, PiStudent } from "react-icons/pi";
 import { SiGoogleclassroom } from "react-icons/si";
 import {
   IoAccessibilityOutline,
@@ -21,23 +17,15 @@ import {
   IoPeopleOutline,
   IoReceiptOutline,
 } from "react-icons/io5";
-import {
-  MdAccountBalanceWallet,
-  MdCoPresent,
-  MdFilterTiltShift,
-  MdOutlinePayments,
-  MdPayment,
-} from "react-icons/md";
+import { MdCoPresent, MdFilterTiltShift } from "react-icons/md";
 import { FaCommentSms, FaPeopleGroup, FaRegAddressCard } from "react-icons/fa6";
 import { TbCoinTaka, TbSection } from "react-icons/tb";
-import { BiSolidInstitution, BiSolidUserAccount } from "react-icons/bi";
-import { AiOutlineAccountBook } from "react-icons/ai";
-import { HiOutlineCash } from "react-icons/hi";
+import { BiSolidInstitution } from "react-icons/bi";
 
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { IoMdPersonAdd } from "react-icons/io";
 import { VscGoToEditingSession } from "react-icons/vsc";
-import { RiLuggageDepositLine, RiSecurePaymentLine } from "react-icons/ri";
+import { RiLuggageDepositLine } from "react-icons/ri";
 import { TfiAnnouncement } from "react-icons/tfi";
 import {
   BsBookmarks,
@@ -127,77 +115,87 @@ const MenuData: React.FC = () => {
   ].filter(Boolean);
 
   const payroll = [
-    hasPermissionForModule(permissions, "payroll") &&
-      hasPermissionForModule(permissions, "payment") && {
-        key: "/payroll-module",
-        label: "Salary",
-        icon: <MdPayment />,
-        children: [
-          hasPermissionForModule(permissions, "payroll") && {
-            key: "/payroll",
-            label: <Link to="/payroll">Payroll</Link>,
-            icon: <MdOutlinePayments />,
-          },
-          hasPermissionForModule(permissions, "payment") && {
-            label: <Link to="/payment">Payment</Link>,
-            icon: <PiContactlessPaymentBold />,
-            key: "/payment",
-          },
-        ],
-      },
+    // hasPermissionForModule(permissions, "payroll") &&
+    //   hasPermissionForModule(permissions, "payment") && {
+    //     key: "/payroll-module",
+    //     label: "Salary",
+    //     icon: <MdPayment />,
+    //     children: [
+    //       hasPermissionForModule(permissions, "payroll") && {
+    //         key: "/payroll",
+    //         label: <Link to="/payroll">Payroll</Link>,
+    //         icon: <MdOutlinePayments />,
+    //       },
+    //       hasPermissionForModule(permissions, "payment") && {
+    //         label: <Link to="/payment">Payment</Link>,
+    //         icon: <PiContactlessPaymentBold />,
+    //         key: "/payment",
+    //       },
+    //     ],
+    //   },
+
     hasPermissionForModule(permissions, "feestructure") &&
       hasPermissionForModule(permissions, "admissionfeestructure") &&
       hasPermissionForModule(permissions, "fees") && {
-        key: "/fees-module",
-        label: "Fees",
+        key: "/finance",
+        label: <Link to="/finance">Finance Management</Link>,
         icon: <TbCoinTaka />,
-        children: [
-          hasPermissionForModule(permissions, "fees") && {
-            label: <Link to="/new-fee">New Fee</Link>,
-            icon: <RiSecurePaymentLine />,
-            key: "/new-fee",
-          },
-          hasPermissionForModule(permissions, "fees") && {
-            label: <Link to="/collect-fee">Collect Fee</Link>,
-            icon: <RiSecurePaymentLine />,
-            key: "/collect-fee",
-          },
-          hasPermissionForModule(permissions, "admissionfeestructure") && {
-            label: <Link to="/additional-fee">Additional Fee</Link>,
-            icon: <HiOutlineCash />,
-            key: "/additional-fee",
-          },
-          hasPermissionForModule(permissions, "feestructure") && {
-            label: <Link to="/fees">Configuration</Link>,
-            icon: <BiSolidUserAccount />,
-            key: "/fees",
-          },
-        ],
+        // children: [
+        //   hasPermissionForModule(permissions, "fees") && {
+        //     label: <Link to="/new-fee">Fee</Link>,
+        //     icon: <RiSecurePaymentLine />,
+        //     key: "/new-fee",
+        //   },
+        // key: "/fees-module",
+        // label: "Fees",
+        // icon: <TbCoinTaka />,
+        // children: [
+        //   hasPermissionForModule(permissions, "fees") && {
+        //     label: <Link to="/new-fee">Fee</Link>,
+        //     icon: <RiSecurePaymentLine />,
+        //     key: "/new-fee",
+        //   },
+        // hasPermissionForModule(permissions, "fees") && {
+        //   label: <Link to="/collect-fee">Collect Fee</Link>,
+        //   icon: <RiSecurePaymentLine />,
+        //   key: "/collect-fee",
+        // },
+        // hasPermissionForModule(permissions, "admissionfeestructure") && {
+        //   label: <Link to="/additional-fee">Additional Fee</Link>,
+        //   icon: <HiOutlineCash />,
+        //   key: "/additional-fee",
+        // },
+        // hasPermissionForModule(permissions, "feestructure") && {
+        //   label: <Link to="/fees">Configuration</Link>,
+        //   icon: <BiSolidUserAccount />,
+        //   key: "/fees",
+        // },
+        // ],
       },
 
-    hasPermissionForModule(permissions, "account") &&
-      hasPermissionForModule(permissions, "transaction") && {
-        key: "/account",
-        label: "Account",
-        icon: <MdAccountBalanceWallet />,
-        children: [
-          hasPermissionForModule(permissions, "account") && {
-            label: <Link to="/account">Chart of Account</Link>,
-            icon: <BiSolidUserAccount />,
-            key: "/account-chart",
-          },
-          hasPermissionForModule(permissions, "transaction") && {
-            label: <Link to="/account/transactions">Account Transaction</Link>,
-            icon: <AiOutlineAccountBook />,
-            key: "/account/transactions",
-          },
-          hasPermissionForModule(permissions, "financialentry") && {
-            label: <Link to="/account/cash">Cash Management</Link>,
-            icon: <AiOutlineAccountBook />,
-            key: "/account/cash",
-          },
-        ],
-      },
+    // hasPermissionForModule(permissions, "account") &&
+    //   hasPermissionForModule(permissions, "transaction") && {
+    //     key: "/account",
+    //     label: "Account",
+    //     icon: <MdAccountBalanceWallet />,
+    //     children: [
+    //       hasPermissionForModule(permissions, "account") && {
+    //         label: <Link to="/account">Chart of Account</Link>,
+    //         icon: <BiSolidUserAccount />,
+    //         key: "/account-chart",
+    //       },
+    //       hasPermissionForModule(permissions, "transaction") && {
+    //         label: <Link to="/account/transactions">Account Transaction</Link>,
+    //         icon: <AiOutlineAccountBook />,
+    //         key: "/account/transactions",
+    //       },
+    //       hasPermissionForModule(permissions, "financialentry") && {
+    //         label: <Link to="/account/cash">Cash Management</Link>,
+    //         icon: <AiOutlineAccountBook />,
+    //         key: "/account/cash",
+    //       },
+    //     ],
+    //   },
   ].filter(Boolean);
 
   const institution = [
@@ -380,7 +378,7 @@ const MenuData: React.FC = () => {
             items={institution.filter(Boolean) as ItemType<MenuItemType>[]}
           />
         </div>
-        <span className="features-title">Finance Management</span>
+        <span className="features-title">Finance</span>
         <div>
           <Menu
             style={{

@@ -1,12 +1,11 @@
-import { Card, Button, Statistic, Progress, Row, Col, Divider } from "antd";
+import { Card, Statistic, Row, Col } from "antd";
 import {
-  PlusOutlined,
   ArrowDownOutlined,
   FileTextOutlined,
   CalendarOutlined,
   PieChartOutlined,
+  ArrowUpOutlined,
 } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../../app/store";
 import { FilterState } from "../../../../../app/features/filterSlice";
 import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
@@ -18,7 +17,6 @@ import {
 } from "../../../../../utilities/permissionConstant";
 import { useGetCashQuery } from "../../../Accounts/cash management/api/cashEndPoints";
 import { IGetCash } from "../../../Accounts/cash management/types/cashTypes";
-import { showModal } from "../../../../../app/features/modalSlice";
 import CreateCash from "../../../Accounts/cash management/components/CreateCash";
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 import { Table } from "../../../../../common/CommonAnt";
@@ -33,17 +31,6 @@ export const ExpenseTracking = () => {
   //   Technology: "indigo",
   //   Sports: "yellow",
   // };
-
-  const monthlyExpenses = [
-    { category: "Transportation", amount: 45000, percentage: 32 },
-    { category: "Utilities", amount: 28000, percentage: 20 },
-    { category: "Maintenance", amount: 25000, percentage: 18 },
-    { category: "Food & Beverage", amount: 20000, percentage: 14 },
-    { category: "Stationery", amount: 15000, percentage: 11 },
-    { category: "Technology", amount: 7000, percentage: 5 },
-  ];
-
-  const dispatch = useDispatch();
 
   const { page_size, page } = useAppSelector(FilterState);
 
@@ -140,32 +127,27 @@ export const ExpenseTracking = () => {
       </Row>
 
       <Row gutter={[16, 16]}>
+        {createPermission && (
+          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Card
+              className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
+              title={
+                <div className="flex items-center">
+                  <ArrowUpOutlined className="text-blue-600 mr-2" />
+                  <span>Quick Cash Management</span>
+                </div>
+              }
+            >
+              <CreateCash />
+            </Card>
+          </Col>
+        )}
+
         {/* Expense List */}
         <Col xs={24} lg={16}>
           <Card
             title="Daily Cash Tracking"
             className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
-            extra={
-              <>
-                {createPermission && (
-                  <Button
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    onClick={() =>
-                      dispatch(
-                        showModal({
-                          title: "Add Cash",
-                          content: <CreateCash />,
-                        })
-                      )
-                    }
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600"
-                  >
-                    Add Cash
-                  </Button>
-                )}
-              </>
-            }
           >
             {/* <div className="mb-6">
               <Space size="middle">
@@ -200,7 +182,7 @@ export const ExpenseTracking = () => {
         </Col>
 
         {/* Category Breakdown */}
-        <Col xs={24} lg={8}>
+        {/* <Col xs={24} lg={8}>
           <Card
             title="Monthly Breakdown"
             className="bg-white/60 backdrop-blur-sm border-blue-100 mb-6"
@@ -228,7 +210,7 @@ export const ExpenseTracking = () => {
               </div>
             ))}
           </Card>
-          {/* 
+          
           <Card
             title="Quick Actions"
             className="bg-white/60 backdrop-blur-sm border-blue-100"
@@ -248,8 +230,8 @@ export const ExpenseTracking = () => {
                 View Analytics
               </Button>
             </Space>
-          </Card> */}
-        </Col>
+          </Card>
+        </Col> */}
       </Row>
     </div>
   );
