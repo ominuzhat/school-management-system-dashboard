@@ -11,8 +11,6 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
-import { useDeleteShiftMutation } from "../api/shiftEndPoints";
-import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 
 const useShiftColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -24,21 +22,21 @@ const useShiftColumns = (): ColumnsType<any> => {
     actionNames.change
   );
 
-  const [deleteItem] = useDeleteShiftMutation();
+  // const [deleteItem] = useDeleteShiftMutation();
 
-  const deletePermission = GetPermission(
-    dashboardData?.data?.permissions,
-    moduleNames.shift,
-    actionNames.delete
-  );
+  // const deletePermission = GetPermission(
+  //   dashboardData?.data?.permissions,
+  //   moduleNames.shift,
+  //   actionNames.delete
+  // );
 
-  const handleDelete = async (id: any) => {
-    try {
-      await deleteItem({ id }).unwrap();
-    } catch (error) {
-      console.error("Failed to delete item:", error);
-    }
-  };
+  // const handleDelete = async (id: any) => {
+  //   try {
+  //     await deleteItem({ id }).unwrap();
+  //   } catch (error) {
+  //     console.error("Failed to delete item:", error);
+  //   }
+  // };
 
   return [
     {
@@ -90,11 +88,11 @@ const useShiftColumns = (): ColumnsType<any> => {
               }
             />
           )}
-          {deletePermission && (
+          {/* {deletePermission && (
             <DeleteButton
               onConfirm={() => handleDelete(record.id)}
             ></DeleteButton>
-          )}
+          )} */}
         </Space>
       ),
     },

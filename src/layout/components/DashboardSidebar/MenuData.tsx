@@ -204,11 +204,19 @@ const MenuData: React.FC = () => {
       label: <Link to="/classes">Classes</Link>,
       icon: <SiGoogleclassroom />,
     },
+
+    hasPermissionForModule(permissions, "gradelevel") && {
+      key: "/class-management",
+      label: <Link to="/class-management">Class Management</Link>,
+      icon: <SiGoogleclassroom />,
+    },
+
     hasPermissionForModule(permissions, "classsubject") && {
       key: "/subjects",
       label: <Link to="/subjects">Subjects</Link>,
       icon: <IoBookOutline />,
     },
+
     hasPermissionForModule(permissions, "section") && {
       key: "/section",
       label: <Link to="/section">Section</Link>,

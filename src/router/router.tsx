@@ -79,6 +79,7 @@ import MigrationResultView from "../modules/general settings/Exam/Result Migrati
 import NewFees from "../modules/Finance Management/NewFees/page/NewFees";
 import CreateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateNewCollectFee";
 import UpdateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/UpdateNewCollectFee";
+import ClassManagement from "../modules/general settings/class management/page/ClassManagement";
 
 const router = createBrowserRouter([
   {
@@ -171,6 +172,14 @@ const router = createBrowserRouter([
         element: (
           <WithPermission requiredPermission="gradelevel">
             <ClassesPage />
+          </WithPermission>
+        ),
+      },
+      {
+        path: "/class-management",
+        element: (
+          <WithPermission requiredPermission="gradelevel">
+            <ClassManagement />
           </WithPermission>
         ),
       },
