@@ -449,7 +449,7 @@ const SingleCollectFee = () => {
               title: "Particular",
               dataIndex: "name",
               key: "name",
-              render: (text, record) => (
+              render: (text, record: any) => (
                 <Space>
                   <Text strong>{text.trim()}</Text>
                   {record?.is_carried_forward && (
@@ -479,8 +479,8 @@ const SingleCollectFee = () => {
               title: "Type",
               dataIndex: "one_time",
               key: "type",
-              render: (_, record) =>
-                record.one_time ? (
+              render: (_, record: any) =>
+                record?.one_time ? (
                   <Tag color="blue" icon={<IdcardOutlined />}>
                     One Time
                   </Tag>

@@ -11,15 +11,14 @@ import { PiExamLight, PiStudent } from "react-icons/pi";
 import { SiGoogleclassroom } from "react-icons/si";
 import {
   IoAccessibilityOutline,
-  IoBookOutline,
   IoCalendarOutline,
   IoCompassOutline,
   IoPeopleOutline,
   IoReceiptOutline,
 } from "react-icons/io5";
-import { MdCoPresent, MdFilterTiltShift } from "react-icons/md";
+import { MdCoPresent } from "react-icons/md";
 import { FaCommentSms, FaPeopleGroup, FaRegAddressCard } from "react-icons/fa6";
-import { TbCoinTaka, TbSection } from "react-icons/tb";
+import { TbCoinTaka } from "react-icons/tb";
 import { BiSolidInstitution } from "react-icons/bi";
 
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
@@ -199,11 +198,11 @@ const MenuData: React.FC = () => {
   ].filter(Boolean);
 
   const institution = [
-    hasPermissionForModule(permissions, "gradelevel") && {
-      key: "/classes",
-      label: <Link to="/classes">Classes</Link>,
-      icon: <SiGoogleclassroom />,
-    },
+    // hasPermissionForModule(permissions, "gradelevel") && {
+    //   key: "/classes",
+    //   label: <Link to="/classes">Classes</Link>,
+    //   icon: <SiGoogleclassroom />,
+    // },
 
     hasPermissionForModule(permissions, "gradelevel") && {
       key: "/class-management",
@@ -211,23 +210,23 @@ const MenuData: React.FC = () => {
       icon: <SiGoogleclassroom />,
     },
 
-    hasPermissionForModule(permissions, "classsubject") && {
-      key: "/subjects",
-      label: <Link to="/subjects">Subjects</Link>,
-      icon: <IoBookOutline />,
-    },
+    // hasPermissionForModule(permissions, "classsubject") && {
+    //   key: "/subjects",
+    //   label: <Link to="/subjects">Subjects</Link>,
+    //   icon: <IoBookOutline />,
+    // },
 
-    hasPermissionForModule(permissions, "section") && {
-      key: "/section",
-      label: <Link to="/section">Section</Link>,
-      icon: <TbSection />,
-    },
+    // hasPermissionForModule(permissions, "section") && {
+    //   key: "/section",
+    //   label: <Link to="/section">Section</Link>,
+    //   icon: <TbSection />,
+    // },
 
-    hasPermissionForModule(permissions, "shift") && {
-      key: "/shift",
-      label: <Link to="/shift">Shift</Link>,
-      icon: <MdFilterTiltShift />,
-    },
+    // hasPermissionForModule(permissions, "shift") && {
+    //   key: "/shift",
+    //   label: <Link to="/shift">Shift</Link>,
+    //   icon: <MdFilterTiltShift />,
+    // },
 
     hasPermissionForModule(permissions, "account") && {
       key: "/leave",

@@ -88,6 +88,46 @@ const sectionEndPoint = api.injectEndpoints({
         },
       ],
     }),
+
+    assignSection: builder.mutation<
+      ApiResponse<any>,
+      { id: number | undefined; data: any }
+    >({
+      query: ({ id, data }) => ({
+        url: `/api/v1.0/institutions/grade-levels/${id}/add-section/`,
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.SECTION,
+          id: TagTypes.SECTION + "_ID",
+        },
+      ],
+    }),
+
+    removeSection: builder.mutation<
+      ApiResponse<any>,
+      { id: number | undefined; data: any }
+    >({
+      query: ({ id, data }) => ({
+        url: `/api/v1.0/institutions/grade-levels/${id}/remove-section/`,
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.SECTION,
+          id: TagTypes.SECTION + "_ID",
+        },
+      ],
+    }),
   }),
 });
 
@@ -97,4 +137,6 @@ export const {
   useUpdateSectionMutation,
   useGetSingleSectionQuery,
   useDeleteSectionMutation,
+  useAssignSectionMutation,
+  useRemoveSectionMutation,
 } = sectionEndPoint;

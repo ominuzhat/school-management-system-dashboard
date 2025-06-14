@@ -88,6 +88,46 @@ const shiftEndpoint = api.injectEndpoints({
         },
       ],
     }),
+
+    assignShift: builder.mutation<
+      ApiResponse<any>,
+      { id: number | undefined; data: any }
+    >({
+      query: ({ id, data }) => ({
+        url: `/api/v1.0/institutions/grade-levels/${id}/assign-shift/`,
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.SHIFT,
+          id: TagTypes.SHIFT + "_ID",
+        },
+      ],
+    }),
+
+    removeShift: builder.mutation<
+      ApiResponse<any>,
+      { id: number | undefined; data: any }
+    >({
+      query: ({ id, data }) => ({
+        url: `/api/v1.0/institutions/grade-levels/${id}/remove-shift/`,
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.SHIFT,
+          id: TagTypes.SHIFT + "_ID",
+        },
+      ],
+    }),
   }),
 });
 
@@ -97,4 +137,6 @@ export const {
   useUpdateShiftMutation,
   useGetSingleShiftQuery,
   useDeleteShiftMutation,
+  useAssignShiftMutation,
+  useRemoveShiftMutation,
 } = shiftEndpoint;

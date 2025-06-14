@@ -4,12 +4,7 @@ import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
-import { Table } from "../../../../common/CommonAnt";
 
-import { useAppSelector } from "../../../../app/store";
-import { FilterState } from "../../../../app/features/filterSlice";
-import { IGetShift } from "../type/shiftTypes";
-import { useGetShiftQuery } from "../api/shiftEndPoints";
 import CreateShift from "../components/CreateShift";
 import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
 import { GetPermission } from "../../../../utilities/permission";
@@ -17,29 +12,28 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
-import useShiftColumns from "../utils/ShiftColumns";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
 
 const ShiftPage = () => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
-  const columns = useShiftColumns();
+  // const columns = useShiftColumns();
 
   const dispatch = useDispatch();
-  const { page_size, page } = useAppSelector(FilterState);
+  // const { page_size, page } = useAppSelector(FilterState);
 
-  const {
-    data: shiftList,
-    isLoading,
-    isFetching,
-    refetch,
-  } = useGetShiftQuery({
-    page_size: page_size,
-    page: Number(page) || undefined,
-  });
+  // const {
+  //   data: shiftList,
+  //   isLoading,
+  //   isFetching,
+  //   refetch,
+  // } = useGetShiftQuery({
+  //   page_size: page_size,
+  //   page: Number(page) || undefined,
+  // });
 
-  const dataLength = (shiftList?.data as IGetShift[] | undefined)?.length ?? 0;
+  // const dataLength = (shiftList?.data as IGetShift[] | undefined)?.length ?? 0;
 
-  const dataSource = (shiftList?.data as IGetShift[] | undefined) ?? [];
+  // const dataSource = (shiftList?.data as IGetShift[] | undefined) ?? [];
 
   const viewPermission = GetPermission(
     dashboardData?.data?.permissions,
@@ -81,15 +75,16 @@ const ShiftPage = () => {
         </Row>
       </Card>
       {viewPermission ? (
-        <Table
-          rowKey={"id"}
-          loading={isLoading || isFetching}
-          refetch={refetch}
-          total={dataLength}
-          dataSource={dataSource}
-          columns={columns}
-        />
+        "k"
       ) : (
+        // <Table
+        //   rowKey={"id"}
+        //   loading={isLoading || isFetching}
+        //   refetch={refetch}
+        //   total={dataLength}
+        //   dataSource={dataSource}
+        //   columns={columns}
+        // />
         <NoPermissionData />
       )}
     </div>

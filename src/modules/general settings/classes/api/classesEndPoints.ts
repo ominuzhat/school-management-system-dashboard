@@ -7,6 +7,30 @@ import { IClasses } from "../type/classesType";
 
 const classesEndpoint = api.injectEndpoints({
   endpoints: (builder) => ({
+    getClassesBigList: builder.query<
+      ApiResponse<PaginatedResponse<IClasses[]>>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "/api/v1.0/institutions/grade-levels/big-list/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.ClASSES,
+          id: TagTypes.ClASSES + "_ID",
+        },
+        {
+          type: TagTypes.SHIFT,
+          id: TagTypes.SHIFT + "_ID",
+        },
+        {
+          type: TagTypes.SECTION,
+          id: TagTypes.SECTION + "_ID",
+        },
+      ],
+    }),
+
     getClasses: builder.query<
       ApiResponse<PaginatedResponse<IClasses[]>>,
       FilterTypes
@@ -97,4 +121,5 @@ export const {
   useUpdateClassesMutation,
   useGetSingleClassesQuery,
   useDeleteClassesMutation,
+  useGetClassesBigListQuery,
 } = classesEndpoint;
