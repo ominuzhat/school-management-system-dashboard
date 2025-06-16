@@ -54,15 +54,15 @@ const useRulesColumns = (): ColumnsType<any> => {
       sorter: (a, b) => (a.title || "").localeCompare(b.title || ""),
       render: (title) => (title ? title : "N/A"),
     },
-    {
-      key: "2",
-      title: "Description",
-      dataIndex: "description",
-      align: "center",
-      sorter: (a, b) =>
-        (a.description || "").localeCompare(b.description || ""),
-      render: (description) => (description ? description : "N/A"),
-    },
+    // {
+    //   key: "2",
+    //   title: "Description",
+    //   dataIndex: "description",
+    //   align: "center",
+    //   sorter: (a, b) =>
+    //     (a.description || "").localeCompare(b.description || ""),
+    //   render: (description) => (description ? description : "N/A"),
+    // },
     {
       key: "3",
       title: "Category",

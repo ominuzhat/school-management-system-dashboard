@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form, Input } from "antd";
 
-const PasswordInput = ({isRequired}:{isRequired:boolean}) => {
+const PasswordInput = ({isRequired=true}:{isRequired?:boolean}) => {
   const [password, setPassword] = useState("");
 
   const handlePasswordChange = (e: any) => {

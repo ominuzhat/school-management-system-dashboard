@@ -51,7 +51,7 @@ const ViewPayment = () => {
             </div>
             <div className="flex justify-between text-gray-700">
               <span className="font-semibold">Amount Paid:</span>
-              <span className="text-gray-800">${payment.amount_paid}</span>
+              <span className="text-gray-800">৳{payment.amount_paid}</span>
             </div>
             <div className="flex justify-between text-gray-700">
               <span className="font-semibold">Payment Method:</span>
@@ -145,7 +145,7 @@ const ViewPayment = () => {
                 className="flex justify-between text-gray-700"
               >
                 <span className="font-semibold">{deduction.remarks}:</span>
-                <span className="text-gray-800">${deduction.amount}</span>
+                <span className="text-gray-800">৳{deduction.amount}</span>
               </div>
             ))}
           </div>
@@ -204,7 +204,7 @@ const ViewPayment = () => {
               <div className="flex justify-between text-gray-700">
                 <span className="font-semibold">Base Salary:</span>
                 <span className="text-gray-800">
-                  ${payment?.payroll?.employee?.base_salary}
+                  ৳{payment?.payroll?.employee?.base_salary}
                 </span>
               </div>
             </>

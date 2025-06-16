@@ -590,10 +590,10 @@ const SingleCollectFee = () => {
                 hoverable
               >
                 <Text strong style={{ fontSize: "16px" }}>
-                  {subject.name}
+                  {subject?.name}
                 </Text>
                 <div>
-                  <Text type="secondary">{subject.grade_level.name}</Text>
+                  <Text type="secondary">{subject?.grade_level?.name}</Text>
                 </div>
               </Card>
             </Col>

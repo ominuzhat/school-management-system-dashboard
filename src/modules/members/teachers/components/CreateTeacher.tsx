@@ -17,45 +17,21 @@ import { Form } from "../../../../common/CommonAnt";
 import { useState } from "react";
 import { useCreateTeacherMutation } from "../api/teachersEndPoints";
 import dayjs from "dayjs";
-import { useGetSubjectsQuery } from "../../../general settings/subjects/api/subjectsEndPoints";
 import PasswordInput from "../../../../common/Password/input";
 import { phoneValidator } from "../../../../utilities/validator";
 import GenderSelect, {
   BloodGroupSelect,
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
-import { useGetClassesQuery } from "../../../general settings/classes/api/classesEndPoints";
+import { useGetClassesBigListQuery } from "../../../general settings/classes/api/classesEndPoints";
 
 const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
-  const { data: subjectData } = useGetSubjectsQuery({
-    page_size: 900,
-  });
-  const { data: classData } = useGetClassesQuery<any>({});
+  const { data: classData } = useGetClassesBigListQuery<any>({});
   const [selectedSubjects, setSelectedSubjects] = useState<number[]>([]);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-
-  // Group subjects by class
-  const groupedSubjects = classData?.data?.reduce(
-    (acc: any, classItem: any) => {
-      const classSubjects: any = subjectData?.data?.results?.filter(
-        (subject: any) => subject.grade_level?.id === classItem.id
-      );
-
-      if (classSubjects?.length > 0) {
-        acc.push({
-          className: classItem.name,
-          classId: classItem.id,
-          subjects: classSubjects,
-        });
-      }
-      return acc;
-    },
-    []
-  );
-
   const handleSubjectChange = (subjectId: number, checked: boolean) => {
     setSelectedSubjects((prev) =>
       checked ? [...prev, subjectId] : prev.filter((id) => id !== subjectId)
@@ -253,7 +229,7 @@ const CreateTeacher = () => {
                         </Form.Item>
                       </Col>
                       <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-                        <PasswordInput isRequired={true} />
+                        <PasswordInput />
                       </Col>
 
                       <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
@@ -388,10 +364,10 @@ const CreateTeacher = () => {
                   Select subjects you teach:
                 </Typography.Title>
 
-                {groupedSubjects?.map((classInfo: any) => (
+                {classData?.data?.map((classInfo: any) => (
                   <Card key={classInfo.classId}>
                     <Typography.Title level={5} style={{ marginBottom: 8 }}>
-                      {classInfo.className}
+                      {classInfo.name}
                     </Typography.Title>
                     <Divider style={{ marginTop: 0, marginBottom: 12 }} />
 

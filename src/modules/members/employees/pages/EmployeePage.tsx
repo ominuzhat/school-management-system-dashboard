@@ -30,11 +30,13 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
+import { useNavigate } from "react-router-dom";
 
 const EmployeePage = () => {
   const [layout, setLayout] = useState("grid");
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const columns = useEmployeeColumns();
@@ -51,7 +53,6 @@ const EmployeePage = () => {
     page_size: page_size,
     page: Number(page) || undefined,
   });
-
 
   const handleDelete = async (id: any) => {
     console.log(id);
@@ -98,8 +99,17 @@ const EmployeePage = () => {
               >
                 Add Employee
               </Button>
+
             </Col>
           )}
+              <Col lg={10}>
+                <p
+                  onClick={() => navigate("/department")}
+                  className="w-fit  underline text-blue-400  cursor-pointer"
+                >
+                  Manage Department
+                </p>
+              </Col>
 
           <Col lg={6} xs={24}>
             <SearchComponent

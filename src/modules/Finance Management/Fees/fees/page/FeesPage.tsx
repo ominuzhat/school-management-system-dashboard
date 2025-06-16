@@ -1,5 +1,4 @@
 import { Button, Card, Col, Row } from "antd";
-import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../../app/features/modalSlice";
 import CreateFees from "../components/CreateFees";
@@ -52,9 +51,9 @@ const FeesPage = () => {
 
   return (
     <div>
-      <div className="my-5">
+      {/* <div className="my-5">
         <BreadCrumb />
-      </div>
+      </div> */}
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           {createPermission && (

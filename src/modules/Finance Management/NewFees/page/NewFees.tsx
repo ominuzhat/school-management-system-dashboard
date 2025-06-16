@@ -109,12 +109,12 @@ import {
   FaArrowUp,
 } from "react-icons/fa";
 // import BasicOverview from "../components/Home/BasicOverview";
-import { FeeCollection } from "../components/FinanceTab/CollectFee";
 import { PaymentFee } from "../components/FinanceTab/PaymentFee";
 import { ExpenseTracking } from "../components/FinanceTab/Expense";
 import { AccountTransfer } from "../components/FinanceTab/TransferFee";
 import AccountList from "../components/FinanceTab/Account";
 import { MdAccountBalanceWallet } from "react-icons/md";
+import CollectFeeTab from "../components/FinanceTab/collectFeeComponents/CollectFeeTab";
 
 const tabs = [
   // { key: "overview", label: "ওভারভিউ", icon: <FaChartPie /> },
@@ -155,7 +155,7 @@ const TabComponent = () => {
         </div>
       </div>
       <div>
-        {activeTab === "fees" && <FeeCollection />}
+        {activeTab === "fees" && <CollectFeeTab />}
         {activeTab === "payments" && <PaymentFee />}
         {activeTab === "expenses" && <ExpenseTracking />}
         {activeTab === "transfers" && <AccountTransfer />}

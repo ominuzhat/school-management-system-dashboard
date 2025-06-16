@@ -476,6 +476,14 @@ const router = createBrowserRouter([
             path: "view/:feesId",
             element: <FeesView />,
           },
+          {
+            path: "payment-view/:paymentId",
+            element: <ViewPayment />,
+          },
+          {
+            path: "payroll-view/:payrollId",
+            element: <ViewPayroll />,
+          },
         ],
       },
 

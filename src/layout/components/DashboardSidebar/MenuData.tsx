@@ -17,14 +17,12 @@ import {
   IoReceiptOutline,
 } from "react-icons/io5";
 import { MdCoPresent } from "react-icons/md";
-import { FaCommentSms, FaPeopleGroup, FaRegAddressCard } from "react-icons/fa6";
+import { FaCommentSms, FaRegAddressCard } from "react-icons/fa6";
 import { TbCoinTaka } from "react-icons/tb";
 import { BiSolidInstitution } from "react-icons/bi";
 
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
-import { IoMdPersonAdd } from "react-icons/io";
-import { VscGoToEditingSession } from "react-icons/vsc";
-import { RiLuggageDepositLine } from "react-icons/ri";
+
 import { TfiAnnouncement } from "react-icons/tfi";
 import {
   BsBookmarks,
@@ -96,20 +94,20 @@ const MenuData: React.FC = () => {
     hasPermissionForModule(permissions, "employee") &&
       hasPermissionForModule(permissions, "department") && {
         key: "/employees-module",
-        label: "Employees",
+        label: <Link to="/employees">Employees</Link>,
         icon: <IoPeopleOutline />,
-        children: [
-          hasPermissionForModule(permissions, "employee") && {
-            key: "/employees",
-            label: <Link to="/employees">Employees</Link>,
-            icon: <FaPeopleGroup />,
-          },
-          hasPermissionForModule(permissions, "department") && {
-            key: "/department",
-            label: <Link to="/department">Department</Link>,
-            icon: <RiLuggageDepositLine />,
-          },
-        ],
+        // children: [
+        //   hasPermissionForModule(permissions, "employee") && {
+        //     key: "/employees",
+        //     label: <Link to="/employees">Employees</Link>,
+        //     icon: <FaPeopleGroup />,
+        //   },
+        //   hasPermissionForModule(permissions, "department") && {
+        //     key: "/department",
+        //     label: <Link to="/department">Department</Link>,
+        //     icon: <RiLuggageDepositLine />,
+        //   },
+        // ],
       },
   ].filter(Boolean);
 
@@ -210,6 +208,25 @@ const MenuData: React.FC = () => {
       icon: <SiGoogleclassroom />,
     },
 
+    hasPermissionForModule(permissions, "admission") &&
+      hasPermissionForModule(permissions, "admissionsession") && {
+        key: "/admission",
+        label: <Link to="/admission">Admission</Link>,
+        icon: <FaRegAddressCard />,
+        // children: [
+        //   hasPermissionForModule(permissions, "admission") && {
+        //     key: "/admission",
+        //     label: <Link to="/admission">Admission</Link>,
+        //     icon: <IoMdPersonAdd />,
+        //   },
+
+        //   hasPermissionForModule(permissions, "admissionsession") && {
+        //     key: "/admission-session",
+        //     label: <Link to="/admission-session">Admission Session</Link>,
+        //     icon: <VscGoToEditingSession />,
+        //   },
+        // ],
+      },
     // hasPermissionForModule(permissions, "classsubject") && {
     //   key: "/subjects",
     //   label: <Link to="/subjects">Subjects</Link>,
@@ -284,25 +301,6 @@ const MenuData: React.FC = () => {
             key: "/result-migration",
             label: <Link to="/result-migration">Result Migration</Link>,
             icon: <FaMapMarkedAlt />,
-          },
-        ],
-      },
-    hasPermissionForModule(permissions, "admission") &&
-      hasPermissionForModule(permissions, "admissionsession") && {
-        key: "/admission-module",
-        label: "Admission",
-        icon: <FaRegAddressCard />,
-        children: [
-          hasPermissionForModule(permissions, "admission") && {
-            key: "/admission",
-            label: <Link to="/admission">Admission</Link>,
-            icon: <IoMdPersonAdd />,
-          },
-
-          hasPermissionForModule(permissions, "admissionsession") && {
-            key: "/admission-session",
-            label: <Link to="/admission-session">Admission Session</Link>,
-            icon: <VscGoToEditingSession />,
           },
         ],
       },

@@ -100,21 +100,21 @@ const ViewPayroll = () => {
           <div className="space-y-4">
             <div className="flex justify-between text-gray-700">
               <span className="font-semibold">Gross Salary:</span>
-              <span className="text-gray-800">${payroll.gross_salary}</span>
+              <span className="text-gray-800">৳{payroll.gross_salary}</span>
             </div>
             <div className="flex justify-between text-gray-700">
               <span className="font-semibold">Net Salary:</span>
-              <span className="text-gray-800">${payroll.net_salary}</span>
+              <span className="text-gray-800">৳{payroll.net_salary}</span>
             </div>
           </div>
           <div className="space-y-4">
             <div className="flex justify-between text-gray-700">
               <span className="font-semibold">Paid Amount:</span>
-              <span className="text-gray-800">${payroll.paid_Amount}</span>
+              <span className="text-gray-800">৳{payroll.paid_Amount}</span>
             </div>
             <div className="flex justify-between text-gray-700">
               <span className="font-semibold">Due Amount:</span>
-              <span className="text-gray-800">${payroll.due_Amount}</span>
+              <span className="text-gray-800">৳{payroll.due_Amount}</span>
             </div>
           </div>
         </div>
@@ -143,7 +143,7 @@ const ViewPayroll = () => {
           })?.map(([key, label]) => (
             <div key={key} className="flex justify-between text-gray-700">
               <span className="font-semibold">{label}:</span>
-              <span className="text-gray-800">${payroll[key]}</span>
+              <span className="text-gray-800">৳{payroll[key]}</span>
             </div>
           ))}
         </div>
@@ -161,7 +161,7 @@ const ViewPayroll = () => {
               className="flex justify-between text-gray-700"
             >
               <span className="font-semibold">{deduction.remarks}:</span>
-              <span className="text-gray-800">${deduction.amount}</span>
+              <span className="text-gray-800">৳{deduction.amount}</span>
             </div>
           ))}
         </div>

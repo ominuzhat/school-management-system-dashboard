@@ -88,18 +88,27 @@ const RulesPage = () => {
         </Row>
       </Card>
 
-{
-  viewPermission ?      <Table
-        rowKey={"id"}
-        loading={isLoading || isFetching}
-        refetch={refetch}
-        total={rulesList?.data?.count}
-        dataSource={rulesList?.data?.results || []}
-        columns={columns}
-      /> : <NoPermissionData/>
-}
-
-
+      {viewPermission ? (
+        <Table
+          rowKey={"id"}
+          loading={isLoading || isFetching}
+          refetch={refetch}
+          total={rulesList?.data?.count}
+          dataSource={rulesList?.data?.results || []}
+          columns={columns}
+          expandable={{
+            expandedRowRender: (record) => (
+              <p className="m-0">
+                <span className="font-semibold">Description: </span>
+                {record.description || "N/A"}
+              </p>
+            ),
+            rowExpandable: (record) => !!record.description,
+          }}
+        />
+      ) : (
+        <NoPermissionData />
+      )}
     </div>
   );
 };

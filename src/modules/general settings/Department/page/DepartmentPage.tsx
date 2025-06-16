@@ -17,12 +17,14 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
+import { useNavigate } from "react-router-dom";
 
 const DepartmentPage = () => {
   const dispatch = useDispatch();
   const { page_size, page } = useAppSelector(FilterState);
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const columns = useDepartmentColumns();
+  const navigate = useNavigate();
 
   const {
     data: departmentData,
@@ -75,6 +77,15 @@ const DepartmentPage = () => {
               >
                 Add Department
               </Button>
+
+              <Col lg={10}>
+                <p
+                  onClick={() => navigate("/employees")}
+                  className="w-fit  underline text-blue-400  cursor-pointer"
+                >
+                  Manage Employee
+                </p>
+              </Col>
             </Col>
           )}
         </Row>

@@ -75,15 +75,27 @@ const AdmissionPage = () => {
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           {createPermission && (
-            <Col lg={4} xs={24}>
-              <Button
-                type="primary"
-                onClick={() => navigate("/admission/create-admission")}
-                icon={<PlusOutlined />}
-                className="w-full"
-              >
-                Add Admission
-              </Button>
+            <Col lg={10} xs={24} className="flex items-center gap-2">
+              <Row gutter={[16, 16]} className="flex items-center">
+                <Col lg={12}>
+                  <Button
+                    type="primary"
+                    onClick={() => navigate("/admission/create-admission")}
+                    icon={<PlusOutlined />}
+                    className="w-full"
+                  >
+                     Admission
+                  </Button>
+                </Col>
+                <Col lg={12}>
+                  <p
+                    onClick={() => navigate("/admission-session")}
+                    className="w-fit underline text-blue-400 cursor-pointer"
+                  >
+                    Manage session
+                  </p>
+                </Col>
+              </Row>
             </Col>
           )}
           <Col lg={14} xs={24}>

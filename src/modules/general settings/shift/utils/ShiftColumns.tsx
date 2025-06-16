@@ -18,6 +18,8 @@ import {
 import { useState } from "react";
 import AssignSection from "../../class management/components/AssignSection";
 import { useRemoveSectionMutation } from "../../Section/api/sectionEndPoints";
+import { MdDelete } from "react-icons/md";
+import { IoMdAdd } from "react-icons/io";
 
 interface ClassData {
   id?: number;
@@ -126,13 +128,19 @@ const useShiftColumns = (
                 loading={loadingShiftId === record.id}
                 onClick={handleClick}
               >
-                {isAssigned ? "Remove Shift" : "Assign Shift"}
+                {isAssigned ? (
+                  <p className="flex items-center gap-1">
+                    <MdDelete /> Shift
+                  </p>
+                ) : (
+                  "Assign Shift"
+                )}
               </Button>
             )}
 
             {isAssigned && selectedClassData?.id && (
               <Button
-                type="dashed"
+              type="default"
                 className="bg-green-600 text-white"
                 onClick={() =>
                   dispatch(
@@ -148,7 +156,7 @@ const useShiftColumns = (
                   )
                 }
               >
-                Add Section
+                <IoMdAdd /> Section
               </Button>
             )}
 
@@ -216,7 +224,7 @@ const useShiftColumns = (
                   }
                 }}
               >
-                Remove
+               <MdDelete />
               </Button>
             ),
           },

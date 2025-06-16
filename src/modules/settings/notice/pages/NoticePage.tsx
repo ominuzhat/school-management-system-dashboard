@@ -94,6 +94,15 @@ const NoticePage = () => {
           total={noticeList?.data?.count}
           dataSource={noticeList?.data?.results || []}
           columns={columns}
+          expandable={{
+            expandedRowRender: (record) => (
+              <p className="m-0">
+                <span className="font-semibold">Description: </span>
+                {record.description || "N/A"}
+              </p>
+            ),
+            rowExpandable: (record) => !!record.description,
+          }}
         />
       ) : (
         <NoPermissionData />

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import {
   Col,
@@ -38,7 +39,6 @@ const CreateCollectFee = () => {
   const [form] = AntForm.useForm();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSelectedFees] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState<any>({});
   const [finalDueAmount, setFinalDueAmount] = useState<number | null>(null);
@@ -56,6 +56,7 @@ const CreateCollectFee = () => {
   const discountType = AntForm.useWatch("discount_type", form);
   const discountAmount = AntForm.useWatch("discount_value", form);
   const month = AntForm.useWatch("month", form);
+  const { data: accountList } = useGetAccountQuery({});
 
   const { data: getSingleAdmission } = useGetSingleAdmissionQuery<any>(
     admissionId || admission,
@@ -70,8 +71,6 @@ const CreateCollectFee = () => {
   });
 
   console.log("newCollectFeeData", newCollectFeeData);
-
-  const { data: accountList } = useGetAccountQuery({});
 
   const totalAmountOfAdditionalFees = useMemo(() => {
     return Array.isArray(selectedAdditionalFee)

@@ -7,7 +7,7 @@ import {
   Upload,
   Badge,
   Card,
-  Select,
+  
   DatePicker,
   Switch,
   Typography,
@@ -23,14 +23,13 @@ import {
   useUpdateTeacherMutation,
 } from "../api/teachersEndPoints";
 import dayjs from "dayjs";
-import { useGetSubjectsQuery } from "../../../general settings/subjects/api/subjectsEndPoints";
 import PasswordInput from "../../../../common/Password/input";
 import { phoneValidator } from "../../../../utilities/validator";
 import GenderSelect, {
   BloodGroupSelect,
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
-import { useGetClassesQuery } from "../../../general settings/classes/api/classesEndPoints";
+import { useGetClassesBigListQuery } from "../../../general settings/classes/api/classesEndPoints";
 
 interface Props {
   record: any;
@@ -39,10 +38,8 @@ interface Props {
 const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
   const [form] = AntForm.useForm();
   const { data: singleTeacher } = useGetSingleSTeacherQuery(record?.id);
-  const { data: subjectData, isLoading: subjectLoading } = useGetSubjectsQuery({
-    page_size: 900,
-  });
-  const { data: classData } = useGetClassesQuery<any>({});
+
+  const { data: classData } = useGetClassesBigListQuery<any>({});
   const [selectedSubjects, setSelectedSubjects] = useState<number[]>([]);
   const [update, { isLoading }] = useUpdateTeacherMutation();
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -138,25 +135,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
   };
 
   // Group subjects by class
-  const groupedSubjects = classData?.data?.reduce(
-    (acc: any, classItem: any) => {
-      const classSubjects: any = subjectData?.data?.results?.filter(
-        (subject: any) => subject.grade_level?.id === classItem.id
-      );
 
-      if (classSubjects?.length > 0) {
-        acc.push({
-          className: classItem.name,
-          classId: classItem.id,
-          subjects: classSubjects,
-        });
-      }
-      return acc;
-    },
-    []
-  );
-
-  console.log(subjectData?.data?.results);
   // console.log(groupedSubjects);
 
   const handleSubjectChange = (subjectId: number, checked: boolean) => {
@@ -346,7 +325,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                     <BloodGroupSelect />
                   </Col>
 
-                  <Col xs={24} sm={24} md={12} lg={12} xl={6} xxl={6}>
+                  {/* <Col xs={24} sm={24} md={12} lg={12} xl={6} xxl={6}>
                     <Form.Item
                       label="Subject Specialization"
                       name="subject_specialization"
@@ -371,7 +350,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                         }
                       />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                   <Col xs={24} sm={24} md={24} lg={12} xl={6} xxl={6}>
                     <Form.Item<any> label="Address" name="home_address">
                       <Input placeholder="Address" />
@@ -389,10 +368,10 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                   Select subjects you teach:
                 </Typography.Title>
 
-                {groupedSubjects?.map((classInfo: any) => (
+                {classData?.data?.map((classInfo: any) => (
                   <Card key={classInfo.classId}>
                     <Typography.Title level={5} style={{ marginBottom: 8 }}>
-                      {classInfo.className}
+                      {classInfo.name}
                     </Typography.Title>
                     <Divider style={{ marginTop: 0, marginBottom: 12 }} />
 

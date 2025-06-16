@@ -38,7 +38,6 @@ import { useGetSectionQuery } from "../../../../general settings/Section/api/sec
 import { useGetAdmissionSessionQuery } from "../../../../general settings/admission session/api/admissionSessionEndPoints";
 import dayjs from "dayjs";
 
-
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
 
@@ -224,7 +223,7 @@ export const FeeCollection = () => {
                         </span>
                         <Tooltip
                           placement="bottom"
-                          color={"rgba(35,117,245,0.5)"}
+                          color={"black"}
                           title={feeGuidelinesBn}
                         >
                           <Button size="small" type="primary">

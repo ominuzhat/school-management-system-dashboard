@@ -17,9 +17,11 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
+import { useNavigate } from "react-router-dom";
 
 const AdmissionSessionPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const columns = useAdmissionSessionsColumns();
@@ -60,9 +62,9 @@ const AdmissionSessionPage = () => {
         <BreadCrumb />
       </div>
       <Card>
-        <Row justify="space-between" gutter={[10, 10]}>
+        <Row  gutter={[10, 10]} className="flex items-center" >
           {createPermission && (
-            <Col lg={4} xs={24}>
+            <Col lg={2} xs={24}>
               <Button
                 type="primary"
                 onClick={() =>
@@ -76,10 +78,18 @@ const AdmissionSessionPage = () => {
                 icon={<PlusOutlined />}
                 className="w-full"
               >
-                Add Admission Session
+                Session
               </Button>
             </Col>
           )}
+          <Col lg={20}>
+            <p
+              onClick={() => navigate("/admission")}
+              className="w-fit  underline text-blue-400  cursor-pointer"
+            >
+              Manage Admission
+            </p>
+          </Col>
         </Row>
       </Card>
       <Card>
