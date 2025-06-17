@@ -271,9 +271,9 @@ const CreateNewCollectFee = () => {
                   optionFilterProp="children"
                 >
                   {admissionData?.data?.results?.map((data: any) => (
-                    <Select.Option key={data?.id} value={data?.id}>
+                    <Select.Option key={data?.student.id} value={data?.id}>
                       {data?.student?.first_name} {data?.student?.last_name} (
-                      {data?.student?.user?.username}) - {data?.session?.name}
+                      {data?.student?.user?.username})
                     </Select.Option>
                   ))}
                 </Select>

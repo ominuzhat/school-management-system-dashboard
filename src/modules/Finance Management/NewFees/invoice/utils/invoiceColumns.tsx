@@ -7,6 +7,8 @@ import { useGetInvoicePdfQuery } from "../api/invoiceEndPoints";
 import { showModal } from "../../../../../app/features/modalSlice";
 import InvoiceView from "../components/InvoiceView";
 import { useDispatch } from "react-redux";
+import { FaEdit } from "react-icons/fa";
+import UpdateInvoice from "../components/UpdateInvoice";
 
 const useInvoiceColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -129,12 +131,34 @@ const useInvoiceColumns = (): ColumnsType<any> => {
             onClick={() =>
               dispatch(
                 showModal({
+                  title: "Update Invoice",
+                  content: <UpdateInvoice record={record?.id} />,
+                })
+              )
+            }
+            style={{
+              color: "#FFA500",
+              border: "1px solid #FFA500",
+            }}
+          >
+            <FaEdit />
+          </Button>
+          <Button
+            size="small"
+            type="default"
+            onClick={() =>
+              dispatch(
+                showModal({
                   title: "View Invoice",
                   content: <InvoiceView record={record?.id} />,
                 })
               )
             }
-            className="w-full"
+            style={{
+              color: "#3892E3",
+              // background: "#3892E3",
+              border: "1px solid #3892E3",
+            }}
           >
             <FaEye />
           </Button>

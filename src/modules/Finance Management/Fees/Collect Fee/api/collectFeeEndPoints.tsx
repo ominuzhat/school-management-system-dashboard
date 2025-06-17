@@ -162,4 +162,5 @@ export const {
   useGetNewCollectFeesQuery,
   useCreateNewCollectFeesMutation,
   useCreateClaimFeesMutation,
+  useLazyGetCollectSingleFeesFormQuery
 } = collectFeeEndPoints;

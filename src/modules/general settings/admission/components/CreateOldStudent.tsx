@@ -19,14 +19,12 @@ import {
 } from "../api/admissionEndPoints";
 import { IAdmission } from "../type/admissionType";
 import { useGetStudentsQuery } from "../../../members/students/api/studentEndPoints";
-import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
+import { useGetClassesBigListQuery } from "../../classes/api/classesEndPoints";
 import { IClasses } from "../../classes/type/classesType";
 import { useEffect, useState } from "react";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
 import { debounce } from "lodash";
-import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
-import { useGetShiftQuery } from "../../shift/api/shiftEndPoints";
 import CustomFeeForm from "./CustomFeeForm";
 import dayjs from "dayjs";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -42,6 +40,8 @@ const CreateOldStudent = () => {
   const [search, setSearch] = useState("");
   const [selectAll, setSelectAll] = useState(true);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+  const [selectedClass, setSelectedClass] = useState<any>({});
+  const [selectedShift, setSelectedShift] = useState<any>({});
 
   const session = AntForm.useWatch("session", form);
   const shift = AntForm.useWatch("shift", form);
@@ -63,6 +63,14 @@ const CreateOldStudent = () => {
   const [createAdmissionFee, { data: admissionFee }] =
     useCreateAdmissionFeeMutation();
 
+  const { data: sessionData, isFetching: isFetchingSessions } =
+    useGetAdmissionSessionQuery({
+      status: "open",
+    });
+
+  const { data: classData, isFetching: isFetchingClasses } =
+    useGetClassesBigListQuery({});
+
   useEffect(() => {
     if (gradeLevel && selectedSubjects) {
       createAdmissionFee({
@@ -73,18 +81,17 @@ const CreateOldStudent = () => {
     }
   }, [gradeLevel, selectedSubjects, feeType, createAdmissionFee]);
 
-  const { data: sessionData, isFetching: isFetchingSessions } =
-    useGetAdmissionSessionQuery({
-      status: "open",
-    });
-  const { data: shiftData, isFetching: isFetchingShifts } = useGetShiftQuery(
-    {}
-  );
-  const { data: classData, isFetching: isFetchingClasses } = useGetClassesQuery(
-    {}
-  );
-  const { data: sectionData, isFetching: isFetchingSections } =
-    useGetSectionQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
+  useEffect(() => {
+    const findClass =
+      Array.isArray(classData?.data) &&
+      classData?.data?.find((e: any) => e.id === gradeLevel);
+    setSelectedClass(findClass);
+
+    const findSection = findClass?.shifts?.find((e: any) => e.id === shift);
+    setSelectedShift(findSection);
+  }, [classData?.data, gradeLevel, shift]);
+
+  // useGetSectionQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
   const {
     data: subjectData,
     isFetching: isFetchingSubjects,
@@ -240,6 +247,7 @@ const CreateOldStudent = () => {
           </Title>
 
           <Row gutter={[16, 16]}>
+            
             {/* Session Selection */}
             <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission>
@@ -261,24 +269,6 @@ const CreateOldStudent = () => {
               </Form.Item>
             </Col>
 
-            {/* Shift Selection */}
-            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-              <Form.Item<IAdmission>
-                label="Shift"
-                name="shift"
-                rules={[{ required: true, message: "Please select a shift" }]}
-              >
-                <Select loading={isFetchingShifts} placeholder="Select shift">
-                  {Array.isArray(shiftData?.data) &&
-                    shiftData?.data?.map((shift: any) => (
-                      <Option key={shift.id} value={shift.id}>
-                        {shift.name}
-                      </Option>
-                    ))}
-                </Select>
-              </Form.Item>
-            </Col>
-
             {/* Class Selection */}
             <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission>
@@ -291,7 +281,11 @@ const CreateOldStudent = () => {
                   placeholder="Select class"
                   onChange={() => {
                     setSelectedSubjects([]);
-                    form.setFieldsValue({ subjects: [], section: undefined });
+                    form.setFieldsValue({
+                      subjects: [],
+                      section: undefined,
+                      shift: undefined,
+                    });
                   }}
                 >
                   {Array.isArray(classData?.data) &&
@@ -304,6 +298,25 @@ const CreateOldStudent = () => {
               </Form.Item>
             </Col>
 
+            {/* Shift Selection */}
+            {gradeLevel && (
+              <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                <Form.Item<IAdmission>
+                  label="Shift"
+                  name="shift"
+                  rules={[{ required: true, message: "Please select a shift" }]}
+                >
+                  <Select placeholder="Select shift">
+                    {selectedClass?.shifts?.map((shift: any) => (
+                      <Option key={shift.id} value={shift.id}>
+                        {shift.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
+
             {/* Section (conditionally rendered) */}
             {gradeLevel && (
               <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
@@ -314,14 +327,11 @@ const CreateOldStudent = () => {
                     { required: true, message: "Please select a section" },
                   ]}
                 >
-                  <Select
-                    loading={isFetchingSections}
-                    placeholder="Select section"
-                  >
-                    {Array.isArray(sectionData?.data) &&
-                      sectionData?.data?.map((section: any) => (
-                        <Option key={section.id} value={section.id}>
-                          {section.name}
+                  <Select placeholder="Select section">
+                    {Array.isArray(selectedShift?.sections) &&
+                      selectedShift.sections.map((s: any) => (
+                        <Option key={s.section.id} value={s.section.id}>
+                          {s.section.name} (Capacity: {s.section.capacity})
                         </Option>
                       ))}
                   </Select>
@@ -358,7 +368,7 @@ const CreateOldStudent = () => {
                     {studentData?.data?.results?.map((student: any) => (
                       <Option key={student.id} value={student.id}>
                         {`${student.first_name} ${student.last_name} - (${
-                          student?.current_grade_level?.name || "N/A"
+                          student?.user?.username || "N/A"
                         })`}
                       </Option>
                     ))}

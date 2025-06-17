@@ -1,6 +1,6 @@
 import { Button, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useGetCollectSingleFeesFormQuery } from "../api/collectFeeEndPoints";
+import { useLazyGetCollectSingleFeesFormQuery } from "../api/collectFeeEndPoints";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
@@ -25,15 +25,10 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
     actionNames.change
   );
 
-  const [collectFeeId, setCollectFeeId] = useState<number | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
-  const { data: singleFeeForm } = useGetCollectSingleFeesFormQuery(
-    collectFeeId as number,
-    {
-      skip: collectFeeId === null,
-    }
-  );
+  const [getCollectFeeForm, { data: singleFeeForm }] =
+    useLazyGetCollectSingleFeesFormQuery();
 
   useEffect(() => {
     if (singleFeeForm) {
@@ -50,7 +45,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
   }, [singleFeeForm]);
 
   const handleForm = (id: number) => {
-    setCollectFeeId(id);
+    getCollectFeeForm(id);
   };
 
   // const [deleteItem] = useDeleteCollectItemMutation();
@@ -69,7 +64,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
 
     {
       key: "1",
-      title: "Student Name",
+      title: "Name",
       dataIndex: "admission",
       align: "center",
       render: (title) =>
@@ -149,7 +144,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
     },
     {
       key: "9",
-      title: "Discount Amount",
+      title: "Amount",
       dataIndex: "discount_amount",
       align: "center",
       render: (title) => (title ? title : "0"),

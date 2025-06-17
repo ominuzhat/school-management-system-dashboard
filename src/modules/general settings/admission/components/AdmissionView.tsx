@@ -68,7 +68,6 @@ const AdmissionView = () => {
     subjects = [],
     admission_date,
     fee_type,
-    registration_number,
     previous_registration_number,
     roll,
     session,
@@ -136,6 +135,7 @@ const AdmissionView = () => {
         return <Tag color="default">{status}</Tag>;
     }
   };
+  
   const feeColumns = [
     {
       title: "Name",
@@ -213,7 +213,7 @@ const AdmissionView = () => {
     md: 8,
     lg: 6,
     xl: 6,
-    xxl: 4,
+    xxl: 6,
   };
 
   const mainContentColSpan = {
@@ -296,8 +296,8 @@ const AdmissionView = () => {
           <Col {...summaryCardColSpan}>
             <Card className="summary-card" hoverable>
               <Statistic
-                title="Registration No"
-                value={registration_number}
+                title="User Name"
+                value={student?.user?.username}
                 prefix={<IdcardOutlined />}
                 valueStyle={{ fontSize: screens.xs ? 14 : 16 }}
               />
@@ -559,49 +559,63 @@ const AdmissionView = () => {
             </Card>
           </Col>
         </Row>
+
+
+        
         <Divider orientation="left">Fee Details</Divider>
-<Table
-  columns={feeColumns}
-  dataSource={singleAdmission?.fees || []}
-  rowKey="id"
-  pagination={false}
-  bordered
-  style={{ marginBottom: 32 }}
-/>
+        <Table
+          columns={feeColumns}
+          dataSource={singleAdmission?.fees || []}
+          rowKey="id"
+          pagination={false}
+          bordered
+          style={{ marginBottom: 32 }}
+        />
 
-<Divider orientation="left">Payment History</Divider>
-<Collapse accordion>
-  {(singleAdmission?.payments || []).map((payment: any) => (
-    <Panel
-      header={
-        <Space>
-          <Text strong>{dayjs(payment.month).format("MMM")}</Text>
-          <Tag color={payment.status === "pending" ? "orange" : "blue"}>{capitalize(payment.status)}</Tag>
-          <Text>Total: {formattedFee(payment.total_amount)}</Text>
-          <Text type="success">Paid: {formattedFee(payment.total_paid)}</Text>
-          <Text type="danger">Due: {formattedFee(payment.total_due)}</Text>
-        </Space>
-      }
-      key={payment.id}
-    >
-      <Descriptions bordered column={1} size="small">
-        <Descriptions.Item label="Payment Date">{payment.payment_date}</Descriptions.Item>
-        <Descriptions.Item label="Net Amount">{formattedFee(payment.net_amount)}</Descriptions.Item>
-        <Descriptions.Item label="Discount">{formattedFee(payment.discount_amount)}</Descriptions.Item>
-      </Descriptions>
-      <Divider dashed />
-      <Text strong>Particulars</Text>
-      <Table
-        columns={paymentParticularColumns}
-        dataSource={payment.particulars || []}
-        rowKey="id"
-        pagination={false}
-        size="small"
-      />
-    </Panel>
-  ))}
-</Collapse>
-
+        <Divider orientation="left">Payment History</Divider>
+        <Collapse accordion>
+          {(singleAdmission?.payments || []).map((payment: any) => (
+            <Panel
+              header={
+                <Space>
+                  <Text strong>{dayjs(payment.month).format("MMM")}</Text>
+                  <Tag color={payment.status === "pending" ? "orange" : "blue"}>
+                    {capitalize(payment.status)}
+                  </Tag>
+                  <Text>Total: {formattedFee(payment.total_amount)}</Text>
+                  <Text type="success">
+                    Paid: {formattedFee(payment.total_paid)}
+                  </Text>
+                  <Text type="danger">
+                    Due: {formattedFee(payment.total_due)}
+                  </Text>
+                </Space>
+              }
+              key={payment.id}
+            >
+              <Descriptions bordered column={1} size="small">
+                <Descriptions.Item label="Payment Date">
+                  {payment.payment_date}
+                </Descriptions.Item>
+                <Descriptions.Item label="Net Amount">
+                  {formattedFee(payment.net_amount)}
+                </Descriptions.Item>
+                <Descriptions.Item label="Discount">
+                  {formattedFee(payment.discount_amount)}
+                </Descriptions.Item>
+              </Descriptions>
+              <Divider dashed />
+              <Text strong>Particulars</Text>
+              <Table
+                columns={paymentParticularColumns}
+                dataSource={payment.particulars || []}
+                rowKey="id"
+                pagination={false}
+                size="small"
+              />
+            </Panel>
+          ))}
+        </Collapse>
       </div>
     </div>
   );

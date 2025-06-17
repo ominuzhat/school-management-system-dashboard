@@ -1,18 +1,18 @@
 import { useGetSingleInvoiceQuery } from "../api/invoiceEndPoints";
-import { 
-  Card, 
-  Typography, 
-  Divider, 
-  Row, 
-  Col, 
-  Table, 
-  Tag, 
-  Space, 
+import {
+  Card,
+  Typography,
+  Divider,
+  Row,
+  Col,
+  Table,
+  Tag,
+  Space,
   Descriptions,
   Badge,
-  Spin
-} from 'antd';
-import dayjs from 'dayjs';
+  Spin,
+} from "antd";
+import dayjs from "dayjs";
 
 const { Title, Text } = Typography;
 
@@ -28,38 +28,48 @@ const InvoiceView = ({ record }: { record: string }) => {
 
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
-      case 'paid': return 'success';
-      case 'partial': return 'warning';
-      case 'unpaid': return 'error';
-      default: return 'default';
+      case "paid":
+        return "success";
+      case "partial":
+        return "warning";
+      case "unpaid":
+        return "error";
+      default:
+        return "default";
     }
   };
 
   const columns = [
     {
-      title: 'Particular',
-      dataIndex: ['particular', 'name'],
-      key: 'particular',
+      title: "Particular",
+      dataIndex: ["particular", "name"],
+      key: "particular",
       render: (text: string) => <Text strong>{text?.trim()}</Text>,
     },
     {
-      title: 'Amount',
-      dataIndex: 'amount',
-      key: 'amount',
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
       render: (amount: number) => `৳${amount?.toFixed(2)}`,
     },
     {
-      title: 'Paid',
-      dataIndex: 'paid_amount',
-      key: 'paid_amount',
+      title: "Paid",
+      dataIndex: "paid_amount",
+      key: "paid_amount",
       render: (paid: number) => `৳${paid?.toFixed(2)}`,
     },
     {
-      title: 'Status',
-      key: 'status',
+      title: "Status",
+      key: "status",
       render: (_: any, record: any) => (
-        <Tag color={record.due_amount > 0 ? getStatusColor('partial') : getStatusColor('paid')}>
-          {record.due_amount > 0 ? 'Partial' : 'Paid'}
+        <Tag
+          color={
+            record.due_amount > 0
+              ? getStatusColor("partial")
+              : getStatusColor("paid")
+          }
+        >
+          {record.due_amount > 0 ? "Partial" : "Paid"}
         </Tag>
       ),
     },
@@ -74,20 +84,24 @@ const InvoiceView = ({ record }: { record: string }) => {
           </Title>
           <Text type="secondary">{institution?.city}</Text>
         </Col>
-        
+
         <Col>
           <Space direction="vertical" align="end">
-            <Title level={4} style={{ marginBottom: 0 }}>INVOICE</Title>
+            <Title level={4} style={{ marginBottom: 0 }}>
+              INVOICE
+            </Title>
             <Text>#{invoice?.invoice_number}</Text>
-            <Text>Issued: {dayjs(invoice?.issue_date)?.format('MMM DD, YYYY')}</Text>
-            <Text>Due: {dayjs(invoice?.due_date)?.format('MMM DD, YYYY')}</Text>
-            <Badge 
-              status={getStatusColor(invoice?.status)} 
+            <Text>
+              Issued: {dayjs(invoice?.issue_date)?.format("MMM DD, YYYY")}
+            </Text>
+            <Text>Due: {dayjs(invoice?.due_date)?.format("MMM DD, YYYY")}</Text>
+            <Badge
+              status={getStatusColor(invoice?.status)}
               text={
-                <Text strong style={{ textTransform: 'capitalize' }}>
+                <Text strong style={{ textTransform: "capitalize" }}>
                   {invoice?.status}
                 </Text>
-              } 
+              }
             />
           </Space>
         </Col>
@@ -105,7 +119,8 @@ const InvoiceView = ({ record }: { record: string }) => {
               {student?.email}
             </Descriptions.Item>
             <Descriptions.Item label="Class">
-              {student?.current_grade_level?.name}, {student?.current_section?.name}
+              {student?.current_grade_level?.name},{" "}
+              {student?.current_section?.name}
             </Descriptions.Item>
             <Descriptions.Item label="Roll">
               {invoice?.collect_fee?.admission?.roll}
@@ -113,7 +128,12 @@ const InvoiceView = ({ record }: { record: string }) => {
           </Descriptions>
         </Col>
         <Col span={12}>
-          <Descriptions title="Payment Summary" column={1} bordered size="small">
+          <Descriptions
+            title="Payment Summary"
+            column={1}
+            bordered
+            size="small"
+          >
             <Descriptions.Item label="Total Amount">
               <Text strong>৳{invoice?.total_amount?.toFixed(2)}</Text>
             </Descriptions.Item>
@@ -121,7 +141,9 @@ const InvoiceView = ({ record }: { record: string }) => {
               <Text type="success">৳{invoice?.total_paid?.toFixed(2)}</Text>
             </Descriptions.Item>
             <Descriptions.Item label="Payment Date">
-              {dayjs(invoice?.collect_fee?.payment_date)?.format('MMM DD, YYYY')}
+              {dayjs(invoice?.collect_fee?.payment_date)?.format(
+                "MMM DD, YYYY"
+              )}
             </Descriptions.Item>
           </Descriptions>
         </Col>
@@ -148,8 +170,6 @@ const InvoiceView = ({ record }: { record: string }) => {
                   ৳{invoice?.total_paid?.toFixed(2)}
                 </Text>
               </Table.Summary.Cell>
-             
-              
             </Table.Summary.Row>
           </Table.Summary>
         )}

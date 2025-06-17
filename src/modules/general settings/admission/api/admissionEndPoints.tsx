@@ -150,4 +150,5 @@ export const {
   useDeleteAdmissionMutation,
   useCreateAdmissionFeeMutation,
   useCreateNewStudentAdmissionMutation,
+  useLazyGetSingleAdmissionFormQuery
 } = admissionEndPoint;

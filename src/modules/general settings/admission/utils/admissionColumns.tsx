@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { FaFilePdf } from "react-icons/fa6";
 import {
   useDeleteAdmissionMutation,
-  useGetSingleAdmissionFormQuery,
+  useLazyGetSingleAdmissionFormQuery,
 } from "../api/admissionEndPoints";
 import { useEffect, useState } from "react";
 import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
@@ -29,7 +29,6 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     moduleNames.admission,
     actionNames.change
   );
-  const [admissionId, setAdmissionId] = useState<number | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   const [deleteItem] = useDeleteAdmissionMutation();
@@ -48,12 +47,8 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     }
   };
 
-  const { data: singleAdmissionForm } = useGetSingleAdmissionFormQuery(
-    admissionId as number,
-    {
-      skip: admissionId === null,
-    }
-  );
+  const [getAdmissionForm, { data: singleAdmissionForm }] =
+    useLazyGetSingleAdmissionFormQuery();
 
   useEffect(() => {
     if (singleAdmissionForm) {
@@ -70,7 +65,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
   }, [singleAdmissionForm]);
 
   const handleForm = (id: number) => {
-    setAdmissionId(id);
+    getAdmissionForm(id);
   };
   // const renderBreakdownList = (items: any) =>
   //   items?.length

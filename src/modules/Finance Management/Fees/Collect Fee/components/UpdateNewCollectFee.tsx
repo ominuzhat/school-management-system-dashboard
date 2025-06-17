@@ -281,7 +281,7 @@ const UpdateNewCollectFee = () => {
                   {admissionData?.data?.results?.map((data: any) => (
                     <Select.Option key={data?.id} value={data?.id}>
                       {data?.student?.first_name} {data?.student?.last_name} (
-                      {data?.registration_number}) - {data?.session?.name}
+                      {data?.student?.user?.username})
                     </Select.Option>
                   ))}
                 </Select>

@@ -15,9 +15,7 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useCreateAdmissionFeeMutation } from "../../api/admissionEndPoints";
 import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";
-import { useGetShiftQuery } from "../../../shift/api/shiftEndPoints";
-import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
-import { useGetSectionQuery } from "../../../Section/api/sectionEndPoints";
+import { useGetClassesBigListQuery } from "../../../classes/api/classesEndPoints";
 import { useGetSubjectsQuery } from "../../../subjects/api/subjectsEndPoints";
 import { IAdmission } from "../../type/admissionType";
 import { IClasses } from "../../../classes/type/classesType";
@@ -45,6 +43,9 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
   const gradeLevel = AntForm.useWatch("grade_level", form);
   const feeType = AntForm.useWatch("fee_type", form);
   const customFees = AntForm.useWatch("customFees", form);
+  const shift = AntForm.useWatch("shift", form);
+  const [selectedClass, setSelectedClass] = useState<any>({});
+  const [selectedShift, setSelectedShift] = useState<any>({});
 
   const allValues = Form.useWatch([], form);
 
@@ -85,14 +86,23 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
     useGetAdmissionSessionQuery({
       status: "open",
     });
-  const { data: shiftData, isFetching: isFetchingShifts } = useGetShiftQuery(
-    {}
-  );
-  const { data: classData, isFetching: isFetchingClasses } = useGetClassesQuery(
-    {}
-  );
-  const { data: sectionData, isFetching: isFetchingSections } =
-    useGetSectionQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
+
+  // ----------------------
+  const { data: classData, isFetching: isFetchingClasses } =
+    useGetClassesBigListQuery({});
+
+  useEffect(() => {
+    const findClass =
+      Array.isArray(classData?.data) &&
+      classData?.data?.find((e: any) => e.id === gradeLevel);
+    setSelectedClass(findClass);
+
+    const findSection = findClass?.shifts?.find((e: any) => e.id === shift);
+    setSelectedShift(findSection);
+  }, [classData?.data, gradeLevel, shift]);
+
+  // ________________________
+
   const {
     data: subjectData,
     isFetching: isFetchingSubjects,
@@ -269,12 +279,23 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
                   placeholder="Select class"
                   onChange={(value) => {
                     setSelectedSubjects([]);
-                    form.setFieldsValue({ subjects: [], section: undefined });
+                    form.setFieldsValue({
+                      subjects: [],
+                      section: undefined,
+                      shift: undefined,
+                    });
+
                     dispatch(
-                      updateAdmissionField({
-                        field: "grade_level",
-                        value,
-                      })
+                      updateAdmissionField({ field: "grade_level", value })
+                    );
+                    dispatch(
+                      updateAdmissionField({ field: "subjects", value: [] })
+                    );
+                    dispatch(
+                      updateAdmissionField({ field: "section", value: null })
+                    );
+                    dispatch(
+                      updateAdmissionField({ field: "shift", value: null })
                     );
                   }}
                 >
@@ -287,6 +308,67 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
                 </Select>
               </Form.Item>
             </Col>
+
+            {/* Shift Selection */}
+            {gradeLevel && (
+              <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                <Form.Item<IAdmission>
+                  label="Shift"
+                  name="shift"
+                  rules={[{ required: true, message: "Please select a shift" }]}
+                >
+                  <Select
+                    placeholder="Select shift"
+                    onChange={(value) =>
+                      dispatch(
+                        updateAdmissionField({
+                          field: "shift",
+                          value,
+                        })
+                      )
+                    }
+                  >
+                    {selectedClass?.shifts?.map((shift: any) => (
+                      <Option key={shift.id} value={shift.id}>
+                        {shift.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
+
+            {/* Section (conditionally rendered) */}
+            {gradeLevel && (
+              <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                <Form.Item<IAdmission>
+                  label="Section"
+                  name="section"
+                  rules={[
+                    { required: true, message: "Please select a section" },
+                  ]}
+                >
+                  <Select
+                    placeholder="Select section"
+                    onChange={(value) =>
+                      dispatch(
+                        updateAdmissionField({
+                          field: "section",
+                          value,
+                        })
+                      )
+                    }
+                  >
+                    {Array.isArray(selectedShift?.sections) &&
+                      selectedShift.sections.map((s: any) => (
+                        <Option key={s.section.id} value={s.section.id}>
+                          {s.section.name} (Capacity: {s.section.capacity})
+                        </Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
 
             {/* Roll Number */}
             <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
@@ -302,68 +384,6 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
                     )
                   }
                 />
-              </Form.Item>
-            </Col>
-
-            {/* Section (conditionally rendered) */}
-            {gradeLevel && (
-              <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-                <Form.Item<IAdmission>
-                  label="Section"
-                  name="section"
-                  rules={[
-                    { required: true, message: "Please select a section" },
-                  ]}
-                >
-                  <Select
-                    loading={isFetchingSections}
-                    placeholder="Select section"
-                    onChange={(value) =>
-                      dispatch(
-                        updateAdmissionField({
-                          field: "section",
-                          value,
-                        })
-                      )
-                    }
-                  >
-                    {Array.isArray(sectionData?.data) &&
-                      sectionData?.data?.map((section: any) => (
-                        <Option key={section.id} value={section.id}>
-                          {section.name}
-                        </Option>
-                      ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-            )}
-
-            {/* Shift Selection */}
-            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-              <Form.Item<IAdmission>
-                label="Shift"
-                name="shift"
-                rules={[{ required: true, message: "Please select a shift" }]}
-              >
-                <Select
-                  loading={isFetchingShifts}
-                  placeholder="Select shift"
-                  onChange={(value) =>
-                    dispatch(
-                      updateAdmissionField({
-                        field: "shift",
-                        value,
-                      })
-                    )
-                  }
-                >
-                  {Array.isArray(shiftData?.data) &&
-                    shiftData?.data?.map((shift: any) => (
-                      <Option key={shift.id} value={shift.id}>
-                        {shift.name}
-                      </Option>
-                    ))}
-                </Select>
               </Form.Item>
             </Col>
 
