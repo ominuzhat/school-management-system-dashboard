@@ -1,38 +1,53 @@
 import { Col, Input, Row, Select, Form as AntForm } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import { useCreateAccountMutation } from "../api/accountEndPoints";
-import { ICreateAccount } from "../types/accountTypes";
 import { useEffect } from "react";
 import { MdAccountBalance } from "react-icons/md";
 import { CiMobile3 } from "react-icons/ci";
 import { BsCash } from "react-icons/bs";
+import { FaCreditCard } from "react-icons/fa6";
 
 const accountTypes = [
   {
     value: "bank",
     label: "Bank Account",
-    color: "#4CAF50", // Green
+    color: "#4CAF50",
     icon: <MdAccountBalance />,
   },
   {
     value: "mfs",
     label: "MFS Account",
-    color: "#2196F3", // Blue
+    color: "#2196F3",
     icon: <CiMobile3 />,
   },
-
   {
     value: "cash",
     label: "Cash",
-    color: "#7AE2CF", // Purple
+    color: "#7AE2CF",
     icon: <BsCash />,
   },
-  // {
-  //   value: "shurjoPay",
-  //   label: "ShurjoPay",
-  //   color: "#00809D", // Orange
-  //   icon: <FaCreditCard />,
-  // },
+  {
+    value: "shurjoPay",
+    label: "ShurjoPay",
+    color: "#00809D",
+    icon: <FaCreditCard />,
+  },
+];
+
+const mfsAccountTypeChoices = [
+  ["bkash", "Bkash Mobile Banking"],
+  ["rocket", "Rocket"],
+  ["mycash", "My Cash"],
+  ["upay", "Upay"],
+  ["islami_bank_mcash", "Islami Bank mCash"],
+  ["ok_wallet", "OK Wallet"],
+  ["first_cash", "FirstCash"],
+  ["rupali_bank", "Rupali Bank"],
+  ["tele_cash", "TeleCash"],
+  ["islamic_wallet", "Islamic Wallet"],
+  ["meghna_pay", "Meghna Pay"],
+  ["nagad", "Nagad"],
+  ["wallet", "Wallet"],
 ];
 
 const { Option } = Select;
@@ -40,23 +55,33 @@ const { Option } = Select;
 const CreateAccount = () => {
   const [create, { isLoading, isSuccess }] = useCreateAccountMutation();
   const [form] = AntForm.useForm();
-  const accountType = AntForm.useWatch("account_type", form);
+  const accountType = AntForm.useWatch("type", form);
 
-  console.log(accountType);
-
-  const onFinish = (values: any): void => {
+  const onFinish = (values: any) => {
     create(values);
   };
 
+  // ✅ Set default type on mount
   useEffect(() => {
-    form.setFieldsValue({ account_type: accountTypes[0].value });
+    form.setFieldsValue({ type: accountTypes[0].value });
   }, [form]);
 
+  // ✅ Reset all fields except `type` when type changes
+  useEffect(() => {
+    if (accountType) {
+      const currentType = accountType;
+      form.resetFields();
+      form.setFieldsValue({ type: currentType });
+    }
+  }, [accountType, form]);
+
+  // ✅ Reset form after successful submit
   useEffect(() => {
     if (isSuccess) {
       form.resetFields();
+      form.setFieldsValue({ type: accountTypes[0].value });
     }
-  }, [form, isSuccess]);
+  }, [isSuccess, form]);
 
   return (
     <div>
@@ -74,20 +99,15 @@ const CreateAccount = () => {
                 key={account.value}
                 xs={24}
                 sm={12}
-                md={8}
-                lg={8}
+                md={6}
                 className="transition-all duration-300"
               >
                 <div
-                  onClick={() =>
-                    form.setFieldsValue({ account_type: account.value })
-                  }
-                  className={`border-2 p-4 rounded-lg cursor-pointer hover:shadow-md flex flex-col h-full transition-all duration-300 ${
-                    isSelected ? "" : ""
-                  }`}
+                  onClick={() => form.setFieldsValue({ type: account.value })}
+                  className={`border-2 p-4 rounded-lg cursor-pointer hover:shadow-md flex flex-col h-full transition-all duration-300`}
                   style={{
-                    borderColor: isSelected ? account.color : ``,
-                    backgroundColor: isSelected ? `${account.color}10` : ``,
+                    borderColor: isSelected ? account.color : "",
+                    backgroundColor: isSelected ? `${account.color}10` : "",
                   }}
                 >
                   <div
@@ -96,16 +116,16 @@ const CreateAccount = () => {
                   >
                     {account.icon}
                   </div>
-                  <p className="text-lg font-medium ">{account.label}</p>
+                  <p className="text-lg font-medium">{account.label}</p>
                 </div>
               </Col>
             );
           })}
         </Row>
 
-        {/* Hidden Select to retain form field value and validation */}
+        {/* Hidden field for validation */}
         <Form.Item
-          name="account_type"
+          name="type"
           rules={[{ required: true, message: "Please select an account type" }]}
           className="hidden"
         >
@@ -118,220 +138,164 @@ const CreateAccount = () => {
           </Select>
         </Form.Item>
 
+        {/* --- BANK ACCOUNT FIELDS --- */}
         {accountType === "bank" && (
           <Row gutter={16}>
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
+            <Col span={12}>
+              <Form.Item
                 label="Bank Name"
-                name="balance"
-                rules={[{ required: true, message: "Bank Name is required!" }]}
+                name="account_type"
               >
-                <Input placeholder="Bank Name" />
+                <Input placeholder="e.g. BRAC Visa" />
               </Form.Item>
             </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
+            <Col span={12}>
+              <Form.Item
                 label="Account Name"
-                name="balance"
+                name="account_name"
                 rules={[
                   { required: true, message: "Account Name is required!" },
                 ]}
               >
-                <Input placeholder="Account Name" />
+                <Input placeholder="John Doe" />
               </Form.Item>
             </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
+            <Col span={12}>
+              <Form.Item
                 label="Account Number"
-                name="balance"
+                name="account_or_merchant_number"
                 rules={[
                   { required: true, message: "Account Number is required!" },
                 ]}
               >
-                <Input placeholder="Account Number" />
+                <Input placeholder="1234567890" />
               </Form.Item>
             </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
+            <Col span={12}>
+              <Form.Item
                 label="Branch Name"
-                name="balance"
+                name="branch_name"
                 rules={[
                   { required: true, message: "Branch Name is required!" },
                 ]}
               >
-                <Input placeholder="Branch Name" />
+                <Input placeholder="Gulshan Branch" />
               </Form.Item>
             </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount> label="Routing Number" name="balance">
-                <Input placeholder="Routing Number" />
+            <Col span={12}>
+              <Form.Item label="Routing Number" name="routing_number_or_apikey">
+                <Input placeholder="123456789" />
               </Form.Item>
             </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount> label="Balance" name="balance">
-                <Input addonBefore="৳" placeholder="Balance" type="number" />
+            <Col span={12}>
+              <Form.Item
+                label="Balance"
+                name="balance"
+                rules={[{ required: true, message: "Balance is required!" }]}
+              >
+                <Input addonBefore="৳" type="number" placeholder="50000.00" />
               </Form.Item>
             </Col>
           </Row>
         )}
 
+        {/* --- MFS ACCOUNT FIELDS --- */}
         {accountType === "mfs" && (
           <Row gutter={16}>
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
+            <Col span={12}>
+              <Form.Item
                 label="MFS Name"
-                name="balance"
+                name="account_type"
                 rules={[{ required: true, message: "MFS Name is required!" }]}
               >
-                <Select
-                  placeholder="Select MFS"
-                  showSearch
-                  optionFilterProp="children"
-                >
-                  <Select.Option value="Rocket">
-                    ROCKET — Dutch-Bangla Bank PLC.
-                  </Select.Option>
-                  <Select.Option value="bKash">
-                    bKash — bKash LTD.
-                  </Select.Option>
-                  <Select.Option value="MYCash">
-                    MYCash — Mercantile Bank PLC.
-                  </Select.Option>
-                  <Select.Option value="mCash">
-                    Islami Bank mCash — Islami Bank Bangladesh PLC.
-                  </Select.Option>
-                  <Select.Option value="tap">
-                    Trust Axiata Pay (tap) — Trust Axiata Digital PLC.
-                  </Select.Option>
-                  <Select.Option value="FirstCash">
-                    FirstCash — First Security Islami Bank PLC.
-                  </Select.Option>
-                  <Select.Option value="Upay">
-                    Upay — UCB Fintech Company PLC.
-                  </Select.Option>
-                  <Select.Option value="OK Wallet">
-                    OK Wallet — One Bank PLC.
-                  </Select.Option>
-                  <Select.Option value="Rupali Bank">
-                    Rupali Bank — Rupali Bank PLC.
-                  </Select.Option>
-                  <Select.Option value="TeleCash">
-                    TeleCash — Southeast Bank PLC.
-                  </Select.Option>
-                  <Select.Option value="Islamic Wallet">
-                    Islamic Wallet — Al-Arafah Islami Bank PLC.
-                  </Select.Option>
-                  <Select.Option value="Meghna Pay">
-                    Meghna Pay — Meghna Bank PLC.
-                  </Select.Option>
-                  <Select.Option value="Nagad">Nagad</Select.Option>
+                <Select placeholder="Select MFS">
+                  {mfsAccountTypeChoices.map(([value, label]) => (
+                    <Option key={value} value={value}>
+                      {label}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
-                label="MFS Type"
-                name="balance"
-                rules={[{ required: true, message: "MFS type is required!" }]}
-              >
-                <Select
-                  placeholder="Select MFS type"
-                  showSearch
-                  optionFilterProp="children"
-                >
-                  <Select.Option value="personal">Personal</Select.Option>
-                  <Select.Option value="merchant">Merchant</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
-                label="Account Name"
-                name="balance"
-                rules={[
-                  { required: true, message: "Account Name is required!" },
-                ]}
-              >
-                <Input placeholder="Account Name" />
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
+            <Col span={12}>
+              <Form.Item
                 label="Account Number"
-                name="balance"
+                name="account_or_merchant_number"
                 rules={[
                   { required: true, message: "Account Number is required!" },
                 ]}
               >
-                <Input placeholder="Account Number" />
+                <Input placeholder="e.g. 01712345678" />
               </Form.Item>
             </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
-                label="Branch Name"
+            <Col span={12}>
+              <Form.Item
+                label="Balance"
                 name="balance"
-                rules={[
-                  { required: true, message: "Branch Name is required!" },
-                ]}
+                rules={[{ required: true, message: "Balance is required!" }]}
               >
-                <Input placeholder="Branch Name" />
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount> label="Balance" name="balance">
-                <Input addonBefore="৳" placeholder="Balance" type="number" />
+                <Input addonBefore="৳" type="number" placeholder="25000.00" />
               </Form.Item>
             </Col>
           </Row>
         )}
 
+        {/* --- SHURJOPAY FIELDS --- */}
+        {accountType === "shurjoPay" && (
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Merchant ID"
+                name="account_or_merchant_number"
+                rules={[
+                  { required: true, message: "Merchant ID is required!" },
+                ]}
+              >
+                <Input placeholder="merchant_12345" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="API Key"
+                name="routing_number_or_apikey"
+                rules={[{ required: true, message: "API Key is required!" }]}
+              >
+                <Input placeholder="ssl_api_key_abcdef123456" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Gateway URL"
+                name="gateway_url"
+                rules={[
+                  { required: true, message: "Gateway URL is required!" },
+                ]}
+              >
+                <Input placeholder="https://securepay.sslcommerz.com" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Balance"
+                name="balance"
+                rules={[{ required: true, message: "Balance is required!" }]}
+              >
+                <Input addonBefore="৳" type="number" placeholder="0.00" />
+              </Form.Item>
+            </Col>
+          </Row>
+        )}
+
+        {/* --- CASH FIELDS --- */}
         {accountType === "cash" && (
           <Row gutter={16}>
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount>
-                label="Account Name"
-                name="balance"
-                rules={[
-                  { required: true, message: "Account Name is required!" },
-                ]}
-              >
-                <Input placeholder="Account Name" />
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item<ICreateAccount> label="Balance" name="balance">
-                <Input
-                  addonBefore="৳"
-                  placeholder="Balance"
-                  type="number"
-                />
+            <Col span={12}>
+              <Form.Item label="Balance" name="balance">
+                <Input addonBefore="৳" type="number" placeholder="3000.00" />
               </Form.Item>
             </Col>
           </Row>
         )}
-
-        {/* <Row gutter={[16, 16]}>
-          <Col lg={24}>
-            <Form.Item<ICreateAccount>
-              label="Balance"
-              name="balance"
-              rules={[{ required: true, message: "Balance is required!" }]}
-            >
-              <Input placeholder="Balance" type="number" />
-            </Form.Item>
-          </Col>
-        </Row> */}
       </Form>
     </div>
   );

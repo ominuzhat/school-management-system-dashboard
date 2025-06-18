@@ -9,10 +9,7 @@ import {
   Form,
 } from "antd";
 import {
-  ExclamationCircleOutlined,
   CheckCircleOutlined,
-  UsergroupAddOutlined,
-  UsergroupDeleteOutlined,
   PlusOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
@@ -30,7 +27,7 @@ import { useGetClassesBigListQuery } from "../../classes/api/classesEndPoints";
 import { IClasses } from "../../classes/type/classesType";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import UpdateClass from "../../classes/components/UpdateClass";
-import { MdFilterTiltShift } from "react-icons/md";
+import { MdFilterTiltShift, MdOutlineSubject } from "react-icons/md";
 import { Table } from "../../../../common/CommonAnt";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
 import { IGetShift } from "../../shift/type/shiftTypes";
@@ -49,6 +46,8 @@ import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
 import useSectionColumns from "../../Section/utils/SectionColumns";
 import CreateSection from "../../Section/components/CreateSection";
 import { debounce } from "lodash";
+import { GrShift } from "react-icons/gr";
+import { BsSignIntersectionSide } from "react-icons/bs";
 
 const ClassManagement = () => {
   const dispatch = useDispatch();
@@ -67,16 +66,16 @@ const ClassManagement = () => {
     data: shiftList,
     isFetching,
     refetch,
-  } = useGetShiftQuery({
+  } = useGetShiftQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
   });
-  const { data: getSubjectsData, isLoading } = useGetSubjectsQuery({
+  const { data: getSubjectsData, isLoading } = useGetSubjectsQuery<any>({
     grade_level: gradeLevel,
     page_size: 900,
     page: Number(page) || undefined,
   });
-  const { data: getSectionData } = useGetSectionQuery({
+  const { data: getSectionData } = useGetSectionQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
   });
@@ -176,13 +175,13 @@ const ClassManagement = () => {
           <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 h-full">
             <Statistic
               title={<span className="text-yellow-100">Sections</span>}
-              value={"0"}
+              value={getSectionData?.data?.length}
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",
                 fontWeight: "bold",
               }}
-              prefix={<ExclamationCircleOutlined className="text-yellow-100" />}
+              prefix={<BsSignIntersectionSide className="text-yellow-100" />}
             />
           </Card>
         </Col>
@@ -190,27 +189,27 @@ const ClassManagement = () => {
           <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 h-full">
             <Statistic
               title={<span className="text-blue-100">Subjects</span>}
-              value={"0"}
+              value={getSubjectsData?.data?.length}
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",
                 fontWeight: "bold",
               }}
-              prefix={<UsergroupAddOutlined className="text-blue-100" />}
+              prefix={<MdOutlineSubject className="text-blue-100" />}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
           <Card className="bg-gradient-to-r from-purple-500 to-violet-500 text-white border-0 h-full">
             <Statistic
-              title={<span className="text-purple-100">Due Students</span>}
-              value={"0"}
+              title={<span className="text-purple-100">Shift</span>}
+              value={shiftList?.data?.length}
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",
                 fontWeight: "bold",
               }}
-              prefix={<UsergroupDeleteOutlined className="text-purple-100" />}
+              prefix={<GrShift className="text-purple-100" />}
             />
           </Card>
         </Col>

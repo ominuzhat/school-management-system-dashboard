@@ -66,6 +66,8 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
 
   const allValues = Form.useWatch([], form);
 
+  console.log(newStudentData?.admission?.student, "newStudentData");
+
   useEffect(() => {
     const validate = async () => {
       try {
@@ -530,9 +532,21 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
         className="[&_.ant-modal-header]:border-b-0 [&_.ant-modal-header]:py-4 [&_.ant-modal-header]:px-6 [&_.ant-modal-body]:px-6 [&_.ant-modal-body]:pb-6"
       >
         <div className="mb-6">
-          <p className="text-base mb-6 text-gray-600">
-            What would you like to do next with this admission?
-          </p>
+          <div className="mb-6 p-4 bg-gray-50 rounded-md border border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-800 mb-1">
+              Hi,
+              <span className="ml-1 text-blue-600">
+                {newStudentData?.admission?.student?.first_name}{" "}
+                {newStudentData?.admission?.student?.last_name}
+              </span>
+              <span className="ml-2 text-sm text-gray-500">
+                ({newStudentData?.admission?.student?.user?.username})
+              </span>
+            </h2>
+            <p className="text-base text-gray-600">
+              What would you like to do next with this admission?
+            </p>
+          </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {/* Print Button */}

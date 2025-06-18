@@ -47,22 +47,71 @@ const useAccountColumns = (): ColumnsType<any> => {
       align: "center",
       render: (_text, _record, index) => index + 1,
     },
+ 
     {
-      key: "1",
+      key: "2",
+      title: "Type",
+      dataIndex: "type",
+      align: "center",
+      render: (type) => type ? capitalize(type) : "N/A",
+    },
+    {
+      key: "3",
       title: "Account Type",
       dataIndex: "account_type",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      render: (val) => val ? capitalize(val) : "N/A",
     },
     {
-      key: "2",
+      key: "4",
+      title: "Account/Merchant Number",
+      dataIndex: "account_or_merchant_number",
+      align: "center",
+      render: (val) => val ?? "N/A",
+    },
+    {
+      key: "5",
+      title: "Account Name",
+      dataIndex: "account_name",
+      align: "center",
+      render: (val) => val ?? "N/A",
+    },
+    {
+      key: "6",
+      title: "Bank Name",
+      dataIndex: "bank_name",
+      align: "center",
+      render: (val) => val ?? "N/A",
+    },
+    {
+      key: "7",
+      title: "Branch Name",
+      dataIndex: "branch_name",
+      align: "center",
+      render: (val) => val ?? "N/A",
+    },
+    {
+      key: "8",
+      title: "Routing Number/API Key",
+      dataIndex: "routing_number_or_apikey",
+      align: "center",
+      render: (val) => val ?? "N/A",
+    },
+    {
+      key: "9",
+      title: "Gateway URL",
+      dataIndex: "gateway_url",
+      align: "center",
+      render: (val) => val ?? "N/A",
+    },
+    {
+      key: "10",
       title: "Balance",
       dataIndex: "balance",
       align: "center",
       render: (balance: number) => {
         const isPositive = Number(balance) > 0;
         const color = isPositive ? "green" : "red";
-
         return (
           <Tag color={color}>
             {balance !== null && balance !== undefined ? balance : "N/A"}
@@ -70,7 +119,6 @@ const useAccountColumns = (): ColumnsType<any> => {
         );
       },
     },
-
     {
       title: "Actions",
       align: "center",
@@ -89,14 +137,11 @@ const useAccountColumns = (): ColumnsType<any> => {
             />
           )}
 
-          {/* <ViewButton to={`student-view/1`} />
-           */}
-
           {deletePermission && (
             <DeleteButton
-              disabled
+              disabled={false}
               onConfirm={() => handleDelete(record.id)}
-            ></DeleteButton>
+            />
           )}
         </Space>
       ),
