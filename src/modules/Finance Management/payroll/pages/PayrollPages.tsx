@@ -51,7 +51,6 @@ const PayrollPage = () => {
 
   return (
     <div className="space-y-5">
-  
       <Card>
         <Row justify="space-between">
           {createPermission && (

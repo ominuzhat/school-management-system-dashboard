@@ -52,13 +52,13 @@ const Form = <T extends Store>({
   return (
     <AntForm form={form} layout="vertical" onFinish={handleSubmit} {...rest}>
       {children}
-      <AntForm.Item>
+      <AntForm.Item className="flex items-center justify-end">
         <Button
           type="primary"
           htmlType="submit"
           loading={isLoading}
           icon={<Iconify name="iconamoon:send-fill" />}
-          className="mt-5 w-40"
+          className="mt-5 w-52 h-14 font-bold"
         >
           {buttonLabel}
         </Button>

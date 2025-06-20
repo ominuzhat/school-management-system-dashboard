@@ -84,7 +84,7 @@ const AdmissionPage = () => {
                     icon={<PlusOutlined />}
                     className="w-full"
                   >
-                     Admission
+                    Admission
                   </Button>
                 </Col>
                 <Col lg={12}>

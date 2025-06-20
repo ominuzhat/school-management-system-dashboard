@@ -22,13 +22,15 @@ import {
 import { CommonPaymentMethod } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useGetAdditionalFeesQuery } from "../../Additional Fee/api/additionalFeeEndPoints";
 import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
-import { Link, useParams } from "react-router-dom";
-import { MdOutlineArrowRightAlt } from "react-icons/md";
+import { useNavigate, useParams } from "react-router-dom";
 import { TbCoinTaka } from "react-icons/tb";
+import { FaArrowAltCircleLeft } from "react-icons/fa";
 
 const { Title, Text } = Typography;
 
 const UpdateCollectFee = () => {
+  const navigate = useNavigate();
+
   const [form] = AntForm.useForm();
   const { collectFeeId } = useParams();
   const [finalDueAmount, setFinalDueAmount] = useState<number | null>(null);
@@ -149,16 +151,14 @@ const UpdateCollectFee = () => {
 
   return (
     <div className="p-6">
-      <div className="text-center  pb-5">
-        <Title level={3} className="">
-          Update Collect Fees
-        </Title>
-        <Link
-          to={"/collect-fee/list"}
-          className="flex items-center justify-center  gap-2 text-blue-600"
+      <div className="text-center pb-5">
+        <Title level={3}>Collect Fees</Title>
+        <p
+          onClick={() => navigate("/finance")}
+          className="border w-fit flex items-center justify-start gap-2 text-white cursor-pointer px-4 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 transition-all duration-300"
         >
-          Go To Collect Fee List <MdOutlineArrowRightAlt />
-        </Link>
+          <FaArrowAltCircleLeft /> Back
+        </p>
       </div>
       <Form
         form={form}

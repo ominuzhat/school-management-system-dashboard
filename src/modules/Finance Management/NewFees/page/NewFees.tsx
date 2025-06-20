@@ -102,26 +102,22 @@
 // export default TabComponent;
 
 import { useState } from "react";
-import {
-  FaFileAlt,
-  FaCreditCard,
-  FaArrowDown,
-  FaArrowUp,
-} from "react-icons/fa";
+import { FaCreditCard, FaArrowUp } from "react-icons/fa";
 // import BasicOverview from "../components/Home/BasicOverview";
 import { PaymentFee } from "../components/FinanceTab/PaymentFee";
-import { ExpenseTracking } from "../components/FinanceTab/Expense";
 import { AccountTransfer } from "../components/FinanceTab/TransferFee";
-import AccountList from "../components/FinanceTab/Account";
-import { MdAccountBalanceWallet } from "react-icons/md";
+import { MdAccountBalanceWallet, MdOutlineReceiptLong } from "react-icons/md";
 import CollectFeeTab from "../components/FinanceTab/collectFeeComponents/CollectFeeTab";
+import AccountTab from "../components/FinanceTab/AccountTab";
+import { FaArrowsSpin } from "react-icons/fa6";
+import CashManagementTab from "../components/FinanceTab/CashManagementTab";
 
 const tabs = [
   // { key: "overview", label: "ওভারভিউ", icon: <FaChartPie /> },
-  { key: "fees", label: "Collect Fee", icon: <FaFileAlt /> },
+  { key: "fees", label: "Fee", icon: <MdOutlineReceiptLong /> },
   { key: "payments", label: "Payroll", icon: <FaCreditCard /> },
-  { key: "expenses", label: "Cash Management", icon: <FaArrowDown /> },
-  { key: "transfers", label: "Transfer", icon: <FaArrowUp /> },
+  { key: "expenses", label: "Cash Management", icon: <FaArrowUp /> },
+  { key: "transfers", label: "Transfer", icon: <FaArrowsSpin /> },
   { key: "account", label: "Account", icon: <MdAccountBalanceWallet /> },
   // { key: "ledger", label: "খাতা", icon: <FaSitemap /> },
 ];
@@ -157,9 +153,9 @@ const TabComponent = () => {
       <div>
         {activeTab === "fees" && <CollectFeeTab />}
         {activeTab === "payments" && <PaymentFee />}
-        {activeTab === "expenses" && <ExpenseTracking />}
+        {activeTab === "expenses" && <CashManagementTab />}
         {activeTab === "transfers" && <AccountTransfer />}
-        {activeTab === "account" && <AccountList />}
+        {activeTab === "account" && <AccountTab />}
       </div>
     </div>
   );

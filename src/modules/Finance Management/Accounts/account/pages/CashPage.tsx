@@ -1,26 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Card, Tag, Row, Col, Statistic } from "antd";
+import { Card, Table, Col, Row, Tag, Statistic } from "antd";
 import {
   ArrowUpOutlined,
+  ArrowDownOutlined,
   WalletOutlined,
   BankOutlined,
 } from "@ant-design/icons";
 import { useAppSelector } from "../../../../../app/store";
 import { FilterState } from "../../../../../app/features/filterSlice";
 import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import useTransactionColumns from "../../../Accounts/Transaction/utils/transactionColumns";
 import { GetPermission } from "../../../../../utilities/permission";
 import {
   actionNames,
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
+import { useGetTransactionQuery } from "../../../Accounts/Transaction/api/transactionEndPoints";
+import { IGetTransaction } from "../../../Accounts/Transaction/types/transactionTypes";
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
-import CreateAccount from "../../../Accounts/account/components/CreateAccount";
-import useAccountColumns from "../../../Accounts/account/utils/accountColumns";
-import { useGetAccountQuery } from "../../../Accounts/account/api/accountEndPoints";
-import { IGetAccount } from "../../../Accounts/account/types/accountTypes";
-import { Table } from "../../../../../common/CommonAnt";
 
-const AccountList = () => {
+const CashPage = () => {
   const accounts = [
     {
       id: 1,
@@ -59,34 +58,25 @@ const AccountList = () => {
   const { page_size, page } = useAppSelector(FilterState);
 
   const { data: dashboardData } = useGetDashboardDataQuery({});
-  const columns = useAccountColumns();
+  const columns = useTransactionColumns();
 
   const viewPermission = GetPermission(
     dashboardData?.data?.permissions,
-    moduleNames.account,
+    moduleNames.transaction,
     actionNames.view
   );
-  const createPermission = GetPermission(
-    dashboardData?.data?.permissions,
-    moduleNames.account,
-    actionNames.add
-  );
-  const {
-    data: accountList,
-    isLoading,
-    isFetching,
-    refetch,
-  } = useGetAccountQuery({
+
+  const { data: transactionList } = useGetTransactionQuery({
     page_size: page_size,
     page: Number(page) || undefined,
+    account__type: "cash",
   });
 
-  const dataLength = (accountList?.data as IGetAccount[] | any)?.length ?? 0;
+  const dataSource =
+    (transactionList?.data?.results as IGetTransaction[] | undefined) ?? [];
 
-  const dataSource = (accountList?.data as IGetAccount[] | undefined) ?? [];
   return (
-    <div className="space-y-6">
-      {/* Account Overview */}
+    <div>
       <Row gutter={[16, 16]}>
         {accounts.map((account) => (
           <Col key={account.id} xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
@@ -120,47 +110,58 @@ const AccountList = () => {
         ))}
       </Row>
 
-      <Row gutter={[16, 16]}>
-        {/* Account Form */}
-        {createPermission && (
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
-            <Card
-              className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
-              title={
-                <div className="flex items-center">
-                  <ArrowUpOutlined className="text-blue-600 mr-2" />
-                  <span>Quick Account</span>
+      {viewPermission ? (
+        <Card
+          className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
+          title="Transfer History"
+        >
+          <Table
+            columns={columns}
+            dataSource={dataSource}
+            rowKey="id"
+            size="middle"
+            scroll={{ x: true }}
+            pagination={{ pageSize: 10 }}
+            expandable={{
+              expandedRowRender: (record) => (
+                <div className="p-4 bg-gray-50 rounded">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                    <div className="flex items-center">
+                      <ArrowUpOutlined className="text-red-500 mr-2" />
+                      <div>
+                        <p className="text-sm font-medium">From</p>
+                        <p className="text-sm">
+                          {record.account?.account_type}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <ArrowDownOutlined className="text-green-500 mr-2" />
+                      <div>
+                        <p className="text-sm font-medium">To</p>
+                        <p className="text-sm">
+                          {record.target_account?.account_type}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-sm">
+                    <p>
+                      <span className="font-medium">Purpose:</span>{" "}
+                      {record.description}
+                    </p>
+                  </div>
                 </div>
-              }
-            >
-              <CreateAccount />
-            </Card>
-          </Col>
-        )}
-
-        {/* Account History */}
-        {viewPermission ? (
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
-            <Card
-              className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
-              title="Accounts"
-            >
-              <Table
-                rowKey={"id"}
-                loading={isLoading || isFetching}
-                refetch={refetch}
-                total={dataLength}
-                dataSource={dataSource}
-                columns={columns}
-              />
-            </Card>
-          </Col>
-        ) : (
-          <NoPermissionData />
-        )}
-      </Row>
+              ),
+              rowExpandable: () => true,
+            }}
+          />
+        </Card>
+      ) : (
+        <NoPermissionData />
+      )}
     </div>
   );
 };
 
-export default AccountList;
+export default CashPage;

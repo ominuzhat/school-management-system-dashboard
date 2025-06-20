@@ -62,7 +62,7 @@ const AdmissionSessionPage = () => {
         <BreadCrumb />
       </div>
       <Card>
-        <Row  gutter={[10, 10]} className="flex items-center" >
+        <Row gutter={[10, 10]} className="flex items-center">
           {createPermission && (
             <Col lg={2} xs={24}>
               <Button

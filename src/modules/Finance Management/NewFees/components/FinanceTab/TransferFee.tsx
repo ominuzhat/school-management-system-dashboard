@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Card, Table, Tag, Row, Col, Statistic } from "antd";
+import { Card, Table, Tag, Row, Col, Statistic, Tabs } from "antd";
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
@@ -19,6 +19,7 @@ import { useGetTransactionQuery } from "../../../Accounts/Transaction/api/transa
 import { IGetTransaction } from "../../../Accounts/Transaction/types/transactionTypes";
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 import CreateTransaction from "../../../Accounts/Transaction/components/CreateTransaction";
+import CreateFundTransfer from "../../../Accounts/Transaction/components/CreateFundTransfer";
 
 export const AccountTransfer = () => {
   const accounts = [
@@ -119,24 +120,26 @@ export const AccountTransfer = () => {
       <Row gutter={[16, 16]}>
         {/* Transfer Form */}
         {createPermission && (
-          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Card
               className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
               title={
-                <div className="flex items-center">
-                  <ArrowUpOutlined className="text-blue-600 mr-2" />
-                  <span>Quick Transfer</span>
-                </div>
+                <Tabs defaultActiveKey="internal">
+                  <Tabs.TabPane tab="Internal Transfer" key="internal">
+                    <CreateTransaction />
+                  </Tabs.TabPane>
+                  <Tabs.TabPane tab="Create Fund Transfer Request" key="fund">
+                    <CreateFundTransfer />
+                  </Tabs.TabPane>
+                </Tabs>
               }
-            >
-              <CreateTransaction />
-            </Card>
+            ></Card>
           </Col>
         )}
 
         {/* Transfer History */}
         {viewPermission ? (
-          <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Card
               className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
               title="Transfer History"

@@ -1,9 +1,11 @@
-import { Button, Card, Col, Row } from "antd";
-import { useDispatch } from "react-redux";
-import { PlusOutlined } from "@ant-design/icons";
+import { Card, Col, Row, Statistic, Tag } from "antd";
+import {
+  ArrowUpOutlined,
+  BankOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
+
 import { useGetAccountQuery } from "../api/accountEndPoints";
-import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
-import { showModal } from "../../../../../app/features/modalSlice";
 import useAccountColumns from "../utils/accountColumns";
 import { IGetAccount } from "../types/accountTypes";
 import CreateAccount from "../components/CreateAccount";
@@ -19,7 +21,40 @@ import {
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 
 const AccountPage = () => {
-  const dispatch = useDispatch();
+  const accounts = [
+    {
+      id: 1,
+      name: "Main School Account",
+      type: "Current",
+      balance: 567890,
+      bank: "State Bank",
+      accountNo: "****1234",
+    },
+    {
+      id: 2,
+      name: "Fee Collection Account",
+      type: "Savings",
+      balance: 245680,
+      bank: "HDFC Bank",
+      accountNo: "****5678",
+    },
+    {
+      id: 3,
+      name: "Emergency Fund",
+      type: "Savings",
+      balance: 150000,
+      bank: "ICICI Bank",
+      accountNo: "****9012",
+    },
+    {
+      id: 4,
+      name: "Petty Cash Account",
+      type: "Current",
+      balance: 25000,
+      bank: "Axis Bank",
+      accountNo: "****3456",
+    },
+  ];
 
   const { page_size, page } = useAppSelector(FilterState);
 
@@ -55,10 +90,85 @@ const AccountPage = () => {
 
   return (
     <div className="space-y-5">
-      <div className="my-5">
+      {/* <div className="my-5">
         <BreadCrumb />
-      </div>
-      <Card>
+      </div> */}
+
+      {/* Account Overview */}
+      <Row gutter={[16, 16]}>
+        {accounts.map((account) => (
+          <Col key={account.id} xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
+            <Card className="bg-gradient-to-br from-white to-blue-50 border-blue-200 hover:shadow-lg transition-all duration-300 h-full">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <WalletOutlined className="text-blue-600" />
+                  <Tag>{account.type}</Tag>
+                </div>
+                <BankOutlined className="text-gray-400" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-1">
+                {account.name}
+              </h3>
+              <Statistic
+                value={account.balance}
+                prefix="₹"
+                valueStyle={{
+                  color: "#2563eb",
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                }}
+                className="mb-2"
+              />
+              <div className="text-xs text-gray-500">
+                <p>{account.bank}</p>
+                <p>{account.accountNo}</p>
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+
+      <Row gutter={[16, 16]}>
+        {/* Account Form */}
+        {createPermission && (
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
+            <Card
+              className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
+              title={
+                <div className="flex items-center">
+                  <ArrowUpOutlined className="text-blue-600 mr-2" />
+                  <span>Quick Account</span>
+                </div>
+              }
+            >
+              <CreateAccount />
+            </Card>
+          </Col>
+        )}
+
+        {/* Account History */}
+        {viewPermission ? (
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
+            <Card
+              className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
+              title="Accounts"
+            >
+              <Table
+                rowKey={"id"}
+                loading={isLoading || isFetching}
+                refetch={refetch}
+                total={dataLength}
+                dataSource={dataSource}
+                columns={columns}
+              />
+            </Card>
+          </Col>
+        ) : (
+          <NoPermissionData />
+        )}
+      </Row>
+
+      {/* <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           {createPermission && (
             <Col lg={4} xs={24}>
@@ -80,8 +190,8 @@ const AccountPage = () => {
             </Col>
           )}
         </Row>
-      </Card>
-
+      </Card> */}
+      {/* 
       {viewPermission ? (
         <Table
           rowKey={"id"}
@@ -93,7 +203,7 @@ const AccountPage = () => {
         />
       ) : (
         <NoPermissionData />
-      )}
+      )} */}
     </div>
   );
 };

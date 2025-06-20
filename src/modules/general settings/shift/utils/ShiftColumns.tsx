@@ -140,7 +140,7 @@ const useShiftColumns = (
 
             {isAssigned && selectedClassData?.id && (
               <Button
-              type="default"
+                type="default"
                 className="bg-green-600 text-white"
                 onClick={() =>
                   dispatch(
@@ -224,7 +224,7 @@ const useShiftColumns = (
                   }
                 }}
               >
-               <MdDelete />
+                <MdDelete />
               </Button>
             ),
           },

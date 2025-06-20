@@ -14,8 +14,6 @@ const CreateTransaction = () => {
   const accountId = AntForm.useWatch("account", form);
   const transactionType = AntForm.useWatch("transaction_type", form);
 
-  console.log(transactionType, "transactionType");
-
   const onFinish = (values: any): void => {
     create(values);
   };

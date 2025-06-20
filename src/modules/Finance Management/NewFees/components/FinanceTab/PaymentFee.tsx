@@ -10,7 +10,7 @@ import PaymentPage from "../../../payment/pages/PaymentPage";
 export const PaymentFee = () => {
   const tabs = [
     { key: "payroll", label: "Payroll", icon: <FaFileAlt /> },
-    { key: "payment", label: "Payment", icon: <FaCreditCard /> },
+    { key: "payment", label: "Payroll Payment", icon: <FaCreditCard /> },
   ];
 
   const [activeTab, setActiveTab] = useState("payroll");

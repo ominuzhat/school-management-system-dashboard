@@ -122,7 +122,6 @@ const StudentsPage = () => {
                   className="w-full"
                   placeholder="Class"
                   allowClear
-                
                   onChange={(value) =>
                     setFilters((prev) => ({
                       ...prev,
@@ -145,7 +144,6 @@ const StudentsPage = () => {
                   className="w-full"
                   placeholder="Section"
                   allowClear
-
                   onChange={(value) =>
                     setFilters((prev) => ({
                       ...prev,

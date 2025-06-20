@@ -64,8 +64,8 @@ const useTransactionColumns = (): ColumnsType<any> => {
       title: "Transaction Type",
       dataIndex: "transaction_type",
       align: "center",
-      render: (type: string) => {
-        const lowerType = type?.toLowerCase();
+      render: (type: string | null) => {
+        const lowerType = type?.toLowerCase?.() || null;
 
         let color = "default";
         if (lowerType === "credit") color = "green";

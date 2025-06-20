@@ -19,8 +19,6 @@ const CreateCash = () => {
   const { data: accountList } = useGetAccountQuery({});
   const [form] = AntForm.useForm();
 
-  //   const accountId = AntForm.useWatch("account", form);
-
   const onFinish = (values: any): void => {
     const results = {
       ...values,
@@ -45,27 +43,29 @@ const CreateCash = () => {
         isSuccess={isSuccess}
       >
         <Row gutter={[16, 16]}>
-          <Col lg={24}>
+          <Col lg={10}>
             <Form.Item<ICreateCash>
               label="Select Account "
               name="account"
               rules={[{ required: true, message: "Account is required!" }]}
             >
               <Select
-                placeholder="Select Account "
+                placeholder="Select Account"
                 className="w-full"
                 allowClear
               >
                 {Array.isArray(accountList?.data) &&
                   accountList?.data?.map((account: any) => (
                     <Select.Option key={account?.id} value={account?.id}>
-                      {account?.account_type} - ({account?.balance})
+                      {account?.type} - {account?.account_name}{" "}
+                      {account?.account_type} -{" "}
+                      {account?.account_or_merchant_number} ({account?.balance})
                     </Select.Option>
                   ))}
               </Select>
             </Form.Item>
-          </Col>
-          <Col lg={12}>
+          </Col>{" "}
+          <Col lg={10}>
             <Form.Item<ICreateCash>
               label="Payment Method"
               name="payment_method"
@@ -80,6 +80,20 @@ const CreateCash = () => {
                   </Select.Option>
                 ))}
               </Select>
+            </Form.Item>
+          </Col>
+          <Col lg={4}>
+            <Form.Item<ICreateCash>
+              label="Date"
+              name="date"
+              initialValue={dayjs()}
+            >
+              <DatePicker
+                placeholder="Select Date"
+                format="YYYY-MM-DD"
+                className="w-full"
+                suffixIcon={<CalendarOutlined />}
+              />
             </Form.Item>
           </Col>
           <Col lg={12}>
@@ -110,21 +124,6 @@ const CreateCash = () => {
               />
             </Form.Item>
           </Col>
-          <Col lg={12}>
-            <Form.Item<ICreateCash>
-              label="Date"
-              name="date"
-              initialValue={dayjs()}
-            >
-              <DatePicker
-                placeholder="Select Date"
-                format="YYYY-MM-DD"
-                className="w-full"
-                suffixIcon={<CalendarOutlined />}
-              />
-            </Form.Item>
-          </Col>
-
           <Col lg={24}>
             <Form.Item<ICreateCash>
               label="Description"

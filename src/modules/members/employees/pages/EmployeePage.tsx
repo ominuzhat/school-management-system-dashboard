@@ -99,17 +99,16 @@ const EmployeePage = () => {
               >
                 Add Employee
               </Button>
-
             </Col>
           )}
-              <Col lg={10}>
-                <p
-                  onClick={() => navigate("/department")}
-                  className="w-fit  underline text-blue-400  cursor-pointer"
-                >
-                  Manage Department
-                </p>
-              </Col>
+          <Col lg={10}>
+            <p
+              onClick={() => navigate("/department")}
+              className="w-fit  underline text-blue-400  cursor-pointer"
+            >
+              Manage Department
+            </p>
+          </Col>
 
           <Col lg={6} xs={24}>
             <SearchComponent

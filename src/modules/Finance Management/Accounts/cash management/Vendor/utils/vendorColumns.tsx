@@ -1,0 +1,107 @@
+import type { ColumnsType } from "antd/es/table";
+import { Space } from "antd";
+import { useDispatch } from "react-redux";
+import { useGetDashboardDataQuery } from "../../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../../utilities/permissionConstant";
+import EditButton from "../../../../../../common/CommonAnt/Button/EditButton";
+import { showModal } from "../../../../../../app/features/modalSlice";
+import UpdateVendor from "../Components/UpdateVendor";
+
+const useVendorColumns = (): ColumnsType<any> => {
+  const dispatch = useDispatch();
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const updatePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.financialentry,
+    actionNames.change
+  );
+
+  // const [deleteCartItem] = useDeleteOrderItemMutation();
+
+  // const handleDelete = async (id: any) => {
+  //   try {
+  //     await deleteCartItem({ id }).unwrap();
+  //     console.log("Item deleted successfully");
+  //   } catch (error) {
+  //     console.error("Failed to delete item:", error);
+  //   }
+  // };
+
+  return [
+    {
+      key: "0",
+      title: "SL",
+      align: "center",
+      render: (_text, _record, index) => index + 1,
+    },
+    {
+      key: "1",
+      title: "Vendor Name",
+      dataIndex: "name",
+      align: "center",
+      render: (text) => text || "N/A",
+    },
+    {
+      key: "2",
+      title: "Contact Number",
+      dataIndex: "contact_number",
+      align: "center",
+      render: (text) => text || "N/A",
+    },
+    {
+      key: "3",
+      title: "Email",
+      dataIndex: "email",
+      align: "center",
+      render: (text) => text || "N/A",
+    },
+    {
+      key: "4",
+      title: "Address",
+      dataIndex: "address",
+      align: "center",
+      render: (text) => text || "N/A",
+    },
+    {
+      key: "5",
+      title: "Purpose",
+      dataIndex: "purpose",
+      align: "center",
+      render: (text) => text || "N/A",
+    },
+
+    {
+      title: "Actions",
+      align: "center",
+      render: (record) => (
+        <Space>
+          {updatePermission && (
+            <EditButton
+              onClick={() =>
+                dispatch(
+                  showModal({
+                    title: "Update Cash",
+                    content: <UpdateVendor record={record?.id} />,
+                  })
+                )
+              }
+            />
+          )}
+
+          {/* <ViewButton to={`student-view/1`} /> */}
+          {/* <DeleteButton
+          onClick={() => handleDelete(record.id)}>
+            Delete
+          </DeleteButton> */}
+        </Space>
+      ),
+    },
+  ];
+};
+
+export default useVendorColumns;

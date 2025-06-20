@@ -47,20 +47,20 @@ const useAccountColumns = (): ColumnsType<any> => {
       align: "center",
       render: (_text, _record, index) => index + 1,
     },
- 
+
     {
       key: "2",
       title: "Type",
       dataIndex: "type",
       align: "center",
-      render: (type) => type ? capitalize(type) : "N/A",
+      render: (type) => (type ? capitalize(type) : "N/A"),
     },
     {
       key: "3",
       title: "Account Type",
       dataIndex: "account_type",
       align: "center",
-      render: (val) => val ? capitalize(val) : "N/A",
+      render: (val) => (val ? capitalize(val) : "N/A"),
     },
     {
       key: "4",

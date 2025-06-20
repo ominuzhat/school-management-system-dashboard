@@ -50,6 +50,9 @@ export const TagTypes = {
   CASH: "Cash",
   CLAIM: "Claim",
   INVOICE: "Invoice",
+  VENDOR: "Vendor",
+  VENDOR_ENTRY: "Vendor_Entry",
+  INVOICE_ENTRY: "Invoice_Entry",
 } as const;
 
 export type TagType = (typeof TagTypes)[keyof typeof TagTypes];

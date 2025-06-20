@@ -26,9 +26,121 @@ const transactionENdPoints = api.injectEndpoints({
       ],
     }),
 
+    getPendingTransaction: builder.query<
+      ApiResponse<PaginatedResponse<IGetTransaction[]>>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "/api/v1.0/accounts/transactions/pending-requests/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.TRANSACTION,
+          id: TagTypes.TRANSACTION + "_ID",
+        },
+      ],
+    }),
+
+    createFundTransaction: builder.mutation<
+      ApiResponse<ICreateTransaction>,
+      any
+    >({
+      query: (data) => ({
+        url: "/api/v1.0/accounts/transactions/request-transfer/",
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.TRANSACTION,
+          id: TagTypes.TRANSACTION + "_ID",
+        },
+        {
+          type: TagTypes.ACCOUNT,
+          id: TagTypes.ACCOUNT + "_ID",
+        },
+      ],
+    }),
+
     createTransaction: builder.mutation<ApiResponse<ICreateTransaction>, any>({
       query: (data) => ({
         url: "/api/v1.0/accounts/transactions/",
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.TRANSACTION,
+          id: TagTypes.TRANSACTION + "_ID",
+        },
+        {
+          type: TagTypes.ACCOUNT,
+          id: TagTypes.ACCOUNT + "_ID",
+        },
+      ],
+    }),
+
+    createTransferApproval: builder.mutation<
+      ApiResponse<ICreateTransaction>,
+      any
+    >({
+      query: ({ id, data }) => ({
+        url: `/api/v1.0/accounts/transactions/${id}/approve-transfer/`,
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.TRANSACTION,
+          id: TagTypes.TRANSACTION + "_ID",
+        },
+        {
+          type: TagTypes.ACCOUNT,
+          id: TagTypes.ACCOUNT + "_ID",
+        },
+      ],
+    }),
+
+    createTransferReject: builder.mutation<
+      ApiResponse<ICreateTransaction>,
+      any
+    >({
+      query: ({ id, data }) => ({
+        url: `/api/v1.0/accounts/transactions/${id}/reject_transfer/`,
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.TRANSACTION,
+          id: TagTypes.TRANSACTION + "_ID",
+        },
+        {
+          type: TagTypes.ACCOUNT,
+          id: TagTypes.ACCOUNT + "_ID",
+        },
+      ],
+    }),
+
+    createTransactionApproval: builder.mutation<
+      ApiResponse<ICreateTransaction>,
+      any
+    >({
+      query: ({ id, data }) => ({
+        url: `/api/v1.0/accounts/transactions/${id}/approve-transaction/`,
         method: "POST",
         body: data,
       }),
@@ -90,4 +202,9 @@ export const {
   useCreateTransactionMutation,
   useUpdateTransactionMutation,
   useGetSingleTransactionQuery,
+  useCreateTransactionApprovalMutation,
+  useGetPendingTransactionQuery,
+  useCreateFundTransactionMutation,
+  useCreateTransferApprovalMutation,
+  useCreateTransferRejectMutation,
 } = transactionENdPoints;

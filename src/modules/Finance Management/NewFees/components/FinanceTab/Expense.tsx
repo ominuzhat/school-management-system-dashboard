@@ -128,13 +128,13 @@ export const ExpenseTracking = () => {
 
       <Row gutter={[16, 16]}>
         {createPermission && (
-          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Card
               className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
               title={
                 <div className="flex items-center">
                   <ArrowUpOutlined className="text-blue-600 mr-2" />
-                  <span>Quick Cash Management</span>
+                  <span>Quick Income & Expense</span>
                 </div>
               }
             >
@@ -144,9 +144,9 @@ export const ExpenseTracking = () => {
         )}
 
         {/* Expense List */}
-        <Col xs={24} lg={16}>
+        <Col xs={24} lg={24}>
           <Card
-            title="Daily Cash Tracking"
+            title="Daily Income & Expense"
             className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
           >
             {/* <div className="mb-6">

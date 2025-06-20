@@ -27,8 +27,8 @@ const accountTypes = [
     icon: <BsCash />,
   },
   {
-    value: "shurjoPay",
-    label: "ShurjoPay",
+    value: "surjopay",
+    label: "Shurjopay",
     color: "#00809D",
     icon: <FaCreditCard />,
   },
@@ -144,9 +144,10 @@ const CreateAccount = () => {
             <Col span={12}>
               <Form.Item
                 label="Bank Name"
-                name="account_type"
+                name="bank_name"
+                rules={[{ required: true, message: "Bank Name is required!" }]}
               >
-                <Input placeholder="e.g. BRAC Visa" />
+                <Input placeholder="e.g. BRAC Bank" />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -241,7 +242,7 @@ const CreateAccount = () => {
         )}
 
         {/* --- SHURJOPAY FIELDS --- */}
-        {accountType === "shurjoPay" && (
+        {accountType === "surjopay" && (
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item

@@ -247,7 +247,6 @@ const CreateOldStudent = () => {
           </Title>
 
           <Row gutter={[16, 16]}>
-            
             {/* Session Selection */}
             <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission>
@@ -341,7 +340,7 @@ const CreateOldStudent = () => {
 
             {/* Student Selection */}
 
-            {session && shift && gradeLevel && section && (
+            {shift && gradeLevel && (
               <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                 <Form.Item<IAdmission>
                   label="Student"

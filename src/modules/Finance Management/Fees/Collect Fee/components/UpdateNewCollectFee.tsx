@@ -3,7 +3,7 @@ import {
   useGetCollectSingleFeesQuery,
   useUpdateCollectFeesMutation,
 } from "../api/collectFeeEndPoints";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Col,
   DatePicker,
@@ -18,7 +18,6 @@ import {
   Button,
 } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
-import { MdOutlineArrowRightAlt } from "react-icons/md";
 import dayjs from "dayjs";
 import { useGetNewCollectFeesQuery } from "../api/collectFeeEndPoints";
 import { debounce } from "lodash";
@@ -28,6 +27,7 @@ import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
 import { TbCoinTaka } from "react-icons/tb";
 import { useGetAdditionalFeesQuery } from "../../Additional Fee/api/additionalFeeEndPoints";
 import { useGetAccountQuery } from "../../../Accounts/account/api/accountEndPoints";
+import { FaArrowAltCircleLeft } from "react-icons/fa";
 
 const { Title } = Typography;
 
@@ -49,6 +49,8 @@ const UpdateNewCollectFee = () => {
     search: search,
     status: "approved",
   });
+
+  console.log(accountList);
 
   const admission = AntForm.useWatch("admission", form);
   const month = AntForm.useWatch("month", form);
@@ -132,7 +134,7 @@ const UpdateNewCollectFee = () => {
               : ""
           }`,
           amount: item.amount,
-          paid_amount: parseInt(item.paid_amount) || 0,
+          paid_amount:  0,
           due_amount: item.due_amount || item.amount - (item.paid_amount || 0),
           one_time: item.one_time || false,
           is_add_on: item.is_add_on || false,
@@ -191,7 +193,7 @@ const UpdateNewCollectFee = () => {
       .unwrap()
       .then(() => {
         message.success("Fee collected successfully!");
-        navigate("/collect-fee/list");
+        navigate("/finance");
       })
       .catch(() => {
         message.error("Failed to collect fee. Please try again.");
@@ -219,12 +221,12 @@ const UpdateNewCollectFee = () => {
     <div className="p-6">
       <div className="text-center pb-5">
         <Title level={3}>Collect Fees</Title>
-        <Link
-          to={"/collect-fee/list"}
-          className="flex items-center justify-center gap-2 text-blue-600"
+        <p
+          onClick={() => navigate("/finance")}
+          className="border w-fit flex items-center justify-start gap-2 text-white cursor-pointer px-4 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 transition-all duration-300"
         >
-          Go To Collect Fee List <MdOutlineArrowRightAlt />
-        </Link>
+          <FaArrowAltCircleLeft /> Back
+        </p>
       </div>
 
       <Form
@@ -367,9 +369,11 @@ const UpdateNewCollectFee = () => {
                   {Array.isArray(accountList?.data) &&
                     accountList?.data?.map((account: any) => (
                       <Select.Option key={account?.id} value={account?.id}>
-                        {account?.account_type} ({account?.balance})
+                     {account?.type=="cash"? `cash (My Account)` : `${account?.type} - ${account?.account_type} (${account?.balance})`}
                       </Select.Option>
                     ))}
+
+                     
                 </Select>
               </Form.Item>
             </Col>
