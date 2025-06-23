@@ -69,7 +69,7 @@ const BankPage = () => {
   const { data: transactionList } = useGetTransactionQuery({
     page_size: page_size,
     page: Number(page) || undefined,
-      account__type: "bank",
+    account__type: "bank",
   });
 
   const dataSource =
@@ -93,7 +93,7 @@ const BankPage = () => {
               </h3>
               <Statistic
                 value={account.balance}
-                prefix="₹"
+                prefix="৳"
                 valueStyle={{
                   color: "#2563eb",
                   fontSize: "24px",

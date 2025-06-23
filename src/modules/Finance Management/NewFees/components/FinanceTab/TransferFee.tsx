@@ -100,7 +100,7 @@ export const AccountTransfer = () => {
               </h3>
               <Statistic
                 value={account.balance}
-                prefix="₹"
+                prefix="৳"
                 valueStyle={{
                   color: "#2563eb",
                   fontSize: "24px",

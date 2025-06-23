@@ -16,7 +16,6 @@ import {
   IoPeopleOutline,
   IoReceiptOutline,
 } from "react-icons/io5";
-import { MdCoPresent } from "react-icons/md";
 import { FaCommentSms, FaRegAddressCard } from "react-icons/fa6";
 import { TbCoinTaka } from "react-icons/tb";
 import { BiSolidInstitution } from "react-icons/bi";
@@ -31,7 +30,6 @@ import {
 } from "react-icons/bs";
 import { FiPenTool } from "react-icons/fi";
 import { FaMapMarkedAlt } from "react-icons/fa";
-import { LuCopyleft } from "react-icons/lu";
 import { useGetDashboardDataQuery } from "../../../modules/Dashboard/api/dashoboardEndPoints";
 import { hasPermissionForModule } from "../../../utilities/permission";
 import { ItemType, MenuItemType } from "antd/es/menu/interface";
@@ -245,11 +243,11 @@ const MenuData: React.FC = () => {
     //   icon: <MdFilterTiltShift />,
     // },
 
-    hasPermissionForModule(permissions, "account") && {
-      key: "/leave",
-      label: <Link to="/leave">Leave</Link>,
-      icon: <LuCopyleft />,
-    },
+    // hasPermissionForModule(permissions, "account") && {
+    //   key: "/leave",
+    //   label: <Link to="/leave">Leave</Link>,
+    //   icon: <LuCopyleft />,
+    // },
     hasPermissionForModule(permissions, "routine") && {
       key: "/routine",
       label: <Link to="/routine">Routine</Link>,
@@ -307,31 +305,44 @@ const MenuData: React.FC = () => {
 
     hasPermissionForModule(permissions, "attendance") &&
       hasPermissionForModule(permissions, "employeeattendance") && {
+        label: <Link to="/attendance">Attendance</Link>,
+        icon: <PiStudent />,
         key: "/attendance",
-        label: "Attendance",
-        icon: <MdCoPresent />,
-        children: [
-          hasPermissionForModule(permissions, "attendance") && {
-            label: (
-              <Link to="/attendance/mark-student-attendance">
-                Students Attendance
-              </Link>
-            ),
-            icon: <PiStudent />,
-            key: "/attendance/mark-student-attendance",
-          },
-
-          hasPermissionForModule(permissions, "employeeattendance") && {
-            label: (
-              <Link to="/attendance/mark-employee-attendance">
-                Employee Attendance
-              </Link>
-            ),
-            icon: <IoPeopleOutline />,
-            key: "/attendance/mark-employee-attendance",
-          },
-        ],
       },
+
+    // hasPermissionForModule(permissions, "attendance") &&
+    //   hasPermissionForModule(permissions, "employeeattendance") && {
+    //     key: "/attendance",
+    //     label: "Attendance",
+    //     icon: <MdCoPresent />,
+
+    // children: [
+    // hasPermissionForModule(permissions, "attendance") && {
+    //   label: <Link to="/attendance">Attendance</Link>,
+    //   icon: <PiStudent />,
+    //   key: "/attendance",
+    // },
+    // hasPermissionForModule(permissions, "attendance") && {
+    //   label: (
+    //     <Link to="/attendance/mark-student-attendance">
+    //       Students Attendance
+    //     </Link>
+    //   ),
+    //   icon: <PiStudent />,
+    //   key: "/attendance/mark-student-attendance",
+    // },
+
+    // hasPermissionForModule(permissions, "employeeattendance") && {
+    //   label: (
+    //     <Link to="/attendance/mark-employee-attendance">
+    //       Employee Attendance
+    //     </Link>
+    //   ),
+    //   icon: <IoPeopleOutline />,
+    //   key: "/attendance/mark-employee-attendance",
+    // },
+    // ],
+    // },
   ].filter(Boolean);
 
   const items: MenuProps["items"] = [

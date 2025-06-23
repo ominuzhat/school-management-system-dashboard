@@ -220,7 +220,7 @@ const CreateVendorEntry = () => {
                 <Input
                   value={`৳ ${amountDue.toLocaleString()}`}
                   disabled
-                  prefix={<MdAttachMoney />}
+                  prefix={<span className="font-medium">৳</span>}
                   className="font-medium"
                 />
               </Form.Item>
@@ -249,6 +249,7 @@ const CreateVendorEntry = () => {
                 <Input
                   value={`৳ ${remainingBalance.toLocaleString()}`}
                   disabled
+                  prefix={<span className="font-medium">৳</span>}
                   className={`font-medium ${
                     remainingBalance > 0 ? "text-red-500" : "text-green-500"
                   }`}

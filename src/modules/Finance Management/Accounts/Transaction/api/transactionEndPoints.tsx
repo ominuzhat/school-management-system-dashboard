@@ -116,7 +116,7 @@ const transactionENdPoints = api.injectEndpoints({
       any
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/accounts/transactions/${id}/reject_transfer/`,
+        url: `/api/v1.0/accounts/transactions/${id}/reject-transfer/`,
         method: "POST",
         body: data,
       }),

@@ -22,7 +22,7 @@ export const PaymentFee = () => {
         <Card className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0">
           <Statistic
             title={<span className="text-green-100">Total Paid</span>}
-            value="₹1,20,000"
+            value="৳1,20,000"
             valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
             // prefix={<DollarOutlined className="text-green-100" />}
           />
@@ -31,7 +31,7 @@ export const PaymentFee = () => {
         <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">
           <Statistic
             title={<span className="text-yellow-100">Amount Pending</span>}
-            value="₹35,400"
+            value="৳35,400"
             valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
             // prefix={<ExclamationCircleOutlined className="text-yellow-100" />}
           />

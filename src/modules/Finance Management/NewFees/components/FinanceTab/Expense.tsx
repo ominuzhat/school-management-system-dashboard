@@ -72,7 +72,7 @@ export const ExpenseTracking = () => {
           <Card className="bg-gradient-to-r from-red-500 to-pink-500 text-white border-0 h-full">
             <Statistic
               title={<span className="text-red-100">Total Expenses</span>}
-              value="₹1,40,000"
+              value="৳1,40,000"
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",
@@ -86,7 +86,7 @@ export const ExpenseTracking = () => {
           <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 h-full">
             <Statistic
               title={<span className="text-yellow-100">This Month</span>}
-              value="₹89,420"
+              value="৳89,420"
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",
@@ -100,7 +100,7 @@ export const ExpenseTracking = () => {
           <Card className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 h-full">
             <Statistic
               title={<span className="text-green-100">Budget Remaining</span>}
-              value="₹10,580"
+              value="৳10,580"
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",
@@ -191,7 +191,7 @@ export const ExpenseTracking = () => {
               <div key={index} className="mb-4">
                 <div className="flex justify-between text-sm mb-1">
                   <span className="font-medium">{item.category}</span>
-                  <span>₹{item.amount.toLocaleString()}</span>
+                  <span>৳{item.amount.toLocaleString()}</span>
                 </div>
                 <Progress
                   percent={item.percentage}

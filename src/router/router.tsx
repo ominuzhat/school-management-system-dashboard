@@ -80,6 +80,7 @@ import NewFees from "../modules/Finance Management/NewFees/page/NewFees";
 import CreateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateNewCollectFee";
 import UpdateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/UpdateNewCollectFee";
 import ClassManagement from "../modules/general settings/class management/page/ClassManagement";
+import AttendanceTab from "../modules/general settings/attendance/overview/pages/AttandenceTab";
 
 const router = createBrowserRouter([
   {
@@ -565,6 +566,10 @@ const router = createBrowserRouter([
         path: "/attendance",
         element: <Accounts />,
         children: [
+          {
+            path: "",
+            element: <AttendanceTab />,
+          },
           {
             path: "mark-student-attendance",
             element: <MarkStudentsAttendance />,
