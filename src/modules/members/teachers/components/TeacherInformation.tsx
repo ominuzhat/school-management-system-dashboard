@@ -27,6 +27,7 @@ const TeacherInformation = ({ data }: { data: any }) => {
     blood_group,
     home_address,
     subject_specializations,
+    shifts,
   } = data || {};
 
   const information = [
@@ -106,6 +107,22 @@ const TeacherInformation = ({ data }: { data: any }) => {
         {
           fieldName: "Home Address",
           text: home_address || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Shifts",
+          text:
+            Array.isArray(shifts) && shifts.length > 0 ? (
+              <>
+                {shifts.map((s: any, idx: number) => (
+                  <Tag color="blue" key={idx}>
+                    {s?.name}
+                  </Tag>
+                ))}
+              </>
+            ) : (
+              "N/A"
+            ),
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],

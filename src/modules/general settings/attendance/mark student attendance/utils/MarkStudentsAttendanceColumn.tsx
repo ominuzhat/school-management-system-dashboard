@@ -1,5 +1,6 @@
-import { Button, Radio, Space } from "antd";
+import { Button, Radio, Space, TimePicker } from "antd";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 
 const useMarkStudentsAttendanceColumns = ({
   attendanceData,
@@ -15,6 +16,9 @@ const useMarkStudentsAttendanceColumns = ({
   const [previousAttendanceData, setPreviousAttendanceData] = useState<any[]>(
     []
   );
+  const [checkInOutMap, setCheckInOutMap] = useState<
+    Record<number, { check_in?: string; check_out?: string }>
+  >({});
 
   useEffect(() => {
     if (
@@ -26,10 +30,23 @@ const useMarkStudentsAttendanceColumns = ({
           student?.status === "not marked"
             ? "present"
             : student?.status || "present";
+
         initialStatusMap[student.admission.id] = status;
+
+        // Initialize check-in/out map
+        setCheckInOutMap((prev) => ({
+          ...prev,
+          [student.admission.id]: {
+            check_in: student.check_in,
+            check_out: student.check_out,
+          },
+        }));
+
         return {
           admission: student.admission.id,
           status: status,
+          check_in: student.check_in,
+          check_out: student.check_out,
         };
       });
 
@@ -59,10 +76,16 @@ const useMarkStudentsAttendanceColumns = ({
     }));
 
     setAdmission((prevData) => {
-      const updatedData = prevData.filter(
-        (item) => item.admission !== recordId
-      );
-      return [...updatedData, { admission: Number(recordId), status: value }];
+      const filtered = prevData.filter((item) => item.admission !== recordId);
+      return [
+        ...filtered,
+        {
+          admission: Number(recordId),
+          status: value,
+          check_in: checkInOutMap[Number(recordId)]?.check_in,
+          check_out: checkInOutMap[Number(recordId)]?.check_out,
+        },
+      ];
     });
   };
 
@@ -73,6 +96,8 @@ const useMarkStudentsAttendanceColumns = ({
       return {
         admission: student.admission.id,
         status: status,
+        check_in: checkInOutMap[student.admission.id]?.check_in,
+        check_out: checkInOutMap[student.admission.id]?.check_out,
       };
     });
 
@@ -123,8 +148,95 @@ const useMarkStudentsAttendanceColumns = ({
       render: (admission: any) => <span>{admission?.section?.name}</span>,
     },
     {
+      title: "Duration",
+      dataIndex: "duration",
+      key: "duration",
+      align: "center",
+      render: (duration: any) => <span>{duration}</span>,
+    },
+    {
+      title: "Check-in",
+      key: "check_in",
+      align: "center",
+      render: (record: any) => {
+        const value =
+          checkInOutMap[record.admission.id]?.check_in || record?.check_in;
+        return (
+          <TimePicker
+            value={value ? dayjs(value, "HH:mm:ss") : null}
+            format="HH:mm:ss"
+            onChange={(time) => {
+              const timeStr = time ? time.format("HH:mm:ss") : undefined;
+              setCheckInOutMap((prev) => ({
+                ...prev,
+                [record.admission.id]: {
+                  ...prev[record.admission.id],
+                  check_in: timeStr,
+                },
+              }));
+
+              setAdmission((prev) => {
+                const filtered = prev.filter(
+                  (item) => item.admission !== record.admission.id
+                );
+                return [
+                  ...filtered,
+                  {
+                    admission: record.admission.id,
+                    status: statusMap[record.admission.id] || "present",
+                    check_in: timeStr,
+                    check_out: checkInOutMap[record.admission.id]?.check_out,
+                  },
+                ];
+              });
+            }}
+          />
+        );
+      },
+    },
+    {
+      title: "Check-out",
+      key: "check_out",
+      align: "center",
+      render: (record: any) => {
+        const value =
+          checkInOutMap[record.admission.id]?.check_out || record?.check_out;
+        return (
+          <TimePicker
+            value={value ? dayjs(value, "HH:mm:ss") : null}
+            format="HH:mm:ss"
+            onChange={(time) => {
+              const timeStr = time ? time.format("HH:mm:ss") : undefined;
+              setCheckInOutMap((prev) => ({
+                ...prev,
+                [record.admission.id]: {
+                  ...prev[record.admission.id],
+                  check_out: timeStr,
+                },
+              }));
+
+              setAdmission((prev) => {
+                const filtered = prev.filter(
+                  (item) => item.admission !== record.admission.id
+                );
+                return [
+                  ...filtered,
+                  {
+                    admission: record.admission.id,
+                    status: statusMap[record.admission.id] || "present",
+                    check_in: checkInOutMap[record.admission.id]?.check_in,
+                    check_out: timeStr,
+                  },
+                ];
+              });
+            }}
+          />
+        );
+      },
+    },
+    {
       title: (
-        <div className="flex items-center justify-center gap-5">
+        <div className="flex items-center justify-center gap-2">
           <Button onClick={() => handleSetAllStatus("present")}>
             All Present
           </Button>
@@ -138,7 +250,7 @@ const useMarkStudentsAttendanceColumns = ({
       width: 400,
       align: "center",
       render: (record: any) => (
-        <Space>
+        <Space >
           <Radio.Group
             onChange={(e) => handleStatusChange(e, record.admission.id)}
             value={statusMap[record.admission?.id] || "present"}

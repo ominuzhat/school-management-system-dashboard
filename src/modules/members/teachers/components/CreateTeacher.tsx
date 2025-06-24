@@ -10,6 +10,7 @@ import {
   Checkbox,
   Divider,
   Typography,
+  Select,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
@@ -24,6 +25,7 @@ import GenderSelect, {
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
 import { useGetClassesBigListQuery } from "../../../general settings/classes/api/classesEndPoints";
+import { useGetShiftQuery } from "../../../general settings/shift/api/shiftEndPoints";
 
 const CreateTeacher = () => {
   const [create, { isLoading, isSuccess }] = useCreateTeacherMutation();
@@ -37,6 +39,8 @@ const CreateTeacher = () => {
       checked ? [...prev, subjectId] : prev.filter((id) => id !== subjectId)
     );
   };
+
+  const { data: shiftData, isLoading: shiftLoading } = useGetShiftQuery({});
 
   const handlePreview = async (file: any) => {
     setPreviewImage(file.thumbUrl || file.url);
@@ -65,6 +69,10 @@ const CreateTeacher = () => {
             }
           });
         }
+      } else if (key === "shifts" && Array.isArray(value)) {
+        value.forEach((subjectId: any) => {
+          formData.append("shifts", subjectId);
+        });
       } else if (key === "hire_date" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
@@ -219,6 +227,37 @@ const CreateTeacher = () => {
                           <Input placeholder="Base Salary." type="number" />
                         </Form.Item>
                       </Col>
+
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                        <Form.Item
+                          label="Shift"
+                          name="shifts"
+                          rules={[
+                            { required: true, message: "Shift is required!" },
+                          ]}
+                        >
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            showSearch
+                            style={{ width: "100%" }}
+                            placeholder={
+                              shiftLoading
+                                ? "Loading Shift..."
+                                : "Please select"
+                            }
+                            options={
+                              (Array?.isArray(shiftData?.data) &&
+                                shiftData?.data?.map((shiftData: any) => ({
+                                  label: shiftData.name,
+                                  value: shiftData.id,
+                                }))) ||
+                              []
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+
                       <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item<any>
                           label="Username"

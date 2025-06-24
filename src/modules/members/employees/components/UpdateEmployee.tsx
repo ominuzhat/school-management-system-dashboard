@@ -27,6 +27,7 @@ import GenderSelect, {
   BloodGroupSelect,
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
+import { useGetShiftQuery } from "../../../general settings/shift/api/shiftEndPoints";
 
 const UpdateEmployee = ({ records }: any) => {
   const [update, { isLoading, isSuccess }] = useUpdateEmployeeMutation();
@@ -34,6 +35,7 @@ const UpdateEmployee = ({ records }: any) => {
   const { data: departmentData } = useGetDepartmentQuery({});
   const [form] = AntForm.useForm();
   const { data: singleEmployeeData } = useGetSingleEmployeeQuery(records?.id);
+  const { data: shiftData, isLoading: shiftLoading } = useGetShiftQuery({});
 
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -60,6 +62,9 @@ const UpdateEmployee = ({ records }: any) => {
 
       form.setFieldsValue({
         ...singleEmployeeData.data,
+        phone_number: singleEmployeeData.data?.phone_number?.replace("880", ""),
+        first_name: singleEmployeeData.data?.first_name || "",
+        shifts: singleEmployeeData?.data?.shifts?.map((s: any) => s?.id),
         hire_date: dayjs(singleEmployeeData.data.hire_date),
         date_of_birth: dayjs(singleEmployeeData.data.date_of_birth),
         username: singleEmployeeData.data?.user?.username,
@@ -91,12 +96,19 @@ const UpdateEmployee = ({ records }: any) => {
               formData.append(key, file.originFileObj);
             }
           });
-        } else {
+        } 
+        else if (key === "shifts") {
+          value.forEach((subjectId: any) => {
+            formData.append("shifts", subjectId);
+          });
+        } 
+        else {
           value.forEach((item) => {
             formData.append(key, item);
           });
         }
-      } else if (key === "hire_date" && value) {
+      }
+       else if (key === "hire_date" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (key === "date_of_birth" && value) {
@@ -260,6 +272,37 @@ const UpdateEmployee = ({ records }: any) => {
                           </Select>
                         </Form.Item>
                       </Col>
+
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                        <Form.Item
+                          label="Shift"
+                          name="shifts"
+                          rules={[
+                            { required: true, message: "Shift is required!" },
+                          ]}
+                        >
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            showSearch
+                            style={{ width: "100%" }}
+                            placeholder={
+                              shiftLoading
+                                ? "Loading Shift..."
+                                : "Please select"
+                            }
+                            options={
+                              (Array?.isArray(shiftData?.data) &&
+                                shiftData?.data?.map((shiftData: any) => ({
+                                  label: shiftData.name,
+                                  value: shiftData.id,
+                                }))) ||
+                              []
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+
                       <Col lg={8}>
                         <Form.Item label="Username" name="username">
                           <Input placeholder="Username" disabled />

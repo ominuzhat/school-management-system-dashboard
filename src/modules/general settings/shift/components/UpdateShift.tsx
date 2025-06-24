@@ -18,6 +18,7 @@ const UpdateShift = ({ record }: any) => {
 
       form.setFieldsValue({
         name: shiftData.name,
+        flexible: shiftData.flexible,
         start_time: dayjs(shiftData.start_time, "HH:mm").format("HH:mm:ss"),
         end_time: dayjs(shiftData.end_time, "HH:mm").format("HH:mm:ss"),
       });
@@ -55,6 +56,11 @@ const UpdateShift = ({ record }: any) => {
             className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
           ></input>
         </Form.Item>
+
+        <Form.Item label="Time In Flexibility" name="flexible">
+          <Input placeholder="Enter Time In Flexibility" type="number" />
+        </Form.Item>
+
         {/* 
         <Form.Item
           label="Shift Time"

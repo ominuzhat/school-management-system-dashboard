@@ -23,11 +23,13 @@ import GenderSelect, {
   BloodGroupSelect,
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
+import { useGetShiftQuery } from "../../../general settings/shift/api/shiftEndPoints";
 
 const CreateEmployee = () => {
   const [create, { isLoading, isSuccess }] = useCreateEmployeeMutation();
   const { data: roleData } = useGetRolePermissionQuery({});
   const { data: departmentData } = useGetDepartmentQuery({});
+  const { data: shiftData, isLoading: shiftLoading } = useGetShiftQuery({});
 
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -63,7 +65,13 @@ const CreateEmployee = () => {
       } else if (key === "hire_date" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
-      } else if (key === "date_of_birth" && value) {
+      } 
+      else if (key === "shifts" && Array.isArray(value)) {
+        value.forEach((subjectId: any) => {
+          formData.append("shifts", subjectId);
+        });
+      }
+       else if (key === "date_of_birth" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (key === "phone_number") {
@@ -74,6 +82,7 @@ const CreateEmployee = () => {
         formData.append(key, value as string | Blob);
       }
     });
+
     const user = {
       username: values.username,
       password: values.password,
@@ -261,6 +270,37 @@ const CreateEmployee = () => {
                           <Input placeholder="Base Salary." type="number" />
                         </Form.Item>
                       </Col>
+
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                        <Form.Item
+                          label="Shift"
+                          name="shifts"
+                          rules={[
+                            { required: true, message: "Shift is required!" },
+                          ]}
+                        >
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            showSearch
+                            style={{ width: "100%" }}
+                            placeholder={
+                              shiftLoading
+                                ? "Loading Shift..."
+                                : "Please select"
+                            }
+                            options={
+                              (Array?.isArray(shiftData?.data) &&
+                                shiftData?.data?.map((shiftData: any) => ({
+                                  label: shiftData.name,
+                                  value: shiftData.id,
+                                }))) ||
+                              []
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+
                       <Col lg={8}>
                         <Form.Item<any>
                           label="Username"
@@ -271,7 +311,7 @@ const CreateEmployee = () => {
                         </Form.Item>
                       </Col>
                       <Col lg={8}>
-                        <PasswordInput isRequired={true}/>
+                        <PasswordInput isRequired={true} />
                       </Col>
 
                       <Col lg={8}>

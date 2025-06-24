@@ -48,6 +48,10 @@ const collectFeeEndPoints = api.injectEndpoints({
             type: TagTypes.COLLECT_FEE,
             id: TagTypes.COLLECT_FEE + "_ID",
           },
+          {
+            type: TagTypes.COLLECT_FEE,
+            id: TagTypes.COLLECT_FEE + "_ID",
+          },
         ],
       }
     ),
@@ -162,5 +166,5 @@ export const {
   useGetNewCollectFeesQuery,
   useCreateNewCollectFeesMutation,
   useCreateClaimFeesMutation,
-  useLazyGetCollectSingleFeesFormQuery
+  useLazyGetCollectSingleFeesFormQuery,
 } = collectFeeEndPoints;

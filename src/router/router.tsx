@@ -80,7 +80,7 @@ import NewFees from "../modules/Finance Management/NewFees/page/NewFees";
 import CreateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/CreateNewCollectFee";
 import UpdateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/UpdateNewCollectFee";
 import ClassManagement from "../modules/general settings/class management/page/ClassManagement";
-import AttendanceTab from "../modules/general settings/attendance/overview/pages/AttandenceTab";
+import AttendanceTab from "../modules/general settings/attendance/Tab/AttandenceTab";
 
 const router = createBrowserRouter([
   {

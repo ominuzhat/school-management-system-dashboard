@@ -33,6 +33,7 @@ import { FaMapMarkedAlt } from "react-icons/fa";
 import { useGetDashboardDataQuery } from "../../../modules/Dashboard/api/dashoboardEndPoints";
 import { hasPermissionForModule } from "../../../utilities/permission";
 import { ItemType, MenuItemType } from "antd/es/menu/interface";
+import { MdCoPresent } from "react-icons/md";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -306,7 +307,7 @@ const MenuData: React.FC = () => {
     hasPermissionForModule(permissions, "attendance") &&
       hasPermissionForModule(permissions, "employeeattendance") && {
         label: <Link to="/attendance">Attendance</Link>,
-        icon: <PiStudent />,
+        icon: <MdCoPresent />,
         key: "/attendance",
       },
 

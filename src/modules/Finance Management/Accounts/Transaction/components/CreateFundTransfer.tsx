@@ -1,4 +1,4 @@
-import { Col, Input, Row, Select, Form as AntForm } from "antd";
+import { Col, Input, Row, Select, Form as AntForm, Card, Statistic } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import {
   useCreateFundTransactionMutation,
@@ -11,11 +11,14 @@ import { useEffect } from "react";
 const CreateFundTransfer = () => {
   const [create, { isLoading, isSuccess }] = useCreateFundTransactionMutation();
   const { data: accountList } = useGetAccountQuery({});
-  const { data: pendingTransactionList } = useGetPendingTransactionQuery<any>(
-    {}
-  );
+  const { data: pendingTransactionList } = useGetPendingTransactionQuery<any>({});
 
-  console.log(pendingTransactionList?.data?.meta.aggregates?.total_amount);
+  const transactionData = pendingTransactionList?.data || {
+    pending_amount: 0,
+    requested_amount: 0,
+    approved_amount: 0,
+    rejected_amount: 0
+  };
 
   const [form] = AntForm.useForm();
 
@@ -34,6 +37,53 @@ const CreateFundTransfer = () => {
 
   return (
     <div>
+      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Pending Amount"
+              value={transactionData.pending_amount}
+              precision={2}
+              valueStyle={{ color: '#faad14' }}
+              prefix={<TbCoinTaka />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Requested Amount"
+              value={transactionData.requested_amount}
+              precision={2}
+              valueStyle={{ color: '#1890ff' }}
+              prefix={<TbCoinTaka />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Approved Amount"
+              value={transactionData.approved_amount}
+              precision={2}
+              valueStyle={{ color: '#52c41a' }}
+              prefix={<TbCoinTaka />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <Card>
+            <Statistic
+              title="Rejected Amount"
+              value={transactionData.rejected_amount}
+              precision={2}
+              valueStyle={{ color: '#ff4d4f' }}
+              prefix={<TbCoinTaka />}
+            />
+          </Card>
+        </Col>
+      </Row>
+
       <Form
         form={form}
         onFinish={onFinish}
@@ -42,14 +92,7 @@ const CreateFundTransfer = () => {
         layout="vertical"
       >
         <Row gutter={[16, 16]}>
-          <div className="">
-            <p
-              className={`border-2 p-4 rounded-lg cursor-pointer hover:shadow-md flex flex-col h-full transition-all duration-300`}
-            >
-              {pendingTransactionList?.data?.meta.aggregates?.total_amount}
-            </p>
-          </div>
-          <Col lg={24}>
+          <Col lg={12}>
             <Form.Item<any>
               label="Transfer To"
               name="target_account_id"
@@ -74,7 +117,7 @@ const CreateFundTransfer = () => {
             </Form.Item>
           </Col>
 
-          <Col lg={24}>
+          <Col lg={12}>
             <Form.Item<any>
               label="Transfer Amount"
               name="amount"

@@ -6,6 +6,7 @@ import {
   Row,
   Select,
   Form as AntForm,
+  Switch,
 } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useGetAdmissionQuery } from "../../admission/api/admissionEndPoints";
@@ -31,7 +32,8 @@ const UpdateLeave = ({ record }: { record: any }) => {
         name: leaveData.name,
         admission: leaveData.admission?.id,
         leave_type: leaveData.leave_type,
-        leave_duration: leaveData.leave_duration || "full_day",
+        is_approved: leaveData.is_approved,
+        leave_duration: leaveData.duration,
         start_date: leaveData.start_date ? dayjs(leaveData.start_date) : null,
         end_date: leaveData.end_date ? dayjs(leaveData.end_date) : null,
         reason: leaveData.reason || "",
@@ -85,13 +87,7 @@ const UpdateLeave = ({ record }: { record: any }) => {
             </Form.Item>
           </Col>
           <Col lg={12}>
-            <Form.Item
-              label="Leave Duration"
-              name="leave_duration"
-              rules={[
-                { required: true, message: "Leave Duration is required!" },
-              ]}
-            >
+            <Form.Item label="Leave Duration" name="leave_duration">
               <Radio.Group>
                 <Radio value="H">Half Day</Radio>
                 <Radio value="F">Full Day</Radio>
@@ -99,12 +95,20 @@ const UpdateLeave = ({ record }: { record: any }) => {
               </Radio.Group>
             </Form.Item>
           </Col>
-          <Col lg={6}>
+          <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
             <Form.Item
-              label="Start Date"
-              name="start_date"
-              rules={[{ required: true, message: "Start Date is required!" }]}
+              label="Status"
+              name="is_approved"
+              valuePropName="checked"
             >
+              <Switch
+                checkedChildren="Approved"
+                unCheckedChildren="Not Approved"
+              />
+            </Form.Item>
+          </Col>
+          <Col lg={6}>
+            <Form.Item label="Start Date" name="start_date">
               <DatePicker style={{ width: "100%" }} />
             </Form.Item>
           </Col>

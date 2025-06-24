@@ -124,7 +124,7 @@ const ApprovalPage = () => {
     page_size: page_size,
     page: Number(page) || undefined,
     approval_status: "requested",
-    transaction_type: "debit",
+    transaction_type: "transfer",
     include_transfer: "1",
   });
   const [createApproval] = useCreateTransferApprovalMutation();
@@ -261,7 +261,7 @@ const ApprovalPage = () => {
                       </Avatar>
                       <div>
                         <p className="font-semibold">
-                          {capitalize(transaction.account?.account_type) || 'N/A'}
+                          {capitalize(transaction.account?.account_name)||capitalize(transaction.account?.type) || 'N/A'}
                         </p>
                         <p className="text-sm text-gray-600">
                           Balance: ৳{transaction.account?.balance || '0'}

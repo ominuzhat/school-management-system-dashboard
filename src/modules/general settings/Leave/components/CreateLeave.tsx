@@ -6,6 +6,7 @@ import {
   Row,
   Select,
   Form as AntForm,
+  Switch,
 } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useGetAdmissionQuery } from "../../admission/api/admissionEndPoints";
@@ -42,10 +43,10 @@ const CreateLeave = () => {
         onFinish={onFinish}
         isLoading={isLoading}
         isSuccess={isSuccess}
-        initialValues={{ leave_duration: "full_day" }}
+        initialValues={{ leave_duration: "full_day", is_approved: true }}
       >
         <Row gutter={[16, 16]}>
-          <Col lg={12}>
+          <Col lg={8}>
             <Form.Item label="Select Admission" name="admission">
               <Select
                 placeholder="Select Admission"
@@ -71,7 +72,7 @@ const CreateLeave = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col lg={12}>
+          <Col lg={8}>
             <Form.Item label="Select Leave Type" name="leave-type">
               <Select placeholder="Select Leave Type" className="w-full">
                 <Select.Option value="Emergency">Emergency Leave</Select.Option>
@@ -81,6 +82,19 @@ const CreateLeave = () => {
                 <Select.Option value="Medical">medical Leave</Select.Option>
                 <Select.Option value="Other">Other</Select.Option>
               </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+            <Form.Item
+              label="Status"
+              name="is_approved"
+              valuePropName="checked"
+              rules={[{ required: true, message: "Status is required!" }]}
+            >
+              <Switch
+                checkedChildren="Approved"
+                unCheckedChildren="Not Approved"
+              />
             </Form.Item>
           </Col>
           <Col lg={12}>

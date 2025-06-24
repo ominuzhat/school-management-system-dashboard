@@ -11,6 +11,7 @@ const CreateShift = () => {
       name: values?.name,
       start_time: dayjs(values.start_time, "HH:mm").format("HH:mm:ss"),
       end_time: dayjs(values.end_time, "HH:mm").format("HH:mm:ss"),
+      flexible: values?.flexible
     });
   };
 
@@ -22,6 +23,7 @@ const CreateShift = () => {
         isSuccess={isSuccess}
         initialValues={{
           name: "",
+          flexible: 10,
         }}
       >
         <Row gutter={[16, 16]}>
@@ -62,6 +64,11 @@ const CreateShift = () => {
                 type="time"
                 className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
               ></input>
+            </Form.Item>
+          </Col>
+          <Col lg={12}>
+            <Form.Item label="Time In Flexibility" name="flexible">
+              <Input placeholder="Enter Time In Flexibility" type="number" />
             </Form.Item>
           </Col>
         </Row>

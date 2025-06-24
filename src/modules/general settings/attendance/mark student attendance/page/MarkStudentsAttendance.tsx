@@ -10,7 +10,6 @@ import {
   Select,
   Table,
 } from "antd";
-import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
 import Iconify from "../../../../../common/IconifyConfig/IconifyConfig";
 import { useState } from "react";
@@ -105,16 +104,18 @@ const MarkStudentsAttendance = () => {
 
   return (
     <div className="space-y-5">
-      <div className="my-5">
+      {/* <div className="my-5">
         <BreadCrumb />
-      </div>
+      </div> */}
       {viewPermission && (
-        <Link to="/attendance/mark-student-attendance-list">
-          <p className="flex items-center gap-2 text-sm sm:text-base md:text-sm lg:text-sm xl:text-sm 2xl:text-sm text-blue-500 p-2 sm:p-3 md:p-2 lg:p-2 xl:p-2 2xl:p-2 cursor-pointer transition-all w-full sm:w-64">
-            View List of Attendance{" "}
-            <MdOutlineArrowRightAlt className="text-xl" />
-          </p>
-        </Link>
+        <div className="w-fit">
+          <Link to="/attendance/mark-student-attendance-list">
+            <p className=" flex items-center gap-2 text-sm sm:text-base md:text-sm lg:text-sm xl:text-sm 2xl:text-sm text-blue-500 p-2 sm:p-3 md:p-2 lg:p-2 xl:p-2 2xl:p-2 cursor-pointer transition-all w-full sm:w-64">
+              View List of Attendance{" "}
+              <MdOutlineArrowRightAlt className="text-xl" />
+            </p>
+          </Link>
+        </div>
       )}
       <Card>
         <Row gutter={[16, 16]} justify="space-between" align="middle">

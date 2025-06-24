@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
@@ -124,6 +124,18 @@ const useLeaveColumns = (): ColumnsType<any> => {
       dataIndex: "reason",
       align: "center",
       render: (title) => (title ? title : "N/A"),
+    },
+    {
+      key: "8",
+      title: "Status",
+      dataIndex: "is_approved",
+      align: "center",
+      render: (isApproved: boolean) =>
+        isApproved ? (
+          <Tag color="green">Approved</Tag>
+        ) : (
+          <Tag color="red">Rejected</Tag>
+        ),
     },
     {
       title: "Actions",
