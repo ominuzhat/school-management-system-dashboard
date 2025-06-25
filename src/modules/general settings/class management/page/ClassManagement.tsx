@@ -189,7 +189,7 @@ const ClassManagement = () => {
           <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 h-full">
             <Statistic
               title={<span className="text-blue-100">Subjects</span>}
-              value={getSubjectsData?.data?.length}
+              value={getSubjectsData?.data?.results.length}
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",

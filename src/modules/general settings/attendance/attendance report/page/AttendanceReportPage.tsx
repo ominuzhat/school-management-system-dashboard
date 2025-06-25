@@ -88,7 +88,6 @@ const AttendanceReportPage = () => {
     date_range_before: dateRange[1]?.format("YYYY-MM-DD"),
   });
 
-  console.log(attendanceReport?.data?.students);
 
   // Handlers
   const handleMonthOnly = (date: dayjs.Dayjs | null) => {
@@ -98,7 +97,7 @@ const AttendanceReportPage = () => {
   return (
     <div>
       <Card>
-        <Row justify="space-between" gutter={[10, 10]}>
+        <Row justify="start" gutter={[6, 6]}>
           <Col lg={4} xs={24}>
             <SearchComponent
               onSearch={(value) => setSearch(value)}
@@ -107,7 +106,7 @@ const AttendanceReportPage = () => {
           </Col>
 
           {/* Session */}
-          <Col xs={12} sm={12} md={8} lg={4} xl={3} xxl={3}>
+          <Col xs={12} sm={12} md={3} lg={3} xl={3} xxl={3}>
             <Select
               className="w-full"
               placeholder="Session"
@@ -126,7 +125,7 @@ const AttendanceReportPage = () => {
           </Col>
 
           {/* Class */}
-          <Col xs={12} sm={12} md={8} lg={4} xl={3} xxl={3}>
+          <Col xs={12} sm={12} md={3} lg={3} xl={3} xxl={3}>
             <Select
               className="w-full"
               placeholder="Class"
@@ -145,7 +144,7 @@ const AttendanceReportPage = () => {
           </Col>
 
           {/* Section */}
-          <Col xs={12} sm={12} md={8} lg={4} xl={3} xxl={3}>
+          <Col xs={12} sm={12} md={3} lg={3} xl={3} xxl={3}>
             <Select
               className="w-full"
               placeholder="Section"
@@ -164,7 +163,7 @@ const AttendanceReportPage = () => {
           </Col>
 
           {/* Shift */}
-          <Col xs={12} sm={12} md={8} lg={4} xl={3} xxl={3}>
+          <Col xs={12} sm={12} md={3} lg={3} xl={3} xxl={3}>
             <Select
               className="w-full"
               placeholder="Shift"
@@ -182,7 +181,7 @@ const AttendanceReportPage = () => {
             </Select>
           </Col>
 
-          <Col lg={6} xs={24}>
+          <Col lg={3} xs={24}>
             <DatePicker
               picker="month"
               onChange={handleMonthOnly}
@@ -193,7 +192,7 @@ const AttendanceReportPage = () => {
             />
           </Col>
 
-          <Col xs={24} sm={24} md={12} lg={8} xl={6} xxl={6}>
+          <Col xs={24} sm={24} md={4} lg={3} xl={3} xxl={4}>
             <RangePicker
               className="w-full"
               onChange={handleDateRange}
