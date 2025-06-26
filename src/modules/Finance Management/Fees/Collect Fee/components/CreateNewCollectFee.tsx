@@ -92,7 +92,10 @@ const CreateNewCollectFee = () => {
   useEffect(() => {
     if (getSingleAdmission?.data) {
       form.setFieldsValue({
-        admission: getSingleAdmission?.data?.id,
+        admission: {
+          value: getSingleAdmission?.data?.id, // this matches Select.Option's `value`
+          label: `${getSingleAdmission?.data?.student?.first_name} ${getSingleAdmission?.data?.student?.last_name} (${getSingleAdmission?.data?.student?.user?.username})`,
+        },
         // admission:
         //   getSingleAdmission?.data?.student?.first_name +
         //   " " +
@@ -153,7 +156,7 @@ const CreateNewCollectFee = () => {
     console.log(values);
 
     const results = {
-      admission: values?.admission,
+      admission: values?.admission?.value,
       add_ons: values?.add_ons,
       discount_type: values?.discount_type,
       discount_value: values?.discount_value,
@@ -271,7 +274,7 @@ const CreateNewCollectFee = () => {
                   optionFilterProp="children"
                 >
                   {admissionData?.data?.results?.map((data: any) => (
-                    <Select.Option key={data?.student.id} value={data?.id}>
+                    <Select.Option key={data?.id} value={data?.id}>
                       {data?.student?.first_name} {data?.student?.last_name} (
                       {data?.student?.user?.username})
                     </Select.Option>
@@ -334,7 +337,9 @@ const CreateNewCollectFee = () => {
                   {Array.isArray(accountList?.data) &&
                     accountList?.data?.map((account: any) => (
                       <Select.Option key={account?.id} value={account?.id}>
-                        {account?.type=="cash"? `cash (My Account)` : `${account?.type} - ${account?.account_type} (${account?.balance})`}
+                        {account?.type == "cash"
+                          ? `cash (My Account)`
+                          : `${account?.type} - ${account?.account_type} (${account?.balance})`}
                       </Select.Option>
                     ))}
                 </Select>

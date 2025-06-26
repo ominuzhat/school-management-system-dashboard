@@ -134,7 +134,7 @@ const UpdateNewCollectFee = () => {
               : ""
           }`,
           amount: item.amount,
-          paid_amount:  0,
+          paid_amount: 0,
           due_amount: item.due_amount || item.amount - (item.paid_amount || 0),
           one_time: item.one_time || false,
           is_add_on: item.is_add_on || false,
@@ -369,11 +369,11 @@ const UpdateNewCollectFee = () => {
                   {Array.isArray(accountList?.data) &&
                     accountList?.data?.map((account: any) => (
                       <Select.Option key={account?.id} value={account?.id}>
-                     {account?.type=="cash"? `cash (My Account)` : `${account?.type} - ${account?.account_type} (${account?.balance})`}
+                        {account?.type == "cash"
+                          ? `cash (My Account)`
+                          : `${account?.type} - ${account?.account_type} (${account?.balance})`}
                       </Select.Option>
                     ))}
-
-                     
                 </Select>
               </Form.Item>
             </Col>
