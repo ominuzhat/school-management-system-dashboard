@@ -81,7 +81,7 @@ const EmployeePage = () => {
         <BreadCrumb />
       </div>
       <Card>
-        <Row justify="space-between" gutter={[10, 10]}>
+        <Row justify="space-between" align="middle" gutter={[10, 10]}>
           {createPermission && (
             <Col lg={4} xs={24}>
               <Button
@@ -101,7 +101,7 @@ const EmployeePage = () => {
               </Button>
             </Col>
           )}
-          <Col lg={10}>
+          <Col lg={13}>
             <p
               onClick={() => navigate("/department")}
               className="w-fit  underline text-blue-400  cursor-pointer"
@@ -168,7 +168,7 @@ const EmployeePage = () => {
                     className="border py-8 px-2 rounded-lg space-y-2"
                   >
                     <img src={no_img} alt="image" className="mx-auto" />
-                    <p> {employee?.id}</p>
+                    <p> {employee?.user.username}</p>
                     <p className="font-serif">
                       {employee?.first_name} {employee?.last_name}
                     </p>

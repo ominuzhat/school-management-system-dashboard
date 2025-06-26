@@ -250,7 +250,7 @@ const useMarkStudentsAttendanceColumns = ({
       width: 400,
       align: "center",
       render: (record: any) => (
-        <Space >
+        <Space>
           <Radio.Group
             onChange={(e) => handleStatusChange(e, record.admission.id)}
             value={statusMap[record.admission?.id] || "present"}

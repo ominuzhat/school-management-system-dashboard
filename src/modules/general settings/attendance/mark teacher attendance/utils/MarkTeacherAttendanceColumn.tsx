@@ -1,5 +1,6 @@
-import { Button, Radio, Space } from "antd";
+import { Button, Radio, Space, TimePicker } from "antd";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 
 const useMarkTeacherAttendanceColumns = ({
   attendanceData,
@@ -15,12 +16,20 @@ const useMarkTeacherAttendanceColumns = ({
   const [previousAttendanceData, setPreviousAttendanceData] = useState<any[]>(
     []
   );
+  const [checkInOutMap, setCheckInOutMap] = useState<
+    Record<string, { [key: string]: string | undefined }>
+  >({});
 
   useEffect(() => {
     if (
       JSON.stringify(attendanceData) !== JSON.stringify(previousAttendanceData)
     ) {
       const initialStatusMap: Record<string, string> = {};
+      const initialCheckInOut: Record<
+        string,
+        { check_in?: string; check_out?: string }
+      > = {};
+
       const initialAdmission = attendanceData
         ?.map((data) => {
           const status =
@@ -29,11 +38,31 @@ const useMarkTeacherAttendanceColumns = ({
               : data?.status || "present";
 
           if (data?.teacher) {
-            initialStatusMap[`teacher-${data?.teacher.id}`] = status;
-            return { teacher: data?.teacher.id, status };
+            const key = `teacher-${data.teacher.id}`;
+            initialStatusMap[key] = status;
+            initialCheckInOut[key] = {
+              check_in: data.check_in,
+              check_out: data.check_out,
+            };
+            return {
+              teacher: data.teacher.id,
+              status,
+              check_in: data.check_in,
+              check_out: data.check_out,
+            };
           } else if (data?.employee) {
-            initialStatusMap[`employee-${data.employee.id}`] = status;
-            return { employee: data.employee.id, status };
+            const key = `employee-${data.employee.id}`;
+            initialStatusMap[key] = status;
+            initialCheckInOut[key] = {
+              check_in: data.check_in,
+              check_out: data.check_out,
+            };
+            return {
+              employee: data.employee.id,
+              status,
+              check_in: data.check_in,
+              check_out: data.check_out,
+            };
           }
 
           return null;
@@ -41,6 +70,7 @@ const useMarkTeacherAttendanceColumns = ({
         .filter(Boolean);
 
       setStatusMap(initialStatusMap);
+      setCheckInOutMap(initialCheckInOut);
       setAdmission(initialAdmission);
       setPreviousAttendanceData(attendanceData);
     }
@@ -64,21 +94,66 @@ const useMarkTeacherAttendanceColumns = ({
     const value = e.target.value;
     const statusKey = `${type}-${recordId}`;
 
-    setStatusMap((prevStatusMap) => ({
-      ...prevStatusMap,
-      [statusKey]: value,
-    }));
+    setStatusMap((prev) => ({ ...prev, [statusKey]: value }));
 
-    setAdmission((prevData) => {
-      const updatedData = prevData.filter(
+    setAdmission((prev) => {
+      const filtered = prev.filter(
         (item) => !(item.teacher === recordId || item.employee === recordId)
       );
 
+      const { check_in, check_out } = checkInOutMap[statusKey] || {};
+
       return [
-        ...updatedData,
+        ...filtered,
         type === "teacher"
-          ? { teacher: recordId, status: value }
-          : { employee: recordId, status: value },
+          ? { teacher: recordId, status: value, check_in, check_out }
+          : { employee: recordId, status: value, check_in, check_out },
+      ];
+    });
+  };
+
+  const handleTimeChange = (
+    time: any,
+    type: "check_in" | "check_out",
+    recordId: number,
+    recordType: "teacher" | "employee"
+  ) => {
+    const key = `${recordType}-${recordId}`;
+    const formattedTime = time ? time.format("HH:mm:ss") : undefined;
+
+    setCheckInOutMap((prev) => ({
+      ...prev,
+      [key]: {
+        ...prev[key],
+        [type]: formattedTime,
+      },
+    }));
+
+    setAdmission((prev) => {
+      const filtered = prev.filter(
+        (item) => !(item.teacher === recordId || item.employee === recordId)
+      );
+
+      const { check_in, check_out } = {
+        ...checkInOutMap[key],
+        [type]: formattedTime,
+      } as { check_in?: string; check_out?: string };
+
+      return [
+        ...filtered,
+        recordType === "teacher"
+          ? {
+              teacher: recordId,
+              status: statusMap[key] || "present",
+              check_in,
+              check_out,
+            }
+          : {
+              employee: recordId,
+              status: statusMap[key] || "present",
+              check_in,
+              check_out,
+            },
       ];
     });
   };
@@ -88,11 +163,23 @@ const useMarkTeacherAttendanceColumns = ({
     const updatedAdmission = attendanceData
       ?.map((data) => {
         if (data?.teacher) {
-          updatedStatusMap[`teacher-${data?.teacher.id}`] = status;
-          return { teacher: data?.teacher.id, status };
+          const key = `teacher-${data.teacher.id}`;
+          updatedStatusMap[key] = status;
+          return {
+            teacher: data.teacher.id,
+            status,
+            check_in: checkInOutMap[key]?.check_in,
+            check_out: checkInOutMap[key]?.check_out,
+          };
         } else if (data?.employee) {
-          updatedStatusMap[`employee-${data.employee.id}`] = status;
-          return { employee: data.employee.id, status };
+          const key = `employee-${data.employee.id}`;
+          updatedStatusMap[key] = status;
+          return {
+            employee: data.employee.id,
+            status,
+            check_in: checkInOutMap[key]?.check_in,
+            check_out: checkInOutMap[key]?.check_out,
+          };
         }
         return null;
       })
@@ -100,18 +187,13 @@ const useMarkTeacherAttendanceColumns = ({
 
     setStatusMap(updatedStatusMap);
     setAdmission(updatedAdmission);
-    setResult({
-      date: formData.date,
-      records: updatedAdmission,
-    });
+    setResult({ date: formData.date, records: updatedAdmission });
   };
 
   return [
     {
       title: "Full Name",
-      dataIndex: "full_name",
-      key: "1",
-      align: "center" as "left" | "right" | "center",
+      align: "center" as const,
       render: (_: any, record: any) =>
         record?.teacher
           ? `${record?.teacher.first_name} ${record?.teacher.last_name}`
@@ -119,33 +201,82 @@ const useMarkTeacherAttendanceColumns = ({
     },
     {
       title: "User Name",
-      dataIndex: "username",
-      key: "2",
-      align: "center" as "left" | "right" | "center",
+      align: "center" as const,
       render: (_: any, record: any) =>
         record?.teacher
-          ? `${record?.teacher?.user?.username} `
-          : `${record?.employee?.user?.username} `,
+          ? `${record?.teacher?.user?.username}`
+          : `${record?.employee?.user?.username}`,
     },
     {
       title: "Role Type",
-      dataIndex: "roll_type",
-      key: "3",
-      align: "center" as "left" | "right" | "center",
+      align: "center" as const,
       render: (_: any, record: any) =>
         record?.teacher
-          ? `${record?.teacher?.user?.role?.name} `
-          : `${record?.employee?.user?.role?.name} `,
+          ? `${record?.teacher?.user?.role?.name}`
+          : `${record?.employee?.user?.role?.name}`,
     },
     {
       title: "Phone Number",
-      dataIndex: "phone_number",
-      key: "4",
-      align: "center" as "left" | "right" | "center",
+      align: "center" as const,
       render: (_: any, record: any) =>
         record?.teacher
-          ? `${record?.teacher?.phone_number} `
-          : `${record?.employee.phone_number} `,
+          ? `${record?.teacher?.phone_number}`
+          : `${record?.employee?.phone_number}`,
+    },
+    {
+      title: "Duration",
+      dataIndex: "duration",
+      key: "duration",
+      align: "center" as const,
+      render: (duration: any) => <span>{duration}</span>,
+    },
+    {
+      title: "Check-in",
+      align: "center" as const,
+      render: (record: any) => {
+        const key = record.teacher
+          ? `teacher-${record.teacher.id}`
+          : `employee-${record.employee.id}`;
+        const value = checkInOutMap[key]?.check_in || record?.check_in;
+        return (
+          <TimePicker
+            value={value ? dayjs(value, "HH:mm:ss") : null}
+            format="HH:mm:ss"
+            onChange={(time) =>
+              handleTimeChange(
+                time,
+                "check_in",
+                record.teacher?.id || record.employee?.id,
+                record.teacher ? "teacher" : "employee"
+              )
+            }
+          />
+        );
+      },
+    },
+    {
+      title: "Check-out",
+      align: "center",
+      render: (record: any) => {
+        const key = record.teacher
+          ? `teacher-${record.teacher.id}`
+          : `employee-${record.employee.id}`;
+        const value = checkInOutMap[key]?.check_out || record?.check_out;
+        return (
+          <TimePicker
+            value={value ? dayjs(value, "HH:mm:ss") : null}
+            format="HH:mm:ss"
+            onChange={(time) =>
+              handleTimeChange(
+                time,
+                "check_out",
+                record.teacher?.id || record.employee?.id,
+                record.teacher ? "teacher" : "employee"
+              )
+            }
+          />
+        );
+      },
     },
     {
       title: (
@@ -159,21 +290,17 @@ const useMarkTeacherAttendanceColumns = ({
           </Button>
           <Button onClick={() => handleSetAllStatus("half")}>All Half</Button>
         </div>
-      ) as React.ReactNode,
-      key: "5",
-      width: 400,
-      align: "center" as "left" | "right" | "center",
+      ),
+      align: "center",
       render: (record: any) => {
-        const recordId = record.teacher
-          ? record?.teacher?.id
-          : record?.employee?.id;
-        const type = record?.teacher ? "teacher" : "employee";
+        const recordId = record.teacher?.id || record.employee?.id;
+        const type = record.teacher ? "teacher" : "employee";
         const statusKey = `${type}-${recordId}`;
 
         return (
           <Space size="middle">
             <Radio.Group
-              value={statusMap[statusKey]}
+              value={statusMap[statusKey] || "present"}
               onChange={(e) => handleStatusChange(e, recordId, type)}
             >
               <Radio value="present">Present</Radio>

@@ -178,7 +178,7 @@ const TeacherPage = () => {
                       className="border py-8 px-2 rounded-lg space-y-2"
                     >
                       <img src={no_img} alt="image" className="mx-auto" />
-                      <p> {teacher?.id}</p>
+                      <p> {teacher?.user.username}</p>
                       <p className="font-serif">
                         {teacher?.first_name} {teacher?.last_name}
                       </p>

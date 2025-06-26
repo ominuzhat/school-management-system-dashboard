@@ -1,5 +1,4 @@
 import { Button, Card, Col, DatePicker, notification, Row, Table } from "antd";
-import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -28,8 +27,7 @@ const MarkTeachersAttendance = () => {
   const [fetchAttendanceData, { data: attendanceData, isLoading }] =
     useLazyGetMarkTeacherAttendanceQuery<any>({});
 
-  // Move hook call to top level
-  const columns = useMarkTeacherAttendanceColumns({
+  const columns: any = useMarkTeacherAttendanceColumns({
     attendanceData: attendanceData?.data?.records || [],
     formData,
     setResult,
@@ -86,9 +84,9 @@ const MarkTeachersAttendance = () => {
 
   return (
     <div className="space-y-5">
-      <div className="my-5">
+      {/* <div className="my-5">
         <BreadCrumb />
-      </div>
+      </div> */}
       {viewPermission && (
         <Link to="/attendance/mark-employee-attendance-list">
           <p
