@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ColumnsType } from "antd/es/table";
 import { Badge, Tooltip } from "antd";
@@ -129,7 +130,7 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
     dataIndex: ['attendances', date],
     align: "center",
     width: 100,
-    render: (attendance: any, record: any) => {
+    render: (attendance: any) => {
       if (!attendance) {
         return (
           <Tooltip 

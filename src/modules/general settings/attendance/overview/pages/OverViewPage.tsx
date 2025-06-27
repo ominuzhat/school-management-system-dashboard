@@ -1,8 +1,8 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Card, Table, Progress, DatePicker, Segmented, Typography } from "antd";
 import { UserOutlined, TeamOutlined, BookOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import type { Dayjs } from "dayjs";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -10,7 +10,6 @@ const { RangePicker } = DatePicker;
 const OverViewPage = () => {
   type UserType = "students" | "teachers" | "employees";
   const [userType, setUserType] = useState<UserType>("students");
-  const [dateRange, setDateRange] = useState<(Dayjs | null)[] | null>(null);
 
   const attendanceData: Record<
     UserType,
@@ -227,7 +226,7 @@ const OverViewPage = () => {
           />
 
           <RangePicker
-            onChange={(dates) => setDateRange(dates)}
+            onChange={(dates) => console.log(dates)}
             style={{
               width: "250px",
               border: "1px solid #dfe6e9",

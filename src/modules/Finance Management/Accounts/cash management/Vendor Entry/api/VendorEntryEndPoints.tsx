@@ -15,7 +15,7 @@ const vendorEntryEndPoints = api.injectEndpoints({
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/accounts/financial-entries/",
+        url: "/api/v1.0/vendors/payments/",
         params,
       }),
       providesTags: [
@@ -28,7 +28,7 @@ const vendorEntryEndPoints = api.injectEndpoints({
 
     createVendorEntry: builder.mutation<ApiResponse<ICreateVendorEntry>, any>({
       query: (data) => ({
-        url: "/api/v1.0/accounts/financial-entries/",
+        url: "/api/v1.0/vendors/payments/",
         method: "POST",
         body: data,
       }),
@@ -52,7 +52,7 @@ const vendorEntryEndPoints = api.injectEndpoints({
       number
     >({
       query: (roleId) => ({
-        url: `/api/v1.0/accounts/financial-entries/${roleId}/`,
+        url: `/api/v1.0/vendors/payments/${roleId}/`,
       }),
 
       providesTags: [
@@ -68,7 +68,7 @@ const vendorEntryEndPoints = api.injectEndpoints({
       { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/accounts/financial-entries/${id}/`,
+        url: `/api/v1.0/vendors/payments/${id}/`,
         method: "PATCH",
         body: data,
       }),

@@ -1,4 +1,4 @@
-import { Space, Tag } from "antd";
+import { Space } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
@@ -14,6 +14,7 @@ import {
 } from "../../../../utilities/permissionConstant";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import { useDeletePaymentMutation } from "../api/paymentEndPoints";
+import dayjs from "dayjs";
 
 const usePaymentColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -64,22 +65,27 @@ const usePaymentColumns = (): ColumnsType<any> => {
         return "N/A";
       },
     },
+
     {
       key: "1",
       title: "Period Date",
       dataIndex: "payroll",
       align: "center",
-      render: (payroll) =>
-        payroll
-          ? payroll?.period_start + " ------- " + payroll?.period_end
+      render: (_, record) =>
+        record
+          ? dayjs(record?.period_start).format("DD MMM YY") +
+            " - " +
+            dayjs(record?.period_end).format("DD MMM YY")
           : "N/A",
+      sorter: (a, b) => a?.period_start.localeCompare(b?.period_start),
     },
     {
       key: "1",
       title: "Payment Date",
       dataIndex: "payment_date",
       align: "center",
-      render: (payroll) => (payroll ? payroll : "N/A"),
+      render: (payroll) =>
+        payroll ? dayjs(payroll).format("DD MMM YY") : "N/A",
     },
     {
       key: "1",
@@ -101,13 +107,6 @@ const usePaymentColumns = (): ColumnsType<any> => {
       dataIndex: "amount_paid",
       align: "center",
       render: (amount) => (amount ? amount : "N/A"),
-    },
-    {
-      key: "1",
-      title: "Payment Method",
-      dataIndex: "payment_method",
-      align: "center",
-      render: (method) => (method ? <Tag color="green">{method}</Tag> : "N/A"),
     },
 
     {

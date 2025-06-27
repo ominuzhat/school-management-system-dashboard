@@ -76,7 +76,6 @@ const CreateVendor = () => {
             <Form.Item<ICreateVendor>
               label="Address"
               name="address"
-              rules={[{ required: true, message: "Address is required!" }]}
             >
               <Input.TextArea placeholder="Enter address" rows={2} />
             </Form.Item>
@@ -86,7 +85,6 @@ const CreateVendor = () => {
             <Form.Item
               label="Purpose"
               name="purpose"
-              rules={[{ required: true, message: "Description is required!" }]}
             >
               <Input.TextArea placeholder="Enter Description" rows={4} />
             </Form.Item>

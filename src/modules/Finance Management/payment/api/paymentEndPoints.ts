@@ -11,8 +11,9 @@ const paymentEndpoint = api.injectEndpoints({
       ApiResponse<PaginatedResponse<IGetPayment>>,
       FilterTypes
     >({
-      query: () => ({
+      query: (params) => ({
         url: "/api/v1.0/payrolls/payments/",
+        params
       }),
       providesTags: [
         {

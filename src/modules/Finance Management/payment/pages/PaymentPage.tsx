@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row } from "antd";
+import { Button, Card, Col, DatePicker, Row } from "antd";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
@@ -15,9 +15,19 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
+import dayjs from "dayjs";
+import { useState } from "react";
+import { SearchComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
+
+const { MonthPicker } = DatePicker;
 
 const PaymentPage = () => {
   const dispatch = useDispatch();
+  const currentMonth = dayjs().format("YYYY-MM") + "-01";
+  const [search, setSearch] = useState();
+  const [filters, setFilters] = useState({
+    month: currentMonth,
+  });
 
   const { page_size, page } = useAppSelector(FilterState);
   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -31,6 +41,8 @@ const PaymentPage = () => {
   } = useGetPaymentQuery({
     page_size: page_size,
     page: Number(page) || undefined,
+    year_month: filters.month,
+    search: search,
   });
 
   const viewPermission = GetPermission(
@@ -67,6 +79,34 @@ const PaymentPage = () => {
               </Button>
             </Col>
           )}
+          <Col lg={12}>
+            <Row gutter={[16, 16]} justify="end" align="middle">
+              {/* Month Picker */}
+              <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
+                <MonthPicker
+                  placeholder="Select month"
+                  className="w-full text-green-500"
+                  defaultValue={dayjs(currentMonth, "YYYY-MM-DD")}
+                  onChange={(date) => {
+                    if (date) {
+                      const formattedDate = date.format("YYYY-MM") + "-01";
+                      setFilters((prev) => ({ ...prev, month: formattedDate }));
+                    } else {
+                      setFilters((prev) => ({ ...prev, month: currentMonth }));
+                    }
+                  }}
+                  format="MMMM YYYY"
+                />
+              </Col>
+
+              <Col lg={12}>
+                <SearchComponent
+                  onSearch={(value: any) => setSearch(value)}
+                  placeholder="Enter Your Payroll"
+                />
+              </Col>
+            </Row>
+          </Col>
         </Row>
       </Card>
       <Card>

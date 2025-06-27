@@ -4,7 +4,6 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useAppSelector } from "../../../../../../app/store";
 import { FilterState } from "../../../../../../app/features/filterSlice";
 import { useGetDashboardDataQuery } from "../../../../../Dashboard/api/dashoboardEndPoints";
-import useCashColumns from "../../utils/cashColumns";
 import { GetPermission } from "../../../../../../utilities/permission";
 import {
   actionNames,
@@ -16,6 +15,7 @@ import NoPermissionData from "../../../../../../utilities/NoPermissionData";
 import { useGetInvoiceEntriesQuery } from "../api/InvoiceEntryEndPoints";
 import { IGetInvoiceEntry } from "../types/invoiceEntryTypes";
 import CreateInvoiceEntry from "../components/CreateInvoiceEntry";
+import useVendorInvoiceColumns from "../utils/vendorInvoiceColumns";
 
 const InvoiceEntryPage = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const InvoiceEntryPage = () => {
   const { page_size, page } = useAppSelector(FilterState);
 
   const { data: dashboardData } = useGetDashboardDataQuery({});
-  const columns = useCashColumns();
+  const columns = useVendorInvoiceColumns();
 
   const viewPermission = GetPermission(
     dashboardData?.data?.permissions,

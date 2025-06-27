@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Col,
   Input,
@@ -10,27 +10,24 @@ import {
   Space,
   Divider,
   Upload,
-  message,
   DatePicker,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useCreateVendorEntryMutation } from "../api/VendorEntryEndPoints";
 import { Form } from "../../../../../../common/CommonAnt";
 import {
-  MdAttachMoney,
-  MdReceipt,
   MdPerson,
   MdOutlineAccountBalanceWallet,
 } from "react-icons/md";
 import { CiMobile3 } from "react-icons/ci";
 import { BsCash, BsBank2, BsQrCodeScan } from "react-icons/bs";
-import { FaCreditCard, FaShieldAlt } from "react-icons/fa";
 import { TbTruckDelivery } from "react-icons/tb";
 import { InboxOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import { HiOutlineBanknotes } from "react-icons/hi2";
 import dayjs from "dayjs";
 import { useGetAccountQuery } from "../../../account/api/accountEndPoints";
+import { useGetInvoiceEntriesQuery } from "../../Invoice Entry/api/InvoiceEntryEndPoints";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -49,14 +46,12 @@ const paymentMethods = [
     icon: <CiMobile3 className="text-blue-500" />,
     color: "blue",
   },
-
   {
     value: "bank",
     label: "Bank Transfer",
     icon: <BsBank2 className="text-green-600" />,
     color: "green",
   },
-
   {
     value: "cheque",
     label: "Cheque Payment",
@@ -76,20 +71,18 @@ const CreateVendorEntry = () => {
   const [form] = AntForm.useForm();
   const [amountDue, setAmountDue] = useState(0);
   const [remainingBalance, setRemainingBalance] = useState(0);
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const paymentMethod = AntForm.useWatch("type", form);
   const [create, { isLoading, isSuccess }] = useCreateVendorEntryMutation();
+  const { data: invoiceList } = useGetInvoiceEntriesQuery({});
   const { data: accountList } = useGetAccountQuery({});
 
   const onFinish = (values: any) => {
     const formData = new FormData();
 
-    formData.append("vendor", values.vendor);
-    formData.append("vendor_invoice_number", values.vendor_invoice_number);
-    formData.append("amount_due", String(amountDue));
+    formData.append("invoice", values.invoice);
     formData.append("amount", values.amount);
-    formData.append("remaining_balance", String(remainingBalance));
     formData.append("type", values.type);
-
     if (values.type === "bank") {
       formData.append("bank_name", values.bank_name);
       formData.append("account_name", values.account_name);
@@ -103,11 +96,6 @@ const CreateVendorEntry = () => {
       formData.append("mobile_number", values.mobile_number);
     }
 
-    if (values.type === "surjopay") {
-      formData.append("merchant_id", values.merchant_id);
-      formData.append("api_key", values.api_key);
-    }
-
     if (values.file && values.file[0]?.originFileObj) {
       formData.append("file", values.file[0].originFileObj);
     }
@@ -115,26 +103,50 @@ const CreateVendorEntry = () => {
     create(formData);
   };
 
-  const handleVendorChange = (vendorId: string) => {
-    const fakeDue = 1000;
-    setAmountDue(fakeDue);
-    const enteredAmount = form.getFieldValue("amount");
-    setRemainingBalance(fakeDue - Number(enteredAmount || 0));
+  const handleVendorChange = (vendorId: number) => {
+    const matchedInvoice: any = invoiceList?.data?.results?.find(
+      (invoice: any) => invoice.vendor?.id === vendorId
+    );
+
+    if (matchedInvoice) {
+      setSelectedInvoice(matchedInvoice);
+      setAmountDue(matchedInvoice.amount_due);
+      const enteredAmount = form.getFieldValue("amount") || 0;
+      setRemainingBalance(matchedInvoice.amount_due - Number(enteredAmount));
+
+      form.setFieldsValue({
+        remaining_balance: remainingBalance,
+      });
+    }
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = Number(e.target.value) || 0;
-    setRemainingBalance(amountDue - amount);
+    const inputAmount = Number(e.target.value) || 0;
+    const maxAmount = selectedInvoice?.amount_due || 0;
+
+    const validAmount = inputAmount > maxAmount ? maxAmount : inputAmount;
+
+    form.setFieldsValue({ amount: validAmount }); // Clamp it in UI
+    setRemainingBalance(maxAmount - validAmount);
   };
+
+  useEffect(() => {
+    if (selectedInvoice) {
+      form.setFieldsValue({
+        amount_due: selectedInvoice?.amount_due,
+        remaining_balance: remainingBalance,
+      });
+    }
+  }, [form, selectedInvoice, remainingBalance]);
 
   useEffect(() => {
     if (isSuccess) {
       form.resetFields();
       setAmountDue(0);
       setRemainingBalance(0);
+      setSelectedInvoice(null);
     }
-  }, [isSuccess, form]);
-
+  }, [isSuccess]);
   return (
     <Card
       title={
@@ -157,7 +169,7 @@ const CreateVendorEntry = () => {
           <Row gutter={16}>
             <Col xs={24} md={12}>
               <Form.Item
-                name="vendor"
+                name="invoice"
                 label="Vendor"
                 rules={[{ required: true, message: "Please select a vendor" }]}
               >
@@ -165,19 +177,19 @@ const CreateVendorEntry = () => {
                   placeholder="Select vendor"
                   suffixIcon={<MdPerson />}
                   onChange={handleVendorChange}
-                >
-                  <Option value="1">Vendor A</Option>
-                  <Option value="2">Vendor B</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item
-                name="vendor_invoice_number"
-                label="Invoice Number"
-                rules={[{ required: true, message: "Enter invoice number" }]}
-              >
-                <Input prefix={<MdReceipt />} placeholder="INV-001" />
+                  showSearch
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={
+                    invoiceList?.data?.results?.map((invoice: any) => ({
+                      label: `${invoice.vendor?.name} (${invoice.invoice_number})`,
+                      value: invoice.vendor?.id,
+                    })) ?? []
+                  }
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -229,12 +241,7 @@ const CreateVendorEntry = () => {
               <Form.Item
                 name="amount"
                 label="Amount Paid"
-                rules={[
-                  {
-                    required: true,
-                    message: "Enter payment amount",
-                  },
-                ]}
+                rules={[{ required: true, message: "Enter payment amount" }]}
               >
                 <Input
                   type="number"
@@ -254,11 +261,6 @@ const CreateVendorEntry = () => {
                     remainingBalance > 0 ? "text-red-500" : "text-green-500"
                   }`}
                 />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={24}>
-              <Form.Item name="description" label="Description">
-                <TextArea rows={4} />
               </Form.Item>
             </Col>
           </Row>
@@ -494,7 +496,6 @@ const CreateVendorEntry = () => {
             name="file"
             valuePropName="fileList"
             getValueFromEvent={(e: any) => (Array.isArray(e) ? e : e?.fileList)}
-            rules={[{ required: true, message: "Please upload a file" }]}
           >
             <Dragger
               name="file"

@@ -1,19 +1,15 @@
 import { Col, Input, Row, Select, Form, DatePicker, Button } from "antd";
 import { useEffect } from "react";
-import { useGetAccountQuery } from "../../account/api/accountEndPoints";
 import { TbCoinTaka } from "react-icons/tb";
-import {
-  EntryTypeEnum,
-  ICreateCash,
-  IGetCash,
-  PaymentMethodEnum,
-} from "../types/cashTypes";
+
+import dayjs from "dayjs";
+import { CalendarOutlined } from "@ant-design/icons";
+import { useGetAccountQuery } from "../../../account/api/accountEndPoints";
 import {
   useGetSingleCashQuery,
   useUpdateCashMutation,
-} from "../api/cashEndPoints";
-import dayjs from "dayjs";
-import { CalendarOutlined } from "@ant-design/icons";
+} from "../../api/cashEndPoints";
+import { EntryTypeEnum, ICreateCash, IGetCash, PaymentMethodEnum } from "../../types/cashTypes";
 
 const UpdateCash = ({ record }: { record: any }) => {
   const { data: accountList } = useGetAccountQuery({});

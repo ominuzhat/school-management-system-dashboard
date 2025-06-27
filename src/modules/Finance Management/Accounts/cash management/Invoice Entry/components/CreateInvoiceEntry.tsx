@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Col,
   Input,
@@ -6,34 +7,44 @@ import {
   DatePicker,
   Upload,
   message,
+  Select,
 } from "antd";
 import { TbCoinTaka } from "react-icons/tb";
 import { CalendarOutlined, InboxOutlined } from "@ant-design/icons";
-
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { Form } from "../../../../../../common/CommonAnt";
 import { useCreateInvoiceEntryMutation } from "../api/InvoiceEntryEndPoints";
 import { ICreateInvoiceEntry } from "../types/invoiceEntryTypes";
+import { useGetVendorQuery } from "../../Vendor/api/vendorEndPoints";
 
 const { Dragger } = Upload;
 
 const CreateInvoiceEntry = () => {
   const [create, { isLoading, isSuccess }] = useCreateInvoiceEntryMutation();
+  const { data: vendorList } = useGetVendorQuery({});
   const [form] = AntForm.useForm();
 
   const onFinish = (values: any): void => {
     const formData = new FormData();
-    formData.append("vendor", values.vendor);
+    formData.append("vendor_id", values.vendor_id);
     formData.append("amount", values.amount);
     formData.append("date", dayjs(values.date).format("YYYY-MM-DD"));
     formData.append("description", values.description);
 
-    if (values.file && values.file[0]?.originFileObj) {
-      formData.append("file", values.file[0].originFileObj);
+    // Append multiple files
+    if (values.uploaded_files && values.uploaded_files.length > 0) {
+      values.uploaded_files.forEach((file: any, index: number) => {
+        if (file.originFileObj) {
+          formData.append(`uploaded_files`, file.originFileObj);
+        }
+      });
     }
 
-    create(formData);
+    create(formData)
+      .unwrap()
+      .then(() => message.success("Invoice entry created successfully!"))
+      .catch(() => message.error("Failed to create invoice entry."));
   };
 
   useEffect(() => {
@@ -43,15 +54,17 @@ const CreateInvoiceEntry = () => {
   }, [form, isSuccess]);
 
   const fileProps = {
-    name: "file",
-    maxCount: 1,
+    name: "files",
+    multiple: true,
     accept: ".jpg,.jpeg,.png,.pdf",
     beforeUpload: () => false, // Prevent auto upload
     onChange(info: any) {
-      const file = info.file;
-      if (!["image/jpeg", "image/png", "application/pdf"].includes(file.type)) {
+      const isValid = info.fileList.every((file: any) =>
+        ["image/jpeg", "image/png", "application/pdf"].includes(file.type)
+      );
+      if (!isValid) {
         message.error("Only JPG, PNG, and PDF files are allowed!");
-        form.setFieldsValue({ file: [] });
+        form.setFieldsValue({ uploaded_files: [] });
       }
     },
   };
@@ -68,10 +81,16 @@ const CreateInvoiceEntry = () => {
           <Col lg={12}>
             <Form.Item<ICreateInvoiceEntry>
               label="Vendor"
-              name="vendor"
+              name="vendor_id"
               rules={[{ required: true, message: "Vendor is required!" }]}
             >
-              <Input placeholder="Vendor name" />
+              <Select placeholder="Select a Vendor" allowClear showSearch>
+                {vendorList?.data?.results?.map((vendor: any) => (
+                  <Select.Option key={vendor.id} value={vendor.id}>
+                    {vendor.name}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
 
@@ -116,9 +135,9 @@ const CreateInvoiceEntry = () => {
           </Col>
 
           <Col lg={24}>
-            <Form.Item
-              label="Upload File"
-              name="file"
+            <Form.Item<ICreateInvoiceEntry>
+              label="Upload Files"
+              name="uploaded_files"
               valuePropName="fileList"
               getValueFromEvent={(e: any) =>
                 Array.isArray(e) ? e : e?.fileList
@@ -129,10 +148,11 @@ const CreateInvoiceEntry = () => {
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">
-                  Click or drag JPG, PNG, or PDF file to this area
+                  Click or drag JPG, PNG, or PDF files to this area
                 </p>
                 <p className="ant-upload-hint">
-                  Only one file allowed. Max file size handled by backend.
+                  You can upload multiple files. Max file size handled by
+                  backend.
                 </p>
               </Dragger>
             </Form.Item>

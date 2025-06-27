@@ -25,7 +25,6 @@ import { useGetAdmissionQuery } from "../../../../general settings/admission/api
 import { useEffect, useState } from "react";
 import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
 import { TbCoinTaka } from "react-icons/tb";
-import { useGetAdditionalFeesQuery } from "../../Additional Fee/api/additionalFeeEndPoints";
 import { useGetAccountQuery } from "../../../Accounts/account/api/accountEndPoints";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 
@@ -44,7 +43,6 @@ const UpdateNewCollectFee = () => {
   const { data: accountList } = useGetAccountQuery({});
   const navigate = useNavigate();
   const [update, { isLoading, isSuccess }] = useUpdateCollectFeesMutation();
-  const { data: additionalData } = useGetAdditionalFeesQuery({});
   const { data: admissionData, isFetching } = useGetAdmissionQuery({
     search: search,
     status: "approved",
@@ -332,33 +330,7 @@ const UpdateNewCollectFee = () => {
                 />
               </AntForm.Item>
             </Col>
-            <Col lg={6}>
-              <Form.Item label="Additional" name="add_ons">
-                <Select
-                  mode="multiple"
-                  placeholder="Select Additional Fees"
-                  className="w-full"
-                  allowClear
-                  showSearch
-                  onSearch={debounce(setSearch, 500)}
-                  filterOption={false}
-                  loading={isFetching}
-                  notFoundContent={
-                    Array.isArray(additionalData?.data) &&
-                    additionalData?.data?.length === 0
-                      ? "No additional fees found"
-                      : null
-                  }
-                >
-                  {Array.isArray(additionalData?.data) &&
-                    additionalData?.data?.map((data: any) => (
-                      <Select.Option key={data?.id} value={data?.id}>
-                        {data?.name} - ৳ {data?.amount}
-                      </Select.Option>
-                    ))}
-                </Select>
-              </Form.Item>
-            </Col>
+
             <Col lg={6}>
               <Form.Item
                 label="Select Account"

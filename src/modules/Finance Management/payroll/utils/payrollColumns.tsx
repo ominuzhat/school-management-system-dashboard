@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
@@ -126,6 +126,21 @@ const usePayrollColumns = (): ColumnsType<any> => {
       render: (due_Amount) => `৳${due_Amount.toFixed(2)}`,
       sorter: (a, b) => a.due_Amount - b.due_Amount, // Sort by due amount (numeric)
     },
+    {
+      key: "9",
+      title: "Status",
+      dataIndex: "status",
+      align: "center",
+      render: (status: string) => {
+        let color = "default";
+        if (status === "pending") color = "red";
+        else if (status === "partial") color = "blue";
+        else if (status === "paid") color = "green";
+
+        return <Tag color={color}>{status?.toUpperCase()}</Tag>;
+      },
+    },
+
     {
       key: "7",
       title: "Actions",

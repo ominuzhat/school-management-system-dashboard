@@ -1,16 +1,16 @@
 export  interface ICreateInvoiceEntry {
-    vendor:string;
+    vendor_id:string;
     amount: number;
     date: string;
     description: string;
-    file: File | null;
+    uploaded_files: File | null;
 }
 
 export interface IGetInvoiceEntry {
     id: number;
-    vendor:string;
+    vendor_id:string;
     amount: number;
     date: string;
     description: string;
-    file: File | null;
+    uploaded_files: File | null;
 }

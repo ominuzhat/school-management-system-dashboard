@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row } from "antd";
+import { Button, Card, Col, DatePicker, Row, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
@@ -18,12 +18,22 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
+import dayjs from "dayjs";
+
+const { Option } = Select;
+const { MonthPicker } = DatePicker;
 
 const PayrollPage = () => {
   const [search, setSearch] = useState();
   const dispatch = useDispatch();
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const columns = usePayrollColumns();
+  const currentMonth = dayjs().format("YYYY-MM") + "-01";
+
+  const [filters, setFilters] = useState({
+    status: "",
+    month: currentMonth,
+  });
 
   const { page_size, page } = useAppSelector(FilterState);
 
@@ -36,6 +46,8 @@ const PayrollPage = () => {
     search: search,
     page_size: page_size,
     page: Number(page) || undefined,
+    year_month: filters.month,
+    status: filters.status,
   });
 
   const viewPermission = GetPermission(
@@ -52,7 +64,7 @@ const PayrollPage = () => {
   return (
     <div className="space-y-5">
       <Card>
-        <Row justify="space-between">
+        <Row justify="space-between" align="middle">
           {createPermission && (
             <Col lg={4}>
               <Button
@@ -72,11 +84,48 @@ const PayrollPage = () => {
               </Button>
             </Col>
           )}
-          <Col lg={6}>
-            <SearchComponent
-              onSearch={(value: any) => setSearch(value)}
-              placeholder="Enter Your Payroll"
-            />
+          <Col lg={12}>
+            <Row gutter={[16, 16]} justify="end" align="middle">
+              {/* Month Picker */}
+              <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
+                <MonthPicker
+                  placeholder="Select month"
+                  className="w-full text-green-500"
+                  defaultValue={dayjs(currentMonth, "YYYY-MM-DD")}
+                  onChange={(date) => {
+                    if (date) {
+                      const formattedDate = date.format("YYYY-MM") + "-01";
+                      setFilters((prev) => ({ ...prev, month: formattedDate }));
+                    } else {
+                      setFilters((prev) => ({ ...prev, month: currentMonth }));
+                    }
+                  }}
+                  format="MMMM YYYY"
+                />
+              </Col>
+
+              {/* Status */}
+              <Col xs={12} sm={12} md={8} lg={6} xl={6} xxl={6}>
+                <Select
+                  className="w-full"
+                  placeholder="Status"
+                  allowClear
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, status: value }))
+                  }
+                >
+                  <Option value="paid">Paid</Option>
+                  <Option value="partial">Partial</Option>
+                  <Option value="pending">Pending</Option>
+                </Select>
+              </Col>
+              <Col lg={12}>
+                <SearchComponent
+                  onSearch={(value: any) => setSearch(value)}
+                  placeholder="Enter Your Payroll"
+                />
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Card>

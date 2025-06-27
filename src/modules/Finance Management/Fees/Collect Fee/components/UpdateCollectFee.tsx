@@ -42,10 +42,10 @@ const UpdateCollectFee = () => {
   console.log(finalDueAmount, setDiscount);
 
   const [paidAmount, setPaidAmount] = useState<number | null>(null);
-  const [addOns, setAddOns] = useState<string[]>([]); // Ensure it's always an array
+  const [addOns, setAddOns] = useState<string[]>([]); 
   const [search, setSearch] = useState("");
-  const [selectedFees, setSelectedFees] = useState<any[]>([]); // Initialize as an empty array
-  const [selectedAdditionalFee, setSelectedAdditionalFee] = useState<any[]>([]); // Initialize as an empty array
+  const [selectedFees, setSelectedFees] = useState<any[]>([]); 
+  const [selectedAdditionalFee, setSelectedAdditionalFee] = useState<any[]>([]);
   const { data: singleData } = useGetCollectSingleFeesQuery(
     Number(collectFeeId)
   );
