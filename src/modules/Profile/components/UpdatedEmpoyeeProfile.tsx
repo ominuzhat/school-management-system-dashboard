@@ -26,7 +26,7 @@ const UpdateEmployeeProfile = ({
 
     try {
       await create(formattedData).unwrap();
-      onSubmitSuccess(); // Notify parent component
+      onSubmitSuccess();
     } catch (error) {
       console.error("Error updating profile:", error);
     }

@@ -25,7 +25,7 @@ const CreateFundTransfer = () => {
   const onFinish = (values: any): void => {
     create({
       ...values,
-      transaction_type: "transfer", // hardcoded as it's the only type in this version
+      transaction_type: "transfer", 
     });
   };
 

@@ -138,7 +138,6 @@ const CreateAccount = () => {
           </Select>
         </Form.Item>
 
-        {/* --- BANK ACCOUNT FIELDS --- */}
         {accountType === "bank" && (
           <Row gutter={16}>
             <Col span={12}>

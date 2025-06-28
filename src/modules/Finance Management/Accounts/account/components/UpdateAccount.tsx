@@ -59,7 +59,6 @@ const UpdateAccount = ({ record }: any) => {
         isLoading={isLoading || isUpdating}
         isSuccess={isSuccess}
       >
-        {/* --- BANK ACCOUNT FIELDS --- */}
         {accountType === "bank" && (
           <Row gutter={16}>
             <Col span={12}>

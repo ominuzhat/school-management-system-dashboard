@@ -483,10 +483,6 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
 
         {/* Submit Button */}
         <Row justify="end" gutter={[16, 16]} className="mt-4">
-          {/* <Col>
-            <Button type="dashed">Submit & Download PDF</Button>
-          </Col> */}
-
           <Col>
             <Button
               className="bg-green-500 text-white w-32 h-12 font-bold"

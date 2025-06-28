@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Col,
@@ -15,10 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { useCreateVendorEntryMutation } from "../api/VendorEntryEndPoints";
 import { Form } from "../../../../../../common/CommonAnt";
-import {
-  MdPerson,
-  MdOutlineAccountBalanceWallet,
-} from "react-icons/md";
+import { MdPerson, MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { CiMobile3 } from "react-icons/ci";
 import { BsCash, BsBank2, BsQrCodeScan } from "react-icons/bs";
 import { TbTruckDelivery } from "react-icons/tb";
@@ -82,7 +81,10 @@ const CreateVendorEntry = () => {
 
     formData.append("invoice", values.invoice);
     formData.append("amount", values.amount);
+    formData.append("account", values.account);
     formData.append("type", values.type);
+
+    // Bank
     if (values.type === "bank") {
       formData.append("bank_name", values.bank_name);
       formData.append("account_name", values.account_name);
@@ -91,13 +93,37 @@ const CreateVendorEntry = () => {
       formData.append("branch", values.branch);
     }
 
+    // MFS
     if (values.type === "mfs") {
       formData.append("provider", values.provider);
       formData.append("mobile_number", values.mobile_number);
+      formData.append("transaction_number", values.transaction_number || "");
     }
 
-    if (values.file && values.file[0]?.originFileObj) {
-      formData.append("file", values.file[0].originFileObj);
+    // Cash
+    if (values.type === "cash") {
+      formData.append("transaction_number", values.transaction_number);
+      formData.append("mobile_number", values.mobile_number);
+      if (values.note) formData.append("note", values.note);
+    }
+
+    // Cheque
+    if (values.type === "cheque") {
+      formData.append("cheque_number", values.cheque_number);
+      formData.append("cheque_date", values.cheque_date.format("YYYY-MM-DD"));
+      formData.append("bank_name", values.bank_name);
+      formData.append("account_number", values.account_number);
+      if (values.payment_description)
+        formData.append("payment_description", values.payment_description);
+    }
+
+    // Multiple file uploads
+    if (values.file && Array.isArray(values.file)) {
+      values.file.forEach((fileObj: any, index: number) => {
+        if (fileObj.originFileObj) {
+          formData.append("files[]", fileObj.originFileObj); // Use "files[]" to send as array
+        }
+      });
     }
 
     create(formData);
@@ -276,7 +302,7 @@ const CreateVendorEntry = () => {
           <Form.Item
             name="type"
             rules={[{ required: true, message: "Select payment method" }]}
-            initialValue="bank"
+            initialValue="cash"
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               {paymentMethods.map((method) => (
@@ -501,8 +527,7 @@ const CreateVendorEntry = () => {
               name="file"
               beforeUpload={() => false}
               accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-              maxCount={1}
-              multiple={false}
+              multiple
             >
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />

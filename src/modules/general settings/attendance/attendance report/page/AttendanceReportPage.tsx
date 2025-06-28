@@ -88,7 +88,6 @@ const AttendanceReportPage = () => {
     date_range_before: dateRange[1]?.format("YYYY-MM-DD"),
   });
 
-
   // Handlers
   const handleMonthOnly = (date: dayjs.Dayjs | null) => {
     setMonthOnly(date ? date.month() + 1 : undefined);
@@ -228,6 +227,7 @@ const AttendanceReportPage = () => {
 
       {viewPermission ? (
         <Table
+          className="[&_.ant-table-cell]:font-bold [&_.ant-typography]:font-bold"
           rowKey="roll"
           loading={isLoading || isFetching}
           refetch={refetch}

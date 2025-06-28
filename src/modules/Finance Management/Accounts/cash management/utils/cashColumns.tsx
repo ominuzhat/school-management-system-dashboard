@@ -24,8 +24,6 @@ const useCashColumns = (): ColumnsType<any> => {
     actionNames.change
   );
 
-  // const [deleteCartItem] = useDeleteOrderItemMutation();
-
   // const handleDelete = async (id: any) => {
   //   try {
   //     await deleteCartItem({ id }).unwrap();
