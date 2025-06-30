@@ -12,12 +12,13 @@ const EditButton: React.FC<Props> = ({ ...rest }) => {
       size="small"
       type="default"
       style={{
-        color: "#FFA500",
-        border: "1px solid #FFA500",
+        color: "#03A6A1",
+        border: "1px solid #03A6A1",
         // background: "#FF5F00"
       }}
     >
       <FaEdit />
+      Update
     </AntButton>
   );
 };

@@ -23,6 +23,7 @@ const DeleteButton: React.FC<Props> = ({ onConfirm, onCancel, ...rest }) => {
         icon={<Iconify name="weui:delete-outlined" />}
         size="small"
         type="default"
+        disabled
       />
     </Popconfirm>
   );

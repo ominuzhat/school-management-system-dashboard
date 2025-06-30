@@ -7,11 +7,12 @@ import { useGetInvoicePdfQuery } from "../api/invoiceEndPoints";
 import { showModal } from "../../../../../app/features/modalSlice";
 import InvoiceView from "../components/InvoiceView";
 import { useDispatch } from "react-redux";
-import { FaEdit } from "react-icons/fa";
 import UpdateInvoice from "../components/UpdateInvoice";
+import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 
 const useInvoiceColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+
   //   const { data: dashboardData } = useGetDashboardDataQuery({});
 
   const [collectFeeId, setCollectFeeId] = useState<number | null>(null);
@@ -125,9 +126,7 @@ const useInvoiceColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <Button
-            size="small"
-            type="default"
+          <EditButton
             onClick={() =>
               dispatch(
                 showModal({
@@ -136,13 +135,8 @@ const useInvoiceColumns = (): ColumnsType<any> => {
                 })
               )
             }
-            style={{
-              color: "#FFA500",
-              border: "1px solid #FFA500",
-            }}
-          >
-            <FaEdit />
-          </Button>
+          />
+
           <Button
             size="small"
             type="default"
@@ -161,6 +155,7 @@ const useInvoiceColumns = (): ColumnsType<any> => {
             }}
           >
             <FaEye />
+            View
           </Button>
 
           <Button

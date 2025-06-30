@@ -1,21 +1,25 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
+  Card,
   Col,
+  Divider,
+  Form as AntForm,
   Input,
   Row,
   Select,
-  Form as AntForm,
-  Card,
-  Typography,
   Space,
-  Divider,
+  Typography,
   Upload,
   DatePicker,
+  message,
 } from "antd";
 import { useEffect, useState } from "react";
-import { useCreateVendorEntryMutation } from "../api/VendorEntryEndPoints";
+import {
+  useGetSingleVendorEntryQuery,
+  useUpdateVendorEntryMutation,
+} from "../api/VendorEntryEndPoints";
+import { useGetAccountQuery } from "../../../account/api/accountEndPoints";
+import { useGetInvoiceEntriesQuery } from "../../Invoice Entry/api/InvoiceEntryEndPoints";
 import { Form } from "../../../../../../common/CommonAnt";
 import {
   MdPerson,
@@ -24,12 +28,10 @@ import {
 } from "react-icons/md";
 import { CiMobile3 } from "react-icons/ci";
 import { BsCash, BsBank2, BsQrCodeScan } from "react-icons/bs";
+import { HiOutlineBanknotes } from "react-icons/hi2";
 import { InboxOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
-import { HiOutlineBanknotes } from "react-icons/hi2";
 import dayjs from "dayjs";
-import { useGetAccountQuery } from "../../../account/api/accountEndPoints";
-import { useGetInvoiceEntriesQuery } from "../../Invoice Entry/api/InvoiceEntryEndPoints";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -69,48 +71,109 @@ const mfsProviders = [
   { value: "upay", label: "Upay" },
 ];
 
-const CreateVendorEntry = () => {
+const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
   const [form] = AntForm.useForm();
-  const [amountDue, setAmountDue] = useState(0);
-  const [remainingBalance, setRemainingBalance] = useState(0);
+  const [amountDue, setAmountDue] = useState<any>(0);
+  const [remainingBalance, setRemainingBalance] = useState<any>(0);
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
+
   const paymentMethod = AntForm.useWatch("type", form);
-  const [create, { isLoading, isSuccess }] = useCreateVendorEntryMutation();
-  const { data: invoiceList } = useGetInvoiceEntriesQuery({});
+
+  const { data: singleData } = useGetSingleVendorEntryQuery<any>(record);
+  const [update, { isLoading, isSuccess }] = useUpdateVendorEntryMutation();
   const { data: accountList } = useGetAccountQuery({});
+  const { data: invoiceList } = useGetInvoiceEntriesQuery({});
+
+  useEffect(() => {
+    if (singleData?.data) {
+      const entry = singleData.data;
+
+      const matchedInvoice: any = invoiceList?.data?.results?.find(
+        (inv: any) => inv.id === entry.invoice
+      );
+
+      setSelectedInvoice(matchedInvoice);
+      setAmountDue(matchedInvoice?.amount_due || 0);
+      setRemainingBalance((matchedInvoice?.amount_due || 0) - entry.amount);
+
+      form.setFieldsValue({
+        invoice: matchedInvoice?.vendor?.id,
+        amount: entry.amount,
+        account: entry.account,
+        type: entry.type,
+        provider: entry.provider,
+        bank_name: entry.bank_name,
+        account_name: entry.account_name,
+        account_number: entry.account_number,
+        branch: entry.branch_name,
+        cheque_number: entry.cheque_number,
+        cheque_date: entry.cheque_date ? dayjs(entry.cheque_date) : undefined,
+        mobile_number: entry.mobile_number,
+        note: entry.note,
+        payment_description: entry.payment_description,
+        amount_due: matchedInvoice?.amount_due,
+        remaining_balance: (matchedInvoice?.amount_due || 0) - entry.amount,
+      });
+    }
+  }, [singleData, invoiceList]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      message.success("Vendor payment updated successfully!");
+    }
+  }, [isSuccess]);
+
+  const handleVendorChange = (vendorId: number) => {
+    const matchedInvoice: any = invoiceList?.data?.results?.find(
+      (invoice: any) => invoice.vendor?.id === vendorId
+    );
+    if (matchedInvoice) {
+      setSelectedInvoice(matchedInvoice);
+      setAmountDue(matchedInvoice.amount_due);
+      const enteredAmount = form.getFieldValue("amount") || 0;
+      setRemainingBalance(matchedInvoice.amount_due - Number(enteredAmount));
+      form.setFieldsValue({
+        amount_due: matchedInvoice.amount_due,
+        remaining_balance: matchedInvoice.amount_due - Number(enteredAmount),
+      });
+    }
+  };
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputAmount = Number(e.target.value) || 0;
+    const maxAmount = selectedInvoice?.amount_due || 0;
+    const validAmount = inputAmount > maxAmount ? maxAmount : inputAmount;
+    form.setFieldsValue({ amount: validAmount });
+    setRemainingBalance(maxAmount - validAmount);
+  };
 
   const onFinish = (values: any) => {
     const formData = new FormData();
-
     formData.append("invoice", values.invoice);
     formData.append("amount", values.amount);
     formData.append("account", values.account);
     formData.append("type", values.type);
 
-    // Bank
     if (values.type === "bank") {
       formData.append("bank_name", values.bank_name);
       formData.append("account_name", values.account_name);
       formData.append("account_number", values.account_number);
+      formData.append("branch_name", values.branch);
       formData.append("transaction_number", values.transaction_number || "");
-      formData.append("branch", values.branch);
     }
 
-    // MFS
     if (values.type === "mfs") {
       formData.append("provider", values.provider);
       formData.append("mobile_number", values.mobile_number);
       formData.append("transaction_number", values.transaction_number || "");
     }
 
-    // Cash
     if (values.type === "cash") {
       formData.append("transaction_number", values.transaction_number);
       formData.append("mobile_number", values.mobile_number);
       if (values.note) formData.append("note", values.note);
     }
 
-    // Cheque
     if (values.type === "cheque") {
       formData.append("cheque_number", values.cheque_number);
       formData.append("cheque_date", values.cheque_date.format("YYYY-MM-DD"));
@@ -120,79 +183,29 @@ const CreateVendorEntry = () => {
         formData.append("payment_description", values.payment_description);
     }
 
-    // Multiple file uploads
     if (values.file && Array.isArray(values.file)) {
-      values.file.forEach((fileObj: any, index: number) => {
+      values.file.forEach((fileObj: any) => {
         if (fileObj.originFileObj) {
-          formData.append("files[]", fileObj.originFileObj); // Use "files[]" to send as array
+          formData.append("files[]", fileObj.originFileObj);
         }
       });
     }
 
-    create(formData);
+    update({ id: record, data: formData });
   };
 
-  const handleVendorChange = (vendorId: number) => {
-    const matchedInvoice: any = invoiceList?.data?.results?.find(
-      (invoice: any) => invoice.vendor?.id === vendorId
-    );
-
-    if (matchedInvoice) {
-      setSelectedInvoice(matchedInvoice);
-      setAmountDue(matchedInvoice.amount_due);
-      const enteredAmount = form.getFieldValue("amount") || 0;
-      setRemainingBalance(matchedInvoice.amount_due - Number(enteredAmount));
-
-      form.setFieldsValue({
-        remaining_balance: remainingBalance,
-      });
-    }
-  };
-
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputAmount = Number(e.target.value) || 0;
-    const maxAmount = selectedInvoice?.amount_due || 0;
-
-    const validAmount = inputAmount > maxAmount ? maxAmount : inputAmount;
-
-    form.setFieldsValue({ amount: validAmount }); // Clamp it in UI
-    setRemainingBalance(maxAmount - validAmount);
-  };
-
-  useEffect(() => {
-    if (selectedInvoice) {
-      form.setFieldsValue({
-        amount_due: selectedInvoice?.amount_due,
-        remaining_balance: remainingBalance,
-      });
-    }
-  }, [form, selectedInvoice, remainingBalance]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      form.resetFields();
-      setAmountDue(0);
-      setRemainingBalance(0);
-      setSelectedInvoice(null);
-    }
-  }, [isSuccess]);
   return (
     <Card
       title={
         <Space className="items-center">
           <MdOutlinePayments className="text-xl text-indigo-600" />
-          <Title level={4} className="m-0">
-            Create Vendor Payment
-          </Title>
+          <Title level={4}>Update Vendor Payment</Title>
         </Space>
       }
-      bordered={false}
-      className="shadow-sm rounded-lg"
     >
       <Form form={form} onFinish={onFinish} isLoading={isLoading}>
-        {/* Vendor Info */}
         <div className="mb-6">
-          <Text strong className="block mb-4 text-lg">
+          <Text strong className="block mb-4">
             Vendor Information
           </Text>
           <Row gutter={16}>
@@ -200,10 +213,10 @@ const CreateVendorEntry = () => {
               <Form.Item
                 name="invoice"
                 label="Vendor"
-                rules={[{ required: true, message: "Please select a vendor" }]}
+                rules={[{ required: true }]}
               >
                 <Select
-                  placeholder="Select vendor"
+                  placeholder="Select Vendor"
                   suffixIcon={<MdPerson />}
                   onChange={handleVendorChange}
                   showSearch
@@ -224,25 +237,24 @@ const CreateVendorEntry = () => {
           </Row>
         </div>
 
-        {/* Payment Info */}
         <div className="mb-6">
-          <Text strong className="block mb-4 text-lg">
+          <Text strong className="block mb-4">
             Payment Account
           </Text>
           <Row gutter={16}>
             <Col lg={24}>
               <Form.Item
-                label="Select Account"
                 name="account"
-                rules={[{ required: true, message: "Account is required!" }]}
+                label="Select Account"
+                rules={[{ required: true }]}
               >
-                <Select placeholder="Select Account" className="w-full">
+                <Select placeholder="Select Account">
                   {Array.isArray(accountList?.data) &&
                     accountList?.data?.map((account: any) => (
-                      <Select.Option key={account?.id} value={account?.id}>
-                        {account?.type} - {account?.account_name}{" "}
-                        {account?.account_type} ({account?.balance})
-                      </Select.Option>
+                      <Option key={account.id} value={account.id}>
+                        {account.type} - {account.account_name}{" "}
+                        {account.account_type} ({account.balance})
+                      </Option>
                     ))}
                 </Select>
               </Form.Item>
@@ -250,46 +262,28 @@ const CreateVendorEntry = () => {
           </Row>
         </div>
 
-        {/* Payment Info */}
         <div className="mb-6">
-          <Text strong className="block mb-4 text-lg">
+          <Text strong className="block mb-4">
             Payment Details
           </Text>
           <Row gutter={16}>
             <Col xs={24} md={8}>
               <Form.Item name="amount_due" label="Amount Due">
-                <Input
-                  value={`৳ ${amountDue.toLocaleString()}`}
-                  disabled
-                  prefix={<span className="font-medium">৳</span>}
-                  className="font-medium"
-                />
+                <Input value={`৳ ${amountDue}`} disabled />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
               <Form.Item
                 name="amount"
                 label="Amount Paid"
-                rules={[{ required: true, message: "Enter payment amount" }]}
+                rules={[{ required: true }]}
               >
-                <Input
-                  type="number"
-                  onChange={handleAmountChange}
-                  prefix="৳"
-                  className="font-medium"
-                />
+                <Input type="number" prefix="৳" onChange={handleAmountChange} />
               </Form.Item>
             </Col>
             <Col xs={24} md={8}>
               <Form.Item name="remaining_balance" label="Remaining Balance">
-                <Input
-                  value={`৳ ${remainingBalance.toLocaleString()}`}
-                  disabled
-                  prefix={<span className="font-medium">৳</span>}
-                  className={`font-medium ${
-                    remainingBalance > 0 ? "text-red-500" : "text-green-500"
-                  }`}
-                />
+                <Input value={`৳ ${remainingBalance}`} disabled />
               </Form.Item>
             </Col>
           </Row>
@@ -297,44 +291,44 @@ const CreateVendorEntry = () => {
 
         <Divider />
 
-        {/* Payment Method */}
         <div className="mb-6">
-          <Text strong className="block mb-4 text-lg">
+          <Text strong className="block mb-4">
             Payment Method
           </Text>
           <Form.Item
             name="type"
-            rules={[{ required: true, message: "Select payment method" }]}
+            rules={[{ required: true }]}
             initialValue="cash"
           >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {paymentMethods.map((method) => (
                 <div
                   key={method.value}
                   onClick={() => form.setFieldsValue({ type: method.value })}
-                  className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                  className={`border rounded-lg p-4 cursor-pointer ${
                     paymentMethod === method.value
                       ? `border-${method.color}-500 bg-${method.color}-50 ring-2 ring-${method.color}-200`
                       : "border-gray-200 hover:border-gray-300"
                   }`}
                 >
                   <div className="flex items-center">
-                    <div className="mr-3 text-xl">{method.icon}</div>
-                    <Text strong>{method.label}</Text>
+                    {method.icon}
+                    <Text strong className="ml-2">
+                      {method.label}
+                    </Text>
                   </div>
                 </div>
               ))}
             </div>
           </Form.Item>
 
-          {/* Conditional Fields */}
           {paymentMethod === "bank" && (
             <Row gutter={16}>
               <Col xs={24} md={12}>
                 <Form.Item
                   name="bank_name"
                   label="Bank Name"
-                  rules={[{ required: true, message: "Enter bank name" }]}
+                  rules={[{ required: true }]}
                 >
                   <Input prefix={<BsBank2 />} />
                 </Form.Item>
@@ -343,7 +337,7 @@ const CreateVendorEntry = () => {
                 <Form.Item
                   name="account_name"
                   label="Account Name"
-                  rules={[{ required: true, message: "Enter account name" }]}
+                  rules={[{ required: true }]}
                 >
                   <Input prefix={<MdPerson />} />
                 </Form.Item>
@@ -352,9 +346,18 @@ const CreateVendorEntry = () => {
                 <Form.Item
                   name="account_number"
                   label="Account Number"
-                  rules={[{ required: true, message: "Enter account number" }]}
+                  rules={[{ required: true }]}
                 >
                   <Input prefix={<MdOutlineAccountBalanceWallet />} />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={12}>
+                <Form.Item
+                  name="branch"
+                  label="Branch Name"
+                  rules={[{ required: true }]}
+                >
+                  <Input />
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
@@ -363,15 +366,6 @@ const CreateVendorEntry = () => {
                   label="Transaction Reference"
                 >
                   <Input prefix={<BsQrCodeScan />} />
-                </Form.Item>
-              </Col>
-              <Col xs={24} md={12}>
-                <Form.Item
-                  name="branch"
-                  label="Branch Name"
-                  rules={[{ required: true, message: "Enter branch name" }]}
-                >
-                  <Input />
                 </Form.Item>
               </Col>
             </Row>
@@ -383,7 +377,7 @@ const CreateVendorEntry = () => {
                 <Form.Item
                   name="provider"
                   label="MFS Provider"
-                  rules={[{ required: true, message: "Select provider" }]}
+                  rules={[{ required: true }]}
                 >
                   <Select suffixIcon={<CiMobile3 />}>
                     {mfsProviders.map((provider) => (
@@ -396,25 +390,19 @@ const CreateVendorEntry = () => {
               </Col>
               <Col xs={24} md={12}>
                 <Form.Item
-                  name="transaction_number"
-                  label="Transaction Reference"
+                  name="mobile_number"
+                  label="Mobile Number"
+                  rules={[{ required: true }]}
                 >
-                  <Input prefix={<BsQrCodeScan />} />
+                  <Input prefix="+88" />
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
                 <Form.Item
-                  name="mobile_number"
-                  label="Mobile Number"
-                  rules={[
-                    { required: true, message: "Enter mobile number" },
-                    {
-                      pattern: /^01[3-9]\d{8}$/,
-                      message: "Invalid Bangladeshi mobile number",
-                    },
-                  ]}
+                  name="transaction_number"
+                  label="Transaction Reference"
                 >
-                  <Input prefix="+88" />
+                  <Input prefix={<BsQrCodeScan />} />
                 </Form.Item>
               </Col>
             </Row>
@@ -425,32 +413,24 @@ const CreateVendorEntry = () => {
               <Col xs={24} md={12}>
                 <Form.Item
                   name="transaction_number"
-                  label="Payment Receiver Name"
-                  rules={[
-                    { required: true, message: "Enter payment receiver name" },
-                  ]}
+                  label="Receiver Name"
+                  rules={[{ required: true }]}
                 >
-                  <Input placeholder="Enter payment receiver name" />
+                  <Input />
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
                 <Form.Item
                   name="mobile_number"
                   label="Mobile Number"
-                  rules={[
-                    { required: true, message: "Enter mobile number" },
-                    {
-                      pattern: /^01[3-9]\d{8}$/,
-                      message: "Invalid Bangladeshi mobile number",
-                    },
-                  ]}
+                  rules={[{ required: true }]}
                 >
                   <Input prefix="+88" />
                 </Form.Item>
               </Col>
-              <Col xs={24} md={24}>
+              <Col xs={24}>
                 <Form.Item name="note" label="Note (Optional)">
-                  <TextArea rows={4} />
+                  <TextArea rows={3} />
                 </Form.Item>
               </Col>
             </Row>
@@ -462,52 +442,44 @@ const CreateVendorEntry = () => {
                 <Form.Item
                   name="cheque_number"
                   label="Cheque Number"
-                  rules={[{ required: true, message: "Enter cheque number" }]}
+                  rules={[{ required: true }]}
                 >
-                  <Input placeholder="e.g. 9876543210" />
+                  <Input />
                 </Form.Item>
               </Col>
-
               <Col xs={24} md={12}>
                 <Form.Item
                   name="cheque_date"
                   label="Cheque Date"
-                  rules={[{ required: true, message: "Select cheque date" }]}
-                  initialValue={dayjs()} // Make sure `dayjs` is imported
+                  rules={[{ required: true }]}
                 >
-                  <DatePicker format="YYYY-MM-DD" className="w-full" />
+                  <DatePicker className="w-full" format="YYYY-MM-DD" />
                 </Form.Item>
               </Col>
-
               <Col xs={24} md={12}>
                 <Form.Item
                   name="bank_name"
                   label="Bank Name"
-                  rules={[{ required: true, message: "Enter bank name" }]}
+                  rules={[{ required: true }]}
                 >
-                  <Input placeholder="e.g. Dutch Bangla Bank" />
+                  <Input />
                 </Form.Item>
               </Col>
-
               <Col xs={24} md={12}>
                 <Form.Item
                   name="account_number"
                   label="Account Number"
-                  rules={[{ required: true, message: "Enter account number" }]}
+                  rules={[{ required: true }]}
                 >
-                  <Input placeholder="e.g. 12345678901234" />
+                  <Input />
                 </Form.Item>
               </Col>
-
               <Col xs={24}>
                 <Form.Item
                   name="payment_description"
                   label="Payment Description"
                 >
-                  <Input.TextArea
-                    placeholder="Write details about the payment..."
-                    rows={3}
-                  />
+                  <TextArea rows={3} />
                 </Form.Item>
               </Col>
             </Row>
@@ -516,9 +488,8 @@ const CreateVendorEntry = () => {
 
         <Divider />
 
-        {/* File Upload */}
         <div className="mb-6">
-          <Text strong className="block mb-4 text-lg">
+          <Text strong className="block mb-4">
             Upload Attachment
           </Text>
           <Form.Item
@@ -526,21 +497,11 @@ const CreateVendorEntry = () => {
             valuePropName="fileList"
             getValueFromEvent={(e: any) => (Array.isArray(e) ? e : e?.fileList)}
           >
-            <Dragger
-              name="file"
-              beforeUpload={() => false}
-              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-              multiple
-            >
+            <Dragger beforeUpload={() => false} multiple>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
-              <p className="ant-upload-text">
-                Click or drag file to this area to upload
-              </p>
-              <p className="ant-upload-hint">
-                Only one file allowed (PDF, JPG, PNG, DOC)
-              </p>
+              <p>Click or drag file here to upload</p>
             </Dragger>
           </Form.Item>
         </div>
@@ -549,4 +510,4 @@ const CreateVendorEntry = () => {
   );
 };
 
-export default CreateVendorEntry;
+export default UpdateVendorPaymentEntry;

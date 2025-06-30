@@ -35,7 +35,6 @@ const UpdateNewCollectFee = () => {
   const { data: singleData } = useGetCollectSingleFeesQuery(
     Number(collectFeeId)
   );
-
   const [searchParams] = useSearchParams();
   const admissionId = searchParams.get("admission_id");
   const [form] = AntForm.useForm();
@@ -47,8 +46,6 @@ const UpdateNewCollectFee = () => {
     search: search,
     status: "approved",
   });
-
-  console.log(accountList);
 
   const admission = AntForm.useWatch("admission", form);
   const month = AntForm.useWatch("month", form);
@@ -88,6 +85,19 @@ const UpdateNewCollectFee = () => {
       skip: !admissionId && !admission,
     }
   );
+
+  // Merge single admission to admissionData to ensure the selected ID is present
+  const admissionOptions = [...(admissionData?.data?.results || [])];
+
+  // If singleData admission is not in the list, add it
+  if (
+    singleData?.data?.admission &&
+    !admissionOptions.some((a: any) => a.id === singleData?.data?.admission.id)
+  ) {
+    admissionOptions.push({
+      ...singleData?.data?.admission,
+    });
+  }
 
   useEffect(() => {
     if (singleData?.data) {
@@ -271,14 +281,12 @@ const UpdateNewCollectFee = () => {
                   filterOption={false}
                   loading={isFetching}
                   notFoundContent={
-                    admissionData?.data?.results?.length === 0
-                      ? "No Student found"
-                      : null
+                    admissionOptions.length === 0 ? "No Student found" : null
                   }
                   suffixIcon={<UserOutlined />}
                   disabled
                 >
-                  {admissionData?.data?.results?.map((data: any) => (
+                  {admissionOptions.map((data: any) => (
                     <Select.Option key={data?.id} value={data?.id}>
                       {data?.student?.first_name} {data?.student?.last_name} (
                       {data?.student?.user?.username})

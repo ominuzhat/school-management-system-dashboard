@@ -1,6 +1,7 @@
 import { Button, Radio, Space, TimePicker } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 const useMarkStudentsAttendanceColumns = ({
   attendanceData,
@@ -113,15 +114,16 @@ const useMarkStudentsAttendanceColumns = ({
       align: "center",
       render: (_text: any, _record: any, index: any) => index + 1,
     },
+
     {
       title: "Student Name",
       dataIndex: "admission",
       key: "student",
       align: "center",
       render: (admission: any) => (
-        <span>
+        <Link to={`/admission/admission-view/${admission?.id}`} className="text-green-500">
           {admission?.student?.first_name} {admission?.student?.last_name}
-        </span>
+        </Link>
       ),
     },
     {

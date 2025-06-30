@@ -170,7 +170,8 @@ const CreatePayment = () => {
                 {Array.isArray(accountList?.data) &&
                   accountList?.data?.map((account: any) => (
                     <Select.Option key={account?.id} value={account?.id}>
-                      {account?.account_type} - {account?.balance}
+                      {account?.type} - {account?.account_name}{" "}
+                      {account?.account_type} ({account?.balance})
                     </Select.Option>
                   ))}
               </Select>

@@ -2,7 +2,6 @@ import { Card, Col, Row } from "antd";
 import { useAppSelector } from "../../../../../../app/store";
 import { FilterState } from "../../../../../../app/features/filterSlice";
 import { useGetDashboardDataQuery } from "../../../../../Dashboard/api/dashoboardEndPoints";
-import useCashColumns from "../../utils/cashColumns";
 import { GetPermission } from "../../../../../../utilities/permission";
 import {
   actionNames,
@@ -13,12 +12,13 @@ import { IGetVendorEntry } from "../types/vendorEntryTypes";
 import { Table } from "../../../../../../common/CommonAnt";
 import NoPermissionData from "../../../../../../utilities/NoPermissionData";
 import CreateVendorEntry from "../components/CreateVendorEntry";
+import useVendorPaymentEntryColumns from "../utils/vendorPaymentEntryColumns";
 
 const VendorEntryPage = () => {
   const { page_size, page } = useAppSelector(FilterState);
 
   const { data: dashboardData } = useGetDashboardDataQuery({});
-  const columns = useCashColumns();
+  const columns = useVendorPaymentEntryColumns();
 
   const viewPermission = GetPermission(
     dashboardData?.data?.permissions,
@@ -32,7 +32,7 @@ const VendorEntryPage = () => {
   );
 
   const {
-    data: transactionList,
+    data: vendorPaymentList,
     isLoading,
     isFetching,
     refetch,
@@ -41,12 +41,13 @@ const VendorEntryPage = () => {
     page: Number(page) || undefined,
   });
 
+
   const dataLength =
-    (transactionList?.data?.results as IGetVendorEntry[] | undefined)?.length ??
-    0;
+    (vendorPaymentList?.data?.results as IGetVendorEntry[] | undefined)
+      ?.length ?? 0;
 
   const dataSource =
-    (transactionList?.data?.results as IGetVendorEntry[] | undefined) ?? [];
+    (vendorPaymentList?.data?.results as IGetVendorEntry[] | undefined) ?? [];
 
   return (
     <div className="space-y-5">
@@ -63,7 +64,7 @@ const VendorEntryPage = () => {
               }
             >
             </Card> */}
-              <CreateVendorEntry /> 
+            <CreateVendorEntry />
           </Col>
         )}
 

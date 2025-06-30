@@ -1,8 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Col, Form as AntForm, Input, Row, Button, Transfer, Collapse } from "antd";
+import {
+  Col,
+  Form as AntForm,
+  Input,
+  Row,
+  Button,
+  Transfer,
+  Collapse,
+} from "antd";
 import type { TransferItem } from "antd/es/transfer";
-import { IGetSingleRolePermission, Permission } from "../type/rolePermissionTypes";
+import {
+  IGetSingleRolePermission,
+  Permission,
+} from "../type/rolePermissionTypes";
 import {
   useGetPermissionQuery,
   useGetSingleRolePermissionQuery,
@@ -25,7 +36,6 @@ interface FormValues {
   permissions?: string[];
 }
 
-
 const organizePermissionsByModule = (
   permissions: Permission[],
   modules: typeof moduleNames
@@ -33,10 +43,10 @@ const organizePermissionsByModule = (
   const moduleValues = Object.values(modules);
   const grouped: GroupedPermissions = {};
 
-  permissions.forEach((permission:any) => {
-    const [_, ...moduleParts] = permission.codename.split('_');
-    const moduleName = moduleParts.join('_');
-    
+  permissions.forEach((permission: any) => {
+    const [_, ...moduleParts] = permission.codename.split("_");
+    const moduleName = moduleParts.join("_");
+
     if (moduleValues.includes(moduleName)) {
       if (!grouped[moduleName]) {
         grouped[moduleName] = [];
@@ -56,23 +66,30 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
   const [form] = AntForm.useForm<FormValues>();
   const [update] = useUpdateRolePermissionMutation();
   const { data: permissionData } = useGetPermissionQuery<any>({});
-  const { data: userPermissionData } = useGetSingleRolePermissionQuery<any>(record.id);
+  const { data: userPermissionData } = useGetSingleRolePermissionQuery<any>(
+    record.id
+  );
 
-  const [groupedPermissions, setGroupedPermissions] = useState<GroupedPermissions>({});
+  const [groupedPermissions, setGroupedPermissions] =
+    useState<GroupedPermissions>({});
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
 
   useEffect(() => {
     if (permissionData?.data) {
-      const organized = organizePermissionsByModule(permissionData.data, moduleNames);
+      const organized = organizePermissionsByModule(
+        permissionData.data,
+        moduleNames
+      );
       setGroupedPermissions(organized);
     }
   }, [permissionData]);
 
   useEffect(() => {
     if (userPermissionData?.data) {
-      const initialPermissions = userPermissionData.data.permissions
-        ?.map((p:any) => p.id.toString()) || [];
-      
+      const initialPermissions =
+        userPermissionData.data.permissions?.map((p: any) => p.id.toString()) ||
+        [];
+
       form.setFieldsValue({
         name: record.name,
         permissions: initialPermissions,
@@ -88,19 +105,19 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
         name: values.name,
         permissions: values.permissions?.map(Number) || [],
       };
-      
+
       await update(requestData).unwrap();
     } catch (error) {
-      console.error('Failed to update role permissions:', error);
+      console.error("Failed to update role permissions:", error);
     }
   };
 
   const handlePermissionChange = (module: string, newKeys: string[]) => {
-    const otherPermissions = selectedPermissions.filter(key => 
-      !groupedPermissions[module].some(item => item.key === key)
+    const otherPermissions = selectedPermissions.filter(
+      (key) => !groupedPermissions[module].some((item) => item.key === key)
     );
     const updatedPermissions = [...otherPermissions, ...newKeys];
-    
+
     setSelectedPermissions(updatedPermissions);
     form.setFieldsValue({ permissions: updatedPermissions });
   };
@@ -111,25 +128,28 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
         <span>{item.title}</span>
       </div>
     ),
-    value: item.title || '',
+    value: item.title || "",
   });
 
   const renderModuleSection = (module: string) => {
     const modulePermissions = groupedPermissions[module] || [];
-    const moduleSelectedKeys = selectedPermissions.filter(key => 
-      modulePermissions.some(item => item.key === key)
+    const moduleSelectedKeys = selectedPermissions.filter((key) =>
+      modulePermissions.some((item) => item.key === key)
     );
 
     return (
       <Collapse ghost key={module}>
-        <Panel header={<span className="module-header">{module.toUpperCase()}</span>} key={module}>
+        <Panel
+          header={<span className="module-header">{module.toUpperCase()}</span>}
+          key={module}
+        >
           <Transfer
             dataSource={modulePermissions}
             targetKeys={moduleSelectedKeys}
-            onChange={(keys:any) => handlePermissionChange(module, keys)}
+            onChange={(keys: any) => handlePermissionChange(module, keys)}
             render={renderPermissionItem}
             showSearch
-            listStyle={{ width: '100%', height: 250 }}
+            listStyle={{ width: "100%", height: 250 }}
           />
         </Panel>
       </Collapse>
@@ -143,17 +163,14 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
           <AntForm.Item
             label="Role Name"
             name="name"
-            rules={[{ required: true, message: 'Role name is required' }]}
+            rules={[{ required: true, message: "Role name is required" }]}
           >
             <Input placeholder="Enter role name" />
           </AntForm.Item>
         </Col>
 
         <Col span={24}>
-          <AntForm.Item
-            label="Permissions"
-            name="permissions"
-          >
+          <AntForm.Item label="Permissions" name="permissions">
             <div className="permissions-container">
               {Object.keys(groupedPermissions).map(renderModuleSection)}
             </div>

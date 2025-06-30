@@ -1,10 +1,9 @@
-import { Button, Space } from "antd";
+import { Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
 import dayjs from "dayjs";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
-import { Link } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
 import { GetPermission } from "../../../../utilities/permission";
 import {
@@ -13,9 +12,11 @@ import {
 } from "../../../../utilities/permissionConstant";
 import { useDeleteExamMutation } from "../api/examEndPoints";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 
 const useExamColumns = (): ColumnsType<any> => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
+  const navigate = useNavigate();
 
   const updatePermission = GetPermission(
     dashboardData?.data?.permissions,
@@ -82,19 +83,7 @@ const useExamColumns = (): ColumnsType<any> => {
       render: (record) => (
         <Space>
           {updatePermission && (
-            <Link to={`${record.id}`}>
-              <Button
-                title="Edit"
-                size="small"
-                type="default"
-                style={{
-                  color: "#FFA500",
-                  border: "1px solid #FFA500",
-                }}
-              >
-                <FaEdit />
-              </Button>
-            </Link>
+            <EditButton onClick={() => navigate(`${record?.id}`)} />
           )}
 
           <ViewButton to={`view/${record?.id}`} />
@@ -111,3 +100,4 @@ const useExamColumns = (): ColumnsType<any> => {
 };
 
 export default useExamColumns;
+

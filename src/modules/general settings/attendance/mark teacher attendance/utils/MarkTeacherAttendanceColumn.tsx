@@ -1,6 +1,7 @@
 import { Button, Radio, Space, TimePicker } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 const useMarkTeacherAttendanceColumns = ({
   attendanceData,
@@ -192,14 +193,35 @@ const useMarkTeacherAttendanceColumns = ({
 
   return [
     {
+      key: "0",
       title: "Full Name",
       align: "center" as const,
-      render: (_: any, record: any) =>
-        record?.teacher
-          ? `${record?.teacher.first_name} ${record?.teacher.last_name}`
-          : `${record?.employee.first_name} ${record?.employee.last_name}`,
+      render: (_: any, record: any) => {
+        if (record?.teacher) {
+          return (
+            <Link
+              to={`/teacher/teacher-view/${record?.teacher.id}`}
+              className="text-green-500"
+            >
+              {record?.teacher?.first_name} {record?.teacher?.last_name}
+            </Link>
+          );
+        } else if (record?.employee) {
+          return (
+            <Link
+              to={`/employees/employee-view/${record?.employee.id}`}
+              className="text-blue-500"
+            >
+              {record?.employee?.first_name} {record?.employee?.last_name}
+            </Link>
+          );
+        } else {
+          return "-";
+        }
+      },
     },
     {
+      key: "1",
       title: "User Name",
       align: "center" as const,
       render: (_: any, record: any) =>
@@ -208,6 +230,7 @@ const useMarkTeacherAttendanceColumns = ({
           : `${record?.employee?.user?.username}`,
     },
     {
+      key: "2",
       title: "Role Type",
       align: "center" as const,
       render: (_: any, record: any) =>
@@ -216,6 +239,7 @@ const useMarkTeacherAttendanceColumns = ({
           : `${record?.employee?.user?.role?.name}`,
     },
     {
+      key: "3",
       title: "Phone Number",
       align: "center" as const,
       render: (_: any, record: any) =>
@@ -231,6 +255,7 @@ const useMarkTeacherAttendanceColumns = ({
       render: (duration: any) => <span>{duration}</span>,
     },
     {
+      key: "5",
       title: "Check-in",
       align: "center" as const,
       render: (record: any) => {

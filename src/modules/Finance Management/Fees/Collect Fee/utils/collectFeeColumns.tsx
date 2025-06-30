@@ -2,7 +2,7 @@ import { Button, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useLazyGetCollectSingleFeesFormQuery } from "../api/collectFeeEndPoints";
 import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
 import { useEffect, useState } from "react";
 import { FaFilePdf } from "react-icons/fa6";
@@ -61,16 +61,22 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (_text, _record, index) => index + 1,
     },
-
     {
       key: "1",
       title: "Name",
       dataIndex: "admission",
       align: "center",
-      render: (title) =>
-        title
-          ? title.student?.first_name + " " + title.student?.last_name
-          : "N/A",
+      render: (admission: any) =>
+        admission ? (
+          <Link
+            to={`/admission/admission-view/${admission.id}`}
+            className="text-green-500"
+          >
+            {admission.student?.first_name} {admission.student?.last_name}
+          </Link>
+        ) : (
+          "N/A"
+        ),
     },
     {
       key: "4",

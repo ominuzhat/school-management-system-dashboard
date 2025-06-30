@@ -1,9 +1,8 @@
-import { Button, Space, Tag } from "antd";
+import { Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 
-import { Link } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { useGetDashboardDataQuery } from "../../../Dashboard/api/dashoboardEndPoints";
 import { GetPermission } from "../../../../utilities/permission";
 import {
@@ -12,9 +11,12 @@ import {
 } from "../../../../utilities/permissionConstant";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import { useDeleteStudentMutation } from "../api/studentEndPoints";
+import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 
 const useStudentColumns = (): ColumnsType<any> => {
   // const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const [deleteCartItem] = useDeleteStudentMutation();
 
@@ -128,19 +130,9 @@ const useStudentColumns = (): ColumnsType<any> => {
       render: (record) => (
         <Space>
           {updatePermission && (
-            <Link to={`/students/update/${record.id}`}>
-              <Button
-                title="Edit"
-                size="small"
-                type="default"
-                style={{
-                  color: "#FFA500",
-                  border: "1px solid #FFA500",
-                }}
-              >
-                <FaEdit />
-              </Button>
-            </Link>
+            <EditButton
+              onClick={() => navigate(`/students/update/${record.id}`)}
+            />
           )}
 
           <ViewButton to={`student-view/${record?.id}`} />

@@ -53,6 +53,8 @@ const CreateNewCollectFee = () => {
     paid_amount: 0,
   });
 
+  console.log(admission, "admission");
+
   useEffect(() => {
     if (Array.isArray(particulars)) {
       const amount = particulars.reduce(
@@ -74,9 +76,9 @@ const CreateNewCollectFee = () => {
   }, [form, particulars]);
 
   const { data: getSingleAdmission } = useGetSingleAdmissionQuery<any>(
-    admissionId || admission,
+    admissionId || admission?.value,
     {
-      skip: !admissionId && !admission,
+      skip: !admissionId && !admission?.value,
     }
   );
   const { data: newCollectFeeData } = useGetNewCollectFeesQuery<any>(
