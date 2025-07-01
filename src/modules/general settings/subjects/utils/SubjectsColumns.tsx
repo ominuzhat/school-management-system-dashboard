@@ -51,19 +51,14 @@ const useSubjectColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? title : "N/A"),
     },
+    {
+      key: "2",
+      title: "Group Type",
+      dataIndex: "group_type_display",
+      align: "center",
+      render: (title) => (title ? title : "N/A"),
+    },
 
-    // {
-    //   key: "4",
-    //   title: "Active",
-    //   dataIndex: "is_active",
-    //   align: "center",
-    //   render: (title) =>
-    //     title ? (
-    //       <Tag color="green">Active</Tag>
-    //     ) : (
-    //       <Tag color="red">Inactive</Tag>
-    //     ),
-    // },
     {
       title: "Actions",
       align: "center",

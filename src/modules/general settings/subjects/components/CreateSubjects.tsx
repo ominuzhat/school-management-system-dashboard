@@ -18,7 +18,7 @@ interface ISubjectItem {
   name: string;
   grade_level: number;
   general: boolean;
-  group?: string;
+  group_type?: string;
   key: number;
 }
 
@@ -41,12 +41,20 @@ const CreateSubject = () => {
     }
 
     try {
-      await create(subjects as any);
+      // ✅ Build payload with group_type logic
+      const payload :any= subjects.map((s) => ({
+        name: s.name,
+        grade_level: s.grade_level,
+        group_type: s.general ? "general" : s.group_type,
+      }));
+
+      await create(payload);
       setSubjects([]);
       setNextKey(1);
       form.resetFields();
       setGeneral(true);
       setGroup(null);
+
       notification.success({
         message: "Success",
         description: "Subjects created successfully",
@@ -83,18 +91,17 @@ const CreateSubject = () => {
       name: subjectName,
       grade_level: gradeLevel,
       general: general,
-      group: general ? undefined : group || undefined,
+      group_type: general ? "general" : group || undefined,
       key: nextKey,
     };
 
     setSubjects([...subjects, newSubject]);
     setNextKey(nextKey + 1);
 
-    // Reset input fields but keep group if general is false
     form.setFieldsValue({ name: "" });
 
     if (general) {
-      setGroup(null); // Only clear group if general is true
+      setGroup(null);
     }
   };
 
@@ -127,8 +134,8 @@ const CreateSubject = () => {
     },
     {
       title: "Group",
-      dataIndex: "group",
-      key: "group",
+      dataIndex: "group_type",
+      key: "group_type",
       render: (value: string) => value || "-",
     },
     {
@@ -177,7 +184,7 @@ const CreateSubject = () => {
                 checked={general}
                 onChange={(checked) => {
                   setGeneral(checked);
-                  if (checked) setGroup(null); // clear group if switched back to general
+                  if (checked) setGroup(null);
                 }}
               />
             </Form.Item>
@@ -188,12 +195,12 @@ const CreateSubject = () => {
               <Form.Item label="Group">
                 <Select
                   placeholder="Select Group"
-                  value={group || undefined}
+                  value={group}
                   onChange={(value) => setGroup(value)}
                 >
-                  <Select.Option value="Science">Science</Select.Option>
-                  <Select.Option value="Commerce">Commerce</Select.Option>
-                  <Select.Option value="Arts">Arts</Select.Option>
+                  <Select.Option value="science">Science</Select.Option>
+                  <Select.Option value="commerce">Commerce</Select.Option>
+                  <Select.Option value="arts">Arts</Select.Option>
                 </Select>
               </Form.Item>
             </Col>

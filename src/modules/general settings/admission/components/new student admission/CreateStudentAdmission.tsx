@@ -21,7 +21,10 @@ import { IAdmission } from "../../type/admissionType";
 import { IClasses } from "../../../classes/type/classesType";
 
 import { useDispatch } from "react-redux";
-import { updateAdmissionField } from "../../../../../app/features/studentAdmissionSlice";
+import {
+  updateAdmissionField,
+  updateStudentField,
+} from "../../../../../app/features/studentAdmissionSlice";
 import { useAppSelector } from "../../../../../app/store";
 
 const { Title, Text } = Typography;
@@ -43,6 +46,7 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
   const gradeLevel = AntForm.useWatch("grade_level", form);
   const feeType = AntForm.useWatch("fee_type", form);
   const customFees = AntForm.useWatch("customFees", form);
+  const groupType = AntForm.useWatch("group_type", form);
   const shift = AntForm.useWatch("shift", form);
   const [selectedClass, setSelectedClass] = useState<any>({});
   const [selectedShift, setSelectedShift] = useState<any>({});
@@ -89,7 +93,9 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
 
   // ----------------------
   const { data: classData, isFetching: isFetchingClasses } =
-    useGetClassesBigListQuery({});
+    useGetClassesBigListQuery({
+      subjects__group_type: groupType,
+    });
 
   useEffect(() => {
     const findClass =
@@ -228,10 +234,9 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        // initialValues={{
-        //   subjects: selectedSubjects,
-        //   status: "approved",
-        // }}
+        initialValues={{
+          group_type: "general",
+        }}
       >
         <Card bordered={false} className="shadow-sm">
           <Title level={4} className="mb-4">
@@ -263,6 +268,30 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
                         {session.name}
                       </Option>
                     ))}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+              <Form.Item label="Group" name="group_type">
+                <Select
+                  placeholder="Select Group"
+                  onChange={(value) => {
+                    form.setFieldsValue({
+                      grade_level: undefined,
+                    });
+                    dispatch(
+                      updateStudentField({
+                        field: "group_type",
+                        value,
+                      })
+                    );
+                  }}
+                >
+                  <Select.Option value="general">General</Select.Option>
+                  <Select.Option value="science">Science</Select.Option>
+                  <Select.Option value="commerce">Commerce</Select.Option>
+                  <Select.Option value="arts">Arts</Select.Option>
                 </Select>
               </Form.Item>
             </Col>

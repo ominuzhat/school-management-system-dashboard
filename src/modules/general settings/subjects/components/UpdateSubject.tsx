@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import { Form, Input, Select, Button, Switch } from "antd";
+import { Form, Input, Select, Button, Switch, notification } from "antd";
 import {
   useGetSingleSubjectsQuery,
   useUpdateSubjectsMutation,
 } from "../api/subjectsEndPoints";
-import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { ISubjects } from "../type/subjectsType";
 
 const UpdateSubjects = ({ record }: any) => {
   const [form] = Form.useForm();
-  const { data: GetClassData } = useGetClassesQuery({});
+  // const { data: GetClassData } = useGetClassesQuery({});
   const { data: singleData } = useGetSingleSubjectsQuery(record);
   const [updateClass, { isLoading }] = useUpdateSubjectsMutation();
 
@@ -18,36 +17,53 @@ const UpdateSubjects = ({ record }: any) => {
 
   useEffect(() => {
     if (singleData?.data) {
-      const subjectData = singleData?.data as unknown as ISubjects;
+      const subjectData: any = singleData?.data as unknown as ISubjects;
       form.setFieldsValue({
         name: subjectData.name,
         grade_level: subjectData.grade_level?.id,
       });
 
-      // Pre-fill general and group
-      setGeneral(subjectData.general ?? true);
-      setGroup(subjectData.group || null);
+      // ✅ Pre-fill switches and group type
+      if (subjectData.group_type?.toLowerCase() === "general") {
+        setGeneral(true);
+        setGroup(null);
+      } else {
+        setGeneral(false);
+        setGroup(subjectData.group_type?.toLowerCase() || null);
+      }
     }
   }, [singleData, form]);
 
-  const onFinish = (values: any) => {
-    const updatedData = {
-      ...values,
-      general: general,
-      group: general ? undefined : group || undefined,
-    };
+  const onFinish = async (values: any) => {
+    try {
+      const payload = {
+        name: values.name,
+        grade_level: values.grade_level,
+        group_type: general ? "general" : group,
+      };
 
-    updateClass({ id: record, data: updatedData });
+      await updateClass({ id: record, data: payload }).unwrap();
+
+      notification.success({
+        message: "Success",
+        description: "Subject updated successfully",
+      });
+    } catch (error) {
+      notification.error({
+        message: "Error",
+        description: "Failed to update subject",
+      });
+    }
   };
 
   return (
     <div>
       <Form form={form} onFinish={onFinish} layout="vertical">
-        <Form.Item label="Subjects Name" name="name">
-          <Input placeholder="Enter Subjects Name" />
+        <Form.Item label="Subject Name" name="name">
+          <Input placeholder="Enter Subject Name" />
         </Form.Item>
 
-        <Form.Item<ISubjects> label="Class" name="grade_level">
+        {/* <Form.Item<ISubjects> label="Class" name="grade_level">
           <Select placeholder="Select Class" className="w-full">
             {Array.isArray(GetClassData?.data) &&
               GetClassData?.data?.map((data: any) => (
@@ -56,16 +72,14 @@ const UpdateSubjects = ({ record }: any) => {
                 </Select.Option>
               ))}
           </Select>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item label="General" valuePropName="checked">
           <Switch
             checked={general}
             onChange={(checked) => {
               setGeneral(checked);
-              if (checked) {
-                setGroup(null);
-              }
+              if (checked) setGroup(null);
             }}
           />
         </Form.Item>
@@ -77,9 +91,9 @@ const UpdateSubjects = ({ record }: any) => {
               value={group || undefined}
               onChange={(value) => setGroup(value)}
             >
-              <Select.Option value="Science">Science</Select.Option>
-              <Select.Option value="Commerce">Commerce</Select.Option>
-              <Select.Option value="Arts">Arts</Select.Option>
+              <Select.Option value="science">Science</Select.Option>
+              <Select.Option value="commerce">Commerce</Select.Option>
+              <Select.Option value="arts">Arts</Select.Option>
             </Select>
           </Form.Item>
         )}
