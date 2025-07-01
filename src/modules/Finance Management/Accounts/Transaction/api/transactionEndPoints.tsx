@@ -31,7 +31,7 @@ const transactionENdPoints = api.injectEndpoints({
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/accounts/transactions/pending-requests/",
+        url: "/api/v1.0/accounts/transfer-requests/stats/",
         params,
       }),
       providesTags: [
@@ -41,13 +41,28 @@ const transactionENdPoints = api.injectEndpoints({
         },
       ],
     }),
+    getTransferRequest: builder.query<
+      ApiResponse<PaginatedResponse<IGetTransaction[]>>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "/api/v1.0/accounts/transfer-requests/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.TRANSFER_REQUEST,
+          id: TagTypes.TRANSFER_REQUEST + "_ID",
+        },
+      ],
+    }),
 
     createFundTransaction: builder.mutation<
       ApiResponse<ICreateTransaction>,
       any
     >({
       query: (data) => ({
-        url: "/api/v1.0/accounts/transactions/request-transfer/",
+        url: "/api/v1.0/accounts/transfer-requests/",
         method: "POST",
         body: data,
       }),
@@ -92,7 +107,7 @@ const transactionENdPoints = api.injectEndpoints({
       any
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/accounts/transactions/${id}/approve-transfer/`,
+        url: `/api/v1.0/accounts/transfer-requests/${id}/approve/`,
         method: "POST",
         body: data,
       }),
@@ -107,6 +122,10 @@ const transactionENdPoints = api.injectEndpoints({
         {
           type: TagTypes.ACCOUNT,
           id: TagTypes.ACCOUNT + "_ID",
+        },
+        {
+          type: TagTypes.TRANSFER_REQUEST,
+          id: TagTypes.TRANSFER_REQUEST + "_ID",
         },
       ],
     }),
@@ -116,7 +135,7 @@ const transactionENdPoints = api.injectEndpoints({
       any
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/accounts/transactions/${id}/reject-transfer/`,
+        url: `/api/v1.0/accounts/transfer-requests/${id}/reject/`,
         method: "POST",
         body: data,
       }),
@@ -131,6 +150,10 @@ const transactionENdPoints = api.injectEndpoints({
         {
           type: TagTypes.ACCOUNT,
           id: TagTypes.ACCOUNT + "_ID",
+        },
+        {
+          type: TagTypes.TRANSFER_REQUEST,
+          id: TagTypes.TRANSFER_REQUEST + "_ID",
         },
       ],
     }),
@@ -199,6 +222,7 @@ const transactionENdPoints = api.injectEndpoints({
 
 export const {
   useGetTransactionQuery,
+  useGetTransferRequestQuery,
   useCreateTransactionMutation,
   useUpdateTransactionMutation,
   useGetSingleTransactionQuery,

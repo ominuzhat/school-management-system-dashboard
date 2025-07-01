@@ -122,7 +122,7 @@ const CreateVendorEntry = () => {
 
     // Multiple file uploads
     if (values.file && Array.isArray(values.file)) {
-      values.file.forEach((fileObj: any, index: number) => {
+      values.file.forEach((fileObj: any) => {
         if (fileObj.originFileObj) {
           formData.append("files[]", fileObj.originFileObj); // Use "files[]" to send as array
         }

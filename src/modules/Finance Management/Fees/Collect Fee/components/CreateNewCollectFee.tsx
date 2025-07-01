@@ -158,7 +158,7 @@ const CreateNewCollectFee = () => {
     console.log(values);
 
     const results = {
-      admission: values?.admission?.value,
+      admission: values?.admission,
       add_ons: values?.add_ons,
       discount_type: values?.discount_type,
       discount_value: values?.discount_value,

@@ -24,6 +24,7 @@ export const TagTypes = {
   ACCOUNT: "Account",
   DASHBOARD: "Dashboard",
   TRANSACTION: "Transaction",
+  TRANSFER_REQUEST: "Transfer_request",
   ADDITIONAL_FEE: "Additional_fees",
   COLLECT_FEE: "Collect_fees",
   TUITION_FEES_PAYMENT: "Tuition_fees_Payment",

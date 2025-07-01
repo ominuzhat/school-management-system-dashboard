@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Col,
@@ -34,7 +35,7 @@ const CreateInvoiceEntry = () => {
 
     // Append multiple files
     if (values.uploaded_files && values.uploaded_files.length > 0) {
-      values.uploaded_files.forEach((file: any, index: number) => {
+      values.uploaded_files.forEach((file: any) => {
         if (file.originFileObj) {
           formData.append(`uploaded_files`, file.originFileObj);
         }

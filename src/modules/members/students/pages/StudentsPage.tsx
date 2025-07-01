@@ -240,7 +240,15 @@ const StudentsPage = () => {
         <Card
           title={
             <div className="flex justify-between items-center">
-              <span>All Students</span>
+              <div className="space-x-5">
+                <span>All Students</span>
+                <Link
+                  to={`/admission/create-admission`}
+                  className="w-fit underline text-blue-400 cursor-pointer text-sm font-normal"
+                >
+                  Add Admission{" "}
+                </Link>
+              </div>
               <div className="flex items-center">
                 <FaListUl
                   className={`w-9 h-9 border px-2 cursor-pointer ${

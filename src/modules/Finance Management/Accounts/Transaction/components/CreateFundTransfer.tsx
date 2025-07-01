@@ -1,4 +1,12 @@
-import { Col, Input, Row, Select, Form as AntForm, Card, Statistic } from "antd";
+import {
+  Col,
+  Input,
+  Row,
+  Select,
+  Form as AntForm,
+  Card,
+  Statistic,
+} from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import {
   useCreateFundTransactionMutation,
@@ -11,13 +19,15 @@ import { useEffect } from "react";
 const CreateFundTransfer = () => {
   const [create, { isLoading, isSuccess }] = useCreateFundTransactionMutation();
   const { data: accountList } = useGetAccountQuery({});
-  const { data: pendingTransactionList } = useGetPendingTransactionQuery<any>({});
+  const { data: pendingTransactionList } = useGetPendingTransactionQuery<any>(
+    {}
+  );
 
   const transactionData = pendingTransactionList?.data || {
-    pending_amount: 0,
-    requested_amount: 0,
-    approved_amount: 0,
-    rejected_amount: 0
+    transferrable_collection: 0,
+    requested_collection: 0,
+    approved_collection: 0,
+    rejected_collection: 0,
   };
 
   const [form] = AntForm.useForm();
@@ -25,7 +35,7 @@ const CreateFundTransfer = () => {
   const onFinish = (values: any): void => {
     create({
       ...values,
-      transaction_type: "transfer", 
+      transaction_type: "transfer",
     });
   };
 
@@ -42,9 +52,9 @@ const CreateFundTransfer = () => {
           <Card>
             <Statistic
               title="Pending Amount"
-              value={transactionData.pending_amount}
+              value={transactionData.transferrable_collection}
               precision={2}
-              valueStyle={{ color: '#faad14' }}
+              valueStyle={{ color: "#faad14" }}
               prefix={<TbCoinTaka />}
             />
           </Card>
@@ -53,9 +63,9 @@ const CreateFundTransfer = () => {
           <Card>
             <Statistic
               title="Requested Amount"
-              value={transactionData.requested_amount}
+              value={transactionData.requested_collection}
               precision={2}
-              valueStyle={{ color: '#1890ff' }}
+              valueStyle={{ color: "#1890ff" }}
               prefix={<TbCoinTaka />}
             />
           </Card>
@@ -64,9 +74,9 @@ const CreateFundTransfer = () => {
           <Card>
             <Statistic
               title="Approved Amount"
-              value={transactionData.approved_amount}
+              value={transactionData.approved_collection}
               precision={2}
-              valueStyle={{ color: '#52c41a' }}
+              valueStyle={{ color: "#52c41a" }}
               prefix={<TbCoinTaka />}
             />
           </Card>
@@ -75,9 +85,9 @@ const CreateFundTransfer = () => {
           <Card>
             <Statistic
               title="Rejected Amount"
-              value={transactionData.rejected_amount}
+              value={transactionData.rejected_collection}
               precision={2}
-              valueStyle={{ color: '#ff4d4f' }}
+              valueStyle={{ color: "#ff4d4f" }}
               prefix={<TbCoinTaka />}
             />
           </Card>
@@ -95,7 +105,7 @@ const CreateFundTransfer = () => {
           <Col lg={12}>
             <Form.Item<any>
               label="Transfer To"
-              name="target_account_id"
+              name="destination_account"
               rules={[
                 { required: true, message: "Target Account is required!" },
               ]}
@@ -109,7 +119,7 @@ const CreateFundTransfer = () => {
                   accountList?.data?.map((account: any) => (
                     <Select.Option key={account?.id} value={account?.id}>
                       {account?.type == "cash"
-                        ? `cash (Office Account)`
+                        ? `cash (Office Account) - (${account?.balance})`
                         : `${account?.type} - ${account?.account_type} (${account?.balance})`}
                     </Select.Option>
                   ))}
@@ -127,6 +137,15 @@ const CreateFundTransfer = () => {
                 addonBefore={<TbCoinTaka />}
                 placeholder="Enter amount"
                 type="number"
+              />
+            </Form.Item>
+          </Col>
+          {/* ✅ New Notes Field */}
+          <Col span={24}>
+            <Form.Item<any> label="Notes" name="notes">
+              <Input.TextArea
+                placeholder="Add any notes about this transfer"
+                rows={4}
               />
             </Form.Item>
           </Col>

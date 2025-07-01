@@ -6,10 +6,11 @@ import {
   Input,
   Row,
   Button,
-  Transfer,
-  Collapse,
+  Checkbox,
+  Card,
+  Space,
 } from "antd";
-import type { TransferItem } from "antd/es/transfer";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
   IGetSingleRolePermission,
   Permission,
@@ -21,14 +22,16 @@ import {
 } from "../api/rolePermissionEndPoints";
 import { moduleNames } from "../../../../utilities/permissionConstant";
 
-const { Panel } = Collapse;
-
 interface Props {
   record: IGetSingleRolePermission;
 }
 
 interface GroupedPermissions {
-  [module: string]: TransferItem[];
+  [module: string]: {
+    id: string;
+    name: string;
+    codename: string;
+  }[];
 }
 
 interface FormValues {
@@ -52,9 +55,9 @@ const organizePermissionsByModule = (
         grouped[moduleName] = [];
       }
       grouped[moduleName].push({
-        key: permission.id.toString(),
-        title: permission.name,
-        description: permission.codename,
+        id: permission.id.toString(),
+        name: permission.name,
+        codename: permission.codename,
       });
     }
   });
@@ -100,59 +103,134 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
 
   const handleSubmit = async (values: FormValues) => {
     try {
+      // Ensure permissions is always an array
+      const permissionsArray = Array.isArray(values.permissions)
+        ? values.permissions
+        : selectedPermissions;
+
       const requestData: any = {
         id: record.id,
         name: values.name,
-        permissions: values.permissions?.map(Number) || [],
+        permissions: permissionsArray.map(Number) || [],
       };
 
-      await update(requestData).unwrap();
+      await update({ id: record.id, data: requestData }).unwrap();
     } catch (error) {
       console.error("Failed to update role permissions:", error);
     }
   };
 
-  const handlePermissionChange = (module: string, newKeys: string[]) => {
-    const otherPermissions = selectedPermissions.filter(
-      (key) => !groupedPermissions[module].some((item) => item.key === key)
-    );
-    const updatedPermissions = [...otherPermissions, ...newKeys];
+  const handlePermissionChange = (permissionId: string, checked: boolean) => {
+    const newSelectedPermissions = checked
+      ? [...selectedPermissions, permissionId]
+      : selectedPermissions.filter((id) => id !== permissionId);
 
-    setSelectedPermissions(updatedPermissions);
-    form.setFieldsValue({ permissions: updatedPermissions });
+    setSelectedPermissions(newSelectedPermissions);
+    form.setFieldsValue({ permissions: newSelectedPermissions });
   };
 
-  const renderPermissionItem = (item: TransferItem) => ({
-    label: (
-      <div className="permission-item">
-        <span>{item.title}</span>
-      </div>
-    ),
-    value: item.title || "",
-  });
+  const handleModuleSelectAll = (module: string, checked: boolean) => {
+    const modulePermissions = groupedPermissions[module] || [];
+    const modulePermissionIds = modulePermissions.map((p) => p.id);
+
+    const newSelectedPermissions = checked
+      ? [
+          ...selectedPermissions.filter(
+            (id) => !modulePermissionIds.includes(id)
+          ),
+          ...modulePermissionIds,
+        ]
+      : selectedPermissions.filter((id) => !modulePermissionIds.includes(id));
+
+    setSelectedPermissions(newSelectedPermissions);
+    form.setFieldsValue({ permissions: newSelectedPermissions });
+  };
+
+  const handleGlobalSelectAll = (e: CheckboxChangeEvent) => {
+    const allPermissionIds: string[] = [];
+    Object.values(groupedPermissions).forEach((modulePermissions) => {
+      modulePermissions.forEach((permission) => {
+        allPermissionIds.push(permission.id);
+      });
+    });
+
+    const newSelectedPermissions = e.target.checked
+      ? [...allPermissionIds]
+      : [];
+
+    setSelectedPermissions(newSelectedPermissions);
+    form.setFieldsValue({ permissions: newSelectedPermissions });
+  };
 
   const renderModuleSection = (module: string) => {
     const modulePermissions = groupedPermissions[module] || [];
-    const moduleSelectedKeys = selectedPermissions.filter((key) =>
-      modulePermissions.some((item) => item.key === key)
-    );
+    const allModuleSelected =
+      modulePermissions.length > 0 &&
+      modulePermissions.every((p) => selectedPermissions.includes(p.id));
 
     return (
-      <Collapse ghost key={module}>
-        <Panel
-          header={<span className="module-header">{module.toUpperCase()}</span>}
-          key={module}
-        >
-          <Transfer
-            dataSource={modulePermissions}
-            targetKeys={moduleSelectedKeys}
-            onChange={(keys: any) => handlePermissionChange(module, keys)}
-            render={renderPermissionItem}
-            showSearch
-            listStyle={{ width: "100%", height: 250 }}
-          />
-        </Panel>
-      </Collapse>
+      <Card
+        key={module}
+        title={
+          <Space>
+            <Checkbox
+              checked={allModuleSelected}
+              indeterminate={
+                modulePermissions.some((p) =>
+                  selectedPermissions.includes(p.id)
+                ) && !allModuleSelected
+              }
+              onChange={(e) => handleModuleSelectAll(module, e.target.checked)}
+            />
+            <span>{module.toUpperCase()}</span>
+          </Space>
+        }
+        style={{ marginBottom: 16 }}
+      >
+        <Row gutter={[16, 16]}>
+          {modulePermissions.map((permission) => (
+            <Col key={permission.id} xs={24} sm={12} md={8} lg={6}>
+              <Checkbox
+                checked={selectedPermissions.includes(permission.id)}
+                onChange={(e) =>
+                  handlePermissionChange(permission.id, e.target.checked)
+                }
+              >
+                {permission.name}
+              </Checkbox>
+            </Col>
+          ))}
+        </Row>
+      </Card>
+    );
+  };
+
+  const isGlobalSelectAllChecked = () => {
+    const allPermissionIds: string[] = [];
+    Object.values(groupedPermissions).forEach((modulePermissions) => {
+      modulePermissions.forEach((permission) => {
+        allPermissionIds.push(permission.id);
+      });
+    });
+
+    return (
+      allPermissionIds.length > 0 &&
+      allPermissionIds.every((id) => selectedPermissions.includes(id))
+    );
+  };
+
+  const isGlobalSelectAllIndeterminate = () => {
+    const allPermissionIds: string[] = [];
+    Object.values(groupedPermissions).forEach((modulePermissions) => {
+      modulePermissions.forEach((permission) => {
+        allPermissionIds.push(permission.id);
+      });
+    });
+
+    return (
+      selectedPermissions.length > 0 &&
+      !isGlobalSelectAllChecked() &&
+      allPermissionIds.some((id) => selectedPermissions.includes(id))
     );
   };
 
@@ -172,6 +250,15 @@ const EditRolePermission: React.FC<Props> = ({ record }) => {
         <Col span={24}>
           <AntForm.Item label="Permissions" name="permissions">
             <div className="permissions-container">
+              <div style={{ marginBottom: 16 }}>
+                <Checkbox
+                  checked={isGlobalSelectAllChecked()}
+                  indeterminate={isGlobalSelectAllIndeterminate()}
+                  onChange={handleGlobalSelectAll}
+                >
+                  <strong>Select All Permissions</strong>
+                </Checkbox>
+              </div>
               {Object.keys(groupedPermissions).map(renderModuleSection)}
             </div>
           </AntForm.Item>
