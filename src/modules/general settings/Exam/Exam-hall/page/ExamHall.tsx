@@ -6,7 +6,6 @@ import { useAppSelector } from "../../../../../app/store";
 import { FilterState } from "../../../../../app/features/filterSlice";
 import { IGetExamHall } from "../Type/examHallType";
 import { useGetExamHallQuery } from "../api/examHallEndPoints";
-import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import { showModal } from "../../../../../app/features/modalSlice";
 import { Table } from "../../../../../common/CommonAnt";
 import useExamHallColumns from "../utils/ExamColumns";
@@ -53,9 +52,7 @@ const ExamHallPage = () => {
 
   return (
     <div className="space-y-5">
-      <div className="my-5">
-        <BreadCrumb />
-      </div>
+   
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           {createPermission && (

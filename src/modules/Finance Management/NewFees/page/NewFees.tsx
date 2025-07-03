@@ -113,13 +113,11 @@ import { FaArrowsSpin } from "react-icons/fa6";
 import CashManagementTab from "../components/FinanceTab/CashManagementTab";
 
 const tabs = [
-  // { key: "overview", label: "ওভারভিউ", icon: <FaChartPie /> },
   { key: "fees", label: "Fee", icon: <MdOutlineReceiptLong /> },
   { key: "payments", label: "Payroll", icon: <FaCreditCard /> },
   { key: "expenses", label: "Cash Management", icon: <FaArrowUp /> },
   { key: "transfers", label: "Transfer", icon: <FaArrowsSpin /> },
   { key: "account", label: "Account", icon: <MdAccountBalanceWallet /> },
-  // { key: "ledger", label: "খাতা", icon: <FaSitemap /> },
 ];
 
 const TabComponent = () => {

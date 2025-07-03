@@ -134,7 +134,7 @@ const CreateVendorEntry = () => {
 
   const handleVendorChange = (vendorId: number) => {
     const matchedInvoice: any = invoiceList?.data?.results?.find(
-      (invoice: any) => invoice.vendor?.id === vendorId
+      (invoice: any) => invoice?.id === vendorId
     );
 
     if (matchedInvoice) {
@@ -199,11 +199,11 @@ const CreateVendorEntry = () => {
             <Col xs={24} md={12}>
               <Form.Item
                 name="invoice"
-                label="Vendor"
-                rules={[{ required: true, message: "Please select a vendor" }]}
+                label="Invoice"
+                rules={[{ required: true, message: "Please select a Invoice" }]}
               >
                 <Select
-                  placeholder="Select vendor"
+                  placeholder="Select Invoice"
                   suffixIcon={<MdPerson />}
                   onChange={handleVendorChange}
                   showSearch
@@ -214,8 +214,8 @@ const CreateVendorEntry = () => {
                   }
                   options={
                     invoiceList?.data?.results?.map((invoice: any) => ({
-                      label: `${invoice.vendor?.name} (${invoice.invoice_number})`,
-                      value: invoice.vendor?.id,
+                      label: `${invoice.vendor?.name} (${invoice.invoice_number}) - (${invoice?.amount_due})`,
+                      value: invoice?.id,
                     })) ?? []
                   }
                 />

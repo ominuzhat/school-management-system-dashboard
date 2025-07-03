@@ -60,7 +60,6 @@ import AccountPage from "../modules/Finance Management/Accounts/account/pages/Ac
 import TransactionPage from "../modules/Finance Management/Accounts/Transaction/pages/TransactionPage";
 import SmsPage from "../modules/settings/sms configuration/pages/SmsPage";
 import ShiftPage from "../modules/general settings/shift/page/ShiftPage";
-import ExamPage from "../modules/general settings/Exam/page/ExamPage";
 import CreateExam from "../modules/general settings/Exam/components/CreateExam";
 import ViewExam from "../modules/general settings/Exam/components/ViewExam";
 import UpdateExam from "../modules/general settings/Exam/components/UpdateExam";
@@ -81,6 +80,7 @@ import CreateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/
 import UpdateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/components/UpdateNewCollectFee";
 import ClassManagement from "../modules/general settings/class management/page/ClassManagement";
 import AttendanceTab from "../modules/general settings/attendance/Tab/AttandenceTab";
+import ExamTab from "../modules/general settings/Exam/Tab/ExamTab";
 
 const router = createBrowserRouter([
   {
@@ -229,7 +229,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <ExamPage />,
+            element: <ExamTab />,
           },
           {
             path: "create",

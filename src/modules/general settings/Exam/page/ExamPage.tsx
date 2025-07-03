@@ -1,5 +1,4 @@
 import { Button, Card, Col, Row } from "antd";
-import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { PlusOutlined } from "@ant-design/icons";
 import { Table } from "../../../../common/CommonAnt";
 
@@ -49,9 +48,6 @@ const ExamPage = () => {
 
   return (
     <div className="space-y-5">
-      <div className="my-5">
-        <BreadCrumb />
-      </div>
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           {createPermission && (
