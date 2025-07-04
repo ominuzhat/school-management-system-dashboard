@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { BsCash } from "react-icons/bs";
 import { CiMobile3 } from "react-icons/ci";
-import { MdAccountBalance, MdAccountBalanceWallet } from "react-icons/md";
+import {
+  MdAccountBalance,
+  MdAccountBalanceWallet,
+  MdOutlineWorkHistory,
+} from "react-icons/md";
 import MfsPage from "../../../Accounts/account/pages/MfsPage";
 import AccountPage from "../../../Accounts/account/pages/AccountPages";
 import BankPage from "../../../Accounts/account/pages/BankPage";
@@ -9,6 +13,7 @@ import ShurjoPayPage from "../../../Accounts/account/pages/ShurjoPayPage";
 import { PiHandDeposit } from "react-icons/pi";
 import ApprovalPage from "../../../Accounts/account/pages/ApprovalPage";
 import { SiTicktick } from "react-icons/si";
+import CollectionPage from "../../../Accounts/account/pages/CollectionPage";
 
 const AccountTab = () => {
   const tabs = [
@@ -17,6 +22,11 @@ const AccountTab = () => {
     { key: "mfs", label: "MFS", icon: <CiMobile3 /> },
     { key: "cash", label: "Cash", icon: <BsCash /> },
     { key: "surjopay", label: "ShurjoPay", icon: <PiHandDeposit /> },
+    {
+      key: "collection",
+      label: "Staff Ledger",
+      icon: <MdOutlineWorkHistory />,
+    },
     { key: "approval", label: "Approval", icon: <SiTicktick /> },
   ];
 
@@ -28,7 +38,7 @@ const AccountTab = () => {
       <div>
         <div className="my-10">
           <div className="bg-white/80 backdrop-blur-md border border-[#A2C3FF] rounded-2xl shadow-xl ">
-            <div className="grid grid-cols-3 lg:grid-cols-6">
+            <div className="grid grid-cols-3 lg:grid-cols-7">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -54,6 +64,7 @@ const AccountTab = () => {
           {activeTab === "cash" && <BankPage />}
           {activeTab === "surjopay" && <ShurjoPayPage />}
           {activeTab === "mfs" && <MfsPage />}
+          {activeTab === "collection" && <CollectionPage />}
           {activeTab === "approval" && <ApprovalPage />}
         </div>
       </div>

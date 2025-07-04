@@ -65,13 +65,11 @@ const CreateEmployee = () => {
       } else if (key === "hire_date" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
-      } 
-      else if (key === "shifts" && Array.isArray(value)) {
+      } else if (key === "shifts" && Array.isArray(value)) {
         value.forEach((subjectId: any) => {
           formData.append("shifts", subjectId);
         });
-      }
-       else if (key === "date_of_birth" && value) {
+      } else if (key === "date_of_birth" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (key === "phone_number") {
@@ -302,11 +300,7 @@ const CreateEmployee = () => {
                       </Col>
 
                       <Col lg={8}>
-                        <Form.Item<any>
-                          label="Username"
-                          name="username"
-                          rules={[{ required: true, message: "Username!" }]}
-                        >
+                        <Form.Item<any> label="Username" name="username">
                           <Input placeholder="Username." />
                         </Form.Item>
                       </Col>

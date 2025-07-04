@@ -26,6 +26,38 @@ const accountEndpoint = api.injectEndpoints({
       ],
     }),
 
+    getCollection: builder.query<
+      ApiResponse<PaginatedResponse<any>>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "/api/v1.0/accounts/daily-collections/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.ACCOUNT,
+          id: TagTypes.ACCOUNT + "_ID",
+        },
+      ],
+    }),
+
+    getSingleCollection: builder.query<
+      ApiResponse<PaginatedResponse<any>>,
+      number
+    >({
+      query: (roleId) => ({
+        url: `/api/v1.0/accounts/daily-collections/${roleId}/`,
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.ACCOUNT,
+          id: TagTypes.ACCOUNT + "_ID",
+        },
+      ],
+    }),
+
     createAccount: builder.mutation<ApiResponse<ICreateAccount>, any>({
       query: (data) => ({
         url: "/api/v1.0/accounts/accounts/",
@@ -100,4 +132,6 @@ export const {
   useUpdateAccountMutation,
   useGetSingleAccountQuery,
   useDeleteAccountMutation,
+  useGetCollectionQuery,
+  useGetSingleCollectionQuery,
 } = accountEndpoint;

@@ -1,20 +1,33 @@
 import { useState } from "react";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
-import { FaMoneyBillTransfer, FaUserTie } from "react-icons/fa6";
 import ExamPage from "../page/ExamPage";
-import MarkExamPage from "../mark-exam/page/MarkExamPage";
 import ExamHallTab from "./ExamHallTab";
 import { IoReceiptOutline } from "react-icons/io5";
+import GradeMarkPage from "../Grade/pages/GradeMark";
+import ResultMigrationPage from "../Result Migration/pages/ResultMigration";
+import MarkExamTab from "./MarkExamTab";
+import { BsBookmarks } from "react-icons/bs";
+import { FaMapMarkedAlt } from "react-icons/fa";
+import { PiExamLight } from "react-icons/pi";
 
 const ExamTab = () => {
   const tabs = [
     {
       key: "exam",
       label: "Exam",
-      icon: <FaMoneyBillTransfer />,
+      icon: <PiExamLight />,
     },
-    { key: "mark_exam", label: "Mark Exam", icon: <FaUserTie /> },
-    { key: "invoice", label: "Invoice", icon: <LiaFileInvoiceSolid /> },
+    { key: "mark_exam", label: "Mark Exam", icon: <BsBookmarks /> },
+    {
+      key: "result_migration",
+      label: "Result Migration",
+      icon: <FaMapMarkedAlt />,
+    },
+    {
+      key: "grade_config",
+      label: "Grade Configuration",
+      icon: <LiaFileInvoiceSolid />,
+    },
     { key: "hall", label: "Hall", icon: <IoReceiptOutline /> },
   ];
 
@@ -25,7 +38,7 @@ const ExamTab = () => {
       <div>
         <div className="my-10">
           <div className="bg-white/80 backdrop-blur-md border border-[#A2C3FF] rounded-2xl shadow-xl ">
-            <div className="grid grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-3 lg:grid-cols-5">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -48,8 +61,9 @@ const ExamTab = () => {
         <div>
           {activeTab === "exam" && <ExamPage />}
           {activeTab === "hall" && <ExamHallTab />}
-          {activeTab === "mark_exam" && <MarkExamPage />}
-          {activeTab === "invoice" && "<InvoiceEntryPage />"}
+          {activeTab === "mark_exam" && <MarkExamTab />}
+          {activeTab === "result_migration" && <ResultMigrationPage />}
+          {activeTab === "grade_config" && <GradeMarkPage />}
         </div>
       </div>
     </div>

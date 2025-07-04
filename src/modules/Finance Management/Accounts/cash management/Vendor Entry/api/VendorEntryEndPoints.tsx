@@ -23,6 +23,10 @@ const vendorEntryEndPoints = api.injectEndpoints({
           type: TagTypes.VENDOR_ENTRY,
           id: TagTypes.VENDOR_ENTRY + "_ID",
         },
+        {
+          type: TagTypes.VENDOR,
+          id: TagTypes.VENDOR + "_ID",
+        },
       ],
     }),
 

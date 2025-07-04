@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Button,
   Card,
@@ -8,109 +9,186 @@ import {
   Form as AntForm,
   Tabs,
   TabsProps,
+  TreeSelect,
 } from "antd";
 import { Form } from "../../../../common/CommonAnt";
-import { useCreateExamMutation } from "../api/examEndPoints";
-import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
-import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
-import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
-import { RangePickerComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
-
-import TimeTableForm from "./TimeTableForm";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
+import { useCreateExamMutation } from "../api/examEndPoints";
+import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
+import { useGetClassesBigListQuery } from "../../classes/api/classesEndPoints";
+import { useGetTermQuery } from "../api/termEndPoints";
+import { RangePickerComponent } from "../../../../common/CommonAnt/CommonSearch/CommonSearch";
+import TimeTableForm from "./TimeTableForm";
 import CreateTerm from "./CreateTerm";
 import { PlusOutlined } from "@ant-design/icons";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
-import { useGetTermQuery } from "../api/termEndPoints";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
 
-const { Option } = Select;
+const { SHOW_PARENT } = TreeSelect;
+
+const buildTreeData = (classes: any[]): any[] =>
+  classes.map((cls) => ({
+    title: cls.name,
+    value: `${cls.id}`,
+    key: `${cls.id}`,
+    children: cls.shifts?.map((shift: any) => ({
+      title: shift.name,
+      value: `class-${cls.id}-shift-${shift.id}`,
+      key: `class-${cls.id}-shift-${shift.id}`,
+      children: shift.sections?.map((sec: any) => ({
+        title: `Section ${sec.section.name}`,
+        value: `class-${cls.id}-shift-${shift.id}-section-${sec.section.id}`,
+        key: `class-${cls.id}-shift-${shift.id}-section-${sec.section.id}`,
+      })),
+    })),
+  }));
+
+const parseNestedGradeLevels = (values: string[], allClasses: any[]) => {
+  const result: Record<string, any> = {};
+
+  values.forEach((val) => {
+    const parts = val.split("-");
+
+    if (parts.length === 1) {
+      // Class only
+      const classId = parseInt(parts[0], 10);
+      const cls = allClasses.find((c) => c.id === classId);
+      if (cls) {
+        result[classId] = { id: classId, shifts: [] };
+        if (cls.shifts?.length) {
+          cls.shifts.forEach((shift: any) => {
+            const sections =
+              shift.sections?.map((s: any) => s.section.id) || [];
+            result[classId].shifts.push({ id: shift.id, sections });
+          });
+        }
+      }
+    } else if (parts.length === 4) {
+      // Class + Shift only
+      const classId = parseInt(parts[1], 10);
+      const shiftId = parseInt(parts[3], 10);
+      const cls = allClasses.find((c) => c.id === classId);
+      if (!result[classId]) {
+        result[classId] = { id: classId, shifts: [] };
+      }
+      const shiftExists = result[classId].shifts.find(
+        (s: any) => s.id === shiftId
+      );
+      if (!shiftExists) {
+        const shiftObj = cls?.shifts?.find((s: any) => s.id === shiftId);
+        const sections =
+          shiftObj?.sections?.map((s: any) => s.section.id) || [];
+        result[classId].shifts.push({ id: shiftId, sections });
+      }
+    } else if (parts.length === 6) {
+      // Class + Shift + Section
+      const classId = parseInt(parts[1], 10);
+      const shiftId = parseInt(parts[3], 10);
+      const sectionId = parseInt(parts[5], 10);
+      if (!result[classId]) {
+        result[classId] = { id: classId, shifts: [] };
+      }
+      let shift = result[classId].shifts.find((s: any) => s.id === shiftId);
+      if (!shift) {
+        shift = { id: shiftId, sections: [] };
+        result[classId].shifts.push(shift);
+      }
+      if (!shift.sections.includes(sectionId)) {
+        shift.sections.push(sectionId);
+      }
+    }
+  });
+
+  return Object.values(result);
+};
 
 const CreateExam = () => {
   const dispatch = useDispatch();
   const [form] = AntForm.useForm();
-
   const [create, { isLoading, isSuccess }] = useCreateExamMutation();
   const { data: sessionData } = useGetAdmissionSessionQuery({ status: "open" });
-  const { data: classData, isLoading: classLoading } = useGetClassesQuery({});
-  const { data: sectionData } = useGetSectionQuery({});
+  const { data: classData, isLoading: classLoading } =
+    useGetClassesBigListQuery({});
   const { data: termData } = useGetTermQuery({});
+  const [value, setValue] = useState<string[]>([]);
+  const [selectedClass, setSelectedClass] = useState<any[]>([]);
+  const [formData, setFormData] = useState<Record<string, any>>({});
 
-  const [selectedClass, setSelectedClass] = useState([]);
-  const [formData, setFormData] = useState<Record<string, any>>([]);
-
-  const gradeLevel = AntForm.useWatch("grade_level", form);
+  const treeData = buildTreeData(
+    Array.isArray(classData?.data) ? classData.data : []
+  );
 
   useEffect(() => {
-    if (Array.isArray(gradeLevel) && Array.isArray(classData?.data)) {
-      const filteredClasses: any = classData.data.filter((classItem) =>
-        gradeLevel.includes(classItem.id)
-      );
+    if (Array.isArray(value) && Array.isArray(classData?.data)) {
+      const filteredClasses: any[] = [];
+      value.forEach((val) => {
+        const parts = val.split("-");
+        const classId =
+          parts.length === 1 ? parseInt(parts[0], 10) : parseInt(parts[1], 10);
+        const classArray = Array.isArray(classData?.data) ? classData.data : [];
+        const classItem = classArray.find((cls: any) => cls.id === classId);
+        if (classItem && !filteredClasses.some((c) => c.id === classItem.id)) {
+          filteredClasses.push(classItem);
+        }
+      });
       setSelectedClass(filteredClasses);
     }
-  }, [gradeLevel, classData]);
+  }, [value, classData]);
 
-  const onFinish = (values: any): void => {
+  const onFinish = (values: any) => {
+    const allClasses = Array.isArray(classData?.data) ? classData.data : [];
+    const nestedGradeLevels = parseNestedGradeLevels(
+      values.grade_level,
+      allClasses
+    );
+
     const results = {
       name: values.name,
       session: values.session,
-      grade_level: values.grade_level,
-      section: values.section,
       term: values.term,
-      start_date: dayjs(values.start_date).format("YYYY-MM-DD"),
-      end_date: dayjs(values.end_date).format("YYYY-MM-DD"),
-      comment: values.comment,
-
+      grade_level: nestedGradeLevels,
+      start_date: dayjs(values.exam_date?.[0]).format("YYYY-MM-DD"),
+      end_date: dayjs(values.exam_date?.[1]).format("YYYY-MM-DD"),
+      comment: values?.comment,
       timetables: Object.keys(formData).flatMap((key: string) =>
         formData[key].timetables.map((timetable: any) => ({
           subject: timetable.subject,
           exam_date: dayjs(timetable.exam_date).format("YYYY-MM-DD"),
-          exam_mark_exp_date: dayjs(timetable.exam_mark_exp_date).format(
-            "YYYY-MM-DD"
-          ),
-
           start_time: timetable.start_time
             ? dayjs(timetable.start_time, "HH:mm").format("HH:mm:ss")
             : undefined,
-
           end_time: timetable.end_time
             ? dayjs(timetable.end_time, "HH:mm").format("HH:mm:ss")
+            : undefined,
+          exam_mark_exp_date: timetable.exam_mark_exp_date
+            ? dayjs(timetable.exam_mark_exp_date).format("YYYY-MM-DD")
             : undefined,
 
           mcq_marks: timetable.mcq_marks,
           written_marks: timetable.written_marks,
-          passing_marks: timetable.passing_marks,
           contribution_marks: timetable.contribution_marks,
         }))
       ),
     };
+
     create(results);
   };
 
-  const items: TabsProps["items"] = selectedClass.map((classItem: any) => ({
-    key: classItem.id.toString(),
-    label: capitalize(classItem.name),
+  const items: TabsProps["items"] = selectedClass.map((cls) => ({
+    key: cls.id.toString(),
+    label: capitalize(cls.name),
     children: (
       <TimeTableForm
-        selectedTab={classItem.id.toString()}
-        formData={formData[classItem.id.toString()] || {}}
+        selectedTab={cls.id.toString()}
+        formData={formData[cls.id.toString()] || {}}
         setFormData={(data: any) =>
-          setFormData((prev) => ({
-            ...prev,
-            [classItem.id.toString()]: data,
-          }))
+          setFormData((prev) => ({ ...prev, [cls.id.toString()]: data }))
         }
       />
     ),
   }));
-  // pp
-
-  const onChange = (key: any) => {
-    console.log(key);
-  };
 
   return (
     <div>
@@ -123,7 +201,6 @@ const CreateExam = () => {
           onFinish={onFinish}
           isLoading={isLoading}
           isSuccess={isSuccess}
-          initialValues={{ timetables: [{}] }}
         >
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={12} lg={6}>
@@ -140,64 +217,43 @@ const CreateExam = () => {
               <Form.Item
                 label="Select Session"
                 name="session"
-                rules={[{ required: true, message: "session is required!" }]}
+                rules={[{ required: true, message: "Session is required!" }]}
               >
                 <Select placeholder="Select Session" className="w-full">
                   {Array.isArray(sessionData?.data) &&
-                    sessionData?.data?.map((session: any) => (
+                    sessionData?.data.map((session: any) => (
                       <Select.Option key={session.id} value={session.id}>
-                        {session?.name}
+                        {session.name}
                       </Select.Option>
                     ))}
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} lg={6}>
-              <Form.Item
-                label="Class"
-                name="grade_level"
-                rules={[{ required: true, message: "Class is required!" }]}
-              >
-                <Select
-                  mode="multiple"
-                  allowClear
-                  showSearch
-                  style={{ width: "100%" }}
-                  placeholder={
-                    classLoading ? "Loading classes..." : "Please select"
-                  }
-                  options={
-                    (Array?.isArray(classData?.data) &&
-                      classData?.data?.map((classItem: any) => ({
-                        label: classItem.name,
-                        value: classItem.id,
-                      }))) ||
-                    []
-                  }
-                />
-              </Form.Item>
-            </Col>
 
-            <Col xs={24} sm={12} lg={6}>
+            <Col xs={24} sm={12} lg={8}>
               <Form.Item
-                label="Section"
-                name="section"
-                rules={[{ required: true, message: "Section" }]}
+                label="Class - Shift - Section"
+                name="grade_level"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select at least one option!",
+                  },
+                ]}
               >
-                <Select
-                  mode="multiple"
-                  className="w-full"
-                  placeholder="Select Section"
-                  allowClear
-                  showSearch
-                >
-                  {Array.isArray(sectionData?.data) &&
-                    sectionData?.data?.map((data: any) => (
-                      <Option key={data.id} value={data.id}>
-                        {data?.name}
-                      </Option>
-                    ))}
-                </Select>
+                <TreeSelect
+                  treeData={treeData}
+                  value={value}
+                  onChange={(newVal) => setValue(newVal as string[])}
+                  treeCheckable
+                  showCheckedStrategy={SHOW_PARENT}
+                  placeholder={
+                    classLoading
+                      ? "Loading classes..."
+                      : "Select class/shift/section"
+                  }
+                  style={{ width: "100%" }}
+                />
               </Form.Item>
             </Col>
 
@@ -221,9 +277,9 @@ const CreateExam = () => {
                 >
                   <Select placeholder="Select Term" allowClear>
                     {Array.isArray(termData?.data) &&
-                      termData?.data?.map((term: any) => (
+                      termData?.data.map((term: any) => (
                         <Select.Option key={term.id} value={term.id}>
-                          {term?.name}
+                          {term.name}
                         </Select.Option>
                       ))}
                   </Select>
@@ -250,13 +306,9 @@ const CreateExam = () => {
                 <Input.TextArea placeholder="Enter Comment" rows={4} />
               </Form.Item>
             </Col>
+
             <Col xs={24}>
-              <Tabs
-                // defaultActiveKey={selectedTab}
-                // activeKey={selectedTab}
-                items={items}
-                onChange={onChange}
-              />
+              <Tabs items={items} />
             </Col>
           </Row>
         </Form>

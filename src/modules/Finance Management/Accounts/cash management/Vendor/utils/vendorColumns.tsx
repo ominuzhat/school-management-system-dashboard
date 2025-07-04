@@ -1,5 +1,5 @@
 import type { ColumnsType } from "antd/es/table";
-import { Space } from "antd";
+import { Button, Space } from "antd";
 import { useDispatch } from "react-redux";
 import { useGetDashboardDataQuery } from "../../../../../Dashboard/api/dashoboardEndPoints";
 import { GetPermission } from "../../../../../../utilities/permission";
@@ -10,6 +10,8 @@ import {
 import EditButton from "../../../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../../../app/features/modalSlice";
 import UpdateVendor from "../Components/UpdateVendor";
+import ViewVendor from "../Components/ViewVendor";
+import { FaEye } from "react-icons/fa6";
 
 const useVendorColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -92,6 +94,27 @@ const useVendorColumns = (): ColumnsType<any> => {
               }
             />
           )}
+
+          <Button
+            onClick={() =>
+              dispatch(
+                showModal({
+                  title: "View Vendor",
+                  content: <ViewVendor record={record} />,
+                })
+              )
+            }
+            size="small"
+            type="default"
+            style={{
+              color: "#3892E3",
+              // background: "#3892E3",
+              border: "1px solid #3892E3",
+            }}
+          >
+            <FaEye />
+            View
+          </Button>
 
           {/* <ViewButton to={`student-view/1`} /> */}
           {/* <DeleteButton

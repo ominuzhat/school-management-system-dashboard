@@ -210,13 +210,9 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
           </Text>
           <Row gutter={16}>
             <Col xs={24} md={12}>
-              <Form.Item
-                name="invoice"
-                label="Vendor"
-                rules={[{ required: true }]}
-              >
+              <Form.Item name="invoice" label="Invoice">
                 <Select
-                  placeholder="Select Vendor"
+                  placeholder="Select Invoice"
                   suffixIcon={<MdPerson />}
                   onChange={handleVendorChange}
                   showSearch
@@ -227,7 +223,7 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
                   }
                   options={
                     invoiceList?.data?.results?.map((invoice: any) => ({
-                      label: `${invoice.vendor?.name} (${invoice.invoice_number})`,
+                      label: `${invoice.vendor?.name} (${invoice.invoice_number}) - (${invoice?.amount})`,
                       value: invoice.vendor?.id,
                     })) ?? []
                   }

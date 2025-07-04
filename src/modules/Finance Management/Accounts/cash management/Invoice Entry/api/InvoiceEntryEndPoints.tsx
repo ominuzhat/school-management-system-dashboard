@@ -6,7 +6,10 @@ import {
 } from "../../../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../../../app/utils/tagTypes";
-import { ICreateInvoiceEntry, IGetInvoiceEntry } from "../types/invoiceEntryTypes";
+import {
+  ICreateInvoiceEntry,
+  IGetInvoiceEntry,
+} from "../types/invoiceEntryTypes";
 
 const invoiceEntryEndPoints = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -23,29 +26,35 @@ const invoiceEntryEndPoints = api.injectEndpoints({
           type: TagTypes.INVOICE_ENTRY,
           id: TagTypes.INVOICE_ENTRY + "_ID",
         },
+        {
+          type: TagTypes.VENDOR,
+          id: TagTypes.VENDOR + "_ID",
+        },
       ],
     }),
 
-    createInvoiceEntry: builder.mutation<ApiResponse<ICreateInvoiceEntry>, any>({
-      query: (data) => ({
-        url: "/api/v1.0/vendors/invoices/",
-        method: "POST",
-        body: data,
-      }),
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        await handleOnQueryStarted(queryFulfilled, dispatch);
-      },
-      invalidatesTags: [
-        {
-          type: TagTypes.INVOICE_ENTRY,
-          id: TagTypes.INVOICE_ENTRY + "_ID",
+    createInvoiceEntry: builder.mutation<ApiResponse<ICreateInvoiceEntry>, any>(
+      {
+        query: (data) => ({
+          url: "/api/v1.0/vendors/invoices/",
+          method: "POST",
+          body: data,
+        }),
+        async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+          await handleOnQueryStarted(queryFulfilled, dispatch);
         },
-        {
-          type: TagTypes.ACCOUNT,
-          id: TagTypes.ACCOUNT + "_ID",
-        },
-      ],
-    }),
+        invalidatesTags: [
+          {
+            type: TagTypes.INVOICE_ENTRY,
+            id: TagTypes.INVOICE_ENTRY + "_ID",
+          },
+          {
+            type: TagTypes.ACCOUNT,
+            id: TagTypes.ACCOUNT + "_ID",
+          },
+        ],
+      }
+    ),
 
     getSingleInvoiceEntry: builder.query<
       ApiResponse<PaginatedResponse<IGetInvoiceEntry>>,

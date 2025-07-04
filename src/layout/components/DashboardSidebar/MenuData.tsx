@@ -7,14 +7,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { ThemesTypes } from "../../../app/features/themeSlice";
 import SidebarButtom from "./SidebarButtom";
-import { PiExamLight, PiStudent } from "react-icons/pi";
+import { PiStudent } from "react-icons/pi";
 import { SiGoogleclassroom } from "react-icons/si";
 import {
   IoAccessibilityOutline,
   IoCalendarOutline,
-  IoCompassOutline,
   IoPeopleOutline,
-  IoReceiptOutline,
 } from "react-icons/io5";
 import { FaCommentSms, FaRegAddressCard } from "react-icons/fa6";
 import { TbCoinTaka } from "react-icons/tb";
@@ -23,13 +21,8 @@ import { BiSolidInstitution } from "react-icons/bi";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 
 import { TfiAnnouncement } from "react-icons/tfi";
-import {
-  BsBookmarks,
-  BsFileEarmarkDiff,
-  BsFillFileRuledFill,
-} from "react-icons/bs";
-import { FiPenTool } from "react-icons/fi";
-import { FaMapMarkedAlt } from "react-icons/fa";
+import { BsFillFileRuledFill } from "react-icons/bs";
+
 import { useGetDashboardDataQuery } from "../../../modules/Dashboard/api/dashoboardEndPoints";
 import { hasPermissionForModule } from "../../../utilities/permission";
 import { ItemType, MenuItemType } from "antd/es/menu/interface";
@@ -261,47 +254,51 @@ const MenuData: React.FC = () => {
       hasPermissionForModule(permissions, "exammark") &&
       hasPermissionForModule(permissions, "gradescale") &&
       hasPermissionForModule(permissions, "studentresult") && {
-        key: "/exam-module",
-        label: "Exam",
-        icon: <FiPenTool />,
-        children: [
-          hasPermissionForModule(permissions, "exam") && {
-            key: "/exam",
-            label: <Link to="/exam">Exam</Link>,
-            icon: <PiExamLight />,
-          },
+        key: "/exam",
+        label: <Link to="/exam">Exam</Link>,
+        icon: <IoCalendarOutline />,
 
-          hasPermissionForModule(permissions, "examhall") && {
-            key: "/exam-hall",
-            label: <Link to="/exam-hall">Exam Hall</Link>,
-            icon: <SiGoogleclassroom />,
-          },
-          hasPermissionForModule(permissions, "examhallreceipt") && {
-            key: "/exam-receipts",
-            label: <Link to="/exam-receipts">Assign Exam Hall</Link>,
-            icon: <IoReceiptOutline />,
-          },
-          hasPermissionForModule(permissions, "exammark") && {
-            key: "/mark-exam",
-            label: <Link to="/mark-exam">Mark Exam</Link>,
-            icon: <BsBookmarks />,
-          },
-          hasPermissionForModule(permissions, "gradescale") && {
-            key: "/grade-mark",
-            label: <Link to="/grade-mark">Grade Configuration</Link>,
-            icon: <BsFileEarmarkDiff />,
-          },
-          hasPermissionForModule(permissions, "studentresult") && {
-            key: "/exam-result",
-            label: <Link to="/exam-result">Publish Result</Link>,
-            icon: <IoCompassOutline />,
-          },
-          hasPermissionForModule(permissions, "exam") && {
-            key: "/result-migration",
-            label: <Link to="/result-migration">Result Migration</Link>,
-            icon: <FaMapMarkedAlt />,
-          },
-        ],
+        // key: "/exam-module",
+        // label: "Exam",
+        // icon: <FiPenTool />,
+        // children: [
+        //   hasPermissionForModule(permissions, "exam") && {
+        //     key: "/exam",
+        //     label: <Link to="/exam">Exam</Link>,
+        //     icon: <PiExamLight />,
+        //   },
+
+        //   hasPermissionForModule(permissions, "examhall") && {
+        //     key: "/exam-hall",
+        //     label: <Link to="/exam-hall">Exam Hall</Link>,
+        //     icon: <SiGoogleclassroom />,
+        //   },
+        //   hasPermissionForModule(permissions, "examhallreceipt") && {
+        //     key: "/exam-receipts",
+        //     label: <Link to="/exam-receipts">Assign Exam Hall</Link>,
+        //     icon: <IoReceiptOutline />,
+        //   },
+        //   hasPermissionForModule(permissions, "exammark") && {
+        //     key: "/mark-exam",
+        //     label: <Link to="/mark-exam">Mark Exam</Link>,
+        //     icon: <BsBookmarks />,
+        //   },
+        //   hasPermissionForModule(permissions, "gradescale") && {
+        //     key: "/grade-mark",
+        //     label: <Link to="/grade-mark">Grade Configuration</Link>,
+        //     icon: <BsFileEarmarkDiff />,
+        //   },
+        //   hasPermissionForModule(permissions, "studentresult") && {
+        //     key: "/exam-result",
+        //     label: <Link to="/exam-result">Publish Result</Link>,
+        //     icon: <IoCompassOutline />,
+        //   },
+        //   hasPermissionForModule(permissions, "exam") && {
+        //     key: "/result-migration",
+        //     label: <Link to="/result-migration">Result Migration</Link>,
+        //     icon: <FaMapMarkedAlt />,
+        //   },
+        // ],
       },
 
     hasPermissionForModule(permissions, "attendance") &&

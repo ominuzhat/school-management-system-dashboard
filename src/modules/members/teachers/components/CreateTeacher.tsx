@@ -262,7 +262,6 @@ const CreateTeacher = () => {
                         <Form.Item<any>
                           label="Username"
                           name="username"
-                          rules={[{ required: true, message: "Username!" }]}
                         >
                           <Input placeholder="Username." />
                         </Form.Item>

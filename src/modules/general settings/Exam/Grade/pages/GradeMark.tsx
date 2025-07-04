@@ -1,5 +1,4 @@
 import { Tabs } from "antd";
-import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 import FailCriteria from "../components/FailCriteria";
 import GradeCriteria from "../components/GradeCriteria";
 import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
@@ -21,9 +20,9 @@ const GradeMarkPage = () => {
 
   return (
     <div>
-      <div className="my-6">
+      {/* <div className="my-6">
         <BreadCrumb />
-      </div>
+      </div> */}
 
       <div>
         <Tabs
