@@ -13,10 +13,8 @@ import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 const useInvoiceColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
 
-  //   const { data: dashboardData } = useGetDashboardDataQuery({});
-
   const [collectFeeId, setCollectFeeId] = useState<number | null>(null);
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [pdfTitle, setPdfTitle] = useState<string>("Invoice PDF");
 
   const { data: singleInvoice } = useGetInvoicePdfQuery(
     collectFeeId as number,
@@ -28,27 +26,38 @@ const useInvoiceColumns = (): ColumnsType<any> => {
   useEffect(() => {
     if (singleInvoice) {
       const url = URL.createObjectURL(singleInvoice);
-      setPdfUrl(url);
 
-      // Open PDF in a new tab
-      window.open(url, "_blank");
+      // ✅ Open a new blank tab with custom title
+      const newWindow = window.open("", "_blank");
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>${pdfTitle}</title>
+            </head>
+            <body style="margin:0">
+              <iframe 
+                src="${url}" 
+                frameborder="0" 
+                style="width:100%;height:100vh;"
+              ></iframe>
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      }
+
+      return () => {
+        URL.revokeObjectURL(url);
+      };
     }
+  }, [singleInvoice, pdfTitle]); // ✅ No pdfUrl in deps!
 
-    return () => {
-      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
-    };
-  }, [singleInvoice]);
-
-  const handleForm = (id: number) => {
-    setCollectFeeId(id);
+  const handleForm = (record: any) => {
+    setPdfTitle(`${record?.id}`);
+    setCollectFeeId(record.id);
   };
 
-  // const [deleteItem] = useDeleteCollectItemMutation();
-
-  // const handleDelete = (id: number) => {
-  //   console.log(id);
-  //   deleteItem(id as any);
-  // };
   return [
     {
       key: "0",
@@ -79,7 +88,6 @@ const useInvoiceColumns = (): ColumnsType<any> => {
           ? title.student?.first_name + " " + title.student?.last_name
           : "N/A",
     },
-
     {
       title: "Issue Date",
       dataIndex: "issue_date",
@@ -92,7 +100,6 @@ const useInvoiceColumns = (): ColumnsType<any> => {
       key: "due_date",
       align: "center",
     },
-
     {
       title: "Total Amount",
       dataIndex: "total_amount",
@@ -120,7 +127,6 @@ const useInvoiceColumns = (): ColumnsType<any> => {
         return <Tag color={color}>{status.toUpperCase()}</Tag>;
       },
     },
-
     {
       title: "Actions",
       align: "center",
@@ -150,24 +156,21 @@ const useInvoiceColumns = (): ColumnsType<any> => {
             }
             style={{
               color: "#3892E3",
-              // background: "#3892E3",
               border: "1px solid #3892E3",
             }}
           >
-            <FaEye />
-            View
+            <FaEye /> View
           </Button>
 
           <Button
-            title="Invoice "
+            title="Invoice"
             size="small"
             type="default"
             style={{
               color: "#c20a0a",
-              // background: "#3892E3",
               border: "1px solid gray",
             }}
-            onClick={() => handleForm(record.id)}
+            onClick={() => handleForm(record)}
           >
             <FaFilePdf />
           </Button>

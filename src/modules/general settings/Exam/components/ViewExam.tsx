@@ -73,7 +73,7 @@ const ViewExam = () => {
                   Grade Level:
                 </Text>{" "}
                 <Tag color="blue">
-                  {exam?.grade_level.map((s: any) => s.name).join(", ")}
+                  {exam?.grade_level?.map((s: any) => s.name).join(", ")}
                   {/* {exam?.grade_level?.name} */}
                 </Tag>
               </div>
@@ -82,7 +82,7 @@ const ViewExam = () => {
                   Section:
                 </Text>{" "}
                 <Tag color="green">
-                  {exam?.section.map((s: any) => s.name).join(", ")}
+                  {exam?.section?.map((s: any) => s.name).join(", ")}
                 </Tag>
               </div>
               <div>

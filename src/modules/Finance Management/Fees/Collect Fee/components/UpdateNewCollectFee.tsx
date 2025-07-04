@@ -530,10 +530,7 @@ const UpdateNewCollectFee = () => {
                               name={[name, "paid_amount"]}
                               style={{ marginBottom: 0 }}
                               rules={[
-                                {
-                                  required: true,
-                                  message: "Paid amount is required",
-                                },
+                         
                                 {
                                   validator: (_, value) => {
                                     const total = form.getFieldValue([

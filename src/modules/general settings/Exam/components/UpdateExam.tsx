@@ -117,7 +117,7 @@ const UpdateExam = () => {
   );
 
   const { data: sessionData } = useGetAdmissionSessionQuery({ status: "open" });
-  const { data: classData, isLoading: classLoading } =
+  const { data: classData } =
     useGetClassesBigListQuery<any>({});
   const { data: termData } = useGetTermQuery({});
 
@@ -126,7 +126,7 @@ const UpdateExam = () => {
   const examData = singleData?.data as any;
 
   const [timetablesData, setTimeTablesData] = useState<Record<string, any>>({});
-  const [selectedClass, setSelectedClass] = useState([]);
+  const [, setSelectedClass] = useState([]);
   const gradeLevel = AntForm.useWatch("grade_level_structure", form);
 
   // 👇 Prepare TreeSelect data from grade_level_structure
@@ -253,7 +253,6 @@ const UpdateExam = () => {
         })),
       };
 
-      console.log(results, "reee");
       update({ id: Number(examId), data: results });
       message.success("Exam updated successfully");
     } catch (err) {

@@ -15,7 +15,6 @@ import {
 import { TbCoinTaka } from "react-icons/tb";
 
 const useCollectFeeColumns = (): ColumnsType<any> => {
-  //   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data: dashboardData } = useGetDashboardDataQuery({});
 
@@ -25,7 +24,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
     actionNames.change
   );
 
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [pdfTitle, setPdfTitle] = useState<string>("Invoice PDF");
 
   const [getCollectFeeForm, { data: singleFeeForm }] =
     useLazyGetCollectSingleFeesFormQuery();
@@ -33,27 +32,39 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
   useEffect(() => {
     if (singleFeeForm) {
       const url = URL.createObjectURL(singleFeeForm);
-      setPdfUrl(url);
 
-      // Open PDF in a new tab
-      window.open(url, "_blank");
+      const newWindow = window.open("", "_blank");
+
+      if (newWindow) {
+        newWindow.document.write(`
+        <html>
+          <head>
+            <title>${pdfTitle}</title>
+          </head>
+          <body style="margin:0">
+            <iframe 
+              src="${url}" 
+              frameborder="0" 
+              style="width:100%;height:100vh;"
+            ></iframe>
+          </body>
+        </html>
+      `);
+        newWindow.document.close();
+      }
+
+      // ✅ Cleanup only this URL
+      return () => {
+        URL.revokeObjectURL(url);
+      };
     }
-
-    return () => {
-      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
-    };
-  }, [singleFeeForm]);
+  }, [singleFeeForm, pdfTitle]); // ✅ Removed pdfUrl!
 
   const handleForm = (id: number) => {
+    setPdfTitle(`${id} `);
     getCollectFeeForm(id);
   };
 
-  // const [deleteItem] = useDeleteCollectItemMutation();
-
-  // const handleDelete = (id: number) => {
-  //   console.log(id);
-  //   deleteItem(id as any);
-  // };
   return [
     {
       key: "0",
@@ -85,7 +96,6 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? title.student?.user?.username : "N/A"),
     },
-
     {
       key: "111115",
       title: "Session",
@@ -93,7 +103,6 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? title?.session?.name : "N/A"),
     },
-
     {
       key: "2",
       title: "Phone",
@@ -104,7 +113,6 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
         return phone ? phone.replace(/^880/, "0") : "N/A";
       },
     },
-
     {
       key: "5",
       title: "Class",
@@ -119,27 +127,12 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (month) => (month ? dayjs(month).format("MMMM") : "N/A"),
     },
-
     {
       key: "8",
       title: "Paid Amount",
       dataIndex: "total_paid",
       align: "center",
       render: (title) => (title ? title : "0"),
-
-      // render: (amount) => {
-      //   if (!amount) return <Tag color="cyan">N/A</Tag>;
-
-      //   const value = String(amount).toLowerCase();
-
-      //   if (value === "paid") {
-      //     return <Tag color="green">Paid</Tag>;
-      //   } else if (value === "partial") {
-      //     return <Tag color="yellow">Partial</Tag>;
-      //   } else {
-      //     return <Tag color="cyan">{amount}</Tag>;
-      //   }
-      // },
     },
     {
       key: "99",
@@ -183,9 +176,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (status) => {
         if (!status) return <Tag color="cyan">N/A</Tag>;
-
         const value = String(status).toLowerCase();
-
         if (value === "paid") {
           return <Tag color="green">Paid</Tag>;
         } else if (value === "partial") {
@@ -195,7 +186,6 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
         }
       },
     },
-
     {
       title: "Actions",
       align: "center",
@@ -208,7 +198,6 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
               type="default"
               style={{
                 color: "green",
-                // background: "#3892E3",
                 border: "1px solid gray",
               }}
               onClick={() => navigate(`/collect-fee/${record?.id}`)}
@@ -217,17 +206,12 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
             </Button>
           )}
           <ViewButton to={`/collect-fee/view/${record?.id}`} />
-          {/* <DeleteButton
-            onConfirm={() => handleDelete(record.id)}
-            onCancel={() => ""}
-          /> */}
           <Button
-            title="Invoice "
+            title="Invoice"
             size="small"
             type="default"
             style={{
               color: "#c20a0a",
-              // background: "#3892E3",
               border: "1px solid gray",
             }}
             onClick={() => handleForm(record.id)}
