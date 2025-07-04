@@ -9,6 +9,7 @@ import InvoiceView from "../components/InvoiceView";
 import { useDispatch } from "react-redux";
 import UpdateInvoice from "../components/UpdateInvoice";
 import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
+import dayjs from "dayjs";
 
 const useInvoiceColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -93,13 +94,9 @@ const useInvoiceColumns = (): ColumnsType<any> => {
       dataIndex: "issue_date",
       key: "issue_date",
       align: "center",
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
     },
-    {
-      title: "Due Date",
-      dataIndex: "due_date",
-      key: "due_date",
-      align: "center",
-    },
+
     {
       title: "Total Amount",
       dataIndex: "total_amount",

@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Button, Space } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
@@ -13,8 +13,13 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
-import { useDeletePaymentMutation } from "../api/paymentEndPoints";
+import {
+  useDeletePaymentMutation,
+  useLazyGetSinglePaymentFormQuery,
+} from "../api/paymentEndPoints";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { FaFilePdf } from "react-icons/fa6";
 
 const usePaymentColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -41,6 +46,47 @@ const usePaymentColumns = (): ColumnsType<any> => {
     } catch (error) {
       console.error("Failed to delete item:", error);
     }
+  };
+
+  const [pdfTitle, setPdfTitle] = useState<string>("Invoice PDF");
+
+  const [getPaymentForm, { data: singleFeeForm }] =
+    useLazyGetSinglePaymentFormQuery();
+
+  useEffect(() => {
+    if (singleFeeForm) {
+      const url = URL.createObjectURL(singleFeeForm);
+
+      const newWindow = window.open("", "_blank");
+
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>${pdfTitle}</title>
+            </head>
+            <body style="margin:0">
+              <iframe 
+                src="${url}" 
+                frameborder="0" 
+                style="width:100%;height:100vh;"
+              ></iframe>
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      }
+
+      // ✅ Cleanup only this URL
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }
+  }, [singleFeeForm, pdfTitle]); // ✅ Removed pdfUrl!
+
+  const handleForm = (id: number) => {
+    setPdfTitle(`${id} `);
+    getPaymentForm(id);
   };
 
   return [
@@ -126,8 +172,19 @@ const usePaymentColumns = (): ColumnsType<any> => {
               }
             />
           )}
-
-          <ViewButton to={`payment-view/${record?.id}`} />
+          <ViewButton to={`payment-view/${record?.id}`} />{" "}
+          <Button
+            title="Invoice"
+            size="small"
+            type="default"
+            style={{
+              color: "#c20a0a",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleForm(record.id)}
+          >
+            <FaFilePdf />
+          </Button>
           {deletePermission && (
             <DeleteButton
               disabled

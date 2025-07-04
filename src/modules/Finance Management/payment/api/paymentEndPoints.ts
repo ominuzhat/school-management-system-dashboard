@@ -66,6 +66,23 @@ const paymentEndpoint = api.injectEndpoints({
       ],
     }),
 
+
+    getSinglePaymentForm: builder.query<Blob, number>({
+      query: (collectFeeId) => ({
+        url: `/api/v1.0/payrolls/payments/generate-fee-invoice/?collect_fee=${collectFeeId}`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.PAYMENT,
+          id: TagTypes.PAYMENT + "_ID",
+        },
+      ],
+    }),
+
+
     updatePayment: builder.mutation<
       ApiResponse<ICreatePayment>,
       { id: number | undefined; data: FormData }
@@ -94,4 +111,5 @@ export const {
   useGetSinglePaymentQuery,
   useDeletePaymentMutation,
   useUpdatePaymentMutation,
+  useLazyGetSinglePaymentFormQuery
 } = paymentEndpoint;

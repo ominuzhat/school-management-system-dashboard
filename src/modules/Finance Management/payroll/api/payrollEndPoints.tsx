@@ -66,6 +66,24 @@ const payrollEndPoints = api.injectEndpoints({
       ],
     }),
 
+    getPayrollForm: builder.query<Blob, { id: number; month?: string }>({
+      query: ({ month }) => ({
+        url: `/api/v1.0/payrolls/generate-report/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+        params: {
+          month,
+        },
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.PAYROLL,
+          id: TagTypes.PAYROLL + "_ID",
+        },
+      ],
+    }),
+
     updatePayroll: builder.mutation<
       ApiResponse<any>,
       { id: number | undefined; data: any }
@@ -94,4 +112,5 @@ export const {
   useGetSinglePayrollQuery,
   useUpdatePayrollMutation,
   useDeletePayrollMutation,
+  useLazyGetPayrollFormQuery,
 } = payrollEndPoints;

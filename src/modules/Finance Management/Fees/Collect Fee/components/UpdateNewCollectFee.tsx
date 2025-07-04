@@ -115,9 +115,7 @@ const UpdateNewCollectFee = () => {
         session: singleData?.data?.admission?.session?.name,
         due_amount: singleData?.data?.admission?.due_amount,
         month: singleData?.data?.month ? dayjs(singleData?.data?.month) : null,
-        payment_date: singleData?.data?.payment_date
-          ? dayjs(singleData?.data?.payment_date)
-          : null,
+     
         add_ons: formattedAddOns,
       });
 
