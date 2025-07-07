@@ -22,15 +22,13 @@ import {
 import { CommonPaymentMethod } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useGetAdditionalFeesQuery } from "../../Additional Fee/api/additionalFeeEndPoints";
 import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { TbCoinTaka } from "react-icons/tb";
-import { FaArrowAltCircleLeft } from "react-icons/fa";
+import BackButton from "../../../../../common/Button/BackButton";
 
 const { Title, Text } = Typography;
 
 const UpdateCollectFee = () => {
-  const navigate = useNavigate();
-
   const [form] = AntForm.useForm();
   const { collectFeeId } = useParams();
   const [finalDueAmount, setFinalDueAmount] = useState<number | null>(null);
@@ -39,12 +37,11 @@ const UpdateCollectFee = () => {
     discountValue: 0,
   });
 
-  console.log(finalDueAmount, setDiscount);
 
   const [paidAmount, setPaidAmount] = useState<number | null>(null);
-  const [addOns, setAddOns] = useState<string[]>([]); 
+  const [addOns, setAddOns] = useState<string[]>([]);
   const [search, setSearch] = useState("");
-  const [selectedFees, setSelectedFees] = useState<any[]>([]); 
+  const [selectedFees, setSelectedFees] = useState<any[]>([]);
   const [selectedAdditionalFee, setSelectedAdditionalFee] = useState<any[]>([]);
   const { data: singleData } = useGetCollectSingleFeesQuery(
     Number(collectFeeId)
@@ -153,12 +150,7 @@ const UpdateCollectFee = () => {
     <div className="p-6">
       <div className="text-center pb-5">
         <Title level={3}>Collect Fees</Title>
-        <p
-          onClick={() => navigate("/finance")}
-          className="border w-fit flex items-center justify-start gap-2 text-white cursor-pointer px-4 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 transition-all duration-300"
-        >
-          <FaArrowAltCircleLeft /> Back
-        </p>
+        <BackButton to="/finance" />
       </div>
       <Form
         form={form}

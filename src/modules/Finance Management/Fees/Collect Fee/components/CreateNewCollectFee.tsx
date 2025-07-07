@@ -27,7 +27,7 @@ import { useEffect, useState } from "react";
 import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
 import { TbCoinTaka } from "react-icons/tb";
 import { useGetAccountQuery } from "../../../Accounts/account/api/accountEndPoints";
-import { FaArrowAltCircleLeft } from "react-icons/fa";
+import BackButton from "../../../../../common/Button/BackButton";
 
 const { Title } = Typography;
 
@@ -216,12 +216,8 @@ const CreateNewCollectFee = () => {
     <div className="p-6">
       <div className="text-center pb-5">
         <Title level={3}>Collect Fees</Title>
-        <p
-          onClick={() => navigate("/finance")}
-          className="border w-fit flex items-center justify-start gap-2 text-white cursor-pointer px-4 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 transition-all duration-300"
-        >
-          <FaArrowAltCircleLeft /> Back
-        </p>
+
+        <BackButton to="/finance" />
       </div>
 
       <Form
