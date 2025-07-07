@@ -35,7 +35,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
 
       const newWindow = window.open("", "_blank");
 
-      if (newWindow) {
+      if (newWindow) { 
         newWindow.document.write(`
         <html>
           <head>

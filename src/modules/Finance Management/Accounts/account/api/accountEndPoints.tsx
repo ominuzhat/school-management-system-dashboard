@@ -104,6 +104,35 @@ const accountEndpoint = api.injectEndpoints({
       ],
     }),
 
+    getStaffLedgerForm: builder.query<
+      Blob,
+      {
+        start_date: any;
+        end_date: any;
+        year_month: any;
+        collected_by: any;
+      }
+    >({
+      query: ({ start_date, end_date, year_month, collected_by }) => ({
+        url: `/api/v1.0/accounts/daily-collections/download-report/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+        params: {
+          start_date,
+          end_date,
+          year_month,
+          collected_by,
+        },
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.TRANSACTION,
+          id: TagTypes.TRANSACTION + "_ID",
+        },
+      ],
+    }),
+
     updateAccount: builder.mutation<
       ApiResponse<IGetAccount>,
       { id: number | undefined; data: any }
@@ -134,4 +163,5 @@ export const {
   useDeleteAccountMutation,
   useGetCollectionQuery,
   useGetSingleCollectionQuery,
+  useLazyGetStaffLedgerFormQuery
 } = accountEndpoint;

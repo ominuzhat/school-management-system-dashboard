@@ -1,5 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Card, Table, Tag, Row, Col, Statistic, Tabs } from "antd";
+import {
+  Card,
+  Table,
+  Tag,
+  Row,
+  Col,
+  Statistic,
+  Tabs,
+  DatePicker,
+  Select,
+  Button,
+} from "antd";
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
@@ -15,11 +26,21 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
-import { useGetTransactionQuery } from "../../../Accounts/Transaction/api/transactionEndPoints";
+import {
+  useGetTransactionQuery,
+  useLazyGetTransactionsFormQuery,
+} from "../../../Accounts/Transaction/api/transactionEndPoints";
 import { IGetTransaction } from "../../../Accounts/Transaction/types/transactionTypes";
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 import CreateTransaction from "../../../Accounts/Transaction/components/CreateTransaction";
 import CreateFundTransfer from "../../../Accounts/Transaction/components/CreateFundTransfer";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { FaFilePdf } from "react-icons/fa6";
+import { useGetAccountQuery } from "../../../Accounts/account/api/accountEndPoints";
+
+const { Option } = Select;
+const { MonthPicker } = DatePicker;
 
 export const AccountTransfer = () => {
   const accounts = [
@@ -59,6 +80,20 @@ export const AccountTransfer = () => {
 
   const { page_size, page } = useAppSelector(FilterState);
 
+  const currentMonth = dayjs().format("YYYY-MM") + "-01";
+
+  const [filters, setFilters] = useState({
+    start_date: "",
+    end_date: "",
+    transaction_type: "",
+    account_id: "",
+    file_format: "pdf",
+    year_month: dayjs(currentMonth).format("YYYY-MM"),
+  });
+
+  const [getPayrollForm, { data: singleFeeForm }] =
+    useLazyGetTransactionsFormQuery<any>();
+  const { data: accountList } = useGetAccountQuery({});
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const columns = useTransactionColumns();
 
@@ -80,6 +115,42 @@ export const AccountTransfer = () => {
 
   const dataSource =
     (transactionList?.data?.results as IGetTransaction[] | undefined) ?? [];
+
+  useEffect(() => {
+    if (singleFeeForm) {
+      const url = URL.createObjectURL(singleFeeForm);
+
+      const newWindow = window.open("", "_blank");
+
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>Transfer History</title>
+            </head>
+            <body style="margin:0">
+              <iframe 
+                src="${url}" 
+                frameborder="0" 
+                style="width:100%;height:100vh;"
+              ></iframe>
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      }
+
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }
+  }, [singleFeeForm]);
+
+  const handleForm = () => {
+    getPayrollForm({
+      ...filters,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -120,7 +191,7 @@ export const AccountTransfer = () => {
       <Row gutter={[16, 16]}>
         {/* Transfer Form */}
         {createPermission && (
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+          <Col xs={24}>
             <Card
               className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
               title={
@@ -133,16 +204,128 @@ export const AccountTransfer = () => {
                   </Tabs.TabPane>
                 </Tabs>
               }
-            ></Card>
+            />
           </Col>
         )}
 
         {/* Transfer History */}
         {viewPermission ? (
-          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+          <Col xs={24}>
             <Card
               className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
-              title="Transfer History"
+              title={
+                <div className="flex flex-col gap-4">
+                  <p className="font-semibold text-lg">Transfer History</p>
+                  <Row gutter={[12, 12]} justify="start" align="middle">
+                    {/* Start Date */}
+                    <Col xs={24} sm={12} md={8} lg={4}>
+                      <DatePicker
+                        className="w-full"
+                        placeholder="Start Date"
+                        onChange={(date) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            start_date: date ? date.format("YYYY-MM-DD") : "",
+                          }))
+                        }
+                      />
+                    </Col>
+
+                    {/* End Date */}
+                    <Col xs={24} sm={12} md={8} lg={4}>
+                      <DatePicker
+                        className="w-full"
+                        placeholder="End Date"
+                        onChange={(date) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            end_date: date ? date.format("YYYY-MM-DD") : "",
+                          }))
+                        }
+                      />
+                    </Col>
+
+                    {/* Transaction Type */}
+                    <Col xs={24} sm={12} md={8} lg={4}>
+                      <Select
+                        className="w-full"
+                        placeholder="Transaction Type"
+                        allowClear
+                        onChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            transaction_type: value,
+                          }))
+                        }
+                      >
+                        <Option value="credit">Credit</Option>
+                        <Option value="debit">Debit</Option>
+                      </Select>
+                    </Col>
+
+                    {/* Account */}
+                    <Col xs={24} sm={12} md={8} lg={4}>
+                      <Select
+                        className="w-full"
+                        placeholder="Select Account"
+                        allowClear
+                        onChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            account_id: value,
+                          }))
+                        }
+                      >
+                        {Array.isArray(accountList?.data) &&
+                          accountList?.data?.map((account: any) => (
+                            <Option key={account.id} value={account.id}>
+                              {account.type} - {account.account_name}{" "}
+                              {account.account_type} -{" "}
+                              {account.account_or_merchant_number} (
+                              {account.balance})
+                            </Option>
+                          ))}
+                      </Select>
+                    </Col>
+
+                    {/* Year Month */}
+                    <Col xs={24} sm={12} md={8} lg={4}>
+                      <MonthPicker
+                        placeholder="Year & Month"
+                        className="w-full"
+                        defaultValue={dayjs(currentMonth, "YYYY-MM-DD")}
+                        onChange={(date) => {
+                          const formattedDate = date
+                            ? date.format("YYYY-MM") + "-01"
+                            : currentMonth;
+                          setFilters((prev) => ({
+                            ...prev,
+                            year_month: formattedDate,
+                          }));
+                        }}
+                        format="MMMM YYYY"
+                      />
+                    </Col>
+
+                    {/* Generate File */}
+                    <Col xs={24} sm={12} md={8} lg={4}>
+                      <Button
+                        title="Generate File"
+                        size="middle"
+                        type="default"
+                        style={{
+                          color: "#c20a0a",
+                          border: "1px solid gray",
+                          width: "100%",
+                        }}
+                        onClick={handleForm}
+                      >
+                        <FaFilePdf /> Generate File
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+              }
             >
               <Table
                 columns={columns}

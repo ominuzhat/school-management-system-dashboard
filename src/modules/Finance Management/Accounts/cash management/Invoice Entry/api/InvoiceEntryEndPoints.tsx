@@ -72,6 +72,21 @@ const invoiceEntryEndPoints = api.injectEndpoints({
       ],
     }),
 
+    getVendorInvoiceForm: builder.query<Blob, number>({
+      query: (collectFeeId) => ({
+        url: `/api/v1.0/vendors/invoices/${collectFeeId}/download-invoice/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.INVOICE_ENTRY,
+          id: TagTypes.INVOICE_ENTRY + "_ID",
+        },
+      ],
+    }),
+
     updateInvoiceEntry: builder.mutation<
       ApiResponse<IGetInvoiceEntry>,
       { id: number | undefined; data: any }
@@ -99,4 +114,5 @@ export const {
   useCreateInvoiceEntryMutation,
   useUpdateInvoiceEntryMutation,
   useGetSingleInvoiceEntryQuery,
+  useLazyGetVendorInvoiceFormQuery,
 } = invoiceEntryEndPoints;

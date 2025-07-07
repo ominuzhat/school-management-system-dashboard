@@ -67,6 +67,21 @@ const vendorEntryEndPoints = api.injectEndpoints({
       ],
     }),
 
+    getVendorPaymentForm: builder.query<Blob, number>({
+      query: (collectFeeId) => ({
+        url: `/api/v1.0/vendors/payments/${collectFeeId}/download-receipt/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.VENDOR_ENTRY,
+          id: TagTypes.VENDOR_ENTRY + "_ID",
+        },
+      ],
+    }),
+
     updateVendorEntry: builder.mutation<
       ApiResponse<IGetVendorEntry>,
       { id: number | undefined; data: any }
@@ -94,4 +109,5 @@ export const {
   useCreateVendorEntryMutation,
   useUpdateVendorEntryMutation,
   useGetSingleVendorEntryQuery,
+  useLazyGetVendorPaymentFormQuery,
 } = vendorEntryEndPoints;

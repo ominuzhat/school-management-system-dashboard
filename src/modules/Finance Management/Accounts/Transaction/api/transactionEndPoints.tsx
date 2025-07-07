@@ -198,6 +198,46 @@ const transactionENdPoints = api.injectEndpoints({
       ],
     }),
 
+    getTransactionsForm: builder.query<
+      Blob,
+      {
+        end_date: string;
+        start_date: string;
+        transaction_type: string;
+        file_format: string;
+        account_id: any;
+        year_month: any;
+      }
+    >({
+      query: ({
+        end_date,
+        start_date,
+        transaction_type,
+        file_format,
+        account_id,
+        year_month,
+      }) => ({
+        url: `/api/v1.0/accounts/transactions/download-transfer-history/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+        params: {
+          end_date,
+          start_date,
+          transaction_type,
+          file_format,
+          account_id,
+          year_month,
+        },
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.TRANSACTION,
+          id: TagTypes.TRANSACTION + "_ID",
+        },
+      ],
+    }),
+
     updateTransaction: builder.mutation<
       ApiResponse<IGetTransaction>,
       { id: number | undefined; data: any }
@@ -231,4 +271,5 @@ export const {
   useCreateFundTransactionMutation,
   useCreateTransferApprovalMutation,
   useCreateTransferRejectMutation,
+  useLazyGetTransactionsFormQuery,
 } = transactionENdPoints;

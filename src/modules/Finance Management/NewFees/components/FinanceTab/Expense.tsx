@@ -1,4 +1,4 @@
-import { Card, Statistic, Row, Col } from "antd";
+import { Card, Statistic, Row, Col, Button, DatePicker } from "antd";
 import {
   ArrowDownOutlined,
   FileTextOutlined,
@@ -15,11 +15,18 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
-import { useGetCashQuery } from "../../../Accounts/cash management/api/cashEndPoints";
+import {
+  useGetCashQuery,
+  useLazyGetIncomeExpenseFormQuery,
+} from "../../../Accounts/cash management/api/cashEndPoints";
 import { IGetCash } from "../../../Accounts/cash management/types/cashTypes";
 import CreateCash from "../../../Accounts/cash management/components/CreateCash";
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 import { Table } from "../../../../../common/CommonAnt";
+import { FaFilePdf } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+const { MonthPicker } = DatePicker;
 
 export const ExpenseTracking = () => {
   // const categoryColors = {
@@ -32,10 +39,19 @@ export const ExpenseTracking = () => {
   //   Sports: "yellow",
   // };
 
+  const currentMonth = dayjs().format("YYYY-MM") + "-01";
+
+  const [filters, setFilters] = useState({
+    status: "",
+    month: currentMonth,
+  });
+
   const { page_size, page } = useAppSelector(FilterState);
 
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const columns = useCashColumns();
+  const [getIncomeExpenseForm, { data: singleFeeForm }] =
+    useLazyGetIncomeExpenseFormQuery<any>();
 
   const viewPermission = GetPermission(
     dashboardData?.data?.permissions,
@@ -63,6 +79,43 @@ export const ExpenseTracking = () => {
 
   const dataSource =
     (transactionList?.data?.results as IGetCash[] | undefined) ?? [];
+
+  useEffect(() => {
+    if (singleFeeForm) {
+      const url = URL.createObjectURL(singleFeeForm);
+
+      const newWindow = window.open("", "_blank");
+
+      if (newWindow) {
+        newWindow.document.write(`
+              <html>
+                <head>
+                  <title>Financial Entries Report</title>
+                </head>
+                <body style="margin:0">
+                  <iframe 
+                    src="${url}" 
+                    frameborder="0" 
+                    style="width:100%;height:100vh;"
+                  ></iframe>
+                </body>
+              </html>
+            `);
+        newWindow.document.close();
+      }
+
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }
+  }, [singleFeeForm]);
+
+  const handleForm = () => {
+    getIncomeExpenseForm({
+      month: filters.month,
+      file_format: "pdf",
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -146,7 +199,59 @@ export const ExpenseTracking = () => {
         {/* Expense List */}
         <Col xs={24} lg={24}>
           <Card
-            title="Daily Income & Expense"
+            title={
+              <Row gutter={[16, 16]} justify="space-between" align="middle">
+                <Col>
+                  <h2 className="font-semibold text-lg">
+                    Daily Income & Expense
+                  </h2>
+                </Col>
+
+                <Col>
+                  <Row gutter={[8, 8]} align="middle">
+                    {/* Month Picker */}
+                    <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                      <MonthPicker
+                        placeholder="Select month"
+                        className="w-full"
+                        defaultValue={dayjs(currentMonth, "YYYY-MM-DD")}
+                        onChange={(date) => {
+                          if (date) {
+                            const formattedDate =
+                              date.format("YYYY-MM") + "-01";
+                            setFilters((prev) => ({
+                              ...prev,
+                              month: formattedDate,
+                            }));
+                          } else {
+                            setFilters((prev) => ({
+                              ...prev,
+                              month: currentMonth,
+                            }));
+                          }
+                        }}
+                        format="MMMM YYYY"
+                      />
+                    </Col>
+
+                    <Col>
+                      <Button
+                        title="Generate Pdf"
+                        size="middle"
+                        type="default"
+                        style={{
+                          color: "#c20a0a",
+                          border: "1px solid gray",
+                        }}
+                        onClick={() => handleForm()}
+                      >
+                        <FaFilePdf /> Generate Pdf
+                      </Button>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            }
             className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
           >
             {/* <div className="mb-6">

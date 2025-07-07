@@ -26,6 +26,28 @@ const cashEndPoints = api.injectEndpoints({
       ],
     }),
 
+    getIncomeExpenseForm: builder.query<
+      Blob,
+      { month?: string; file_format: any }
+    >({
+      query: ({ month, file_format }) => ({
+        url: `/api/v1.0/accounts/financial-entries/download-ledger/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+        params: {
+          month,
+          file_format,
+        },
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.CASH,
+          id: TagTypes.CASH + "_ID",
+        },
+      ],
+    }),
+
     createCash: builder.mutation<ApiResponse<ICreateCash>, any>({
       query: (data) => ({
         url: "/api/v1.0/accounts/financial-entries/",
@@ -90,4 +112,5 @@ export const {
   useCreateCashMutation,
   useUpdateCashMutation,
   useGetSingleCashQuery,
+  useLazyGetIncomeExpenseFormQuery,
 } = cashEndPoints;

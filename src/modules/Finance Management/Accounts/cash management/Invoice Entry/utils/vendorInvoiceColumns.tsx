@@ -14,7 +14,9 @@ import EditButton from "../../../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../../../app/features/modalSlice";
 import UpdateInvoiceEntry from "../components/UpdateInvoiceEntry";
 import ViewInvoiceEntry from "../components/ViewInvoiceEntry";
-import { FaEye } from "react-icons/fa6";
+import { FaEye, FaFilePdf } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { useLazyGetVendorInvoiceFormQuery } from "../api/InvoiceEntryEndPoints";
 
 const useVendorInvoiceColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -25,6 +27,47 @@ const useVendorInvoiceColumns = (): ColumnsType<any> => {
     moduleNames.financialentry,
     actionNames.change
   );
+
+  const [pdfTitle, setPdfTitle] = useState<string>("Invoice PDF");
+
+  const [getCollectFeeForm, { data: singleFeeForm }] =
+    useLazyGetVendorInvoiceFormQuery();
+
+  useEffect(() => {
+    if (singleFeeForm) {
+      const url = URL.createObjectURL(singleFeeForm);
+
+      const newWindow = window.open("", "_blank");
+
+      if (newWindow) {
+        newWindow.document.write(`
+        <html>
+          <head>
+            <title>${pdfTitle}</title>
+          </head>
+          <body style="margin:0">
+            <iframe 
+              src="${url}" 
+              frameborder="0" 
+              style="width:100%;height:100vh;"
+            ></iframe>
+          </body>
+        </html>
+      `);
+        newWindow.document.close();
+      }
+
+      // ✅ Cleanup only this URL
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }
+  }, [singleFeeForm, pdfTitle]); // ✅ Removed pdfUrl!
+
+  const handleForm = (id: number) => {
+    setPdfTitle(`${id} `);
+    getCollectFeeForm(id);
+  };
 
   // const [deleteCartItem] = useDeleteOrderItemMutation();
 
@@ -145,6 +188,18 @@ const useVendorInvoiceColumns = (): ColumnsType<any> => {
           >
             <FaEye />
             View
+          </Button>
+          <Button
+            title="Invoice"
+            size="small"
+            type="default"
+            style={{
+              color: "#c20a0a",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleForm(record.id)}
+          >
+            <FaFilePdf />
           </Button>
 
           {/* <ViewButton to={`student-view/1`} /> */}
