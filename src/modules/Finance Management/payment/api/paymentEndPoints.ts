@@ -69,7 +69,7 @@ const paymentEndpoint = api.injectEndpoints({
 
     getSinglePaymentForm: builder.query<Blob, number>({
       query: (collectFeeId) => ({
-        url: `/api/v1.0/payrolls/payments/generate-fee-invoice/?collect_fee=${collectFeeId}`,
+        url: `/api/v1.0/payrolls/payments/${collectFeeId}/download-receipt/`,
         responseHandler: async (response) => response.blob(),
         cache: "no-cache",
       }),

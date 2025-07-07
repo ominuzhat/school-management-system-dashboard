@@ -113,7 +113,10 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
     data: subjectData,
     isFetching: isFetchingSubjects,
     refetch: refetchSubjects,
-  } = useGetSubjectsQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
+  } = useGetSubjectsQuery(
+    { grade_level: gradeLevel, page_size: 900 },
+    { skip: !gradeLevel }
+  );
 
   // Handle subject selection when grade level changes
   useEffect(() => {

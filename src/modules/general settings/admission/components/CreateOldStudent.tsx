@@ -96,7 +96,10 @@ const CreateOldStudent = () => {
     data: subjectData,
     isFetching: isFetchingSubjects,
     refetch: refetchSubjects,
-  } = useGetSubjectsQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
+  } = useGetSubjectsQuery(
+    { grade_level: gradeLevel, page_size: 900 },
+    { skip: !gradeLevel }
+  );
 
   const [create, { isLoading, isSuccess }] = useCreateAdmissionMutation();
 
@@ -220,6 +223,7 @@ const CreateOldStudent = () => {
         initialValues={{
           subjects: selectedSubjects,
           status: "approved",
+          group_type: "general",
           // discount_type: "amount",
           // discount_value: 0,
           fee_type: "class",
@@ -268,6 +272,18 @@ const CreateOldStudent = () => {
               </Form.Item>
             </Col>
 
+            {/* group */}
+
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+              <Form.Item label="Group" name="group_type">
+                <Select placeholder="Select Group">
+                  <Select.Option value="general">General</Select.Option>
+                  <Select.Option value="science">Science</Select.Option>
+                  <Select.Option value="commerce">Commerce</Select.Option>
+                  <Select.Option value="arts">Arts</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
             {/* Class Selection */}
             <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission>

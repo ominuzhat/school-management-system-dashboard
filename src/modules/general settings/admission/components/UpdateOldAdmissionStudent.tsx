@@ -47,6 +47,8 @@ const UpdateOldAdmissionStudent = () => {
   // const customFees = AntForm.useWatch("customFees", form);
   // console.log(setForceUpdate);
 
+  console.log(selectedSubjects);
+
   const { admissionId } = useParams();
   const { data: singleAdmissionData } = useGetSingleAdmissionQuery(
     Number(admissionId)
@@ -73,7 +75,10 @@ const UpdateOldAdmissionStudent = () => {
     data: subjectData,
     isFetching: isFetchingSubjects,
     refetch: refetchSubjects,
-  } = useGetSubjectsQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
+  } = useGetSubjectsQuery(
+    { grade_level: gradeLevel, page_size: 900 },
+    { skip: !gradeLevel }
+  );
 
   const [updateAdmission, { isLoading, isSuccess }] =
     useUpdateAdmissionMutation();
@@ -127,6 +132,7 @@ const UpdateOldAdmissionStudent = () => {
 
       form.setFieldsValue({
         student: singleAdmission?.student?.id,
+        group_type: singleAdmission?.group_type,
         roll: singleAdmission?.roll,
         session: singleAdmission?.session?.id,
         status: singleAdmission?.status,
@@ -135,7 +141,7 @@ const UpdateOldAdmissionStudent = () => {
         shift: singleAdmission?.shift?.id,
         fee_type: singleAdmission?.fee_type,
         section: singleAdmission?.section?.id,
-        grade_level: singleAdmission?.subjects?.[0]?.grade_level?.id,
+        // grade_level: singleAdmission?.subjects?.[0]?.grade_level?.id,
         subjects: initialSubjects,
         fees: isCustomFee ? [] : singleAdmission?.fees || [],
         customFees: formattedCustomFees,
@@ -147,6 +153,8 @@ const UpdateOldAdmissionStudent = () => {
       );
     }
   }, [singleAdmission, form, subjectData]);
+
+  console.log(singleAdmission);
 
   const handleSubjectsChange = (selectedValues: string[]) => {
     setSelectedSubjects(selectedValues);
@@ -209,6 +217,8 @@ const UpdateOldAdmissionStudent = () => {
     );
   }
 
+  console.log(subjectData?.data?.results, "subjectData?.data?.results");
+
   return (
     <div className="p-4">
       <Form
@@ -265,6 +275,19 @@ const UpdateOldAdmissionStudent = () => {
                         {session.name}
                       </Option>
                     ))}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            {/* group */}
+
+            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+              <Form.Item label="Group" name="group_type">
+                <Select placeholder="Select Group">
+                  <Select.Option value="general">General</Select.Option>
+                  <Select.Option value="science">Science</Select.Option>
+                  <Select.Option value="commerce">Commerce</Select.Option>
+                  <Select.Option value="arts">Arts</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -347,7 +370,7 @@ const UpdateOldAdmissionStudent = () => {
           </Row>
 
           {/* Subjects Section */}
-          {gradeLevel && subjectData?.data?.results && (
+          {subjectData?.data?.results && (
             <div className="mt-6">
               <Title level={4} className="mb-4">
                 Subject Selection
@@ -359,12 +382,12 @@ const UpdateOldAdmissionStudent = () => {
                       <Checkbox
                         checked={selectAll}
                         onChange={handleSelectAllChange}
-                        indeterminate={
-                          !selectAll &&
-                          selectedSubjects.length > 0 &&
-                          selectedSubjects.length <
-                            subjectData.data.results.length
-                        }
+                        // indeterminate={
+                        //   !selectAll &&
+                        //   selectedSubjects.length > 0 &&
+                        //   selectedSubjects.length <
+                        //     subjectData?.data?.results?.length
+                        // }
                       >
                         <Text strong>Select All Subjects</Text>
                       </Checkbox>
@@ -387,7 +410,7 @@ const UpdateOldAdmissionStudent = () => {
                           .includes(input.toLowerCase())
                       }
                     >
-                      {subjectData.data.results.map((subject: any) => (
+                      {subjectData?.data?.results?.map((subject: any) => (
                         <Option key={subject.id} value={subject.id}>
                           {subject.name}
                         </Option>

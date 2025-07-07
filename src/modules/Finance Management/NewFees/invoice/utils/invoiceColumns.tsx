@@ -97,16 +97,35 @@ const useInvoiceColumns = (): ColumnsType<any> => {
       render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
     },
 
+    // {
+    //   title: "Total Amount",
+    //   dataIndex: "total_amount",
+    //   key: "total_amount",
+    //   align: "center",
+    // },
+
+    // {
+    //   title: "Discount Type",
+    //   dataIndex: "discount_type",
+    //   key: "discount_type",
+    //   align: "center",
+    // },
     {
-      title: "Total Amount",
-      dataIndex: "total_amount",
-      key: "total_amount",
+      title: "Discount",
+      dataIndex: "discount_value",
+      key: "discount_value",
       align: "center",
     },
     {
-      title: "Paid Amount",
+      title: "Amount",
       dataIndex: "total_paid",
       key: "total_paid",
+      align: "center",
+    },
+    {
+      title: "Net Amount",
+      dataIndex: "net_amount",
+      key: "net_amount",
       align: "center",
     },
     {

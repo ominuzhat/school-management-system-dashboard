@@ -37,6 +37,7 @@ const UpdateCollectFee = () => {
     discountValue: 0,
   });
 
+  console.log(finalDueAmount, setDiscount);
 
   const [paidAmount, setPaidAmount] = useState<number | null>(null);
   const [addOns, setAddOns] = useState<string[]>([]);

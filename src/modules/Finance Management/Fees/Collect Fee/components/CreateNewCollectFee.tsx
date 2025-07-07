@@ -46,14 +46,15 @@ const CreateNewCollectFee = () => {
 
   const admission = AntForm.useWatch("admission", form);
   const month = AntForm.useWatch("month", form);
+  const discountType = AntForm.useWatch("discount_type", form);
+  const discountAmount = AntForm.useWatch("discount_value", form);
   const particulars = AntForm.useWatch("particulars", form);
-  const [totals, setTotals] = useState({
+  const [totals, setTotals] = useState<any>({
     amount: 0,
     due_amount: 0,
     paid_amount: 0,
+    net_amount: 0,
   });
-
-  console.log(admission, "admission");
 
   useEffect(() => {
     if (Array.isArray(particulars)) {
@@ -61,19 +62,73 @@ const CreateNewCollectFee = () => {
         (sum, item) => sum + Number(item?.amount || 0),
         0
       );
+
       const due_amount = particulars.reduce(
         (sum, item) => sum + Number(item?.due_amount || 0),
         0
       );
+
       const paid_amount = particulars.reduce((sum, item) => {
         const paid = Number(item?.paid_amount || 0);
         const due = Number(item?.due_amount || 0);
         return sum + (paid > due ? due : paid);
       }, 0);
 
-      setTotals({ amount, due_amount, paid_amount });
+      let net_amount = paid_amount || 0;
+
+      if (discountType && discountAmount) {
+        const discount = Number(discountAmount);
+
+        if (discountType === "percent") {
+          const percentDiscount = (discount / 100) * paid_amount;
+          net_amount = paid_amount - percentDiscount;
+        } else if (discountType === "amount") {
+          net_amount = paid_amount - discount;
+        }
+
+        net_amount = Math.max(net_amount, 0);
+      }
+
+      setTotals({ amount, due_amount, paid_amount, net_amount });
     }
-  }, [form, particulars]);
+  }, [form, particulars, discountType, discountAmount]);
+
+  // useEffect(() => {
+  //   if (Array.isArray(particulars)) {
+  //     // 1️⃣ Raw totals
+  //     const amount = particulars.reduce(
+  //       (sum, item) => sum + Number(item?.amount || 0),
+  //       0
+  //     );
+
+  //     const due_amount = particulars.reduce(
+  //       (sum, item) => sum + Number(item?.due_amount || 0),
+  //       0
+  //     );
+
+  //     let paid_amount = particulars.reduce((sum, item) => {
+  //       const paid = Number(item?.paid_amount || 0);
+  //       const due = Number(item?.due_amount || 0);
+  //       return sum + (paid > due ? due : paid);
+  //     }, 0);
+
+  //     // 2️⃣ Apply discount only to paid_amount
+  //     if (discountType && discountAmount) {
+  //       const discount = Number(discountAmount);
+
+  //       if (discountType === "percent") {
+  //         const percentDiscount = (discount / 100) * paid_amount;
+  //         paid_amount -= percentDiscount;
+  //       } else if (discountType === "amount") {
+  //         paid_amount -= discount;
+  //       }
+
+  //       paid_amount = Math.max(paid_amount, 0);
+  //     }
+
+  //     setTotals({ amount, due_amount, paid_amount });
+  //   }
+  // }, [form, particulars, discountType, discountAmount]);
 
   const { data: getSingleAdmission } = useGetSingleAdmissionQuery<any>(
     admissionId || admission?.value,
@@ -158,6 +213,7 @@ const CreateNewCollectFee = () => {
     console.log(values);
 
     const results = {
+      ...values,
       admission: values?.admission,
       add_ons: values?.add_ons,
       discount_type: values?.discount_type,
@@ -325,7 +381,7 @@ const CreateNewCollectFee = () => {
               </AntForm.Item>
             </Col>
 
-            <Col lg={8}>
+            <Col lg={6}>
               <Form.Item
                 label="Select Account"
                 name="account"
@@ -343,6 +399,32 @@ const CreateNewCollectFee = () => {
                 </Select>
               </Form.Item>
             </Col>
+            <Col xs={24} sm={12} md={8} lg={6}>
+              <Form.Item label="Discount Type" name="discount_type">
+                <Select placeholder="Select Type">
+                  <Select.Option value="percent">Percent</Select.Option>
+                  <Select.Option value="amount">Amount</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            {discountType && (
+              <Col xs={24} sm={12} md={8} lg={6}>
+                <Form.Item label="Discount Amount" name="discount_value">
+                  <Input placeholder="Discount Amount" type="number" />
+                </Form.Item>
+              </Col>
+            )}
+
+            {discountType && (
+              <Col xs={24} sm={24} md={8} lg={12}>
+                <Form.Item label="Discount Reason" name="discount_reason">
+                  <Input.TextArea
+                    placeholder="Enter reason for discount"
+                    rows={2}
+                  />
+                </Form.Item>
+              </Col>
+            )}
           </Row>
         </Card>
 
@@ -559,6 +641,43 @@ const CreateNewCollectFee = () => {
                     }
                   )}
                 </tbody>
+
+                {discountType && discountAmount && (
+                  <tfoot>
+                    <tr
+                      style={{
+                        backgroundColor: "#FFFFFF",
+                        borderTop: "1px solid #ddd",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <td colSpan={3}></td>
+                      <td> </td>
+                      <td>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                          }}
+                        >
+                          Discount Amount: {discountAmount}
+                        </div>
+                      </td>
+                      <td>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                          }}
+                        >
+                          Net Amount: {totals?.net_amount}
+                        </div>
+                      </td>
+                    </tr>
+                  </tfoot>
+                )}
 
                 <tfoot>
                   <tr
