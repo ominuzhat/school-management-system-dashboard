@@ -59,15 +59,15 @@ const DepartmentPage = () => {
         <BreadCrumb />
       </div>
       <Card>
-        <Row justify="space-between" gutter={[10, 10]}>
+        <Row  align="middle" gutter={[12, 12]}>
           {createPermission && (
-            <Col lg={4} xs={24}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
               <Button
                 type="primary"
                 onClick={() =>
                   dispatch(
                     showModal({
-                      title: "Add Department ",
+                      title: "Add Department",
                       content: <CreateDepartmentModal />,
                     })
                   )
@@ -77,15 +77,17 @@ const DepartmentPage = () => {
               >
                 Add Department
               </Button>
+            </Col>
+          )}
 
-              <Col lg={10}>
-                <p
-                  onClick={() => navigate("/employees")}
-                  className="w-fit  underline text-blue-400  cursor-pointer"
-                >
-                  Manage Employee
-                </p>
-              </Col>
+          {createPermission && (
+            <Col xs={24} sm={2} md={2} lg={2} xl={2}>
+              <p
+                onClick={() => navigate("/employees")}
+                className="w-fit underline text-blue-500 cursor-pointer"
+              >
+                Manage Employee
+              </p>
             </Col>
           )}
         </Row>
