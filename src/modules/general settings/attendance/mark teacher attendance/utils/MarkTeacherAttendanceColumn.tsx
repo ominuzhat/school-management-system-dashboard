@@ -1,4 +1,4 @@
-import { Button, Radio, Space, TimePicker } from "antd";
+import { Button, Radio, Space } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
@@ -263,46 +263,65 @@ const useMarkTeacherAttendanceColumns = ({
           ? `teacher-${record.teacher.id}`
           : `employee-${record.employee.id}`;
         const value = checkInOutMap[key]?.check_in || record?.check_in;
+
+        // 🟢 Fix: Slice to HH:mm for input
+        const timeValue = value ? value.slice(0, 5) : "";
+
         return (
-          <TimePicker
-            value={value ? dayjs(value, "HH:mm:ss") : null}
-            format="HH:mm:ss"
-            onChange={(time) =>
+          <input
+            type="time"
+            value={timeValue}
+            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+            onChange={(e) => {
+              const newTime = e.target.value
+                ? `${e.target.value}:00` // add seconds back
+                : undefined;
+
               handleTimeChange(
-                time,
+                newTime ? dayjs(newTime, "HH:mm:ss") : undefined,
                 "check_in",
                 record.teacher?.id || record.employee?.id,
                 record.teacher ? "teacher" : "employee"
-              )
-            }
+              );
+            }}
           />
         );
       },
     },
+
     {
       title: "Check-out",
-      align: "center",
+      align: "center" as const,
       render: (record: any) => {
         const key = record.teacher
           ? `teacher-${record.teacher.id}`
           : `employee-${record.employee.id}`;
         const value = checkInOutMap[key]?.check_out || record?.check_out;
+
+        const timeValue = value ? value.slice(0, 5) : "";
+
         return (
-          <TimePicker
-            value={value ? dayjs(value, "HH:mm:ss") : null}
-            format="HH:mm:ss"
-            onChange={(time) =>
+          <input
+            type="time"
+            value={timeValue}
+            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
+            onChange={(e) => {
+              const newTime = e.target.value
+                ? `${e.target.value}:00`
+                : undefined;
+
               handleTimeChange(
-                time,
+                newTime ? dayjs(newTime, "HH:mm:ss") : undefined,
                 "check_out",
                 record.teacher?.id || record.employee?.id,
                 record.teacher ? "teacher" : "employee"
-              )
-            }
+              );
+            }}
           />
         );
       },
     },
+
     {
       title: (
         <div className="flex items-center justify-center gap-5">

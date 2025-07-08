@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetSingleAdmissionQuery } from "../api/admissionEndPoints";
 import {
   Card,
@@ -33,6 +33,7 @@ import {
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
 import dayjs from "dayjs";
+import { FaRegEdit } from "react-icons/fa";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -96,10 +97,30 @@ const AdmissionView = () => {
       render: (text: string) => <Text strong>{text}</Text>,
     },
     {
-      title: "Class",
-      dataIndex: ["grade_level", "name"],
-      key: "grade_level",
-      render: (text: string) => <Tag color="blue">{text}</Tag>,
+      title: "Group Type",
+      dataIndex: "group_type_display",
+      key: "group_type_display",
+      render: (text: string) => {
+        let color = "";
+        switch (text?.toLowerCase()) {
+          case "general":
+            color = "blue";
+            break;
+          case "commerce":
+            color = "green";
+            break;
+          case "science":
+            color = "purple";
+            break;
+          case "arts":
+            color = "orange";
+            break;
+          default:
+            color = "default";
+        }
+
+        return <Tag color={color}>{text}</Tag>;
+      },
     },
     {
       title: "Status",
@@ -135,7 +156,7 @@ const AdmissionView = () => {
         return <Tag color="default">{status}</Tag>;
     }
   };
-  
+
   const feeColumns = [
     {
       title: "Name",
@@ -429,6 +450,9 @@ const AdmissionView = () => {
           {/* Right Column - Student Profile */}
           <Col {...profileColSpan}>
             <Card className="profile-card">
+              <Link to={`/students/update/${student?.id}`}>
+                <FaRegEdit className="text-blue-500 cursor-pointer hover:scale-110 transition-transform duration-200" />
+              </Link>
               <div className="profile-header" style={{ textAlign: "center" }}>
                 <Avatar
                   size={screens.xs ? 64 : 80}
@@ -467,7 +491,7 @@ const AdmissionView = () => {
                     </Space>
                   }
                 >
-                  <Text>{student?.phone_number || "N/A"}</Text>
+                  <Text>{student?.contact_phone_number || "N/A"}</Text>
                 </Descriptions.Item>
                 <Descriptions.Item
                   label={
@@ -560,8 +584,6 @@ const AdmissionView = () => {
           </Col>
         </Row>
 
-
-        
         <Divider orientation="left">Fee Details</Divider>
         <Table
           columns={feeColumns}

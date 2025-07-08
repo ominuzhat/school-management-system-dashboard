@@ -58,7 +58,7 @@ const EmployeeInformation = ({ data }: any) => {
         },
         {
           fieldName: "Base Salary",
-          text: base_salary ? `$${base_salary}` : "N/A",
+          text: base_salary ? `${base_salary}` : "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetSingleStudentAttendanceListQuery } from "../api/studentAttendanceEndPoints";
 import { Table, Tag, Row, Col, Card } from "antd";
 
@@ -21,10 +21,22 @@ const ViewSingleStudentsAttendanceList = () => {
       title: "Student Name",
       key: "studentName",
       render: (_: any, record: any) => {
-        const { first_name, last_name } = record.admission.student;
-        return `${first_name} ${last_name}`;
+        const admission = record.admission;
+        const { first_name, last_name } = admission?.student || {};
+
+        return admission ? (
+          <Link
+            to={`/admission/admission-view/${admission.id}`}
+            className="text-green-500 hover:underline"
+          >
+            {first_name} {last_name}
+          </Link>
+        ) : (
+          "N/A"
+        );
       },
     },
+
     {
       title: "Registration Number",
       dataIndex: ["admission", "registration_number"],
@@ -67,9 +79,9 @@ const ViewSingleStudentsAttendanceList = () => {
         align: "center",
       },
       {
-        title: "Class Teacher",
-        dataIndex: "classTeacher",
-        key: "classTeacher",
+        title: "Group Type",
+        dataIndex: "group_type_display",
+        key: "group_type_display",
         align: "center",
       },
     ];
@@ -77,7 +89,8 @@ const ViewSingleStudentsAttendanceList = () => {
     const subjectData = admission.subjects.map((subject: any) => ({
       key: subject.id,
       subject: subject.name,
-      classTeacher: subject.grade_level?.class_teacher?.first_name || "N/A",
+      group_type_display: subject.group_type_display,
+      // group_type_display: subject.grade_level?.class_teacher?.first_name || "N/A",
     }));
 
     return (
@@ -91,25 +104,25 @@ const ViewSingleStudentsAttendanceList = () => {
             </Col>
             <Col span={8}>
               <p>
-                <strong>Phone Number:</strong> {student.phone_number}
+                <strong>Phone Number:</strong> {student.contact_phone_number}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Enrollment Date:</strong> {student.enrollment_date}
+                <strong>Session:</strong> {student.current_session?.name}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Date of Birth:</strong> {student.date_of_birth}
+                <strong>Section:</strong> {student?.current_section?.name}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Guardian Name:</strong> {student.guardian_name}
+                <strong>Shift:</strong> {student?.current_shift?.name}
               </p>
             </Col>
-            <Col span={8}>
+            {/* <Col span={8}>
               <p>
                 <strong>Guardian Phone:</strong> {student.guardian_phone_number}
               </p>
@@ -118,7 +131,7 @@ const ViewSingleStudentsAttendanceList = () => {
               <p>
                 <strong>Address:</strong> {student.address}
               </p>
-            </Col>
+            </Col> */}
           </Row>
         </Card>
 

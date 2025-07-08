@@ -1,6 +1,5 @@
-import { Button, Radio, Space, TimePicker } from "antd";
+import { Button, Radio, Space } from "antd";
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 
 const useMarkStudentsAttendanceColumns = ({
@@ -121,7 +120,10 @@ const useMarkStudentsAttendanceColumns = ({
       key: "student",
       align: "center",
       render: (admission: any) => (
-        <Link to={`/admission/admission-view/${admission?.id}`} className="text-green-500">
+        <Link
+          to={`/admission/admission-view/${admission?.id}`}
+          className="text-green-500"
+        >
           {admission?.student?.first_name} {admission?.student?.last_name}
         </Link>
       ),
@@ -163,12 +165,19 @@ const useMarkStudentsAttendanceColumns = ({
       render: (record: any) => {
         const value =
           checkInOutMap[record.admission.id]?.check_in || record?.check_in;
+
+        // Convert to HH:mm for input type="time"
+        const timeValue = value ? value.slice(0, 5) : "";
+
         return (
-          <TimePicker
-            value={value ? dayjs(value, "HH:mm:ss") : null}
-            format="HH:mm:ss"
-            onChange={(time) => {
-              const timeStr = time ? time.format("HH:mm:ss") : undefined;
+          <input
+            type="time"
+            value={timeValue}
+            onChange={(e) => {
+              const timeStr = e.target.value
+                ? `${e.target.value}:00`
+                : undefined;
+
               setCheckInOutMap((prev) => ({
                 ...prev,
                 [record.admission.id]: {
@@ -192,10 +201,12 @@ const useMarkStudentsAttendanceColumns = ({
                 ];
               });
             }}
+            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
           />
         );
       },
     },
+
     {
       title: "Check-out",
       key: "check_out",
@@ -203,12 +214,19 @@ const useMarkStudentsAttendanceColumns = ({
       render: (record: any) => {
         const value =
           checkInOutMap[record.admission.id]?.check_out || record?.check_out;
+
+        // Convert to HH:mm for input type="time"
+        const timeValue = value ? value.slice(0, 5) : "";
+
         return (
-          <TimePicker
-            value={value ? dayjs(value, "HH:mm:ss") : null}
-            format="HH:mm:ss"
-            onChange={(time) => {
-              const timeStr = time ? time.format("HH:mm:ss") : undefined;
+          <input
+            type="time"
+            value={timeValue}
+            onChange={(e) => {
+              const timeStr = e.target.value
+                ? `${e.target.value}:00`
+                : undefined;
+
               setCheckInOutMap((prev) => ({
                 ...prev,
                 [record.admission.id]: {
@@ -232,10 +250,12 @@ const useMarkStudentsAttendanceColumns = ({
                 ];
               });
             }}
+            className="border border-gray-300 w-full rounded-lg px-3 py-0.5"
           />
         );
       },
     },
+
     {
       title: (
         <div className="flex items-center justify-center gap-2">

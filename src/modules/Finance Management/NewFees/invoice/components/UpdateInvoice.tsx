@@ -100,7 +100,6 @@ const UpdateInvoice = ({ record }: { record: string }) => {
             <AntForm.Item
               label="Admission"
               name={['admission', 'name']}
-              rules={[{ required: true, message: "Admission is required!" }]}
             >
               <Input disabled />
             </AntForm.Item>
@@ -113,7 +112,6 @@ const UpdateInvoice = ({ record }: { record: string }) => {
             <Form.Item
               label="Issue Date"
               name="issue_date"
-              rules={[{ required: true, message: "Please select issue date!" }]}
             >
               <DatePicker format="YYYY-MM-DD" className="w-full" />
             </Form.Item>
@@ -123,7 +121,6 @@ const UpdateInvoice = ({ record }: { record: string }) => {
             <Form.Item
               label="Due Date"
               name="due_date"
-              rules={[{ required: true, message: "Please select due date!" }]}
             >
               <DatePicker format="YYYY-MM-DD" className="w-full" />
             </Form.Item>
@@ -133,7 +130,6 @@ const UpdateInvoice = ({ record }: { record: string }) => {
             <Form.Item
               label="Notes"
               name="notes"
-              rules={[{ required: true, message: "Please input notes!" }]}
             >
               <Input.TextArea rows={3} />
             </Form.Item>

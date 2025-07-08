@@ -9,13 +9,13 @@ import {
   Row,
   Col,
   Badge,
+  Table,
 } from "antd";
 import {
   UserOutlined,
   FileOutlined,
   FilePdfOutlined,
   FileImageOutlined,
-  DollarOutlined,
   CalendarOutlined,
   EnvironmentOutlined,
   MailOutlined,
@@ -25,6 +25,7 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { capitalize } from "../../../../../../common/capitalize/Capitalize";
 
 const { useBreakpoint } = Grid;
 
@@ -60,8 +61,7 @@ const getStatusTag = (status: string) => {
           Unpaid
         </Tag>
       );
-    case "draft":
-      return <Tag color="default">Draft</Tag>;
+
     default:
       return <Tag>{status}</Tag>;
   }
@@ -233,7 +233,7 @@ const ViewVendor = ({ record }: any) => {
 
               <div style={{ marginTop: "12px" }}>
                 <Row gutter={16}>
-                  <Col xs={24} sm={12} md={8}>
+                  <Col xs={24} sm={12} md={12}>
                     <Card
                       size="small"
                       title="Amount"
@@ -258,7 +258,7 @@ const ViewVendor = ({ record }: any) => {
                     </Card>
                   </Col>
 
-                  <Col xs={24} sm={12} md={8}>
+                  <Col xs={24} sm={12} md={12}>
                     <Card
                       size="small"
                       title="Files"
@@ -288,36 +288,46 @@ const ViewVendor = ({ record }: any) => {
                     </Card>
                   </Col>
 
-                  <Col xs={24} sm={24} md={8}>
+                  <Col xs={24} sm={24} md={24}>
                     <Card
                       size="small"
                       title="Payments"
                       style={{ marginBottom: "16px" }}
                     >
                       {invoice.payments.length > 0 ? (
-                        <List
+                        <Table
                           size="small"
+                          pagination={false}
                           dataSource={invoice.payments}
-                          renderItem={(payment: any) => (
-                            <List.Item>
-                              <Space direction="vertical" size={2}>
-                                <Space>
-                                  <DollarOutlined
-                                    style={{ color: "#52c41a" }}
-                                  />
-                                  <Typography.Text strong>
-                                    ৳{payment.amount.toLocaleString()}
-                                  </Typography.Text>
-                                  <Tag>{payment.type}</Tag>
-                                </Space>
+                          rowKey="id"
+                          columns={[
+                            {
+                              title: "Date",
+                              dataIndex: "payment_date",
+                              key: "payment_date",
+                              render: (date: string) => (
                                 <Typography.Text type="secondary">
-                                  {dayjs(payment.payment_date).format(
-                                    "MMM D, YYYY"
-                                  )}
+                                  {dayjs(date).format("MMM D, YYYY")}
                                 </Typography.Text>
-                              </Space>
-                            </List.Item>
-                          )}
+                              ),
+                            },
+                            {
+                              title: "Amount",
+                              dataIndex: "amount",
+                              key: "amount",
+                              render: (amount: number) => (
+                                <Typography.Text strong>
+                                  ৳{amount.toLocaleString()}
+                                </Typography.Text>
+                              ),
+                            },
+                            {
+                              title: "Type",
+                              dataIndex: "type",
+                              key: "type",
+                              render: (type: string) => capitalize(type),
+                            },
+                          ]}
                         />
                       ) : (
                         <Typography.Text type="secondary">
