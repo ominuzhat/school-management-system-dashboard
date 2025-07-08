@@ -129,7 +129,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
     },
     {
       key: "8",
-      title: "Paid Amount",
+      title: "Amount",
       dataIndex: "total_paid",
       align: "center",
       render: (title) => (title ? title : "0"),
