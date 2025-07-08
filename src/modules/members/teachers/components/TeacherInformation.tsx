@@ -16,7 +16,7 @@ const TeacherInformation = ({ data }: { data: any }) => {
     date_of_birth,
     address,
     base_salary,
-    gender,
+    gender_display,
     hire_date,
     image,
     national_id,
@@ -36,7 +36,7 @@ const TeacherInformation = ({ data }: { data: any }) => {
       data: [
         {
           fieldName: "Gender",
-          text: gender || "N/A",
+          text: gender_display || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {

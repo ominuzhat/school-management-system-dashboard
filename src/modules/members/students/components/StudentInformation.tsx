@@ -16,7 +16,7 @@ const StudentInformation = ({ data }: { data: any }) => {
     father_name,
     father_number,
     father_profession,
-    gender,
+    gender_display,
     image,
     local_guardian_name,
     local_guardian_phone_number,
@@ -66,7 +66,7 @@ const StudentInformation = ({ data }: { data: any }) => {
         },
         {
           fieldName: "Gender",
-          text: gender || "N/A",
+          text: gender_display || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {

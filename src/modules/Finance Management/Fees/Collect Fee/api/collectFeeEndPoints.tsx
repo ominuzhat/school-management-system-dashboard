@@ -70,6 +70,10 @@ const collectFeeEndPoints = api.injectEndpoints({
           type: TagTypes.COLLECT_FEE,
           id: TagTypes.COLLECT_FEE + "_ID",
         },
+        {
+          type: TagTypes.INVOICE,
+          id: TagTypes.INVOICE + "_ID",
+        },
       ],
     }),
 
@@ -150,6 +154,10 @@ const collectFeeEndPoints = api.injectEndpoints({
         {
           type: TagTypes.COLLECT_FEE,
           id: TagTypes.COLLECT_FEE + "_ID",
+        },
+        {
+          type: TagTypes.INVOICE,
+          id: TagTypes.INVOICE + "_ID",
         },
       ],
     }),

@@ -25,6 +25,7 @@ const EmployeeInformation = ({ data }: any) => {
     blood_group,
     home_address,
     shifts,
+    gender_display,
   } = data || {};
 
   const information = [
@@ -32,8 +33,8 @@ const EmployeeInformation = ({ data }: any) => {
       title: "Employee Information",
       data: [
         {
-          fieldName: "Full Name",
-          text: `${first_name} ${last_name}` || "N/A",
+          fieldName: "Gender",
+          text: gender_display || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
