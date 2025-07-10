@@ -33,6 +33,10 @@ const NewStudentAdmissionPreview = () => {
   const student: any = useAppSelector((state) => state.student.student);
   const fee: any = useAppSelector((state) => state.student.fee);
 
+  console.log(admission, "add");
+  console.log(student, "student");
+  console.log(fee, "fee");
+
   const getSessionName = (id: number) => {
     return (
       (Array?.isArray(sessionData?.data) &&
@@ -286,11 +290,6 @@ const NewStudentAdmissionPreview = () => {
                     <Tag color={fee?.fee_type === "class" ? "purple" : "cyan"}>
                       {fee?.fee_type?.toUpperCase() || "N/A"}
                     </Tag>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Discount">
-                    {fee?.discount_value
-                      ? `${fee.discount_value}%`
-                      : "No discount"}
                   </Descriptions.Item>
                 </Descriptions>
 

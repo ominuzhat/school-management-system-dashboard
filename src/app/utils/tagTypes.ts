@@ -50,6 +50,7 @@ export const TagTypes = {
   TEACHER_ATTENDANCE: "Teacher_Attendance",
   CASH: "Cash",
   CLAIM: "Claim",
+  SCHEDULE: "Schedule",
   INVOICE: "Invoice",
   VENDOR: "Vendor",
   VENDOR_ENTRY: "Vendor_Entry",

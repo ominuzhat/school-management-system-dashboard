@@ -9,6 +9,9 @@ import StudentEmployeeAttendanceTab from "./StudentEmployeeAttendanceTab";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import BigShiftPage from "../../shift/page/BigShiftPage";
 import AttendanceReportPage from "../attendance report/page/AttendanceReportPage";
+import { AiTwotoneSchedule } from "react-icons/ai";
+import { MdOutlineFilterTiltShift } from "react-icons/md";
+import SchedulePage from "../Schedule/page/SchedulePage";
 
 const AttendanceTab = () => {
   const tabs = [
@@ -20,8 +23,9 @@ const AttendanceTab = () => {
     },
 
     { key: "report", label: "Report", icon: <HiOutlineDocumentReport /> },
+    { key: "schedule", label: "Schedule", icon: <AiTwotoneSchedule /> },
     { key: "leave", label: "Leave", icon: <LuCopyleft /> },
-    { key: "shift", label: "Shift", icon: <LuCopyleft /> },
+    { key: "shift", label: "Shift", icon: <MdOutlineFilterTiltShift /> },
   ];
 
   const [activeTab, setActiveTab] = useState("overview");
@@ -30,7 +34,7 @@ const AttendanceTab = () => {
     <div className="space-y-6">
       <div className="my-10">
         <div className="bg-white/80 backdrop-blur-md border border-[#A2C3FF] rounded-2xl shadow-xl">
-          <div className="grid grid-cols-5 lg:grid-cols-5">
+          <div className="grid grid-cols-6 lg:grid-cols-6">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
@@ -56,6 +60,7 @@ const AttendanceTab = () => {
         {activeTab === "attendance" && <StudentEmployeeAttendanceTab />}
         {activeTab === "shift" && <BigShiftPage />}
         {activeTab === "report" && <AttendanceReportPage />}
+        {activeTab === "schedule" && <SchedulePage />}
       </div>
     </div>
   );

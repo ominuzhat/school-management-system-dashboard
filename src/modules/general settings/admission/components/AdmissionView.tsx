@@ -24,7 +24,6 @@ import {
   DollarOutlined,
   IdcardOutlined,
   BookOutlined,
-  BankOutlined,
   PhoneOutlined,
   MailOutlined,
   CheckCircleOutlined,
@@ -515,7 +514,7 @@ const AdmissionView = () => {
 
               <Divider />
 
-              <Title
+              {/* <Title
                 level={screens.xs ? 5 : 5}
                 className="section-title"
                 style={{ marginBottom: "16px" }}
@@ -541,7 +540,7 @@ const AdmissionView = () => {
                     <Tag color="red">Inactive</Tag>
                   )}
                 </Descriptions.Item>
-              </Descriptions>
+              </Descriptions> */}
 
               <Divider />
 

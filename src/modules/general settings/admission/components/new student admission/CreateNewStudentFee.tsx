@@ -59,10 +59,15 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   const [createAdmissionFee, { data: admissionFee }] =
     useCreateAdmissionFeeMutation();
 
+  console.log(isRegularFee, "iiii");
+
   const [forceUpdate, setForceUpdate] = useState(0);
 
   const feeType = AntForm.useWatch("fee_type", form);
   const fees = AntForm.useWatch("fees", form);
+
+  console.log(fees, "feesfeesfeesfees");
+  console.log(customFees, "customFees");
 
   const allValues = Form.useWatch([], form);
 
@@ -82,6 +87,15 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   }, [allValues]);
 
   useEffect(() => {
+    dispatch(
+      updateFeeField({
+        field: "fee_type",
+        value: isRegularFee ? "class" : "custom",
+      })
+    );
+  }, [dispatch, isRegularFee]);
+
+  useEffect(() => {
     if (admission.grade_level && admission.subjects) {
       createAdmissionFee({
         grade_level: admission.grade_level || "",
@@ -92,6 +106,14 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   }, [createAdmissionFee, admission.grade_level, admission.subjects]);
 
   useEffect(() => {
+    if (customFees) {
+      dispatch(
+        updateFeeField({
+          field: "fees",
+          value: customFees,
+        })
+      );
+    }
     if (fees) {
       dispatch(
         updateFeeField({
@@ -100,7 +122,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
         })
       );
     }
-  }, [fees, dispatch]);
+  }, [fees, dispatch, customFees]);
 
   useEffect(() => {
     const setupFees = () => {
