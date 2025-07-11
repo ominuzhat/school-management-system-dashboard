@@ -86,7 +86,6 @@ const AccountPage = () => {
 
   const dataSource = (accountList?.data as IGetAccount[] | undefined) ?? [];
 
-  console.log(accountList, "accountList");
 
   return (
     <div className="space-y-5">

@@ -56,19 +56,27 @@ const useLeaveColumns = (): ColumnsType<any> => {
           : "N/A",
     },
     {
-      key: "2",
-      title: "Section Name",
-      dataIndex: "admission",
-      align: "center",
-      render: (title) => (title ? title?.section?.name : "N/A"),
-    },
-    {
       key: "3",
       title: "Session Name",
       dataIndex: "admission",
       align: "center",
       render: (title) => (title ? title?.session?.name : "N/A"),
     },
+    {
+      key: "22",
+      title: "Class",
+      dataIndex: "admission",
+      align: "center",
+      render: (title) => (title ? title?.grade_level : "N/A"),
+    },
+    {
+      key: "2",
+      title: "Section",
+      dataIndex: "admission",
+      align: "center",
+      render: (title) => (title ? title?.section?.name : "N/A"),
+    },
+
     {
       key: "4",
       title: "Leave Type",

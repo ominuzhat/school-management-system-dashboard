@@ -53,6 +53,13 @@ const useSubjectColumns = (): ColumnsType<any> => {
     },
     {
       key: "2",
+      title: "Class",
+      dataIndex: "grade_level",
+      align: "center",
+      render: (title) => (title ? title?.name : "N/A"),
+    },
+    {
+      key: "3",
       title: "Group Type",
       dataIndex: "group_type_display",
       align: "center",

@@ -307,7 +307,7 @@ const UpdateNewCollectFee = () => {
                   {admissionOptions.map((data: any) => (
                     <Select.Option key={data?.id} value={data?.id}>
                       {data?.student?.first_name} {data?.student?.last_name} (
-                      {data?.student?.user?.username})
+                      {data?.student?.user?.username}) - {data?.session?.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -367,8 +367,10 @@ const UpdateNewCollectFee = () => {
                   {Array.isArray(accountList?.data) &&
                     accountList?.data?.map((account: any) => (
                       <Select.Option key={account?.id} value={account?.id}>
-                        {account?.type == "cash"
+                        {account?.type === "cash"
                           ? `cash (My Account)`
+                          : account?.type === "bank"
+                          ? `bank - ${account?.account_name} - ${account?.bank_name} (${account?.balance})`
                           : `${account?.type} - ${account?.account_type} (${account?.balance})`}
                       </Select.Option>
                     ))}
@@ -383,7 +385,7 @@ const UpdateNewCollectFee = () => {
                 </Select>
               </Form.Item>
             </Col>
-            
+
             {discountType && (
               <Col xs={24} sm={12} md={8} lg={6}>
                 <Form.Item label="Discount Amount" name="discount_value">

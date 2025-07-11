@@ -165,13 +165,21 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? title : 0),
     },
+
     {
       key: "10",
       title: "Due",
-      dataIndex: "total_due",
+      dataIndex: "due_amount",
       align: "center",
       render: (title) =>
         title ? <span className="text-red-500">{title}</span> : 0,
+    },
+    {
+      key: "99",
+      title: "Paid Amount",
+      dataIndex: "total_paid_amount",
+      align: "center",
+      render: (title) => (title ? title : 0),
     },
     {
       title: "Actions",

@@ -30,11 +30,12 @@ interface StudentState {
     email: string;
     image: File[];
     [key: string]: any;
-    group_type : any
+    
   };
   admission: {
     session: string;
     grade_level: string;
+    group_type: any; 
     roll: string;
     section: string;
     shift: string;
@@ -72,7 +73,6 @@ const initialState: StudentState = {
     religion: "Islam",
     present_address: "",
     permanent_address: "",
-    group_type: "",
     is_active: false,
     image: [],
   },
@@ -82,6 +82,7 @@ const initialState: StudentState = {
     roll: "",
     section: "",
     shift: "",
+    group_type: "general",
     status: "approved",
     subjects: [],
   },

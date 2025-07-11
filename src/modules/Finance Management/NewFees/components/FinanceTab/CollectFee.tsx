@@ -276,7 +276,7 @@ export const FeeCollection = () => {
                   const formattedDate = date.format("YYYY-MM") + "-01";
                   setFilters((prev) => ({ ...prev, month: formattedDate }));
                 } else {
-                  setFilters((prev) => ({ ...prev, month: currentMonth }));
+                  setFilters((prev) => ({ ...prev, month: "" }));
                 }
               }}
               format="MMMM YYYY"

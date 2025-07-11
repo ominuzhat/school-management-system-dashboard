@@ -17,6 +17,7 @@ import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
 import { useGetSectionQuery } from "../../../Section/api/sectionEndPoints";
 import { useGetSubjectsQuery } from "../../../subjects/api/subjectsEndPoints";
 import { useMemo } from "react";
+import { capitalize } from "../../../../../common/capitalize/Capitalize";
 
 const { Title, Text } = Typography;
 
@@ -33,9 +34,9 @@ const NewStudentAdmissionPreview = () => {
   const student: any = useAppSelector((state) => state.student.student);
   const fee: any = useAppSelector((state) => state.student.fee);
 
-  console.log(admission, "add");
-  console.log(student, "student");
-  console.log(fee, "fee");
+  // console.log(admission, "add");
+  // console.log(student, "student");
+  // console.log(fee, "fee");
 
   const getSessionName = (id: number) => {
     return (
@@ -256,6 +257,9 @@ const NewStudentAdmissionPreview = () => {
                   </Descriptions.Item>
                   <Descriptions.Item label="Roll Number">
                     {admission?.roll || "Not assigned"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Group Type">
+                    {capitalize(admission?.group_type) || "N/A"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Status">
                     <Tag color={admission?.status ? "green" : "orange"}>

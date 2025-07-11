@@ -131,20 +131,22 @@ const CreateNewCollectFee = () => {
   // }, [form, particulars, discountType, discountAmount]);
 
   const { data: getSingleAdmission } = useGetSingleAdmissionQuery<any>(
-    admissionId || admission?.value,
-    {
-      skip: !admissionId && !admission?.value,
-    }
-  );
-  const { data: newCollectFeeData } = useGetNewCollectFeesQuery<any>(
-    {
-      admission: admissionId || admission,
-      month: month ? dayjs(month).format("YYYY-MM-01") : undefined,
-    },
+    admissionId || admission,
     {
       skip: !admissionId && !admission,
     }
   );
+  const { data: newCollectFeeData } = useGetNewCollectFeesQuery<any>(
+    {
+      admission: admissionId || admission?.value,
+      month: month ? dayjs(month).format("YYYY-MM-01") : undefined,
+    },
+    {
+      skip: !admissionId && !admission?.value,
+    }
+  );
+
+  console.log(getSingleAdmission, admission);
 
   useEffect(() => {
     if (getSingleAdmission?.data) {
@@ -214,7 +216,7 @@ const CreateNewCollectFee = () => {
 
     const results = {
       ...values,
-      admission: values?.admission,
+      admission: values?.admission?.value,
       add_ons: values?.add_ons,
       discount_type: values?.discount_type,
       discount_value: values?.discount_value,
@@ -330,7 +332,7 @@ const CreateNewCollectFee = () => {
                   {admissionData?.data?.results?.map((data: any) => (
                     <Select.Option key={data?.id} value={data?.id}>
                       {data?.student?.first_name} {data?.student?.last_name} (
-                      {data?.student?.user?.username})
+                      {data?.student?.user?.username}) - {data?.session?.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -387,12 +389,18 @@ const CreateNewCollectFee = () => {
                 name="account"
                 rules={[{ required: true, message: "Account is required!" }]}
               >
-                <Select placeholder="Select Account" className="w-full">
+                <Select
+                  placeholder="Select Account"
+                  className="w-full"
+                  allowClear
+                >
                   {Array.isArray(accountList?.data) &&
                     accountList?.data?.map((account: any) => (
                       <Select.Option key={account?.id} value={account?.id}>
-                        {account?.type == "cash"
+                        {account?.type === "cash"
                           ? `cash (My Account)`
+                          : account?.type === "bank"
+                          ? `bank - ${account?.account_name} - ${account?.bank_name} (${account?.balance})`
                           : `${account?.type} - ${account?.account_type} (${account?.balance})`}
                       </Select.Option>
                     ))}
@@ -401,7 +409,7 @@ const CreateNewCollectFee = () => {
             </Col>
             <Col xs={24} sm={12} md={8} lg={6}>
               <Form.Item label="Discount Type" name="discount_type">
-                <Select placeholder="Select Type">
+                <Select placeholder="Select Type" allowClear>
                   <Select.Option value="percent">Percent</Select.Option>
                   <Select.Option value="amount">Amount</Select.Option>
                 </Select>
@@ -738,6 +746,39 @@ const CreateNewCollectFee = () => {
                     <td></td>
                   </tr>
                 </tfoot>
+
+                {/* <tfoot className="flex items-center justify-between w-full border">
+                  <tr>
+                    <td>
+                      <Form.Item
+                        label="Discount Type"
+                        name="discount_type"
+                        className="w-full"
+                      >
+                        <Select placeholder="Select Type" allowClear  className="w-full">
+                          <Select.Option value="percent">Percent</Select.Option>
+                          <Select.Option value="amount">Amount</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </td>
+                    <td>
+                      <Form.Item label="Discount Type" name="discount_type">
+                        <Select placeholder="Select Type" allowClear>
+                          <Select.Option value="percent">Percent</Select.Option>
+                          <Select.Option value="amount">Amount</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </td>
+                    <td>
+                      <Form.Item label="Discount Type" name="discount_type">
+                        <Select placeholder="Select Type" allowClear>
+                          <Select.Option value="percent">Percent</Select.Option>
+                          <Select.Option value="amount">Amount</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </td>
+                  </tr>
+                </tfoot> */}
               </table>
             )}
           </AntForm.List>

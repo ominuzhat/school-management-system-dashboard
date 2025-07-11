@@ -102,6 +102,8 @@ const CreateStudentInformation: React.FC<CreateStudentInformationProps> = ({
 
   const student = useAppSelector((state) => state.student.student);
 
+
+  
   useEffect(() => {
     if (student) {
       form.setFieldsValue({
@@ -199,6 +201,23 @@ const CreateStudentInformation: React.FC<CreateStudentInformationProps> = ({
                   beforeUpload={() => false}
                   maxCount={1}
                   onPreview={handlePreview}
+                  accept="image/*"
+                  onChange={({ fileList }) => {
+                    // Always deep clone before saving
+                    const clonedList = fileList.map((file) => ({ ...file }));
+                    dispatch(
+                      updateStudentField({ field: "image", value: clonedList })
+                    );
+                  }}
+                >
+                  {uploadButton}
+                </Upload>
+
+                {/* <Upload
+                  listType="picture-card"
+                  beforeUpload={() => false}
+                  maxCount={1}
+                  onPreview={handlePreview}
                   className="avatar-uploader"
                   accept="image/*"
                   onChange={({ fileList }) =>
@@ -211,7 +230,7 @@ const CreateStudentInformation: React.FC<CreateStudentInformationProps> = ({
                   }
                 >
                   {uploadButton}
-                </Upload>
+                </Upload> */}
               </Item>
               <Modal
                 open={previewVisible}

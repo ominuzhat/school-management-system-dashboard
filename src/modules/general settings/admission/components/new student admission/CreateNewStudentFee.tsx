@@ -59,24 +59,15 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   const [createAdmissionFee, { data: admissionFee }] =
     useCreateAdmissionFeeMutation();
 
-  console.log(isRegularFee, "iiii");
-
   const [forceUpdate, setForceUpdate] = useState(0);
-
   const feeType = AntForm.useWatch("fee_type", form);
   const fees = AntForm.useWatch("fees", form);
-
-  console.log(fees, "feesfeesfeesfees");
-  console.log(customFees, "customFees");
-
   const allValues = Form.useWatch([], form);
-
-  console.log(newStudentData?.admission?.student, "newStudentData");
 
   useEffect(() => {
     const validate = async () => {
       try {
-        await form.validateFields(); // Only validates required fields
+        await form.validateFields();
         onValidationChange(true);
       } catch {
         onValidationChange(false);

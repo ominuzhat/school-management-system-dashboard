@@ -218,7 +218,7 @@ const ClassManagement = () => {
       <Row gutter={[16, 16]} className="mt-5">
         <Col xs={24} sm={24} md={12} lg={12} xl={10} xxl={10}>
           <Row gutter={[16, 16]}>
-            <Col lg={24}>
+            <Col xs={24} sm={24} md={12} lg={24} xl={24} xxl={24}>
               <Card
                 className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
                 title={
@@ -299,7 +299,7 @@ const ClassManagement = () => {
                 </Form>
               </Card>
             </Col>
-            <Col lg={24}>
+            <Col xs={24} sm={24} md={12} lg={24} xl={24} xxl={24}>
               <Card
                 className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
                 title={
@@ -369,7 +369,7 @@ const ClassManagement = () => {
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={14} xxl={14}>
           <Row gutter={[16, 16]}>
-            <Col lg={24}>
+            <Col xs={24} sm={24} md={12} lg={24} xl={24} xxl={24}>
               {/* shift */}
               <Card
                 className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
@@ -417,7 +417,7 @@ const ClassManagement = () => {
                 )}
               </Card>
             </Col>
-            <Col lg={24}>
+            <Col xs={24} sm={24} md={12} lg={24} xl={24} xxl={24}>
               {/* Section */}
               <Card
                 className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"

@@ -19,12 +19,8 @@ import { useGetClassesBigListQuery } from "../../../classes/api/classesEndPoints
 import { useGetSubjectsQuery } from "../../../subjects/api/subjectsEndPoints";
 import { IAdmission } from "../../type/admissionType";
 import { IClasses } from "../../../classes/type/classesType";
-
 import { useDispatch } from "react-redux";
-import {
-  updateAdmissionField,
-  updateStudentField,
-} from "../../../../../app/features/studentAdmissionSlice";
+import { updateAdmissionField } from "../../../../../app/features/studentAdmissionSlice";
 import { useAppSelector } from "../../../../../app/store";
 
 const { Title, Text } = Typography;
@@ -52,6 +48,7 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
   const [selectedShift, setSelectedShift] = useState<any>({});
 
   const allValues = Form.useWatch([], form);
+
 
   useEffect(() => {
     const validate = async () => {
@@ -284,7 +281,7 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
                       grade_level: undefined,
                     });
                     dispatch(
-                      updateStudentField({
+                      updateAdmissionField({
                         field: "group_type",
                         value,
                       })

@@ -14,7 +14,6 @@ import {
 import {
   FilePdfOutlined,
   DownloadOutlined,
-  DollarOutlined,
   CalendarOutlined,
   UserOutlined,
   PhoneOutlined,
@@ -23,6 +22,7 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { TbCurrencyTaka } from "react-icons/tb";
 
 const { Title, Text } = Typography;
 
@@ -44,7 +44,7 @@ const ViewInvoiceEntry = ({ record }: any) => {
       draft: { color: "default", text: "Draft" },
       unpaid: { color: "orange", text: "Unpaid" },
       paid: { color: "green", text: "Paid" },
-      partially_paid: { color: "blue", text: "Partially Paid" },
+      partial: { color: "blue", text: "Partially Paid" },
       cancelled: { color: "red", text: "Cancelled" },
     };
     return (
@@ -54,18 +54,18 @@ const ViewInvoiceEntry = ({ record }: any) => {
     );
   };
 
-  const getPaymentStatusTag = (status?: string) => {
-    const statusMap: Record<string, { color: string; text: string }> = {
-      unpaid: { color: "volcano", text: "Unpaid" },
-      paid: { color: "green", text: "Paid" },
-      partially_paid: { color: "blue", text: "Partially Paid" },
-    };
-    return (
-      <Tag color={status ? statusMap[status]?.color : "default"}>
-        {status ? statusMap[status]?.text : "Unknown"}
-      </Tag>
-    );
-  };
+  // const getPaymentStatusTag = (status?: string) => {
+  //   const statusMap: Record<string, { color: string; text: string }> = {
+  //     unpaid: { color: "volcano", text: "Unpaid" },
+  //     paid: { color: "green", text: "Paid" },
+  //     partial: { color: "blue", text: "Partially Paid" },
+  //   };
+  //   return (
+  //     <Tag color={status ? statusMap[status]?.color : "default"}>
+  //       {status ? statusMap[status]?.text : "Unknown"}
+  //     </Tag>
+  //   );
+  // };
 
   const fileColumns = [
     {
@@ -122,18 +122,18 @@ const ViewInvoiceEntry = ({ record }: any) => {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
-      render: (amount?: number) => `$${amount?.toFixed(2) || "0.00"}`,
+      render: (amount?: number) => `৳${amount?.toFixed(2) || "0.00"}`,
     },
     {
-      title: "Method",
-      dataIndex: "payment_method",
-      key: "payment_method",
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
       render: (method?: string) => method || "-",
     },
     {
-      title: "Reference",
-      dataIndex: "reference",
-      key: "reference",
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
       render: (ref?: string) => ref || "-",
     },
   ];
@@ -156,7 +156,7 @@ const ViewInvoiceEntry = ({ record }: any) => {
                 </Title>
                 <Space>
                   {getStatusTag(invoice?.status)}
-                  {getPaymentStatusTag(invoice?.payment_status)}
+                  {/* {getPaymentStatusTag(invoice?.payment_status)} */}
                 </Space>
               </div>
 
@@ -179,12 +179,13 @@ const ViewInvoiceEntry = ({ record }: any) => {
                 </Descriptions.Item>
                 <Descriptions.Item label="Amount">
                   <Space>
-                    <DollarOutlined />${invoice?.amount?.toFixed(2) || "0.00"}
+                    <TbCurrencyTaka />
+                    {invoice?.amount?.toFixed(2) || "0.00"}
                   </Space>
                 </Descriptions.Item>
                 <Descriptions.Item label="Amount Due">
                   <Space>
-                    <DollarOutlined />$
+                    <TbCurrencyTaka />
                     {invoice?.amount_due?.toFixed(2) || "0.00"}
                   </Space>
                 </Descriptions.Item>

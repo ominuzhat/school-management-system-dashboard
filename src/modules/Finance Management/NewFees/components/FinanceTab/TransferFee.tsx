@@ -199,7 +199,7 @@ export const AccountTransfer = () => {
                   <Tabs.TabPane tab="Internal Transfer" key="internal">
                     <CreateTransaction />
                   </Tabs.TabPane>
-                  <Tabs.TabPane tab="Create Fund Transfer Request" key="fund">
+                  <Tabs.TabPane tab="My Fund Transfer Request" key="fund">
                     <CreateFundTransfer />
                   </Tabs.TabPane>
                 </Tabs>

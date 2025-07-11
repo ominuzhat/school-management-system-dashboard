@@ -86,18 +86,12 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Account Name",
-      dataIndex: "account_name",
+      title: "vendor Name",
+      dataIndex: "vendor",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      render: (title) => (title ? capitalize(title?.name) : "N/A"),
     },
-    {
-      key: "11",
-      title: "Account Type",
-      dataIndex: "account_type",
-      align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
-    },
+ 
     {
       key: "111",
       title: "Type",

@@ -41,7 +41,6 @@ const VendorEntryPage = () => {
     page: Number(page) || undefined,
   });
 
-
   const dataLength =
     (vendorPaymentList?.data?.results as IGetVendorEntry[] | undefined)
       ?.length ?? 0;
@@ -71,7 +70,7 @@ const VendorEntryPage = () => {
         {/* Expense List */}
         <Col xs={24} lg={24}>
           <Card
-            title="Daily Income & Expense"
+            title="Vendor Payment"
             className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
           >
             {viewPermission ? (

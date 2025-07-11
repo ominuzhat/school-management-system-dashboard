@@ -67,7 +67,7 @@ const SingleCollectFee = () => {
     admission?.payments?.flatMap((payment: any) => payment.particulars) || [];
 
   // Payment status configuration
-  type PaymentStatus = "paid" | "partial" | "unpaid" | "default";
+  type PaymentStatus = "paid" | "partial" | "unpaid" | "default" | "pending";
   const paymentStatusConfig: Record<
     PaymentStatus,
     { color: string; icon: React.ReactNode; text: string }
@@ -86,6 +86,11 @@ const SingleCollectFee = () => {
       color: "#ff4d4f",
       icon: <ExclamationCircleOutlined />,
       text: "Unpaid",
+    },
+    pending: {
+      color: "#BC259C",
+      icon: <ExclamationCircleOutlined />,
+      text: "Pending",
     },
     default: {
       color: "#d9d9d9",
