@@ -10,7 +10,6 @@ import {
 } from "antd";
 
 import { useEffect } from "react";
-import { IGetLeave } from "../types/leaveTypes";
 import dayjs from "dayjs";
 import {
   useGetSingleScheduleQuery,
@@ -18,6 +17,7 @@ import {
 } from "../api/scheduleEndPoints";
 import { useGetAdmissionQuery } from "../../../admission/api/admissionEndPoints";
 import { Form } from "../../../../../common/CommonAnt";
+import { IGetSchedule } from "../types/scheduleTypes";
 
 const UpdateLeave = ({ record }: { record: any }) => {
   const [form] = AntForm.useForm();
@@ -28,10 +28,9 @@ const UpdateLeave = ({ record }: { record: any }) => {
 
   useEffect(() => {
     if (singleData?.data) {
-      const leaveData = singleData?.data as unknown as IGetLeave;
+      const leaveData = singleData?.data as unknown as IGetSchedule;
       form.setFieldsValue({
         name: leaveData.name,
-        admission: leaveData.admission?.id,
         leave_type: leaveData.leave_type,
         is_approved: leaveData.is_approved,
         leave_duration: leaveData.duration,

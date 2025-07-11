@@ -1,7 +1,6 @@
 import { Button, Card, Col, Row, Select } from "antd";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
-import { IGetLeave } from "../types/leaveTypes";
 import useLeaveColumns from "../utils/ScheduleColumns";
 import { useState } from "react";
 import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
@@ -22,6 +21,7 @@ import { SearchComponent } from "../../../../../common/CommonAnt/CommonSearch/Co
 import { Table } from "../../../../../common/CommonAnt";
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 import CreateSchedule from "../components/CreateSchedule";
+import { IGetSchedule } from "../types/scheduleTypes";
 
 const { Option } = Select;
 
@@ -59,9 +59,10 @@ const SchedulePage = () => {
     is_active: filters.is_active,
   });
 
-  const dataLength = (classList?.data as IGetLeave[] | undefined)?.length ?? 0;
+  const dataLength =
+    (classList?.data as IGetSchedule[] | undefined)?.length ?? 0;
 
-  const dataSource = (classList?.data as IGetLeave[] | undefined) ?? [];
+  const dataSource = (classList?.data as IGetSchedule[] | undefined) ?? [];
 
   const viewPermission = GetPermission(
     dashboardData?.data?.permissions,

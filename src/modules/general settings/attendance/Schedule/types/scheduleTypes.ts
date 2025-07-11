@@ -1,6 +1,5 @@
-import { IAdmission } from "../../admission/type/admissionType";
 
-export interface ICreateLeave {
+export interface ICreateSchedule {
   name: string;
   leave_type: string;
   duration: string;
@@ -9,7 +8,7 @@ export interface ICreateLeave {
   end_date: string;
   is_approved: boolean;
 }
-export interface IGetLeave {
+export interface IGetSchedule {
   name: string;
   leave_type: string;
   duration: string;
@@ -17,5 +16,4 @@ export interface IGetLeave {
   start_date: string;
   end_date: string;
   is_approved: boolean;
-  admission: IAdmission;
 }
