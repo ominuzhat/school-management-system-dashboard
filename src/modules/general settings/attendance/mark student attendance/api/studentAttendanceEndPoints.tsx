@@ -61,6 +61,25 @@ const studentAttendanceEndPoint = api.injectEndpoints({
       ],
     }),
 
+    createSyncAttendance: builder.mutation<
+      ApiResponse<TAttendanceData>,
+      FormData
+    >({
+      query: () => ({
+        url: "/api/v1.0/admissions/attendances/sync/",
+        method: "POST",
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.STUDENT_ATTENDANCE,
+          id: TagTypes.STUDENT_ATTENDANCE + "_ID",
+        },
+      ],
+    }),
+
     getSingleStudentAttendance: builder.query<
       ApiResponse<TAttendanceData>,
       number
@@ -118,7 +137,7 @@ export const {
   useGetMarkStudentAttendanceQuery,
   useLazyGetMarkStudentAttendanceQuery,
   useGetSingleStudentAttendanceListQuery,
-
+  useCreateSyncAttendanceMutation,
   useCreateStudentAttendanceMutation,
   useGetSingleStudentAttendanceQuery,
   useGetStudentAttendanceQuery,

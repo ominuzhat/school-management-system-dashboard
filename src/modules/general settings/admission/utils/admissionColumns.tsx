@@ -5,7 +5,7 @@ import { capitalize } from "../../../../common/capitalize/Capitalize";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { useNavigate } from "react-router-dom";
-import { FaFilePdf } from "react-icons/fa6";
+import { FaFilePdf, FaFingerprint } from "react-icons/fa6";
 import {
   useDeleteAdmissionMutation,
   useLazyGetSingleAdmissionFormQuery,
@@ -19,8 +19,12 @@ import {
 } from "../../../../utilities/permissionConstant";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import dayjs from "dayjs";
+import { useAppDispatch } from "../../../../app/store";
+import { showModal } from "../../../../app/features/modalSlice";
+import FingerAdmission from "../components/FingerAdmission";
 
 const useAdmissionColumns = (): ColumnsType<any> => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { data: dashboardData } = useGetDashboardDataQuery({});
 
@@ -204,6 +208,28 @@ const useAdmissionColumns = (): ColumnsType<any> => {
           >
             <FaFilePdf />
           </Button>
+
+          <Button
+            title="Admission Form"
+            size="small"
+            type="default"
+            style={{
+              color: "green",
+              // background: "#3892E3",
+              border: "1px solid green",
+            }}
+            onClick={() =>
+              dispatch(
+                showModal({
+                  title: "Finger Admission",
+                  content: <FingerAdmission record={record?.id} />,
+                })
+              )
+            }
+          >
+            <FaFingerprint />
+          </Button>
+
           {deletePermission && (
             <DeleteButton
               onConfirm={() => handleDelete(record.id)}

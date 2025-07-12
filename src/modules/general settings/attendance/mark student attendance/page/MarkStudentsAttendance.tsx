@@ -17,6 +17,7 @@ import { useGetAdmissionSessionQuery } from "../../../admission session/api/admi
 import { useGetClassesQuery } from "../../../classes/api/classesEndPoints";
 import {
   useCreateStudentAttendanceMutation,
+  useCreateSyncAttendanceMutation,
   useLazyGetMarkStudentAttendanceQuery,
 } from "../api/studentAttendanceEndPoints";
 import useMarkStudentsAttendanceColumns from "../utils/MarkStudentsAttendanceColumn";
@@ -31,6 +32,7 @@ import {
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 import { useGetShiftQuery } from "../../../shift/api/shiftEndPoints";
 import { useGetSectionQuery } from "../../../Section/api/sectionEndPoints";
+import { IoMdSync } from "react-icons/io";
 
 const { Option } = Select;
 
@@ -50,6 +52,8 @@ const MarkStudentsAttendance = () => {
   const { data: sectionData } = useGetSectionQuery({});
   const [fetchAdmissionData, { data: attendanceData, isLoading }] =
     useLazyGetMarkStudentAttendanceQuery<any>({});
+
+  const [syncAttendance] = useCreateSyncAttendanceMutation<any>({});
 
   const columns = useMarkStudentsAttendanceColumns({
     attendanceData: (attendanceData?.data?.records as any) || [],
@@ -108,13 +112,20 @@ const MarkStudentsAttendance = () => {
         <BreadCrumb />
       </div> */}
       {viewPermission && (
-        <div className="w-fit">
+        <div className="w-full flex items-center justify-between">
           <Link to="/attendance/mark-student-attendance-list">
             <p className=" flex items-center gap-2 text-sm sm:text-base md:text-sm lg:text-sm xl:text-sm 2xl:text-sm text-blue-500 p-2 sm:p-3 md:p-2 lg:p-2 xl:p-2 2xl:p-2 cursor-pointer transition-all w-full sm:w-64">
               View List of Attendance{" "}
               <MdOutlineArrowRightAlt className="text-xl" />
             </p>
           </Link>
+          <Button
+            onClick={() => syncAttendance()}
+            className="text-green-700 border-green-700"
+          >
+            <IoMdSync />
+            Sync Attendance
+          </Button>
         </div>
       )}
       <Card>
