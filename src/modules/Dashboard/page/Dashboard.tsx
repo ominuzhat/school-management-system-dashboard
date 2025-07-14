@@ -451,7 +451,7 @@ const Dashboard = () => {
               </Link>
 
               <Link
-                to="/collect-attendance"
+                to="/attendance"
                 className="flex items-center p-4 rounded transition-all hover:shadow-md"
                 style={{
                   background:
