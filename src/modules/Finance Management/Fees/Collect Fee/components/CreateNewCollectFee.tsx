@@ -746,8 +746,8 @@ const CreateNewCollectFee = () => {
                     <td></td>
                   </tr>
                 </tfoot>
-
-                {/* <tfoot className="flex items-center justify-between w-full border">
+                {/* 
+                <tfoot className="flex items-center justify-between w-full border">
                   <tr>
                     <td>
                       <Form.Item

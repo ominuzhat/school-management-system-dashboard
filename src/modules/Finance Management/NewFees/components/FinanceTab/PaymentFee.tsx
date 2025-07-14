@@ -1,5 +1,4 @@
 "use client";
-import { Card, Statistic } from "antd";
 import { useState } from "react";
 import { FaFileAlt } from "react-icons/fa";
 import { FaCreditCard } from "react-icons/fa6";
@@ -18,7 +17,7 @@ export const PaymentFee = () => {
   return (
     <div className="space-y-6">
       {/* Payment Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0">
           <Statistic
             title={<span className="text-green-100">Total Paid</span>}
@@ -54,7 +53,7 @@ export const PaymentFee = () => {
             // prefix={<CalendarOutlined className="text-purple-100" />}
           />
         </Card>
-      </div>
+      </div> */}
 
       {/* Search and Filters */}
       {/* <Card className="bg-white/60 backdrop-blur-sm border-blue-100">

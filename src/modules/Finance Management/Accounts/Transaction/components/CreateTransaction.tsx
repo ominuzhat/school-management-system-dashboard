@@ -45,7 +45,11 @@ const CreateTransaction = () => {
                 {Array.isArray(accountList?.data) &&
                   accountList?.data?.map((account: any) => (
                     <Select.Option key={account?.id} value={account?.id}>
-                      {account?.account_type} ({account?.balance})
+                      {account?.type === "cash"
+                        ? `cash (My Account)`
+                        : account?.type === "bank"
+                        ? `bank - ${account?.account_name} - ${account?.bank_name} (${account?.balance})`
+                        : `${account?.type} - ${account?.account_type} (${account?.balance})`}
                     </Select.Option>
                   ))}
               </Select>

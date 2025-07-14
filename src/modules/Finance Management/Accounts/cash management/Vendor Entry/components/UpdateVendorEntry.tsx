@@ -98,6 +98,7 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
 
       form.setFieldsValue({
         invoice: matchedInvoice?.vendor?.id,
+        receiver_name: entry.receiver_name,
         amount: entry.amount,
         account: entry.account,
         type: entry.type,
@@ -153,6 +154,9 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
     formData.append("amount", values.amount);
     formData.append("account", values.account);
     formData.append("type", values.type);
+    formData.append("receiver_name", values.receiver_name);
+    formData.append("mobile_number", values.mobile_number);
+    if (values.note) formData.append("note", values.note);
 
     if (values.type === "bank") {
       formData.append("bank_name", values.bank_name);
@@ -166,12 +170,6 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
       formData.append("provider", values.provider);
       formData.append("mobile_number", values.mobile_number);
       formData.append("transaction_number", values.transaction_number || "");
-    }
-
-    if (values.type === "cash") {
-      formData.append("transaction_number", values.transaction_number);
-      formData.append("mobile_number", values.mobile_number);
-      if (values.note) formData.append("note", values.note);
     }
 
     if (values.type === "cheque") {
@@ -280,6 +278,29 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
             <Col xs={24} md={8}>
               <Form.Item name="remaining_balance" label="Remaining Balance">
                 <Input value={`৳ ${remainingBalance}`} disabled />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="receiver_name"
+                label="Receiver Name"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="mobile_number"
+                label="Mobile Number"
+                rules={[{ required: true }]}
+              >
+                <Input prefix="+88" />
+              </Form.Item>
+            </Col>
+            <Col xs={24}>
+              <Form.Item name="note" label="Note (Optional)">
+                <TextArea rows={3} />
               </Form.Item>
             </Col>
           </Row>
@@ -404,33 +425,11 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
             </Row>
           )}
 
-          {paymentMethod === "cash" && (
+          {/* {paymentMethod === "cash" && (
             <Row gutter={16}>
-              <Col xs={24} md={12}>
-                <Form.Item
-                  name="transaction_number"
-                  label="Receiver Name"
-                  rules={[{ required: true }]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} md={12}>
-                <Form.Item
-                  name="mobile_number"
-                  label="Mobile Number"
-                  rules={[{ required: true }]}
-                >
-                  <Input prefix="+88" />
-                </Form.Item>
-              </Col>
-              <Col xs={24}>
-                <Form.Item name="note" label="Note (Optional)">
-                  <TextArea rows={3} />
-                </Form.Item>
-              </Col>
+          
             </Row>
-          )}
+          )} */}
 
           {paymentMethod === "cheque" && (
             <Row gutter={16}>

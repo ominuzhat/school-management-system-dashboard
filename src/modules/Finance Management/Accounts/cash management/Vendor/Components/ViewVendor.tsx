@@ -210,7 +210,7 @@ const ViewVendor = ({ record }: any) => {
                       {invoice.invoice_number}
                     </Typography.Text>
                     {getStatusTag(invoice.payment_status)}
-                    {getStatusTag(invoice.status)}
+                    {/* {getStatusTag(invoice.status)} */}
                   </Space>
                 }
                 description={

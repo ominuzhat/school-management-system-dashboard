@@ -91,7 +91,7 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
       align: "center",
       render: (title) => (title ? capitalize(title?.name) : "N/A"),
     },
- 
+
     {
       key: "111",
       title: "Type",
@@ -153,22 +153,6 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
       render: (amount: number) => {
         const isPositive = Number(amount) > 0;
         const color = isPositive ? "green" : "red";
-
-        return (
-          <Tag color={color}>
-            {amount !== null && amount !== undefined ? amount : "N/A"}
-          </Tag>
-        );
-      },
-    },
-    {
-      key: "44",
-      title: "Balance",
-      dataIndex: "balance",
-      align: "center",
-      render: (amount: number) => {
-        const isPositive = Number(amount) > 0;
-        const color = isPositive ? "pink" : "red";
 
         return (
           <Tag color={color}>

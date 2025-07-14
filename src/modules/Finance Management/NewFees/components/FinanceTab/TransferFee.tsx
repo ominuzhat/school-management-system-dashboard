@@ -2,7 +2,6 @@
 import {
   Card,
   Table,
-  Tag,
   Row,
   Col,
   Statistic,
@@ -14,8 +13,8 @@ import {
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
-  WalletOutlined,
-  BankOutlined,
+  PieChartOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 import { useAppSelector } from "../../../../../app/store";
 import { FilterState } from "../../../../../app/features/filterSlice";
@@ -43,41 +42,6 @@ const { Option } = Select;
 const { MonthPicker } = DatePicker;
 
 export const AccountTransfer = () => {
-  const accounts = [
-    {
-      id: 1,
-      name: "Main School Account",
-      type: "Current",
-      balance: 567890,
-      bank: "State Bank",
-      accountNo: "****1234",
-    },
-    {
-      id: 2,
-      name: "Fee Collection Account",
-      type: "Savings",
-      balance: 245680,
-      bank: "HDFC Bank",
-      accountNo: "****5678",
-    },
-    {
-      id: 3,
-      name: "Emergency Fund",
-      type: "Savings",
-      balance: 150000,
-      bank: "ICICI Bank",
-      accountNo: "****9012",
-    },
-    {
-      id: 4,
-      name: "Petty Cash Account",
-      type: "Current",
-      balance: 25000,
-      bank: "Axis Bank",
-      accountNo: "****3456",
-    },
-  ];
-
   const { page_size, page } = useAppSelector(FilterState);
 
   const currentMonth = dayjs().format("YYYY-MM") + "-01";
@@ -108,9 +72,10 @@ export const AccountTransfer = () => {
     actionNames.add
   );
 
-  const { data: transactionList } = useGetTransactionQuery({
+  const { data: transactionList } = useGetTransactionQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
+    year_month: dayjs(currentMonth).format("YYYY-MM"),
   });
 
   const dataSource =
@@ -155,37 +120,88 @@ export const AccountTransfer = () => {
   return (
     <div className="space-y-6">
       {/* Account Overview */}
+
       <Row gutter={[16, 16]}>
-        {accounts.map((account) => (
-          <Col key={account.id} xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
-            <Card className="bg-gradient-to-br from-white to-blue-50 border-blue-200 hover:shadow-lg transition-all duration-300 h-full">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <WalletOutlined className="text-blue-600" />
-                  <Tag>{account.type}</Tag>
-                </div>
-                <BankOutlined className="text-gray-400" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">
-                {account.name}
-              </h3>
-              <Statistic
-                value={account.balance}
-                prefix="৳"
-                valueStyle={{
-                  color: "#2563eb",
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                }}
-                className="mb-2"
-              />
-              <div className="text-xs text-gray-500">
-                <p>{account.bank}</p>
-                <p>{account.accountNo}</p>
-              </div>
-            </Card>
-          </Col>
-        ))}
+        <Col xs={24} sm={12} md={12} lg={6}>
+          <Card className="bg-gradient-to-r from-red-500 to-pink-500 text-white border-0 h-full">
+            <Statistic
+              title={<span className="text-red-100">Total Amount</span>}
+              value={`৳ ${
+                transactionList?.data?.reports?.overall?.total_amount || 0
+              }`}
+              valueStyle={{
+                color: "#fff",
+                fontSize: "24px",
+                fontWeight: "bold",
+              }}
+              prefix={<ArrowDownOutlined className="text-red-100" />}
+            />
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={12} lg={6}>
+          <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 h-full">
+            <Statistic
+              title={
+                <span className="text-yellow-100">Total Transactions</span>
+              }
+              value={`${
+                transactionList?.data?.reports?.overall?.total_transactions || 0
+              }`}
+              valueStyle={{
+                color: "#fff",
+                fontSize: "24px",
+                fontWeight: "bold",
+              }}
+              prefix={<ArrowUpOutlined className="text-yellow-100" />}
+            />
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={12} lg={6}>
+          <Card className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 h-full">
+            <Statistic
+              title={
+                <span className="text-green-100">
+                  {filters?.year_month
+                    ? `Transactions ${dayjs(filters.year_month).format(
+                        "MMMM YYYY"
+                      )}`
+                    : "Current Month Transactions"}
+                </span>
+              }
+              value={`${
+                transactionList?.data?.reports?.filtered?.total_amount || 0
+              }`}
+              valueStyle={{
+                color: "#fff",
+                fontSize: "24px",
+                fontWeight: "bold",
+              }}
+              prefix={<PieChartOutlined className="text-green-100" />}
+            />
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={12} lg={6}>
+          <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 h-full">
+            <Statistic
+              title={
+                <span className="text-yellow-100">Total Transactions</span>
+              }
+              value={`${
+                transactionList?.data?.reports?.filtered?.total_transactions ||
+                0
+              }`}
+              valueStyle={{
+                color: "#fff",
+                fontSize: "24px",
+                fontWeight: "bold",
+              }}
+              prefix={<FileTextOutlined className="text-blue-100" />}
+            />
+          </Card>
+        </Col>
       </Row>
 
       <Row gutter={[16, 16]}>
@@ -214,7 +230,7 @@ export const AccountTransfer = () => {
             <Card
               className="bg-white/60 backdrop-blur-sm border-blue-100 h-full"
               title={
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 py-4">
                   <p className="font-semibold text-lg">Transfer History</p>
                   <Row gutter={[12, 12]} justify="start" align="middle">
                     {/* Start Date */}
@@ -344,6 +360,11 @@ export const AccountTransfer = () => {
                             <p className="text-sm font-medium">From</p>
                             <p className="text-sm">
                               {record.account?.account_type}
+                              {record.account?.type === "cash"
+                                ? `cash (My Account)`
+                                : record.account?.type === "bank"
+                                ? `bank - ${record.account?.account_name} - ${record.account?.bank_name} (${record.account?.balance})`
+                                : `${record.account?.type} - ${record.account?.account_type} (${record.account?.balance})`}
                             </p>
                           </div>
                         </div>

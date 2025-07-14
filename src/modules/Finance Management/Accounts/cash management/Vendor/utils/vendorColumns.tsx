@@ -64,10 +64,10 @@ const useVendorColumns = (): ColumnsType<any> => {
     },
     {
       key: "4",
-      title: "Address",
-      dataIndex: "address",
+      title: "Number Of Invoices",
+      dataIndex: "invoices",
       align: "center",
-      render: (text) => text || "N/A",
+      render: (text) => text?.length || "N/A",
     },
     {
       key: "5",

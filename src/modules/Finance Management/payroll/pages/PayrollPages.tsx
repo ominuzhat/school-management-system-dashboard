@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Row, Select } from "antd";
+import { Button, Card, Col, DatePicker, Row, Select, Statistic } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../../app/features/modalSlice";
@@ -48,7 +48,7 @@ const PayrollPage = () => {
     isLoading,
     isFetching,
     refetch,
-  } = useGetPayrollQuery({
+  } = useGetPayrollQuery<any>({
     search: search,
     page_size: page_size,
     page: Number(page) || undefined,
@@ -106,6 +106,45 @@ const PayrollPage = () => {
 
   return (
     <div className="space-y-5">
+     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+  <Card className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0">
+    <Statistic
+      title={<span className="text-green-100">Total Gross Salary</span>}
+      value={`৳ ${payrollData?.data?.reports?.overall?.total_gross_salary || 0}`}
+      valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
+    />
+  </Card>
+
+  <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">
+    <Statistic
+      title={
+        <span className="text-yellow-100">
+          {payrollData?.data?.reports?.applied_filters?.year_month 
+            ? dayjs(payrollData.data.reports.applied_filters.year_month).format("MMMM YYYY")
+            : "All Time"} Net Salary
+        </span>
+      }
+      value={`৳ ${payrollData?.data?.reports?.filtered?.total_net_salary || 0}`}
+      valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
+    />
+  </Card>
+
+  <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0">
+    <Statistic
+      title={<span className="text-blue-100">Total Paid</span>}
+      value={`৳ ${payrollData?.data?.reports?.overall?.total_paid || 0}`}
+      valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
+    />
+  </Card>
+
+  <Card className="bg-gradient-to-r from-purple-500 to-violet-600 text-white border-0">
+    <Statistic
+      title={<span className="text-purple-100">Total Due</span>}
+      value={`৳ ${payrollData?.data?.reports?.filtered?.total_due || 0}`}
+      valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
+    />
+  </Card>
+</div>
       <Card>
         <Row justify="space-between" align="middle">
           {createPermission && (

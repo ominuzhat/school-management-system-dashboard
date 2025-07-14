@@ -86,6 +86,9 @@ const CreateVendorEntry = () => {
     formData.append("amount", values.amount);
     formData.append("account", values.account);
     formData.append("type", values.type);
+    formData.append("receiver_name", values.receiver_name);
+    formData.append("mobile_number", values.mobile_number);
+    if (values.note) formData.append("note", values.note);
 
     // Bank
     if (values.type === "bank") {
@@ -104,11 +107,9 @@ const CreateVendorEntry = () => {
     }
 
     // Cash
-    if (values.type === "cash") {
-      formData.append("transaction_number", values.transaction_number);
-      formData.append("mobile_number", values.mobile_number);
-      if (values.note) formData.append("note", values.note);
-    }
+    // if (values.type === "cash") {
+
+    // }
 
     // Cheque
     if (values.type === "cheque") {
@@ -292,6 +293,38 @@ const CreateVendorEntry = () => {
                 />
               </Form.Item>
             </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="receiver_name"
+                label="Payment Receiver Name"
+                rules={[
+                  { required: true, message: "Enter payment receiver name" },
+                ]}
+              >
+                <Input placeholder="Enter payment receiver name" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="mobile_number"
+                label="Mobile Number"
+                rules={[
+                  { required: true, message: "Enter mobile number" },
+                  {
+                    pattern: /^01[3-9]\d{8}$/,
+                    message: "Invalid Bangladeshi mobile number",
+                  },
+                ]}
+              >
+                <Input prefix="+88" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={24}>
+              <Form.Item name="note" label="Note (Optional)">
+                <TextArea rows={4} />
+              </Form.Item>
+            </Col>
           </Row>
         </div>
 
@@ -396,65 +429,27 @@ const CreateVendorEntry = () => {
               </Col>
               <Col xs={24} md={12}>
                 <Form.Item
+                  name="mobile_number"
+                  label="Mobile Number"
+                  rules={[{ required: true }]}
+                >
+                  <Input prefix="+88" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} md={12}>
+                <Form.Item
                   name="transaction_number"
                   label="Transaction Reference"
                 >
                   <Input prefix={<BsQrCodeScan />} />
                 </Form.Item>
               </Col>
-              <Col xs={24} md={12}>
-                <Form.Item
-                  name="mobile_number"
-                  label="Mobile Number"
-                  rules={[
-                    { required: true, message: "Enter mobile number" },
-                    {
-                      pattern: /^01[3-9]\d{8}$/,
-                      message: "Invalid Bangladeshi mobile number",
-                    },
-                  ]}
-                >
-                  <Input prefix="+88" />
-                </Form.Item>
-              </Col>
             </Row>
           )}
 
-          {paymentMethod === "cash" && (
-            <Row gutter={16}>
-              <Col xs={24} md={12}>
-                <Form.Item
-                  name="transaction_number"
-                  label="Payment Receiver Name"
-                  rules={[
-                    { required: true, message: "Enter payment receiver name" },
-                  ]}
-                >
-                  <Input placeholder="Enter payment receiver name" />
-                </Form.Item>
-              </Col>
-              <Col xs={24} md={12}>
-                <Form.Item
-                  name="mobile_number"
-                  label="Mobile Number"
-                  rules={[
-                    { required: true, message: "Enter mobile number" },
-                    {
-                      pattern: /^01[3-9]\d{8}$/,
-                      message: "Invalid Bangladeshi mobile number",
-                    },
-                  ]}
-                >
-                  <Input prefix="+88" />
-                </Form.Item>
-              </Col>
-              <Col xs={24} md={24}>
-                <Form.Item name="note" label="Note (Optional)">
-                  <TextArea rows={4} />
-                </Form.Item>
-              </Col>
-            </Row>
-          )}
+          {/* {paymentMethod === "cash" && (
+          "d"
+          )} */}
 
           {paymentMethod === "cheque" && (
             <Row gutter={16}>

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Card, Table, Col, Row, Tag, Statistic } from "antd";
+import { Card, Table, Col, Row, Statistic } from "antd";
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
-  WalletOutlined,
-  BankOutlined,
+  PieChartOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 import { useAppSelector } from "../../../../../app/store";
 import { FilterState } from "../../../../../app/features/filterSlice";
@@ -20,41 +20,6 @@ import { IGetTransaction } from "../../../Accounts/Transaction/types/transaction
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 
 const MfsPage = () => {
-  const accounts = [
-    {
-      id: 1,
-      name: "Main School Account",
-      type: "Current",
-      balance: 567890,
-      bank: "State Bank",
-      accountNo: "****1234",
-    },
-    {
-      id: 2,
-      name: "Fee Collection Account",
-      type: "Savings",
-      balance: 245680,
-      bank: "HDFC Bank",
-      accountNo: "****5678",
-    },
-    {
-      id: 3,
-      name: "Emergency Fund",
-      type: "Savings",
-      balance: 150000,
-      bank: "ICICI Bank",
-      accountNo: "****9012",
-    },
-    {
-      id: 4,
-      name: "Petty Cash Account",
-      type: "Current",
-      balance: 25000,
-      bank: "Axis Bank",
-      accountNo: "****3456",
-    },
-  ];
-
   const { page_size, page } = useAppSelector(FilterState);
 
   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -66,7 +31,7 @@ const MfsPage = () => {
     actionNames.view
   );
 
-  const { data: transactionList } = useGetTransactionQuery({
+  const { data: transactionList } = useGetTransactionQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
     account__type: "mfs",
@@ -78,37 +43,84 @@ const MfsPage = () => {
   return (
     <div>
       <Row gutter={[16, 16]}>
-        {accounts.map((account) => (
-          <Col key={account.id} xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
-            <Card className="bg-gradient-to-br from-white to-blue-50 border-blue-200 hover:shadow-lg transition-all duration-300 h-full">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <WalletOutlined className="text-blue-600" />
-                  <Tag>{account.type}</Tag>
-                </div>
-                <BankOutlined className="text-gray-400" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">
-                {account.name}
-              </h3>
-              <Statistic
-                value={account.balance}
-                prefix="৳"
-                valueStyle={{
-                  color: "#2563eb",
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                }}
-                className="mb-2"
-              />
-              <div className="text-xs text-gray-500">
-                <p>{account.bank}</p>
-                <p>{account.accountNo}</p>
-              </div>
-            </Card>
-          </Col>
-        ))}
+        <Col xs={24} sm={12} md={12} lg={6}>
+          <Card className="bg-gradient-to-r from-red-500 to-pink-500 text-white border-0 h-full">
+            <Statistic
+              title={<span className="text-red-100">Total Amount</span>}
+              value={`৳ ${
+                transactionList?.data?.reports?.overall?.total_amount || 0
+              }`}
+              valueStyle={{
+                color: "#fff",
+                fontSize: "24px",
+                fontWeight: "bold",
+              }}
+              prefix={<ArrowDownOutlined className="text-red-100" />}
+            />
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={12} lg={6}>
+          <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 h-full">
+            <Statistic
+              title={
+                <span className="text-yellow-100">Total Transactions</span>
+              }
+              value={`${
+                transactionList?.data?.reports?.overall?.total_transactions || 0
+              }`}
+              valueStyle={{
+                color: "#fff",
+                fontSize: "24px",
+                fontWeight: "bold",
+              }}
+              prefix={<ArrowUpOutlined className="text-yellow-100" />}
+            />
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={12} lg={6}>
+          <Card className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 h-full">
+            <Statistic
+              title={
+                <span className="text-green-100">
+                  {"Current Month Transactions"}
+                </span>
+              }
+              value={`${
+                transactionList?.data?.reports?.filtered?.total_amount || 0
+              }`}
+              valueStyle={{
+                color: "#fff",
+                fontSize: "24px",
+                fontWeight: "bold",
+              }}
+              prefix={<PieChartOutlined className="text-green-100" />}
+            />
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={12} lg={6}>
+          <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 h-full">
+            <Statistic
+              title={
+                <span className="text-yellow-100">Total Transactions</span>
+              }
+              value={`${
+                transactionList?.data?.reports?.filtered?.total_transactions ||
+                0
+              }`}
+              valueStyle={{
+                color: "#fff",
+                fontSize: "24px",
+                fontWeight: "bold",
+              }}
+              prefix={<FileTextOutlined className="text-blue-100" />}
+            />
+          </Card>
+        </Col>
       </Row>
+      <br />
 
       {viewPermission ? (
         <Card

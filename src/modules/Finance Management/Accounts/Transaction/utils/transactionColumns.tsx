@@ -1,7 +1,4 @@
 import type { ColumnsType } from "antd/es/table";
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
-
-import { capitalize } from "../../../../../common/capitalize/Capitalize";
 import dayjs from "dayjs";
 import { Tag } from "antd";
 
@@ -28,29 +25,39 @@ const useTransactionColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "From",
+      title: "Account Name",
       dataIndex: "account",
       align: "center",
-      render: (text: any) => (
+      render: (account: any) => (
         <div className="flex items-center">
-          <ArrowUpOutlined className="text-red-500 mr-2" />
-          {capitalize(text?.account_type)} ({text?.balance}){/* {text} */}
-        </div>
-      ),
-    },
-    {
-      key: "22",
-      title: "To",
-      dataIndex: "target_account",
-      align: "center",
-      render: (text: any) => (
-        <div className="flex items-center">
-          <ArrowDownOutlined className="text-green-500 mr-2" />
+          {account?.type === "cash"
+            ? `cash (My Account)`
+            : account?.type === "bank"
+            ? `bank - ${account?.account_name} - ${account?.bank_name} (${account?.balance})`
+            : `${account?.type} - ${account?.account_type} (${account?.balance})`}
 
-          {text ? `${capitalize(text?.account_type)} (${text?.balance})` : null}
+          {/* {capitalize(account?.type)} ({account?.balance}) */}
         </div>
       ),
     },
+
+    // {account?.type === "cash"
+    //                           ? `cash (My Account)`
+    //                           : account?.type === "bank"
+    //                           ? `bank - ${account?.account_name} - ${account?.bank_name} (${account?.balance})`
+    //                           : `${account?.type} - ${account?.account_type} (${account?.balance})`}
+
+    // {
+    //   key: "22",
+    //   title: "To",
+    //   dataIndex: "target_account",
+    //   align: "center",
+    //   render: (text: any) => (
+    //     <div className="flex items-center">
+    //       {text ? `${capitalize(text)} (${text?.balance}) s` : null}
+    //     </div>
+    //   ),
+    // },
     {
       key: "2",
       title: "Amount",

@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Row } from "antd";
+import { Button, Card, Col, DatePicker, Row, Statistic } from "antd";
 import { showModal } from "../../../../app/features/modalSlice";
 import { useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
@@ -38,7 +38,7 @@ const PaymentPage = () => {
     isLoading,
     isFetching,
     refetch,
-  } = useGetPaymentQuery({
+  } = useGetPaymentQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
     year_month: filters.month,
@@ -58,6 +58,57 @@ const PaymentPage = () => {
 
   return (
     <div className="space-y-5">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0">
+          <Statistic
+            title={<span className="text-green-100">Overall Amount</span>}
+            value={`৳ ${
+              paymentData?.data?.reports?.overall?.total_amount || 0
+            }`}
+            valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
+          />
+        </Card>
+
+        <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">
+          <Statistic
+            title={
+              <span className="text-yellow-100">
+                Payment{" "}
+                <span className="text-white underline font-bold">
+                  {paymentData?.data?.reports?.applied_filters?.year_month
+                    ? dayjs(
+                        paymentData?.data?.reports?.applied_filters.year_month
+                      ).format("MMMM YYYY")
+                    : "All Time"}
+                </span>
+              </span>
+            }
+            value={`৳ ${
+              paymentData?.data?.reports?.filtered?.total_amount || 0
+            }`}
+            valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
+          />
+        </Card>
+
+        <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0">
+          <Statistic
+            title={<span className="text-blue-100">Total Transactions</span>}
+            value={paymentData?.data?.reports?.overall?.total_payments || 0}
+            valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
+          />
+        </Card>
+
+        <Card className="bg-gradient-to-r from-purple-500 to-violet-600 text-white border-0">
+          <Statistic
+            title={
+              <span className="text-purple-100">Filtered Transactions</span>
+            }
+            value={paymentData?.data?.reports?.filtered?.total_payments || 0}
+            valueStyle={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
+          />
+        </Card>
+      </div>
+
       <Card>
         <Row justify="space-between" gutter={[10, 10]}>
           {createPermission && (

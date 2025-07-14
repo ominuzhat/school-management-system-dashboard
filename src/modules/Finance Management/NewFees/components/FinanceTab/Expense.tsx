@@ -69,7 +69,7 @@ export const ExpenseTracking = () => {
     isLoading,
     isFetching,
     refetch,
-  } = useGetCashQuery({
+  } = useGetCashQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
   });
@@ -125,7 +125,10 @@ export const ExpenseTracking = () => {
           <Card className="bg-gradient-to-r from-red-500 to-pink-500 text-white border-0 h-full">
             <Statistic
               title={<span className="text-red-100">Total Expenses</span>}
-              value="৳1,40,000"
+              value={`৳${
+                transactionList?.data?.reports?.overall?.expense?.toLocaleString() ||
+                0
+              }`}
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",
@@ -138,8 +141,11 @@ export const ExpenseTracking = () => {
         <Col xs={24} sm={12} md={12} lg={6}>
           <Card className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 h-full">
             <Statistic
-              title={<span className="text-yellow-100">This Month</span>}
-              value="৳89,420"
+              title={<span className="text-red-100">Total Incomes</span>}
+              value={`৳${
+                transactionList?.data?.reports?.overall?.income?.toLocaleString() ||
+                0
+              }`}
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",
@@ -152,8 +158,15 @@ export const ExpenseTracking = () => {
         <Col xs={24} sm={12} md={12} lg={6}>
           <Card className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 h-full">
             <Statistic
-              title={<span className="text-green-100">Budget Remaining</span>}
-              value="৳10,580"
+              title={
+                <span className="text-red-100">
+                  Expenses {dayjs(filters.month).format("MMMM YYYY")}
+                </span>
+              }
+              value={`৳${
+                transactionList?.data?.reports?.filtered?.expense?.toLocaleString() ||
+                0
+              }`}
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",
@@ -166,8 +179,15 @@ export const ExpenseTracking = () => {
         <Col xs={24} sm={12} md={12} lg={6}>
           <Card className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 h-full">
             <Statistic
-              title={<span className="text-blue-100">Total Receipts</span>}
-              value="156"
+                 title={
+                <span className="text-red-100">
+                  Incomes {dayjs(filters.month).format("MMMM YYYY")}
+                </span>
+              }
+              value={`৳${
+                transactionList?.data?.reports?.filtered?.income?.toLocaleString() ||
+                0
+              }`}
               valueStyle={{
                 color: "#fff",
                 fontSize: "24px",

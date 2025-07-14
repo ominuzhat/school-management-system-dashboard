@@ -27,6 +27,7 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
+import { Link } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -67,13 +68,22 @@ const SmsPage = () => {
       <div className="my-5">
         <BreadCrumb />
       </div>
-      <Title level={4} className="mb-4 ml-4">
-        SMS Settings{" "}
-        <span className="relative bottom-2">
-          <Tag color={smsData?.is_active ? "green" : "red"}>
-            {smsData?.is_active ? "Active" : "Inactive"}
-          </Tag>
-        </span>
+      <Title level={4} className="mb-4 ml-4 flex items-center justify-between">
+        <p>
+          SMS Settings
+          <span className="relative bottom-2">
+            <Tag color={smsData?.is_active ? "green" : "red"}>
+              {smsData?.is_active ? "Active" : "Inactive"}
+            </Tag>
+          </span>
+        </p>
+        <Link
+          to={`http://notify.codecanvascreation.com/`}
+          target="_blank"
+          className="text-sm border px-4 py-2 rounded border-blue-500"
+        >
+          Login SMS Panel
+        </Link>
       </Title>
 
       {updatePermission ? (
