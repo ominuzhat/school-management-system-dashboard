@@ -1,9 +1,5 @@
-import { Card, Col, Row, Statistic, Tag } from "antd";
-import {
-  ArrowUpOutlined,
-  BankOutlined,
-  WalletOutlined,
-} from "@ant-design/icons";
+import { Card, Col, Row } from "antd";
+import { ArrowUpOutlined } from "@ant-design/icons";
 
 import { useGetAccountQuery } from "../api/accountEndPoints";
 import useAccountColumns from "../utils/accountColumns";
@@ -21,41 +17,6 @@ import {
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 
 const AccountPage = () => {
-  const accounts = [
-    {
-      id: 1,
-      name: "Main School Account",
-      type: "Current",
-      balance: 567890,
-      bank: "State Bank",
-      accountNo: "****1234",
-    },
-    {
-      id: 2,
-      name: "Fee Collection Account",
-      type: "Savings",
-      balance: 245680,
-      bank: "HDFC Bank",
-      accountNo: "****5678",
-    },
-    {
-      id: 3,
-      name: "Emergency Fund",
-      type: "Savings",
-      balance: 150000,
-      bank: "ICICI Bank",
-      accountNo: "****9012",
-    },
-    {
-      id: 4,
-      name: "Petty Cash Account",
-      type: "Current",
-      balance: 25000,
-      bank: "Axis Bank",
-      accountNo: "****3456",
-    },
-  ];
-
   const { page_size, page } = useAppSelector(FilterState);
 
   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -86,46 +47,11 @@ const AccountPage = () => {
 
   const dataSource = (accountList?.data as IGetAccount[] | undefined) ?? [];
 
-
   return (
     <div className="space-y-5">
       {/* <div className="my-5">
         <BreadCrumb />
       </div> */}
-
-      {/* Account Overview */}
-      <Row gutter={[16, 16]}>
-        {accounts.map((account) => (
-          <Col key={account.id} xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
-            <Card className="bg-gradient-to-br from-white to-blue-50 border-blue-200 hover:shadow-lg transition-all duration-300 h-full">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <WalletOutlined className="text-blue-600" />
-                  <Tag>{account.type}</Tag>
-                </div>
-                <BankOutlined className="text-gray-400" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">
-                {account.name}
-              </h3>
-              <Statistic
-                value={account.balance}
-                prefix="৳"
-                valueStyle={{
-                  color: "#2563eb",
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                }}
-                className="mb-2"
-              />
-              <div className="text-xs text-gray-500">
-                <p>{account.bank}</p>
-                <p>{account.accountNo}</p>
-              </div>
-            </Card>
-          </Col>
-        ))}
-      </Row>
 
       <Row gutter={[16, 16]}>
         {/* Account Form */}

@@ -569,57 +569,100 @@ const Dashboard = () => {
       {/* === New Sections === */}
       <Row gutter={[16, 16]}>
         <Col xs={24} md={12}>
-          <Card title="Recent Activities" bordered={false}>
+          <Card
+            title="Recent Activities"
+            bordered={false}
+            className="shadow-sm"
+          >
             <div className="space-y-4">
-              {/* Single activity item */}
-              <div className="flex items-start space-x-3">
-                <span className="text-green-500">💰</span>
+              {/* Activity items */}
+              <div className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded transition">
+                <div className="bg-green-100 p-2 rounded-full">
+                  <span className="text-green-600 text-lg">💰</span>
+                </div>
                 <div>
-                  <p className="font-medium">নতুন ফি পেমেন্ট</p>
-                  <p className="text-gray-500 text-sm">৫ মিনিট আগে</p>
+                  <p className="font-medium">New Fee Payment Received</p>
+                  <p className="text-gray-500 text-sm">5 minutes ago</p>
                 </div>
               </div>
-              <div className="flex items-start space-x-3">
-                <span className="text-blue-500">👨‍🎓</span>
+
+              <div className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded transition">
+                <div className="bg-blue-100 p-2 rounded-full">
+                  <span className="text-blue-600 text-lg">👨‍🎓</span>
+                </div>
                 <div>
-                  <p className="font-medium">নতুন ভর্তি</p>
-                  <p className="text-gray-500 text-sm">১৫ মিনিট আগে</p>
+                  <p className="font-medium">New Student Enrollment</p>
+                  <p className="text-gray-500 text-sm">15 minutes ago</p>
                 </div>
               </div>
-              <div className="flex items-start space-x-3">
-                <span className="text-purple-500">📢</span>
+
+              <div className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded transition">
+                <div className="bg-purple-100 p-2 rounded-full">
+                  <span className="text-purple-600 text-lg">📢</span>
+                </div>
                 <div>
-                  <p className="font-medium">উপস্থিতি নোটিস</p>
-                  <p className="text-gray-500 text-sm">৩০ মিনিট আগে</p>
+                  <p className="font-medium">Attendance Notice</p>
+                  <p className="text-gray-500 text-sm">30 minutes ago</p>
                 </div>
               </div>
-              <div className="flex items-start space-x-3">
-                <span className="text-pink-500">📊</span>
+
+              <div className="flex items-start gap-3 p-2 hover:bg-gray-50 rounded transition">
+                <div className="bg-pink-100 p-2 rounded-full">
+                  <span className="text-pink-600 text-lg">📊</span>
+                </div>
                 <div>
-                  <p className="font-medium">পরীক্ষার ফলাফল</p>
-                  <p className="text-gray-500 text-sm">১ ঘণ্টা আগে</p>
+                  <p className="font-medium">Exam Results Published</p>
+                  <p className="text-gray-500 text-sm">1 hour ago</p>
                 </div>
               </div>
             </div>
             <div className="mt-4 text-right">
-              <a href="#" className="text-blue-600">
-                সব কার্যক্রম দেখুন →
+              <a
+                href="#"
+                className="text-blue-600 hover:text-blue-800 font-medium text-sm"
+              >
+                View All Activities →
               </a>
             </div>
           </Card>
-        </Col>{" "}
-        <Col xs={12}>
-          <Card title="Recent Notices" bordered={false}>
-            <div>
-              <p className="font-medium">নতুন বার্তা</p>
-              <p className="text-gray-500 text-sm">৫টি নতুন অভিভাবকের বার্তা</p>
-              <p className="text-gray-400 text-xs mt-1">১০ মিনিট আগে</p>
+        </Col>
+
+        <Col xs={24} md={12}>
+          <Card title="Recent Notices" bordered={false} className="shadow-sm">
+            <div className="space-y-4">
+              <div className="p-3 border-l-4 border-blue-500 hover:bg-gray-50 rounded transition">
+                <p className="font-medium">New Messages</p>
+                <p className="text-gray-500 text-sm">5 new parent messages</p>
+                <p className="text-gray-400 text-xs mt-1">10 minutes ago</p>
+              </div>
+
+              <div className="p-3 border-l-4 border-green-500 hover:bg-gray-50 rounded transition">
+                <p className="font-medium">Upcoming Event</p>
+                <p className="text-gray-500 text-sm">
+                  Annual sports day on Friday
+                </p>
+                <p className="text-gray-400 text-xs mt-1">2 hours ago</p>
+              </div>
+
+              <div className="p-3 border-l-4 border-orange-500 hover:bg-gray-50 rounded transition">
+                <p className="font-medium">Holiday Notice</p>
+                <p className="text-gray-500 text-sm">
+                  School will remain closed on Monday
+                </p>
+                <p className="text-gray-400 text-xs mt-1">1 day ago</p>
+              </div>
+            </div>
+            <div className="mt-4 text-right">
+              <Link
+                to="/notice"
+                className="text-blue-600 hover:text-blue-800 font-medium text-sm"
+              >
+                View All Notices →
+              </Link>
             </div>
           </Card>
         </Col>
       </Row>
-
-      <Row gutter={[16, 16]} className="mt-6"></Row>
     </div>
   );
 };
