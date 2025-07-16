@@ -171,7 +171,12 @@ const useEmployeeColumns = (): ColumnsType<any> => {
               dispatch(
                 showModal({
                   title: "Start Enrollment",
-                  content: <FingerAdmission record={record?.id} />,
+                  content: (
+                    <FingerAdmission
+                      record={record?.id}
+                      pathType={window.location.pathname}
+                    />
+                  ),
                 })
               )
             }

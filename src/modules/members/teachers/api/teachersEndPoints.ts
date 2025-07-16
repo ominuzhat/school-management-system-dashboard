@@ -52,6 +52,24 @@ const teacherEndPoint = api.injectEndpoints({
       ],
     }),
 
+        createFingerTeacher: builder.mutation<ApiResponse<any>, any>({
+          query: ({ data, id }: any) => ({
+            url: `/api/v1.0/teachers/${id}/start-enrollment/`,
+            method: "POST",
+            body: data,
+          }),
+          async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+            await handleOnQueryStarted(queryFulfilled, dispatch);
+          },
+          invalidatesTags: [
+      {
+          type: TagTypes.TEACHER,
+          id: TagTypes.TEACHER + "_ID",
+        },
+          ],
+        }),
+    
+
     deleteTeacher: builder.mutation<ApiResponse<any>, { id: any }>({
       query: ({ id }) => ({
         url: `/api/v1.0/teachers/${id}/`,
@@ -93,4 +111,5 @@ export const {
   useGetSingleSTeacherQuery,
   useUpdateTeacherMutation,
   useDeleteTeacherMutation,
+  useCreateFingerTeacherMutation
 } = teacherEndPoint;

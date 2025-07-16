@@ -1,8 +1,10 @@
 import { Col, Row, Select, Input, Button, Form } from "antd";
 import { useCreateFingerAdmissionMutation } from "../api/admissionEndPoints";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CreditCardOutlined } from "@ant-design/icons";
 import { FaFingerprint } from "react-icons/fa6";
+import { useCreateFingerTeacherMutation } from "../../../members/teachers/api/teachersEndPoints";
+import { useCreateFingerEmployeeMutation } from "../../../members/employees/api/employeeEndPoints";
 
 const enrollmentTypes = [
   {
@@ -19,9 +21,22 @@ const enrollmentTypes = [
   },
 ];
 
-const FingerAdmission = ({ record }: any) => {
-  const [createFingerAdmission, { isLoading }] =
+const FingerAdmission = ({
+  record,
+  pathType,
+}: {
+  record: number;
+  pathType: string;
+}) => {
+  const [form] = Form.useForm();
+
+  const [createFingerAdmission, { isLoading: isLoadingAdmission, isSuccess }] =
     useCreateFingerAdmissionMutation();
+  const [createFingerTeacher, { isLoading: isLoadingTeacher }] =
+    useCreateFingerTeacherMutation();
+  const [createFingerEmployee, { isLoading: isLoadingEmployee }] =
+    useCreateFingerEmployeeMutation();
+
   const [enrollmentType, setEnrollmentType] = useState<"finger" | "rfid">(
     "finger"
   );
@@ -32,13 +47,30 @@ const FingerAdmission = ({ record }: any) => {
         ? { hand: values.hand, finger: values.finger }
         : { enrollment_type: "rfid", rfid: values.rfid };
 
-    createFingerAdmission({ id: record, data: payload });
+    if (pathType.includes("/employees")) {
+      createFingerEmployee({ id: record, data: payload });
+    } else if (pathType.includes("/teacher")) {
+      createFingerTeacher({ id: record, data: payload });
+    } else {
+      createFingerAdmission({ id: record, data: payload });
+    }
   };
+
+  const isLoading = pathType.includes("/employees")
+    ? isLoadingEmployee
+    : pathType.includes("/teacher")
+    ? isLoadingTeacher
+    : isLoadingAdmission;
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.resetFields();
+    }
+  }, [form, isSuccess]);
 
   return (
     <div>
       <Form onFinish={onFinish} layout="vertical" className="space-y-4">
-        {/* Enrollment Type Selection Cards */}
         <Row gutter={[16, 16]} justify="space-between" className="mb-6">
           {enrollmentTypes.map((type) => {
             const isSelected = enrollmentType === type.value;
@@ -69,7 +101,6 @@ const FingerAdmission = ({ record }: any) => {
           })}
         </Row>
 
-        {/* Finger Enrollment Fields */}
         {enrollmentType === "finger" && (
           <Row gutter={[16, 16]}>
             <Col lg={8}>
@@ -103,7 +134,6 @@ const FingerAdmission = ({ record }: any) => {
           </Row>
         )}
 
-        {/* RFID Enrollment Field */}
         {enrollmentType === "rfid" && (
           <Row gutter={[16, 16]}>
             <Col lg={8}>
@@ -125,10 +155,9 @@ const FingerAdmission = ({ record }: any) => {
           </Row>
         )}
 
-        {/* Submit Button */}
         <Row>
-          <Col className="w-2/5  ">
-            <Form.Item name="submitButton">
+          <Col className="w-2/5">
+            <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"

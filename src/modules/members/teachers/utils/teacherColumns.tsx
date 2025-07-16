@@ -134,7 +134,7 @@ const useTeacherColumns = (): ColumnsType<any> => {
           )}
 
           <ViewButton to={`teacher-view/${record?.id}`} />
-          
+
           <Button
             title="Start Enrollment"
             size="small"
@@ -148,7 +148,12 @@ const useTeacherColumns = (): ColumnsType<any> => {
               dispatch(
                 showModal({
                   title: "Start Enrollment",
-                  content: <FingerAdmission record={record?.id} />,
+                  content: (
+                    <FingerAdmission
+                      record={record?.id}
+                      pathType={window.location.pathname}
+                    />
+                  ),
                 })
               )
             }
