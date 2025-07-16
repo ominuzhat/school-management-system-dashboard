@@ -1,10 +1,19 @@
 import { Col, Row, Select, Input, Button, Form } from "antd";
-import { useCreateFingerAdmissionMutation } from "../api/admissionEndPoints";
+import {
+  useCreateFingerAdmissionMutation,
+  useCreateStopFingerAdmissionMutation,
+} from "../api/admissionEndPoints";
 import { useEffect, useState } from "react";
 import { CreditCardOutlined } from "@ant-design/icons";
 import { FaFingerprint } from "react-icons/fa6";
-import { useCreateFingerTeacherMutation } from "../../../members/teachers/api/teachersEndPoints";
-import { useCreateFingerEmployeeMutation } from "../../../members/employees/api/employeeEndPoints";
+import {
+  useCreateFingerTeacherMutation,
+  useCreateStopFingerTeacherMutation,
+} from "../../../members/teachers/api/teachersEndPoints";
+import {
+  useCreateFingerEmployeeMutation,
+  useCreateStopFingerEmployeeMutation,
+} from "../../../members/employees/api/employeeEndPoints";
 
 const enrollmentTypes = [
   {
@@ -37,6 +46,10 @@ const FingerAdmission = ({
   const [createFingerEmployee, { isLoading: isLoadingEmployee }] =
     useCreateFingerEmployeeMutation();
 
+  const [createStopFingerAdmission] = useCreateStopFingerAdmissionMutation();
+  const [createStopFingerTeacher] = useCreateStopFingerTeacherMutation();
+  const [createStopFingerEmployee] = useCreateStopFingerEmployeeMutation();
+
   const [enrollmentType, setEnrollmentType] = useState<"finger" | "rfid">(
     "finger"
   );
@@ -61,6 +74,16 @@ const FingerAdmission = ({
     : pathType.includes("/teacher")
     ? isLoadingTeacher
     : isLoadingAdmission;
+
+  const handleStopEnrollment = () => {
+    if (pathType.includes("/employees")) {
+      createStopFingerEmployee({});
+    } else if (pathType.includes("/teacher")) {
+      createStopFingerTeacher({});
+    } else {
+      createStopFingerAdmission({});
+    }
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -155,7 +178,7 @@ const FingerAdmission = ({
           </Row>
         )}
 
-        <Row>
+        <Row gutter={16}>
           <Col className="w-2/5">
             <Form.Item>
               <Button
@@ -168,10 +191,25 @@ const FingerAdmission = ({
                     enrollmentType === "finger" ? "#4CAF50" : "#2196F3",
                 }}
               >
-                {enrollmentType === "finger" ? "Enroll Finger" : "Enroll RFID"}
+                Start Enrollment
               </Button>
             </Form.Item>
           </Col>
+
+          {enrollmentType === "finger" && (
+            <Col className="w-2/5">
+              <Form.Item>
+                <Button
+                  type="primary"
+                  onClick={() => handleStopEnrollment()}
+                  loading={isLoading}
+                  className="w-full border bg-red-500"
+                >
+                  Stop Enrollment
+                </Button>
+              </Form.Item>
+            </Col>
+          )}
         </Row>
       </Form>
     </div>

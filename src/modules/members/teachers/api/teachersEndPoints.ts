@@ -68,6 +68,23 @@ const teacherEndPoint = api.injectEndpoints({
         },
           ],
         }),
+
+        createStopFingerTeacher: builder.mutation<ApiResponse<any>, any>({
+          query: ({ data }: any) => ({
+            url: `/api/v1.0/teachers/stop-enrollment/`,
+            method: "POST",
+            body: data,
+          }),
+          async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+            await handleOnQueryStarted(queryFulfilled, dispatch);
+          },
+          invalidatesTags: [
+      {
+          type: TagTypes.TEACHER,
+          id: TagTypes.TEACHER + "_ID",
+        },
+          ],
+        }),
     
 
     deleteTeacher: builder.mutation<ApiResponse<any>, { id: any }>({
@@ -111,5 +128,6 @@ export const {
   useGetSingleSTeacherQuery,
   useUpdateTeacherMutation,
   useDeleteTeacherMutation,
-  useCreateFingerTeacherMutation
+  useCreateFingerTeacherMutation,
+  useCreateStopFingerTeacherMutation
 } = teacherEndPoint;

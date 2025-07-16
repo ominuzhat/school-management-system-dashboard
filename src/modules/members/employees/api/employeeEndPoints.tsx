@@ -83,6 +83,23 @@ const employeesEndpoint = api.injectEndpoints({
       ],
     }),
 
+    createStopFingerEmployee: builder.mutation<ApiResponse<any>, any>({
+      query: ({ data }: any) => ({
+        url: `/api/v1.0/employees/stop-enrollment/`,
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.EMPLOYEE,
+          id: TagTypes.EMPLOYEE + "_ID",
+        },
+      ],
+    }),
+
     updateEmployee: builder.mutation<
       ApiResponse<any>,
       { id: number | undefined; data: FormData }
@@ -111,5 +128,6 @@ export const {
   useGetSingleEmployeeQuery,
   useUpdateEmployeeMutation,
   useDeleteEmployeeMutation,
-  useCreateFingerEmployeeMutation
+  useCreateFingerEmployeeMutation,
+  useCreateStopFingerEmployeeMutation,
 } = employeesEndpoint;

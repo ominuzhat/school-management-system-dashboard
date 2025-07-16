@@ -34,9 +34,7 @@ const useMarkTeacherAttendanceColumns = ({
       const initialAdmission = attendanceData
         ?.map((data) => {
           const status =
-            data?.status === "not marked"
-              ? "present"
-              : data?.status || "present";
+            data?.status === "not marked" ? undefined : data?.status;
 
           if (data?.teacher) {
             const key = `teacher-${data.teacher.id}`;
@@ -321,7 +319,6 @@ const useMarkTeacherAttendanceColumns = ({
         );
       },
     },
-
     {
       title: (
         <div className="flex items-center justify-center gap-5">
@@ -344,7 +341,7 @@ const useMarkTeacherAttendanceColumns = ({
         return (
           <Space size="middle">
             <Radio.Group
-              value={statusMap[statusKey] || "present"}
+              value={statusMap[statusKey] }
               onChange={(e) => handleStatusChange(e, recordId, type)}
             >
               <Radio value="present">Present</Radio>

@@ -85,7 +85,6 @@ const NoticePage = () => {
           </Col>
         </Row>
       </Card>
-
       {viewPermission ? (
         <Table
           rowKey={"id"}
@@ -96,10 +95,15 @@ const NoticePage = () => {
           columns={columns}
           expandable={{
             expandedRowRender: (record) => (
-              <p className="m-0">
-                <span className="font-semibold">Description: </span>
-                {record.description || "N/A"}
-              </p>
+              <div className="m-0 py-6">
+                <span className="font-semibold  ml-8">Description: </span>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: record.description,
+                  }}
+                  className="prose max-w-none ml-12"
+                />
+              </div>
             ),
             rowExpandable: (record) => !!record.description,
           }}

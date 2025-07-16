@@ -3,20 +3,16 @@ import { Form } from "../../../../common/CommonAnt";
 import { useCreateNoticeMutation } from "../api/noticeEndPoints";
 import dayjs from "dayjs";
 import { NoticeBoardCategory } from "../types/noticeTypes";
-import MDEditor from '@uiw/react-md-editor';
-import { useMemo, useState } from "react";
-
+import TextArea from "antd/es/input/TextArea";
 
 const { Option } = Select;
 
 const CreateNotice = () => {
   const [create, { isLoading, isSuccess }] = useCreateNoticeMutation();
-  const [content, setContent] = useState("");
 
   const onFinish = (values: any): void => {
     const payload = {
       ...values,
-      description: content, // Use the rich text content
       publish_date: values.publish_date
         ? dayjs(values.publish_date).format("YYYY-MM-DD")
         : null,
@@ -27,10 +23,9 @@ const CreateNotice = () => {
     create(payload);
   };
 
-
   return (
-    <Card 
-      title="Create New Notice" 
+    <Card
+      title="Create New Notice"
       bordered={false}
       className="shadow-sm rounded-lg"
     >
@@ -56,14 +51,14 @@ const CreateNotice = () => {
               name="title"
               rules={[{ required: true, message: "Title is required!" }]}
             >
-              <Input 
-                placeholder="Enter Notice Title" 
+              <Input
+                placeholder="Enter Notice Title"
                 size="large"
                 className="rounded-lg"
               />
             </Form.Item>
           </Col>
-          
+
           {/* Category */}
           <Col xs={24} lg={6}>
             <Form.Item
@@ -71,7 +66,7 @@ const CreateNotice = () => {
               name="category"
               rules={[{ required: true, message: "Category is required!" }]}
             >
-              <Select 
+              <Select
                 placeholder="Select Category"
                 size="large"
                 className="rounded-lg"
@@ -93,7 +88,7 @@ const CreateNotice = () => {
               </Select>
             </Form.Item>
           </Col>
-          
+
           {/* Target Audience */}
           <Col xs={24} lg={6}>
             <Form.Item
@@ -103,7 +98,7 @@ const CreateNotice = () => {
                 { required: true, message: "Target Audience is required!" },
               ]}
             >
-              <Select 
+              <Select
                 placeholder="Select Target Audience"
                 size="large"
                 className="rounded-lg"
@@ -118,56 +113,53 @@ const CreateNotice = () => {
               </Select>
             </Form.Item>
           </Col>
-          
+
           {/* Rich Text Editor */}
           <Col xs={24}>
             <Form.Item
-  label={<span className="font-medium">Description</span>}
-  name="description"
-  rules={[{ required: true, message: "Description is required!" }]}
->
-  <div className="rounded-lg border border-gray-200 overflow-hidden" data-color-mode="light">
-    <MDEditor
-      value={content}
-      onChange={setContent}
-      height={400}
-      preview="edit"
-      visibleDragbar={false}
-    />
-  </div>
-</Form.Item>
+              label={<span className="font-medium">Description</span>}
+              name="description"
+              rules={[{ required: true, message: "Description is required!" }]}
+            >
+              <div
+                className="rounded-lg border border-gray-200 overflow-hidden"
+                data-color-mode="light"
+              >
+                <TextArea placeholder="Description" />
+              </div>
+            </Form.Item>
           </Col>
-          
+
           {/* Publish Date */}
           <Col xs={24} md={12} lg={8}>
-            <Form.Item 
-              label={<span className="font-medium">Publish Date</span>} 
+            <Form.Item
+              label={<span className="font-medium">Publish Date</span>}
               name="publish_date"
             >
-              <DatePicker 
-                format="YYYY-MM-DD" 
-                style={{ width: "100%" }} 
+              <DatePicker
+                format="YYYY-MM-DD"
+                style={{ width: "100%" }}
                 size="large"
                 className="rounded-lg"
               />
             </Form.Item>
           </Col>
-          
+
           {/* Expiry Date */}
           <Col xs={24} md={12} lg={8}>
-            <Form.Item 
-              label={<span className="font-medium">Expiry Date</span>} 
+            <Form.Item
+              label={<span className="font-medium">Expiry Date</span>}
               name="expiry_date"
             >
-              <DatePicker 
-                format="YYYY-MM-DD" 
-                style={{ width: "100%" }} 
+              <DatePicker
+                format="YYYY-MM-DD"
+                style={{ width: "100%" }}
                 size="large"
                 className="rounded-lg"
               />
             </Form.Item>
           </Col>
-          
+
           {/* Publish Status */}
           <Col xs={24} md={24} lg={8}>
             <Form.Item

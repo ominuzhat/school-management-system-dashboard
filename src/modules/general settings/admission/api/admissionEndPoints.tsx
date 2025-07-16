@@ -61,6 +61,23 @@ const admissionEndPoint = api.injectEndpoints({
       ],
     }),
 
+    createStopFingerAdmission: builder.mutation<ApiResponse<IAdmission>, any>({
+      query: ({ data }: any) => ({
+        url: `/api/v1.0/admissions/stop-enrollment/`,
+        method: "POST",
+        body: data,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await handleOnQueryStarted(queryFulfilled, dispatch);
+      },
+      invalidatesTags: [
+        {
+          type: TagTypes.ADMISSION,
+          id: TagTypes.ADMISSION + "_ID",
+        },
+      ],
+    }),
+
     createAdmission: builder.mutation<ApiResponse<IAdmission>, FormData>({
       query: (data) => ({
         url: "api/v1.0/admissions/",
@@ -169,4 +186,5 @@ export const {
   useCreateNewStudentAdmissionMutation,
   useLazyGetSingleAdmissionFormQuery,
   useCreateFingerAdmissionMutation,
+  useCreateStopFingerAdmissionMutation,
 } = admissionEndPoint;

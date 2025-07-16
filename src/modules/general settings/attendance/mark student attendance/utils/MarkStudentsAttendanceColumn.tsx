@@ -20,6 +20,7 @@ const useMarkStudentsAttendanceColumns = ({
     Record<number, { check_in?: string; check_out?: string }>
   >({});
 
+
   useEffect(() => {
     if (
       JSON.stringify(attendanceData) !== JSON.stringify(previousAttendanceData)
@@ -27,9 +28,7 @@ const useMarkStudentsAttendanceColumns = ({
       const initialStatusMap: Record<string, string> = {};
       const initialAdmission = attendanceData?.map((student) => {
         const status =
-          student?.status === "not marked"
-            ? "present"
-            : student?.status || "present";
+          student?.status === "not marked" ? undefined : student?.status;
 
         initialStatusMap[student.admission.id] = status;
 
@@ -275,7 +274,7 @@ const useMarkStudentsAttendanceColumns = ({
         <Space>
           <Radio.Group
             onChange={(e) => handleStatusChange(e, record.admission.id)}
-            value={statusMap[record.admission?.id] || "present"}
+            value={statusMap[record.admission?.id]}
           >
             <Radio value="present">P</Radio>
             <Radio value="late">D</Radio>
