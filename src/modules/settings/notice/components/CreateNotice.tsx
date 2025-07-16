@@ -1,19 +1,22 @@
-import { Col, Input, Row, Select, Switch, DatePicker } from "antd";
+import { Col, Input, Row, Select, Switch, DatePicker, Card } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { useCreateNoticeMutation } from "../api/noticeEndPoints";
 import dayjs from "dayjs";
 import { NoticeBoardCategory } from "../types/noticeTypes";
+import MDEditor from '@uiw/react-md-editor';
+import { useMemo, useState } from "react";
 
-const { TextArea } = Input;
+
 const { Option } = Select;
 
 const CreateNotice = () => {
   const [create, { isLoading, isSuccess }] = useCreateNoticeMutation();
+  const [content, setContent] = useState("");
 
   const onFinish = (values: any): void => {
-    // Convert dates to "YYYY-MM-DD" format using dayjs
     const payload = {
       ...values,
+      description: content, // Use the rich text content
       publish_date: values.publish_date
         ? dayjs(values.publish_date).format("YYYY-MM-DD")
         : null,
@@ -24,8 +27,13 @@ const CreateNotice = () => {
     create(payload);
   };
 
+
   return (
-    <div>
+    <Card 
+      title="Create New Notice" 
+      bordered={false}
+      className="shadow-sm rounded-lg"
+    >
       <Form
         onFinish={onFinish}
         isLoading={isLoading}
@@ -40,25 +48,34 @@ const CreateNotice = () => {
           expiry_date: null,
         }}
       >
-        <Row gutter={[16, 16]}>
+        <Row gutter={[24, 16]}>
           {/* Title */}
-          <Col lg={12}>
+          <Col xs={24} lg={12}>
             <Form.Item
-              label="Title"
+              label={<span className="font-medium">Title</span>}
               name="title"
               rules={[{ required: true, message: "Title is required!" }]}
             >
-              <Input placeholder="Enter Notice Title" />
+              <Input 
+                placeholder="Enter Notice Title" 
+                size="large"
+                className="rounded-lg"
+              />
             </Form.Item>
           </Col>
+          
           {/* Category */}
-          <Col lg={6}>
+          <Col xs={24} lg={6}>
             <Form.Item
-              label="Category"
+              label={<span className="font-medium">Category</span>}
               name="category"
               rules={[{ required: true, message: "Category is required!" }]}
             >
-              <Select placeholder="Select Category">
+              <Select 
+                placeholder="Select Category"
+                size="large"
+                className="rounded-lg"
+              >
                 {(
                   [
                     "General",
@@ -76,16 +93,21 @@ const CreateNotice = () => {
               </Select>
             </Form.Item>
           </Col>
+          
           {/* Target Audience */}
-          <Col lg={6}>
+          <Col xs={24} lg={6}>
             <Form.Item
-              label="Target Audience"
+              label={<span className="font-medium">Target Audience</span>}
               name="target_audience"
               rules={[
                 { required: true, message: "Target Audience is required!" },
               ]}
             >
-              <Select placeholder="Select Target Audience">
+              <Select 
+                placeholder="Select Target Audience"
+                size="large"
+                className="rounded-lg"
+              >
                 {(["Student", "Teacher", "Employee", "All"] as any[]).map(
                   (audience) => (
                     <Option key={audience} value={audience}>
@@ -96,44 +118,78 @@ const CreateNotice = () => {
               </Select>
             </Form.Item>
           </Col>
-          {/* Description */}
-          <Col lg={24}>
+          
+          {/* Rich Text Editor */}
+          <Col xs={24}>
             <Form.Item
-              label="Description"
-              name="description"
-              rules={[{ required: true, message: "Description is required!" }]}
-            >
-              <TextArea placeholder="Enter Description" rows={4} />
-            </Form.Item>
+  label={<span className="font-medium">Description</span>}
+  name="description"
+  rules={[{ required: true, message: "Description is required!" }]}
+>
+  <div className="rounded-lg border border-gray-200 overflow-hidden" data-color-mode="light">
+    <MDEditor
+      value={content}
+      onChange={setContent}
+      height={400}
+      preview="edit"
+      visibleDragbar={false}
+    />
+  </div>
+</Form.Item>
           </Col>
+          
           {/* Publish Date */}
-          <Col lg={8}>
-            <Form.Item label="Publish Date" name="publish_date">
-              <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+          <Col xs={24} md={12} lg={8}>
+            <Form.Item 
+              label={<span className="font-medium">Publish Date</span>} 
+              name="publish_date"
+            >
+              <DatePicker 
+                format="YYYY-MM-DD" 
+                style={{ width: "100%" }} 
+                size="large"
+                className="rounded-lg"
+              />
             </Form.Item>
           </Col>
+          
           {/* Expiry Date */}
-          <Col lg={8}>
-            <Form.Item label="Expiry Date" name="expiry_date">
-              <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+          <Col xs={24} md={12} lg={8}>
+            <Form.Item 
+              label={<span className="font-medium">Expiry Date</span>} 
+              name="expiry_date"
+            >
+              <DatePicker 
+                format="YYYY-MM-DD" 
+                style={{ width: "100%" }} 
+                size="large"
+                className="rounded-lg"
+              />
             </Form.Item>
-          </Col>{" "}
+          </Col>
+          
           {/* Publish Status */}
-          <Col lg={8}>
+          <Col xs={24} md={24} lg={8}>
             <Form.Item
-              label="Publish Status"
+              label={<span className="font-medium">Publish Status</span>}
               name="is_published"
               valuePropName="checked"
             >
-              <Switch
-                checkedChildren="Published"
-                unCheckedChildren="Unpublished"
-              />
+              <div className="flex items-center h-full">
+                <Switch
+                  checkedChildren="Published"
+                  unCheckedChildren="Draft"
+                  className="bg-gray-300"
+                />
+                <span className="ml-2 text-sm text-gray-600">
+                  Toggle to publish immediately
+                </span>
+              </div>
             </Form.Item>
           </Col>
         </Row>
       </Form>
-    </div>
+    </Card>
   );
 };
 

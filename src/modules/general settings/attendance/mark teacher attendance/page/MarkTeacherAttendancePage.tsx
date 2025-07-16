@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import {
   useCreateTeacherAttendanceMutation,
+  useCreateTeacherSyncAttendanceMutation,
   useLazyGetMarkTeacherAttendanceQuery,
 } from "../api/teacherAttendanceEndPoints";
 import useMarkTeacherAttendanceColumns from "../utils/MarkTeacherAttendanceColumn";
@@ -16,6 +17,7 @@ import {
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
+import { IoMdSync } from "react-icons/io";
 
 const MarkTeachersAttendance = () => {
   const [result, setResult] = useState<Record<string, any> | null>(null);
@@ -23,6 +25,7 @@ const MarkTeachersAttendance = () => {
     date: dayjs().format("YYYY-MM-DD"),
   });
   const [create] = useCreateTeacherAttendanceMutation();
+  const [syncAttendance] = useCreateTeacherSyncAttendanceMutation<any>({});
 
   const [fetchAttendanceData, { data: attendanceData, isLoading }] =
     useLazyGetMarkTeacherAttendanceQuery<any>({});
@@ -87,23 +90,23 @@ const MarkTeachersAttendance = () => {
       {/* <div className="my-5">
         <BreadCrumb />
       </div> */}
+
       {viewPermission && (
-        <Link to="/attendance/mark-employee-attendance-list">
-          <p
-            style={{
-              fontSize: "14px",
-              fontWeight: "400",
-              color: "#1890ff",
-              padding: "8px 16px",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-            }}
-            className="flex items-center gap-2  w-64"
+        <div className="w-full flex items-center justify-between">
+          <Link to="/attendance/mark-employee-attendance-list">
+            <p className=" flex items-center gap-2 text-sm sm:text-base md:text-sm lg:text-sm xl:text-sm 2xl:text-sm text-blue-500 p-2 sm:p-3 md:p-2 lg:p-2 xl:p-2 2xl:p-2 cursor-pointer transition-all w-full sm:w-64">
+              View List of Attendance{" "}
+              <MdOutlineArrowRightAlt className="text-xl" />
+            </p>
+          </Link>
+          <Button
+            onClick={() => syncAttendance({})}
+            className="text-green-700 border-green-700"
           >
-            View List of Attendance{" "}
-            <MdOutlineArrowRightAlt className="text-xl" />
-          </p>
-        </Link>
+            <IoMdSync />
+            Sync Attendance
+          </Button>
+        </div>
       )}
 
       <Card>

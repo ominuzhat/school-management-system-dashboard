@@ -74,6 +74,26 @@ const teacherAttendanceEndPoint = api.injectEndpoints({
       ],
     }),
 
+    
+        createTeacherSyncAttendance: builder.mutation<
+          ApiResponse<any>,
+          any
+        >({
+          query: () => ({
+            url: "/api/v1.0/employees/attendances/sync/",
+            method: "POST",
+          }),
+          async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+            await handleOnQueryStarted(queryFulfilled, dispatch);
+          },
+          invalidatesTags: [
+            {
+          type: TagTypes.TEACHER_ATTENDANCE,
+          id: TagTypes.TEACHER_ATTENDANCE + "_ID",
+        },
+          ],
+        }),
+
     getSingleEmployeeAttendance: builder.query<ApiResponse<any>, number>({
       query: (roleId) => ({
         url: `api/v1.0/employees/attendances/${roleId}/`,
@@ -126,7 +146,7 @@ export const {
   useGetMarkTeacherAttendanceQuery,
   useLazyGetMarkTeacherAttendanceQuery,
   useGetSingleTeacherAttendanceListQuery,
-
+useCreateTeacherSyncAttendanceMutation,
   useCreateTeacherAttendanceMutation,
   useGetSingleEmployeeAttendanceQuery,
   useGetTeacherAttendanceQuery,
