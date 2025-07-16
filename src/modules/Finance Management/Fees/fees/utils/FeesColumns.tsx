@@ -51,7 +51,7 @@ const useFeesColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Fees Type",
+      title: "Fee Type",
       dataIndex: "fee_type",
       align: "center",
       render: (title) => (title ? capitalize(title) : "N/A"),
@@ -72,14 +72,14 @@ const useFeesColumns = (): ColumnsType<any> => {
     //   render: (title) =>
     //     title ? title.map((data: any) => data.user.username).join(", ") : "N/A",
     // },
-    {
-      key: "4",
-      title: "Subject",
-      dataIndex: "subject",
-      align: "center",
-      render: (title) =>
-        title ? title.map((data: any) => data.name).join(", ") : "N/A",
-    },
+    // {
+    //   key: "4",
+    //   title: "Subject",
+    //   dataIndex: "subject",
+    //   align: "center",
+    //   render: (title) =>
+    //     title ? title.map((data: any) => data.name).join(", ") : "N/A",
+    // },
 
     {
       title: "Actions",

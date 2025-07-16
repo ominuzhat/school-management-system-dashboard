@@ -51,6 +51,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Full Name",
       dataIndex: "first_name",
       align: "left",
+      width: "200px",
       render: (_: any, record: any) =>
         `${record?.first_name} ${record?.last_name}`,
     },
@@ -67,7 +68,6 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Class",
       dataIndex: "current_grade_level",
       align: "center",
-
       render: (current_grade_level) =>
         current_grade_level ? current_grade_level?.name : "N/A",
     },

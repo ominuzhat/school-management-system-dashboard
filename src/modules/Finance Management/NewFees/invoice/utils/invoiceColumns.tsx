@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import UpdateInvoice from "../components/UpdateInvoice";
 import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 const useInvoiceColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -77,17 +78,21 @@ const useInvoiceColumns = (): ColumnsType<any> => {
       title: "Student ID",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title.student?.user?.username : "N/A"),
+      render: (title) => (title ? title?.student?.user?.username : "N/A"),
     },
     {
       key: "1",
-      title: "Student Name",
+      title: "Student Name sd",
       dataIndex: "admission",
       align: "center",
-      render: (title) =>
-        title
-          ? title.student?.first_name + " " + title.student?.last_name
-          : "N/A",
+      render: (admission) => (
+        <Link
+          to={`/admission/admission-view/${admission?.id}`}
+          className="text-green-500"
+        >
+          {admission?.student?.first_name} {admission?.student?.last_name}
+        </Link>
+      ),
     },
     {
       title: "Issue Date",

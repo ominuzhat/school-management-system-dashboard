@@ -103,6 +103,7 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
         account: entry.account,
         type: entry.type,
         provider: entry.provider,
+        account_or_merchant_number: entry.account_or_merchant_number,
         bank_name: entry.bank_name,
         account_name: entry.account_name,
         account_number: entry.account_number,
@@ -161,14 +162,20 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
     if (values.type === "bank") {
       formData.append("bank_name", values.bank_name);
       formData.append("account_name", values.account_name);
-      formData.append("account_number", values.account_number);
+      formData.append(
+        "account_or_merchant_number",
+        values.account_or_merchant_number
+      );
       formData.append("branch_name", values.branch);
       formData.append("transaction_number", values.transaction_number || "");
     }
 
     if (values.type === "mfs") {
       formData.append("provider", values.provider);
-      formData.append("mobile_number", values.mobile_number);
+      formData.append(
+        "account_or_merchant_number",
+        values.account_or_merchant_number
+      );
       formData.append("transaction_number", values.transaction_number || "");
     }
 
@@ -407,7 +414,7 @@ const UpdateVendorPaymentEntry = ({ record }: { record: number }) => {
               </Col>
               <Col xs={24} md={12}>
                 <Form.Item
-                  name="mobile_number"
+                  name="account_or_merchant_number"
                   label="Mobile Number"
                   rules={[{ required: true }]}
                 >

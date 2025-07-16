@@ -3,7 +3,6 @@ import { Card, Table, Col, Row, Statistic } from "antd";
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
-
   PieChartOutlined,
   FileTextOutlined,
 } from "@ant-design/icons";
@@ -21,8 +20,6 @@ import { IGetTransaction } from "../../../Accounts/Transaction/types/transaction
 import NoPermissionData from "../../../../../utilities/NoPermissionData";
 
 const BankPage = () => {
-
-
   const { page_size, page } = useAppSelector(FilterState);
 
   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -37,7 +34,7 @@ const BankPage = () => {
   const { data: transactionList } = useGetTransactionQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
-    account__type: "bank",
+    type: "bank",
   });
 
   const dataSource =

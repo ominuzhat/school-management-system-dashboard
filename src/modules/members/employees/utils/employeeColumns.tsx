@@ -1,4 +1,4 @@
-import { Space, Tag } from "antd";
+import { Button, Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import ViewButton from "../../../../common/CommonAnt/Button/ViewButton";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
@@ -14,6 +14,8 @@ import {
 } from "../../../../utilities/permissionConstant";
 import { useDeleteEmployeeMutation } from "../api/employeeEndPoints";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import FingerAdmission from "../../../general settings/admission/components/FingerAdmission";
+import { FaFingerprint } from "react-icons/fa6";
 
 const useEmployeeColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -155,6 +157,28 @@ const useEmployeeColumns = (): ColumnsType<any> => {
           )}
 
           <ViewButton to={`employee-view/${record?.id}`} />
+
+          <Button
+            title="Start Enrollment"
+            size="small"
+            type="default"
+            style={{
+              color: "green",
+              // background: "#3892E3",
+              border: "1px solid green",
+            }}
+            onClick={() =>
+              dispatch(
+                showModal({
+                  title: "Start Enrollment",
+                  content: <FingerAdmission record={record?.id} />,
+                })
+              )
+            }
+          >
+            <FaFingerprint />
+          </Button>
+
           {deletePermission && (
             <DeleteButton
               onConfirm={() => handleDelete(record.id)}

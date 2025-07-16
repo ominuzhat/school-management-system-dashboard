@@ -9,6 +9,13 @@ import {
 import VendorPage from "../../../Accounts/cash management/Vendor/page/VendorPage";
 import VendorEntryPage from "../../../Accounts/cash management/Vendor Entry/pages/VendorEntryPag";
 import InvoiceEntryPage from "../../../Accounts/cash management/Invoice Entry/pages/InvoiceEntryPage";
+import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import { GetPermission } from "../../../../../utilities/permission";
+import {
+  actionNames,
+  moduleNames,
+} from "../../../../../utilities/permissionConstant";
+import NoPermissionData from "../../../../../utilities/NoPermissionData";
 
 const CashManagementTab = () => {
   const tabs = [
@@ -23,6 +30,41 @@ const CashManagementTab = () => {
   ];
 
   const [activeTab, setActiveTab] = useState("expense");
+
+  const { data: dashboardData } = useGetDashboardDataQuery({});
+
+  const viewVendorInvoicePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.vendorinvoice,
+    actionNames.view
+  );
+  const createVendorInvoicePermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.vendorinvoice,
+    actionNames.add
+  );
+
+  const viewVendorPaymentPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.vendorpayment,
+    actionNames.view
+  );
+  const createVendorPaymentPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.vendorpayment,
+    actionNames.add
+  );
+
+  const viewVendorPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.vendor,
+    actionNames.view
+  );
+  const createVendorPermission = GetPermission(
+    dashboardData?.data?.permissions,
+    moduleNames.vendor,
+    actionNames.add
+  );
 
   return (
     <div className="space-y-6">
@@ -51,9 +93,32 @@ const CashManagementTab = () => {
         </div>
         <div>
           {activeTab === "expense" && <ExpenseTracking />}
-          {activeTab === "vendor" && <VendorPage />}
-          {activeTab === "payment" && <VendorEntryPage />}
-          {activeTab === "invoice" && <InvoiceEntryPage />}
+
+          {activeTab === "vendor" &&
+            (viewVendorPermission && createVendorPermission ? (
+              <VendorPage />
+            ) : (
+              <NoPermissionData />
+            ))}
+
+          {activeTab === "payment" &&
+            (viewVendorPaymentPermission && createVendorPaymentPermission ? (
+              <VendorEntryPage />
+            ) : (
+              <NoPermissionData />
+            ))}
+
+          {activeTab === "invoice" &&
+            (viewVendorInvoicePermission && createVendorInvoicePermission ? (
+              <InvoiceEntryPage />
+            ) : (
+              <NoPermissionData />
+            ))}
+
+          {/* {activeTab === "invoice" && <InvoiceEntryPage />} */}
+
+          {/* {activeTab === "payment" && <VendorEntryPage />} */}
+          {/* {activeTab === "vendor" && <VendorPage />} */}
         </div>
       </div>
     </div>

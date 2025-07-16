@@ -34,7 +34,7 @@ const ShurjoPayPage = () => {
   const { data: transactionList } = useGetTransactionQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
-    account__type: "surjopay",
+    type: "surjopay",
   });
 
   const dataSource =

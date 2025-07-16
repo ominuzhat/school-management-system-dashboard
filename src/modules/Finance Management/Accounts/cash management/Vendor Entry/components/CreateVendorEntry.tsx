@@ -94,7 +94,7 @@ const CreateVendorEntry = () => {
     if (values.type === "bank") {
       formData.append("bank_name", values.bank_name);
       formData.append("account_name", values.account_name);
-      formData.append("account_number", values.account_number);
+      formData.append("account_or_merchant_number", values.account_or_merchant_number);
       formData.append("transaction_number", values.transaction_number || "");
       formData.append("branch", values.branch);
     }
@@ -102,7 +102,10 @@ const CreateVendorEntry = () => {
     // MFS
     if (values.type === "mfs") {
       formData.append("provider", values.provider);
-      formData.append("mobile_number", values.mobile_number);
+      formData.append(
+        "account_or_merchant_number",
+        values.account_or_merchant_number
+      );
       formData.append("transaction_number", values.transaction_number || "");
     }
 
@@ -383,7 +386,7 @@ const CreateVendorEntry = () => {
               </Col>
               <Col xs={24} md={12}>
                 <Form.Item
-                  name="account_number"
+                  name="account_or_merchant_number"
                   label="Account Number"
                   rules={[{ required: true, message: "Enter account number" }]}
                 >
@@ -429,7 +432,7 @@ const CreateVendorEntry = () => {
               </Col>
               <Col xs={24} md={12}>
                 <Form.Item
-                  name="mobile_number"
+                  name="account_or_merchant_number"
                   label="Mobile Number"
                   rules={[{ required: true }]}
                 >

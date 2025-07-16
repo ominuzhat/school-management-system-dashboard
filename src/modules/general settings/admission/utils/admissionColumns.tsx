@@ -86,7 +86,8 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       key: "1",
       title: "Name",
       dataIndex: "student",
-      align: "center",
+      align: "left",
+      width: "180px",
       render: (title) =>
         title ? title?.first_name + " " + title?.last_name : "N/A",
     },
@@ -210,7 +211,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
           </Button>
 
           <Button
-            title="Admission Form"
+            title="Start Enrollment"
             size="small"
             type="default"
             style={{
@@ -221,7 +222,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
             onClick={() =>
               dispatch(
                 showModal({
-                  title: "Finger Admission",
+                  title: "Start Enrollment",
                   content: <FingerAdmission record={record?.id} />,
                 })
               )

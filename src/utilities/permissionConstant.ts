@@ -52,6 +52,10 @@ type ModuleNames = {
   rulesandregulations: string;
   smsconfig: string;
   admissionleave: string;
+  transferrequest: string;
+  vendor: string;
+  vendorpayment: string;
+  vendorinvoice: string;
 };
 
 export const moduleNames: ModuleNames = {
@@ -88,4 +92,8 @@ export const moduleNames: ModuleNames = {
   account: "account",
   institution: "institution",
   transaction: "transaction",
+  transferrequest: "transferrequest",
+  vendor: "transferrequest",
+  vendorpayment: "vendorpayment",
+  vendorinvoice: "vendorpayment",
 };

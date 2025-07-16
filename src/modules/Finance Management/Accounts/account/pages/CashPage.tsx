@@ -29,7 +29,7 @@ const CashPage = () => {
   const { data: transactionList } = useGetTransactionQuery({
     page_size: page_size,
     page: Number(page) || undefined,
-    account__type: "cash",
+    type: "cash",
   });
 
   const dataSource =
