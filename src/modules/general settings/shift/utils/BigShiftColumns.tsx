@@ -71,9 +71,9 @@ const useBigShiftColumns = (): ColumnsType<any> => {
         return time ? moment(time, "HH:mm:ss").format("h:mm A") : "N/A"; // Format in 12-hour format
       },
     },
-       {
+    {
       key: "1",
-      title: "Flexibility",
+      title: "Flexibility (In Minutes)",
       dataIndex: "flexible",
       align: "center",
       render: (title) => (title ? title : title),

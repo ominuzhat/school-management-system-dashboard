@@ -57,8 +57,11 @@ const UpdateShift = ({ record }: any) => {
           ></input>
         </Form.Item>
 
-        <Form.Item label="Time In Flexibility" name="flexible">
-          <Input placeholder="Enter Time In Flexibility" type="number" />
+        <Form.Item label="Time In Flexibility (In Minutes)" name="flexible">
+          <Input
+            placeholder="Enter Time In Flexibility (In Minutes)"
+            type="number"
+          />
         </Form.Item>
 
         {/* 

@@ -81,6 +81,7 @@ import UpdateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/
 import ClassManagement from "../modules/general settings/class management/page/ClassManagement";
 import AttendanceTab from "../modules/general settings/attendance/Tab/AttandenceTab";
 import ExamTab from "../modules/general settings/Exam/Tab/ExamTab";
+import HolidayPage from "../modules/settings/holiday/pages/NoticePage";
 
 const router = createBrowserRouter([
   {
@@ -611,6 +612,14 @@ const router = createBrowserRouter([
         element: (
           <WithPermission requiredPermission="noticeboard">
             <NoticePage />
+          </WithPermission>
+        ),
+      },
+      {
+        path: "/holiday",
+        element: (
+          <WithPermission requiredPermission="noticeboard">
+            <HolidayPage />
           </WithPermission>
         ),
       },

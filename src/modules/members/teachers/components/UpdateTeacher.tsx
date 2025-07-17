@@ -30,7 +30,7 @@ import GenderSelect, {
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
 import { useGetClassesBigListQuery } from "../../../general settings/classes/api/classesEndPoints";
-import { useGetShiftQuery } from "../../../general settings/shift/api/shiftEndPoints";
+import { useGetScheduleQuery } from "../../../general settings/attendance/Schedule/api/scheduleEndPoints";
 
 interface Props {
   record: any;
@@ -39,7 +39,8 @@ interface Props {
 const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
   const [form] = AntForm.useForm();
   const { data: singleTeacher } = useGetSingleSTeacherQuery(record?.id);
-  const { data: shiftData , isLoading : shiftLoading} = useGetShiftQuery({});
+  const { data: scheduleData, isLoading: scheduleLoading } =
+    useGetScheduleQuery({});
 
   const { data: classData } = useGetClassesBigListQuery<any>({});
   const [selectedSubjects, setSelectedSubjects] = useState<number[]>([]);
@@ -80,7 +81,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
 
       form.setFieldsValue({
         ...singleTeacher.data,
-        shifts: singleTeacher?.data?.shifts?.map((s: any) => s?.id),
+        schedule: singleTeacher?.data?.schedule?.id,
         username: singleTeacher?.data?.user?.username,
         hire_date: dayjs(singleTeacher?.data?.hire_date),
         date_of_birth: dayjs(singleTeacher?.data?.date_of_birth),
@@ -90,7 +91,7 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
         phone_number: phoneNumber,
       });
     }
-  }, [form, shiftData?.data, singleTeacher]);
+  }, [form, scheduleData?.data, singleTeacher]);
 
   const handlePreview = async (file: any) => {
     setPreviewImage(file.thumbUrl || file.url);
@@ -117,12 +118,8 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
       } else if (key === "hire_date" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
-      } else if (key === "shifts") {
-        if (Array.isArray(value)) {
-          value.forEach((subjectId: any) => {
-            formData.append("shifts", subjectId);
-          });
-        }
+      } else if (key === "schedule") {
+        formData.append("schedule", values.schedule);
       } else if (Array.isArray(value)) {
         value.forEach((item) => {
           formData.append(key, item);
@@ -246,35 +243,30 @@ const UpdateTeacher: React.FC<Props> = React.memo(({ record }) => {
                           <Input placeholder="Base Salary." type="number" />
                         </Form.Item>
                       </Col>
-                                   <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
-                                              <Form.Item
-                                                label="Shift"
-                                                name="shifts"
-                                                rules={[
-                                                  { required: true, message: "Shift is required!" },
-                                                ]}
-                                              >
-                                                <Select
-                                                  mode="multiple"
-                                                  allowClear
-                                                  showSearch
-                                                  style={{ width: "100%" }}
-                                                  placeholder={
-                                                    shiftLoading
-                                                      ? "Loading Shift..."
-                                                      : "Please select"
-                                                  }
-                                                  options={
-                                                    (Array?.isArray(shiftData?.data) &&
-                                                      shiftData?.data?.map((shiftData: any) => ({
-                                                        label: shiftData.name,
-                                                        value: shiftData.id,
-                                                      }))) ||
-                                                    []
-                                                  }
-                                                />
-                                              </Form.Item>
-                                            </Col>
+                      <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                        <Form.Item label="Schedule" name="schedule">
+                          <Select
+                            allowClear
+                            showSearch
+                            style={{ width: "100%" }}
+                            placeholder={
+                              scheduleLoading
+                                ? "Loading Shift..."
+                                : "Please select"
+                            }
+                            options={
+                              (Array?.isArray(scheduleData?.data) &&
+                                scheduleData?.data?.map(
+                                  (scheduleData: any) => ({
+                                    label: scheduleData.name,
+                                    value: scheduleData.id,
+                                  })
+                                )) ||
+                              []
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
                       <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item label="Username" name="username">
                           <Input placeholder="Username." disabled />

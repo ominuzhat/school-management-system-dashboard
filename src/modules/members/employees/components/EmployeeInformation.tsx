@@ -24,7 +24,7 @@ const EmployeeInformation = ({ data }: any) => {
     religion,
     blood_group,
     home_address,
-    shifts,
+    schedule,
     gender_display,
   } = data || {};
 
@@ -113,24 +113,15 @@ const EmployeeInformation = ({ data }: any) => {
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
-          fieldName: "Shifts",
-          text:
-            Array.isArray(shifts) && shifts.length > 0 ? (
-              <>
-                {shifts.map((s: any, idx: number) => (
-                  <Tag color="blue" key={idx}>
-                    {s?.name}
-                  </Tag>
-                ))}
-              </>
-            ) : (
-              "N/A"
-            ),
+          fieldName: "Schedule",
+          text: schedule?.name || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
     },
   ];
+
+  
 
   return (
     <div>

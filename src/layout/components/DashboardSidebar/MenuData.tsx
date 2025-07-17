@@ -26,7 +26,7 @@ import { BsFillFileRuledFill } from "react-icons/bs";
 import { useGetDashboardDataQuery } from "../../../modules/Dashboard/api/dashoboardEndPoints";
 import { hasPermissionForModule } from "../../../utilities/permission";
 import { ItemType, MenuItemType } from "antd/es/menu/interface";
-import { MdCoPresent } from "react-icons/md";
+import { MdCoPresent, MdOutlineHolidayVillage } from "react-icons/md";
 
 const MenuData: React.FC = () => {
   const { themes } = useSelector<RootState, ThemesTypes>(
@@ -43,6 +43,11 @@ const MenuData: React.FC = () => {
   };
 
   const settings = [
+    hasPermissionForModule(permissions, "routine") && {
+      key: "/routine",
+      label: <Link to="/routine">Routine</Link>,
+      icon: <IoCalendarOutline />,
+    },
     hasPermissionForModule(permissions, "institution") && {
       key: "/institute-profile",
       label: <Link to="/institute-profile">Institute Profile</Link>,
@@ -58,6 +63,11 @@ const MenuData: React.FC = () => {
       key: "/notice",
       label: <Link to="/notice">Notice</Link>,
       icon: <TfiAnnouncement />,
+    },
+    hasPermissionForModule(permissions, "noticeboard") && {
+      key: "/holiday",
+      label: <Link to="/holiday">Holiday</Link>,
+      icon: <MdOutlineHolidayVillage />,
     },
     hasPermissionForModule(permissions, "rulesandregulations") && {
       key: "/rules",
@@ -194,12 +204,6 @@ const MenuData: React.FC = () => {
     //   icon: <SiGoogleclassroom />,
     // },
 
-    hasPermissionForModule(permissions, "gradelevel") && {
-      key: "/class-management",
-      label: <Link to="/class-management">Class Management</Link>,
-      icon: <SiGoogleclassroom />,
-    },
-
     hasPermissionForModule(permissions, "admission") &&
       hasPermissionForModule(permissions, "admissionsession") && {
         key: "/admission",
@@ -219,6 +223,14 @@ const MenuData: React.FC = () => {
         //   },
         // ],
       },
+
+    //  hasPermissionForModule(permissions, "employeeattendance") &&
+    hasPermissionForModule(permissions, "attendance") && {
+      label: <Link to="/attendance">Attendance Management</Link>,
+      icon: <MdCoPresent />,
+      key: "/attendance",
+    },
+
     // hasPermissionForModule(permissions, "classsubject") && {
     //   key: "/subjects",
     //   label: <Link to="/subjects">Subjects</Link>,
@@ -242,71 +254,65 @@ const MenuData: React.FC = () => {
     //   label: <Link to="/leave">Leave</Link>,
     //   icon: <LuCopyleft />,
     // },
-    hasPermissionForModule(permissions, "routine") && {
-      key: "/routine",
-      label: <Link to="/routine">Routine</Link>,
+
+    //  hasPermissionForModule(permissions, "examhall") &&
+    //   hasPermissionForModule(permissions, "examhallreceipt") &&
+    //   hasPermissionForModule(permissions, "exammark") &&
+    //   hasPermissionForModule(permissions, "gradescale") &&
+    //   hasPermissionForModule(permissions, "studentresult") &&
+
+    hasPermissionForModule(permissions, "exam") && {
+      key: "/exam",
+      label: <Link to="/exam">Exam Management</Link>,
       icon: <IoCalendarOutline />,
+
+      // key: "/exam-module",
+      // label: "Exam",
+      // icon: <FiPenTool />,
+      // children: [
+      //   hasPermissionForModule(permissions, "exam") && {
+      //     key: "/exam",
+      //     label: <Link to="/exam">Exam</Link>,
+      //     icon: <PiExamLight />,
+      //   },
+
+      //   hasPermissionForModule(permissions, "examhall") && {
+      //     key: "/exam-hall",
+      //     label: <Link to="/exam-hall">Exam Hall</Link>,
+      //     icon: <SiGoogleclassroom />,
+      //   },
+      //   hasPermissionForModule(permissions, "examhallreceipt") && {
+      //     key: "/exam-receipts",
+      //     label: <Link to="/exam-receipts">Assign Exam Hall</Link>,
+      //     icon: <IoReceiptOutline />,
+      //   },
+      //   hasPermissionForModule(permissions, "exammark") && {
+      //     key: "/mark-exam",
+      //     label: <Link to="/mark-exam">Mark Exam</Link>,
+      //     icon: <BsBookmarks />,
+      //   },
+      //   hasPermissionForModule(permissions, "gradescale") && {
+      //     key: "/grade-mark",
+      //     label: <Link to="/grade-mark">Grade Configuration</Link>,
+      //     icon: <BsFileEarmarkDiff />,
+      //   },
+      //   hasPermissionForModule(permissions, "studentresult") && {
+      //     key: "/exam-result",
+      //     label: <Link to="/exam-result">Publish Result</Link>,
+      //     icon: <IoCompassOutline />,
+      //   },
+      //   hasPermissionForModule(permissions, "exam") && {
+      //     key: "/result-migration",
+      //     label: <Link to="/result-migration">Result Migration</Link>,
+      //     icon: <FaMapMarkedAlt />,
+      //   },
+      // ],
     },
-
-    hasPermissionForModule(permissions, "exam") &&
-      hasPermissionForModule(permissions, "examhall") &&
-      hasPermissionForModule(permissions, "examhallreceipt") &&
-      hasPermissionForModule(permissions, "exammark") &&
-      hasPermissionForModule(permissions, "gradescale") &&
-      hasPermissionForModule(permissions, "studentresult") && {
-        key: "/exam",
-        label: <Link to="/exam">Exam</Link>,
-        icon: <IoCalendarOutline />,
-
-        // key: "/exam-module",
-        // label: "Exam",
-        // icon: <FiPenTool />,
-        // children: [
-        //   hasPermissionForModule(permissions, "exam") && {
-        //     key: "/exam",
-        //     label: <Link to="/exam">Exam</Link>,
-        //     icon: <PiExamLight />,
-        //   },
-
-        //   hasPermissionForModule(permissions, "examhall") && {
-        //     key: "/exam-hall",
-        //     label: <Link to="/exam-hall">Exam Hall</Link>,
-        //     icon: <SiGoogleclassroom />,
-        //   },
-        //   hasPermissionForModule(permissions, "examhallreceipt") && {
-        //     key: "/exam-receipts",
-        //     label: <Link to="/exam-receipts">Assign Exam Hall</Link>,
-        //     icon: <IoReceiptOutline />,
-        //   },
-        //   hasPermissionForModule(permissions, "exammark") && {
-        //     key: "/mark-exam",
-        //     label: <Link to="/mark-exam">Mark Exam</Link>,
-        //     icon: <BsBookmarks />,
-        //   },
-        //   hasPermissionForModule(permissions, "gradescale") && {
-        //     key: "/grade-mark",
-        //     label: <Link to="/grade-mark">Grade Configuration</Link>,
-        //     icon: <BsFileEarmarkDiff />,
-        //   },
-        //   hasPermissionForModule(permissions, "studentresult") && {
-        //     key: "/exam-result",
-        //     label: <Link to="/exam-result">Publish Result</Link>,
-        //     icon: <IoCompassOutline />,
-        //   },
-        //   hasPermissionForModule(permissions, "exam") && {
-        //     key: "/result-migration",
-        //     label: <Link to="/result-migration">Result Migration</Link>,
-        //     icon: <FaMapMarkedAlt />,
-        //   },
-        // ],
-      },
-
-    hasPermissionForModule(permissions, "attendance") &&
-      hasPermissionForModule(permissions, "employeeattendance") && {
-        label: <Link to="/attendance">Attendance</Link>,
-        icon: <MdCoPresent />,
-        key: "/attendance",
-      },
+    hasPermissionForModule(permissions, "gradelevel") && {
+      key: "/class-management",
+      label: <Link to="/class-management">Class Management</Link>,
+      icon: <SiGoogleclassroom />,
+    },
 
     // hasPermissionForModule(permissions, "attendance") &&
     //   hasPermissionForModule(permissions, "employeeattendance") && {
@@ -355,7 +361,7 @@ const MenuData: React.FC = () => {
     <div className="dashboard-sidebar-style">
       <div>
         <SidebarTop />
-        <span className="features-title">Main Menu</span>
+        <span className="features-title text-green-500">Main Menu</span>
         <div>
           <Menu
             style={{
@@ -367,7 +373,7 @@ const MenuData: React.FC = () => {
             items={items}
           />
         </div>
-        <span className="features-title">Members</span>
+        <span className="features-title text-purple-500">Members</span>
 
         <div>
           <Menu
@@ -380,7 +386,7 @@ const MenuData: React.FC = () => {
             items={members.filter(Boolean) as ItemType<MenuItemType>[]}
           />
         </div>
-        <span className="features-title">Institution</span>
+        <span className="features-title text-green-500">Institution</span>
         <div>
           <Menu
             style={{
@@ -392,7 +398,7 @@ const MenuData: React.FC = () => {
             items={institution.filter(Boolean) as ItemType<MenuItemType>[]}
           />
         </div>
-        <span className="features-title">Finance</span>
+        <span className="features-title text-orange-500">Finance</span>
         <div>
           <Menu
             style={{
@@ -404,7 +410,7 @@ const MenuData: React.FC = () => {
             items={payroll.filter(Boolean) as ItemType<MenuItemType>[]}
           />
         </div>
-        <span className="features-title">Settings</span>
+        <span className="features-title text-yellow-500">Settings</span>
         <div>
           <Menu
             style={{

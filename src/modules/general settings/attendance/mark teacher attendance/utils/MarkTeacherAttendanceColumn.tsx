@@ -341,7 +341,7 @@ const useMarkTeacherAttendanceColumns = ({
         return (
           <Space size="middle">
             <Radio.Group
-              value={statusMap[statusKey] }
+              value={statusMap[statusKey] || "not marked"}
               onChange={(e) => handleStatusChange(e, recordId, type)}
             >
               <Radio value="present">Present</Radio>

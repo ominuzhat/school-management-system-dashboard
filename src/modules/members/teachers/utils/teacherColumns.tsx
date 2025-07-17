@@ -69,12 +69,20 @@ const useTeacherColumns = (): ColumnsType<any> => {
       render: (name) => (name ? name?.username : "N/A"),
     },
     {
-      key: "3",
-      title: "Email",
-      dataIndex: "email",
+      key: "33",
+      title: "Working Hour",
+      dataIndex: "schedule",
       align: "center",
-      sorter: (a, b) => (a.email || "").localeCompare(b.email || ""),
-      render: (email) => (email ? email : "N/A"),
+      render: (schedule) =>
+        schedule ? (
+          <>
+            {`${dayjs(schedule?.start_time, "HH:mm:ss").format(
+              "hh:mm A"
+            )} - ${dayjs(schedule?.end_time, "HH:mm:ss").format("hh:mm A")}`}
+          </>
+        ) : (
+          "N/A"
+        ),
     },
     {
       key: "4",

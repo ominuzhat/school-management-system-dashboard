@@ -11,7 +11,7 @@ const CreateShift = () => {
       name: values?.name,
       start_time: dayjs(values.start_time, "HH:mm").format("HH:mm:ss"),
       end_time: dayjs(values.end_time, "HH:mm").format("HH:mm:ss"),
-      flexible: values?.flexible
+      flexible: values?.flexible,
     });
   };
 
@@ -67,8 +67,11 @@ const CreateShift = () => {
             </Form.Item>
           </Col>
           <Col lg={12}>
-            <Form.Item label="Time In Flexibility" name="flexible">
-              <Input placeholder="Enter Time In Flexibility" type="number" />
+            <Form.Item label="Time In Flexibility (In Minutes)" name="flexible">
+              <Input
+                placeholder="Enter Time In Flexibility (In Minutes)"
+                type="number"
+              />
             </Form.Item>
           </Col>
         </Row>

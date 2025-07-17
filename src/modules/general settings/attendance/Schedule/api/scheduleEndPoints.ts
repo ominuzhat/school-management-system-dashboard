@@ -4,6 +4,7 @@ import { FilterTypes } from "../../../../../app/features/filterSlice";
 import { ApiResponse, PaginatedResponse } from "../../../../../app/utils/constant";
 import { handleOnQueryStarted } from "../../../../../app/utils/onQueryStartedHandler";
 import { TagTypes } from "../../../../../app/utils/tagTypes";
+import { ICreateSchedule } from "../types/scheduleTypes";
 
 const scheduleEndPoints = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,7 +13,7 @@ const scheduleEndPoints = api.injectEndpoints({
       FilterTypes
     >({
       query: (params) => ({
-        url: "/api/v1.0/admissions/leaves/",
+        url: "/api/v1.0/employees/schedules/",
         params,
       }),
       providesTags: [
@@ -23,9 +24,9 @@ const scheduleEndPoints = api.injectEndpoints({
       ],
     }),
 
-    createSchedule: builder.mutation<ApiResponse<any>, any>({
+    createSchedule: builder.mutation<ApiResponse<any>, ICreateSchedule>({
       query: (data) => ({
-        url: "/api/v1.0/admissions/leaves/",
+        url: "/api/v1.0/employees/schedules/",
         method: "POST",
         body: data,
       }),
@@ -45,7 +46,7 @@ const scheduleEndPoints = api.injectEndpoints({
       number
     >({
       query: (examId) => ({
-        url: `/api/v1.0/admissions/leaves/${examId}/`,
+        url: `/api/v1.0/employees/schedules/${examId}/`,
       }),
 
       providesTags: [
@@ -58,7 +59,7 @@ const scheduleEndPoints = api.injectEndpoints({
 
     deleteSchedules: builder.mutation<ApiResponse<any>, { id: any }>({
       query: ({ id }) => ({
-        url: `/api/v1.0/admissions/leaves/${id}/`,
+        url: `/api/v1.0/employees/schedules/${id}/`,
         method: "DELETE",
       }),
       invalidatesTags: [
@@ -74,7 +75,7 @@ const scheduleEndPoints = api.injectEndpoints({
       { id: number | undefined; data: any }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/admissions/leaves/${id}/`,
+        url: `/api/v1.0/employees/schedules/${id}/`,
         method: "PATCH",
         body: data,
       }),

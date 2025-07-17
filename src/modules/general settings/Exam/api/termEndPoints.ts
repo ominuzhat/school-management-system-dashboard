@@ -56,6 +56,20 @@ const termEndpoint = api.injectEndpoints({
       ],
     }),
 
+        deleteTerm: builder.mutation<ApiResponse<any>, { id: any }>({
+          query: ( id ) => ({
+            url: `/api/v1.0/exams/terms/${id}/`,
+            method: "DELETE",
+          }),
+          invalidatesTags: [
+            {
+          type: TagTypes.TERM,
+          id: TagTypes.TERM + "_ID",
+        },
+          ],
+        }),
+    
+
     updateTerm: builder.mutation<
       ApiResponse<IGetTerm>,
       { id: number | undefined; data: any }
@@ -83,4 +97,5 @@ export const {
   useCreateTermMutation,
   useUpdateTermMutation,
   useGetSingleTermQuery,
+  useDeleteTermMutation
 } = termEndpoint;

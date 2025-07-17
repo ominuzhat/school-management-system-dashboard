@@ -23,13 +23,14 @@ import GenderSelect, {
   BloodGroupSelect,
   ReligionSelect,
 } from "../../../../common/commonField/commonFeild";
-import { useGetShiftQuery } from "../../../general settings/shift/api/shiftEndPoints";
+import { useGetScheduleQuery } from "../../../general settings/attendance/Schedule/api/scheduleEndPoints";
 
 const CreateEmployee = () => {
   const [create, { isLoading, isSuccess }] = useCreateEmployeeMutation();
   const { data: roleData } = useGetRolePermissionQuery({});
   const { data: departmentData } = useGetDepartmentQuery({});
-  const { data: shiftData, isLoading: shiftLoading } = useGetShiftQuery({});
+  const { data: scheduleData, isLoading: scheduleLoading } =
+    useGetScheduleQuery<any>({});
 
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -65,11 +66,9 @@ const CreateEmployee = () => {
       } else if (key === "hire_date" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
-      } else if (key === "shifts" && Array.isArray(value)) {
-        value.forEach((subjectId: any) => {
-          formData.append("shifts", subjectId);
-        });
-      } else if (key === "date_of_birth" && value) {
+      } else if (key === "schedule") {
+        formData.append("schedule", values.schedule);
+      }else if (key === "date_of_birth" && value) {
         const formattedDate = dayjs(value as any).format("YYYY-MM-DD");
         formData.append(key, formattedDate);
       } else if (key === "phone_number") {
@@ -271,28 +270,32 @@ const CreateEmployee = () => {
 
                       <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <Form.Item
-                          label="Shift"
-                          name="shifts"
+                          label="Schedule"
+                          name="schedule"
                           rules={[
-                            { required: true, message: "Shift is required!" },
+                            {
+                              required: true,
+                              message: "Schedule is required!",
+                            },
                           ]}
                         >
                           <Select
-                            mode="multiple"
                             allowClear
                             showSearch
                             style={{ width: "100%" }}
                             placeholder={
-                              shiftLoading
-                                ? "Loading Shift..."
+                              scheduleLoading
+                                ? "Loading Schedule..."
                                 : "Please select"
                             }
                             options={
-                              (Array?.isArray(shiftData?.data) &&
-                                shiftData?.data?.map((shiftData: any) => ({
-                                  label: shiftData.name,
-                                  value: shiftData.id,
-                                }))) ||
+                              (Array?.isArray(scheduleData?.data) &&
+                                scheduleData?.data?.map(
+                                  (scheduleData: any) => ({
+                                    label: scheduleData.name,
+                                    value: scheduleData.id,
+                                  })
+                                )) ||
                               []
                             }
                           />

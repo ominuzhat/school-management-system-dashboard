@@ -12,6 +12,7 @@ import {
   actionNames,
 } from "../../../../../utilities/permissionConstant";
 import UpdateLeave from "../components/UpdateSchedule";
+import dayjs from "dayjs";
 
 const useScheduleColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -47,94 +48,47 @@ const useScheduleColumns = (): ColumnsType<any> => {
     },
     {
       key: "1",
-      title: "Student Name",
-      dataIndex: "admission",
+      title: "Shift Name",
+      dataIndex: "name",
       align: "center",
-      render: (title) =>
-        title
-          ? title?.student?.first_name + " " + title?.student?.last_name
-          : "N/A",
+      render: (title) => (title ? title : "N/A"),
     },
+
     {
       key: "2",
-      title: "Section Name",
-      dataIndex: "admission",
+      title: "Start Time",
+      dataIndex: "start_time",
       align: "center",
-      render: (title) => (title ? title?.section?.name : "N/A"),
+      render: (time) => {
+        return time ? dayjs(time, "HH:mm:ss").format("h:mm A") : "N/A"; // Format in 12-hour format
+      },
     },
     {
       key: "3",
-      title: "Session Name",
-      dataIndex: "admission",
+      title: "End Time",
+      dataIndex: "end_time",
       align: "center",
-      render: (title) => (title ? title?.session?.name : "N/A"),
+      render: (time) => {
+        return time ? dayjs(time, "HH:mm:ss").format("h:mm A") : "N/A"; // Format in 12-hour format
+      },
     },
     {
       key: "4",
-      title: "Leave Type",
-      dataIndex: "leave_type",
+      title: "Flexibility (In Minutes)",
+      dataIndex: "flexible",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : title),
     },
     {
       key: "5",
-      title: "Duration",
-      dataIndex: "duration",
-      align: "center",
-      render: (type) => {
-        if (type === "F") return "Full Day";
-        if (type === "H") return "Half Day";
-        if (type === "M") return "Multiple Days";
-        return "N/A";
-      },
-    },
-
-    {
-      key: "6",
-      title: "Start Date",
-      dataIndex: "start_date",
-      align: "center",
-      render: (date) =>
-        date
-          ? new Intl.DateTimeFormat("en-GB", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            }).format(new Date(date))
-          : "N/A",
-    },
-    {
-      key: "7",
-      title: "End Date",
-      dataIndex: "end_date",
-      align: "center",
-      render: (date) =>
-        date
-          ? new Intl.DateTimeFormat("en-GB", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            }).format(new Date(date))
-          : "N/A",
-    },
-
-    {
-      key: "7",
-      title: "Reason",
-      dataIndex: "reason",
-      align: "center",
-      render: (title) => (title ? title : "N/A"),
-    },
-    {
-      key: "8",
       title: "Status",
-      dataIndex: "is_approved",
+      dataIndex: "is_active",
       align: "center",
-      render: (isApproved: boolean) =>
-        isApproved ? (
-          <Tag color="green">Approved</Tag>
+      render: (title) =>
+        title ? (
+          <Tag color="green">Active</Tag>
         ) : (
-          <Tag color="red">Rejected</Tag>
+          <Tag color="red">Inactive</Tag>
         ),
     },
     {

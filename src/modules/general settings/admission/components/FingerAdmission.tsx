@@ -1,4 +1,4 @@
-import { Col, Row, Select, Input, Button, Form } from "antd";
+import { Col, Row, Select, Input, Button, Form, message } from "antd";
 import {
   useCreateFingerAdmissionMutation,
   useCreateStopFingerAdmissionMutation,
@@ -14,6 +14,7 @@ import {
   useCreateFingerEmployeeMutation,
   useCreateStopFingerEmployeeMutation,
 } from "../../../members/employees/api/employeeEndPoints";
+import { motion } from "framer-motion";
 
 const enrollmentTypes = [
   {
@@ -38,21 +39,42 @@ const FingerAdmission = ({
   pathType: string;
 }) => {
   const [form] = Form.useForm();
+  const [enrollmentType, setEnrollmentType] = useState<"finger" | "rfid">("finger");
 
-  const [createFingerAdmission, { isLoading: isLoadingAdmission, isSuccess }] =
+  // Start Enrollment Mutations
+  const [createFingerAdmission, { isLoading: isStartingAdmission, isSuccess: isAdmissionSuccess }] =
     useCreateFingerAdmissionMutation();
-  const [createFingerTeacher, { isLoading: isLoadingTeacher }] =
+  const [createFingerTeacher, { isLoading: isStartingTeacher, isSuccess: isTeacherSuccess }] =
     useCreateFingerTeacherMutation();
-  const [createFingerEmployee, { isLoading: isLoadingEmployee }] =
+  const [createFingerEmployee, { isLoading: isStartingEmployee, isSuccess: isEmployeeSuccess }] =
     useCreateFingerEmployeeMutation();
 
-  const [createStopFingerAdmission] = useCreateStopFingerAdmissionMutation();
-  const [createStopFingerTeacher] = useCreateStopFingerTeacherMutation();
-  const [createStopFingerEmployee] = useCreateStopFingerEmployeeMutation();
+  // Stop Enrollment Mutations
+  const [createStopFingerAdmission, { isLoading: isStoppingAdmission }] = 
+    useCreateStopFingerAdmissionMutation();
+  const [createStopFingerTeacher, { isLoading: isStoppingTeacher }] = 
+    useCreateStopFingerTeacherMutation();
+  const [createStopFingerEmployee, { isLoading: isStoppingEmployee }] = 
+    useCreateStopFingerEmployeeMutation();
 
-  const [enrollmentType, setEnrollmentType] = useState<"finger" | "rfid">(
-    "finger"
-  );
+  // Determine loading states
+  const isStarting = pathType.includes("/employees")
+    ? isStartingEmployee
+    : pathType.includes("/teacher")
+    ? isStartingTeacher
+    : isStartingAdmission;
+
+  const isStopping = pathType.includes("/employees")
+    ? isStoppingEmployee
+    : pathType.includes("/teacher")
+    ? isStoppingTeacher
+    : isStoppingAdmission;
+
+  const isSuccess = pathType.includes("/employees")
+    ? isEmployeeSuccess
+    : pathType.includes("/teacher")
+    ? isTeacherSuccess
+    : isAdmissionSuccess;
 
   const onFinish = (values: any): void => {
     const payload =
@@ -61,27 +83,39 @@ const FingerAdmission = ({
         : { enrollment_type: "rfid", rfid: values.rfid };
 
     if (pathType.includes("/employees")) {
-      createFingerEmployee({ id: record, data: payload });
+      createFingerEmployee({ id: record, data: payload })
+        .unwrap()
+        .then(() => message.success("Employee enrollment started successfully"))
+        .catch(() => message.error("Failed to start employee enrollment"));
     } else if (pathType.includes("/teacher")) {
-      createFingerTeacher({ id: record, data: payload });
+      createFingerTeacher({ id: record, data: payload })
+        .unwrap()
+        .then(() => message.success("Teacher enrollment started successfully"))
+        .catch(() => message.error("Failed to start teacher enrollment"));
     } else {
-      createFingerAdmission({ id: record, data: payload });
+      createFingerAdmission({ id: record, data: payload })
+        .unwrap()
+        .then(() => message.success("Admission enrollment started successfully"))
+        .catch(() => message.error("Failed to start admission enrollment"));
     }
   };
 
-  const isLoading = pathType.includes("/employees")
-    ? isLoadingEmployee
-    : pathType.includes("/teacher")
-    ? isLoadingTeacher
-    : isLoadingAdmission;
-
   const handleStopEnrollment = () => {
     if (pathType.includes("/employees")) {
-      createStopFingerEmployee({});
+      createStopFingerEmployee({})
+        .unwrap()
+        .then(() => message.success("Employee enrollment stopped successfully"))
+        .catch(() => message.error("Failed to stop employee enrollment"));
     } else if (pathType.includes("/teacher")) {
-      createStopFingerTeacher({});
+      createStopFingerTeacher({})
+        .unwrap()
+        .then(() => message.success("Teacher enrollment stopped successfully"))
+        .catch(() => message.error("Failed to stop teacher enrollment"));
     } else {
-      createStopFingerAdmission({});
+      createStopFingerAdmission({})
+        .unwrap()
+        .then(() => message.success("Admission enrollment stopped successfully"))
+        .catch(() => message.error("Failed to stop admission enrollment"));
     }
   };
 
@@ -92,7 +126,11 @@ const FingerAdmission = ({
   }, [form, isSuccess]);
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       <Form onFinish={onFinish} layout="vertical" className="space-y-4">
         <Row gutter={[16, 16]} justify="space-between" className="mb-6">
           {enrollmentTypes.map((type) => {
@@ -104,7 +142,9 @@ const FingerAdmission = ({
                 sm={12}
                 className="transition-all duration-300"
               >
-                <div
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() =>
                     setEnrollmentType(type.value as "finger" | "rfid")
                   }
@@ -118,7 +158,7 @@ const FingerAdmission = ({
                     {type.icon}
                   </div>
                   <p className="text-lg font-medium">{type.label}</p>
-                </div>
+                </motion.div>
               </Col>
             );
           })}
@@ -181,38 +221,42 @@ const FingerAdmission = ({
         <Row gutter={16}>
           <Col className="w-2/5">
             <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={isLoading}
-                className="w-full border"
-                style={{
-                  backgroundColor:
-                    enrollmentType === "finger" ? "#4CAF50" : "#2196F3",
-                }}
-              >
-                Start Enrollment
-              </Button>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={isStarting}
+                  className="w-full border"
+                  style={{
+                    backgroundColor:
+                      enrollmentType === "finger" ? "#4CAF50" : "#2196F3",
+                  }}
+                >
+                  Start Enrollment
+                </Button>
+              </motion.div>
             </Form.Item>
           </Col>
 
           {enrollmentType === "finger" && (
             <Col className="w-2/5">
               <Form.Item>
-                <Button
-                  type="primary"
-                  onClick={() => handleStopEnrollment()}
-                  loading={isLoading}
-                  className="w-full border bg-red-500"
-                >
-                  Stop Enrollment
-                </Button>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button
+                    type="primary"
+                    onClick={handleStopEnrollment}
+                    loading={isStopping}
+                    className="w-full border bg-red-500 hover:bg-red-600"
+                  >
+                    Stop Enrollment
+                  </Button>
+                </motion.div>
               </Form.Item>
             </Col>
           )}
         </Row>
       </Form>
-    </div>
+    </motion.div>
   );
 };
 
