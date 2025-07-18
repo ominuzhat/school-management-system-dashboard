@@ -66,7 +66,7 @@ const MenuData: React.FC = () => {
     },
     hasPermissionForModule(permissions, "noticeboard") && {
       key: "/holiday",
-      label: <Link to="/holiday">Holiday</Link>,
+      label: <Link to="/holiday">Holiday / Events</Link>,
       icon: <MdOutlineHolidayVillage />,
     },
     hasPermissionForModule(permissions, "rulesandregulations") && {

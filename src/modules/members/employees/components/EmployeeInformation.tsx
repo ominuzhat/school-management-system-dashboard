@@ -2,6 +2,9 @@ import { Badge, Card, Col, Row, Tag } from "antd";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { no_img } from "../../../../utilities/images";
 import TextView from "../../../../common/components/TextView";
+import { BiRfid } from "react-icons/bi";
+import { capitalize } from "lodash";
+import { IoHandLeftOutline, IoFingerPrintOutline } from "react-icons/io5";
 
 const EmployeeInformation = ({ data }: any) => {
   const {
@@ -26,6 +29,8 @@ const EmployeeInformation = ({ data }: any) => {
     home_address,
     schedule,
     gender_display,
+    enrollment_fingerprints,
+    rfid,
   } = data || {};
 
   const information = [
@@ -121,8 +126,6 @@ const EmployeeInformation = ({ data }: any) => {
     },
   ];
 
-  
-
   return (
     <div>
       <Row gutter={[16, 16]} align="middle" justify="center">
@@ -139,6 +142,28 @@ const EmployeeInformation = ({ data }: any) => {
             <Tag color={is_active ? "green" : "red"}>
               {is_active ? "Active" : "Inactive"}
             </Tag>
+            {rfid && (
+              <div>
+                <BiRfid />
+                {rfid}
+              </div>
+            )}
+
+            {enrollment_fingerprints?.[0]?.hand &&
+              enrollment_fingerprints?.[0]?.finger && (
+                <div className="py-2 space-y-2">
+                  <div className=" flex items-center gap-3 ">
+                    <IoHandLeftOutline />{" "}
+                    <span className="text-blue-400">Hand : </span>{" "}
+                    {capitalize(enrollment_fingerprints?.[0]?.hand)}
+                  </div>
+                  <div className=" flex items-center gap-3">
+                    <IoFingerPrintOutline />
+                    <span className="text-green-400">Finger : </span>{" "}
+                    {capitalize(enrollment_fingerprints?.[0]?.finger)}
+                  </div>
+                </div>
+              )}
           </Card>
         </Col>
 

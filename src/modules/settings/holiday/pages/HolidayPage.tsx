@@ -39,11 +39,11 @@ const HolidayPage = () => {
   );
 
   const {
-    data: noticeList,
+    data: holidayList,
     isLoading,
     isFetching,
     refetch,
-  } = useGetHolidayQuery({
+  } = useGetHolidayQuery<any>({
     search: filters.search,
     page_size: page_size,
     page: Number(page) || undefined,
@@ -63,7 +63,7 @@ const HolidayPage = () => {
                 onClick={() =>
                   dispatch(
                     showModal({
-                      title: "Add Holiday",
+                      title: "Add Holiday / Events",
                       content: <CreateHoliday />,
                     })
                   )
@@ -71,7 +71,7 @@ const HolidayPage = () => {
                 icon={<PlusOutlined />}
                 className="w-full"
               >
-                Add Holiday
+                Add Holiday / Events
               </Button>
             </Col>
           )}
@@ -80,7 +80,7 @@ const HolidayPage = () => {
               onSearch={(value) =>
                 setFilters((prev) => ({ ...prev, search: value }))
               }
-              placeholder="Search Holiday"
+              placeholder="Search Holiday / Events"
             />
           </Col>
         </Row>
@@ -90,23 +90,9 @@ const HolidayPage = () => {
           rowKey={"id"}
           loading={isLoading || isFetching}
           refetch={refetch}
-          total={noticeList?.data?.count}
-          dataSource={noticeList?.data?.results || []}
+          total={holidayList?.data?.count}
+          dataSource={holidayList?.data || []}
           columns={columns}
-          expandable={{
-            expandedRowRender: (record) => (
-              <div className="m-0 py-6">
-                <span className="font-semibold  ml-8">Description: </span>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: record.description,
-                  }}
-                  className="prose max-w-none ml-12"
-                />
-              </div>
-            ),
-            rowExpandable: (record) => !!record.description,
-          }}
         />
       ) : (
         <NoPermissionData />

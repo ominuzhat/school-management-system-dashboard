@@ -60,6 +60,8 @@ const CreateOldStudent = () => {
       exclude_section: section,
       exclude_grade_level: gradeLevel,
     });
+
+    
   const [createAdmissionFee, { data: admissionFee }] =
     useCreateAdmissionFeeMutation();
 

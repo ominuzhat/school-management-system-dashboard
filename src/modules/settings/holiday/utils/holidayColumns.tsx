@@ -1,4 +1,4 @@
-import { Space, Tag } from "antd";
+import { Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
@@ -13,6 +13,7 @@ import {
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import { useDeleteHolidayMutation } from "../api/holidayEndPoints";
 import UpdateHoliday from "../components/UpdateHoliday";
+import { capitalize } from "../../../../common/capitalize/Capitalize";
 
 const useHolidayColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -51,10 +52,9 @@ const useHolidayColumns = (): ColumnsType<any> => {
     {
       key: "1",
       title: "Title",
-      dataIndex: "title",
+      dataIndex: "name",
       align: "center",
-      sorter: (a, b) => (a.title || "").localeCompare(b.title || ""),
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? capitalize(title) : "N/A"),
     },
     // {
     //   key: "2",
@@ -67,51 +67,51 @@ const useHolidayColumns = (): ColumnsType<any> => {
     // },
     {
       key: "3",
-      title: "Category",
-      dataIndex: "category",
+      title: "Event For",
+      dataIndex: "event_for_display",
       align: "center",
-      sorter: (a, b) => (a.category || "").localeCompare(b.category || ""),
-      render: (category) => (category ? category : "N/A"),
+      render: (event_for_display) =>
+        event_for_display ? event_for_display : "N/A",
     },
     {
       key: "4",
-      title: "Target Audience",
-      dataIndex: "target_audience",
+      title: "Event Type",
+      dataIndex: "event_type_display",
       align: "center",
-      sorter: (a, b) =>
-        (a.target_audience || "").localeCompare(b.target_audience || ""),
-      render: (audience) => (audience ? audience : "N/A"),
+
+      render: (event_type_display) =>
+        event_type_display ? event_type_display : "N/A",
     },
-    {
-      key: "5",
-      title: "Published Status",
-      dataIndex: "is_published",
-      align: "center",
-      sorter: (a, b) => Number(b.is_published) - Number(a.is_published),
-      render: (is_published) =>
-        is_published ? (
-          <Tag color="green">Published</Tag>
-        ) : (
-          <Tag color="red">Unpublished</Tag>
-        ),
-    },
+    // {
+    //   key: "5",
+    //   title: "Published Status",
+    //   dataIndex: "is_published",
+    //   align: "center",
+    //   sorter: (a, b) => Number(b.is_published) - Number(a.is_published),
+    //   render: (is_published) =>
+    //     is_published ? (
+    //       <Tag color="green">Published</Tag>
+    //     ) : (
+    //       <Tag color="red">Unpublished</Tag>
+    //     ),
+    // },
     {
       key: "6",
-      title: "Publish Date",
-      dataIndex: "publish_date",
+      title: "Start Date",
+      dataIndex: "start_date",
       align: "center",
       sorter: (a, b) =>
-        dayjs(a.publish_date || 0).unix() - dayjs(b.publish_date || 0).unix(),
-      render: (date) => (date ? dayjs(date).format("YYYY-MM-DD") : "N/A"),
+        dayjs(a.start_date || 0).unix() - dayjs(b.start_date || 0).unix(),
+      render: (date) => (date ? dayjs(date).format("DD MMM YYYY") : "N/A"),
     },
     {
       key: "7",
-      title: "Expiry Date",
-      dataIndex: "expiry_date",
+      title: "End Date",
+      dataIndex: "end_date",
       align: "center",
       sorter: (a, b) =>
-        dayjs(a.expiry_date || 0).unix() - dayjs(b.expiry_date || 0).unix(),
-      render: (date) => (date ? dayjs(date).format("YYYY-MM-DD") : "N/A"),
+        dayjs(a.end_date || 0).unix() - dayjs(b.end_date || 0).unix(),
+      render: (date) => (date ? dayjs(date).format("DD MMM YYYY") : "N/A"),
     },
     {
       key: "8",

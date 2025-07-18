@@ -9,7 +9,7 @@ const holidayEndpoint = api.injectEndpoints({
     getHoliday: builder.query<ApiResponse<PaginatedResponse<any>>, FilterTypes>(
       {
         query: (params) => ({
-          url: "/api/v1.0/institutions/holiday/",
+          url: "/api/v1.0/institutions/holidays/",
           params,
         }),
         providesTags: [
@@ -23,7 +23,7 @@ const holidayEndpoint = api.injectEndpoints({
 
     createHoliday: builder.mutation<ApiResponse<any>, any>({
       query: (data) => ({
-        url: "/api/v1.0/institutions/holiday/",
+        url: "/api/v1.0/institutions/holidays/",
         method: "POST",
         body: data,
       }),
@@ -40,7 +40,7 @@ const holidayEndpoint = api.injectEndpoints({
 
     getSingleHoliday: builder.query<ApiResponse<any>, number>({
       query: (studId) => ({
-        url: `/api/v1.0/institutions/holiday/${studId}/`,
+        url: `/api/v1.0/institutions/holidays/${studId}/`,
       }),
 
       providesTags: [
@@ -53,7 +53,7 @@ const holidayEndpoint = api.injectEndpoints({
 
     deleteHoliday: builder.mutation<ApiResponse<any>, { id: any }>({
       query: ({ id }) => ({
-        url: `/api/v1.0/institutions/holiday/${id}/`,
+        url: `/api/v1.0/institutions/holidays/${id}/`,
         method: "DELETE",
       }),
       invalidatesTags: [
@@ -69,7 +69,7 @@ const holidayEndpoint = api.injectEndpoints({
       { id: number | undefined; data: FormData }
     >({
       query: ({ id, data }) => ({
-        url: `/api/v1.0/institutions/holiday/${id}/`,
+        url: `/api/v1.0/institutions/holidays/${id}/`,
         method: "PATCH",
         body: data,
       }),

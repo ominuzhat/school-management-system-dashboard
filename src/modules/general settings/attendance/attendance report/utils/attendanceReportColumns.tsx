@@ -119,10 +119,12 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
         mouseEnterDelay={0.1}
         mouseLeaveDelay={0.1}
       >
-        <div className="flex flex-col items-center cursor-help">
-          <div>{dayjs(date).format("MMM")}</div>
-          <div className="font-bold">{dayjs(date).format("D")}</div>
-          <div className="text-xs">{dayjs(date).format("ddd")}</div>
+        <div className="flex flex-col items-center cursor-help px-1 py-1 hover:bg-gray-50 rounded">
+          <div className="text-xs text-gray-500 uppercase tracking-wider">
+            {dayjs(date).format("MMM")} {dayjs(date).format("D")}
+            {", "}
+            {dayjs(date).format("dddd")}
+          </div>
         </div>
       </Tooltip>
     ),
@@ -135,13 +137,15 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
         return (
           <Tooltip
             title={`No attendance record for ${dayjs(date).format(
-              "MMM D, YYYY"
+              "MMMM D, YYYY"
             )}`}
             placement="top"
             mouseEnterDelay={0.1}
             mouseLeaveDelay={0.1}
           >
-            <span style={{ color: "#ccc", cursor: "help" }}>-</span>
+            <div className="text-gray-300 cursor-help h-full flex items-center justify-center">
+              <span className="text-lg">-</span>
+            </div>
           </Tooltip>
         );
       }
@@ -155,14 +159,37 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
       ATTENDANCE_STATUS.default;
 
       const tooltipContent = (
-        <div>
-          <div>
-            <strong>{dayjs(date).format("MMM D, YYYY")}</strong>
+        <div className="space-y-1 p-1 text-gray-200">
+          <div className="font-semibold text-gray-200">
+            {dayjs(date).format("dddd, MMMM D, YYYY")}
           </div>
-          <div>Status: {text}</div>
-          {check_in && <div>Check-in: {check_in}</div>}
-          {check_out && <div>Check-out: {check_out}</div>}
-          {duration && <div>Duration: {duration}</div>}
+          <div className="flex items-center gap-2">
+            <span className="font-medium">Status:</span>
+            <span
+              className="px-1.5 py-0.5 rounded text-xs font-medium capitalize"
+              style={{ backgroundColor: `${color}20`, color }}
+            >
+              {text}
+            </span>
+          </div>
+          {check_in && (
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-gray-200">Check-in:</span>
+              <span className="text-blue-600 font-mono">{check_in}</span>
+            </div>
+          )}
+          {check_out && (
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-gray-200">Check-out:</span>
+              <span className="text-red-600 font-mono">{check_out}</span>
+            </div>
+          )}
+          {duration && (
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-gray-200">Duration:</span>
+              <span className="text-green-600 font-mono">{duration}</span>
+            </div>
+          )}
         </div>
       );
 
@@ -173,11 +200,44 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
           mouseEnterDelay={0.1}
           mouseLeaveDelay={0.1}
           overlayStyle={{ maxWidth: "300px" }}
+          overlayClassName="bg-white shadow-lg rounded-md border border-gray-200"
         >
-          <div style={{ cursor: "help" }}>
+          <div className="cursor-help h-full flex items-center justify-center px-1 py-2 hover:bg-gray-50 rounded">
             <Badge
               status={badgeStatus as any}
-              text={<span style={{ color }}>{status || "-"}</span>}
+              text={
+                <div className="flex flex-col items-center gap-1 w-full">
+                  {/* Status */}
+                  <span
+                    className="font-medium text-xs capitalize px-1.5 py-0.5 rounded-full"
+                    style={{
+                      color,
+                      backgroundColor: `${color}10`,
+                    }}
+                  >
+                    {status || "-"}
+                  </span>
+
+                  {/* Time indicators */}
+                  <div className="flex flex-col items-center gap-0.5 w-full">
+                    {check_in && (
+                      <div className="text-xs text-blue-600 font-mono leading-none">
+                        Check In : {check_in}
+                      </div>
+                    )}
+                    {check_out && (
+                      <div className="text-xs text-red-600 font-mono leading-none">
+                        Check Out: {check_out}
+                      </div>
+                    )}
+                    {duration && (
+                      <div className="text-xs text-green-600 font-mono leading-none">
+                        Duration: {duration}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              }
             />
           </div>
         </Tooltip>

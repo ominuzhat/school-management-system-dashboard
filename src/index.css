@@ -19,7 +19,7 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: gray;
+  background-color: rgba(7, 55, 212, 0.603);
   border-radius: 10px;
   border: 2px solid #f1f1f1;
   cursor: pointer;
@@ -31,7 +31,7 @@ body::-webkit-scrollbar-corner {
 }
 
 .ant-descriptions-item-label {
-  background-color: #aee5fe3e !important;
+  background-color: #1458773e !important;
 }
 
 .ant-descriptions-view .ant-descriptions-item-label {
@@ -54,7 +54,7 @@ th {
 }
 
 tr:nth-child(even) {
-  background-color: #dee2e65e;
+  background-color: #ffffff;
 }
 
 /* ____login________ */

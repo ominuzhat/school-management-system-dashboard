@@ -2,6 +2,9 @@ import { Badge, Card, Col, Row, Tag } from "antd";
 import { no_img } from "../../../../utilities/images";
 import TextView from "../../../../common/components/TextView";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
+import { IoFingerPrintOutline, IoHandLeftOutline } from "react-icons/io5";
+import { capitalize } from "../../../../common/capitalize/Capitalize";
+import { BiRfid } from "react-icons/bi";
 
 const TeacherInformation = ({ data }: { data: any }) => {
   console.log(data);
@@ -9,7 +12,7 @@ const TeacherInformation = ({ data }: { data: any }) => {
   const {
     first_name,
     last_name,
-    id,
+    user,
     is_active,
     phone_number,
     email,
@@ -28,6 +31,8 @@ const TeacherInformation = ({ data }: { data: any }) => {
     home_address,
     subject_specializations,
     schedule,
+    enrollment_fingerprints,
+    rfid,
   } = data || {};
 
   const information = [
@@ -114,6 +119,16 @@ const TeacherInformation = ({ data }: { data: any }) => {
           text: schedule?.name || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
+        {
+          fieldName: "Enrollment Fingerprint",
+          text:
+            enrollment_fingerprints?.[0]?.hand &&
+            enrollment_fingerprints?.[0]?.finger
+              ? `${enrollment_fingerprints?.[0]?.hand} / ${enrollment_fingerprints?.[0]?.finger}`
+              : "N/A",
+
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
       ],
     },
     {
@@ -144,11 +159,34 @@ const TeacherInformation = ({ data }: { data: any }) => {
               {first_name} {last_name}
             </p>
             <p className="py-2">
-              <span className="font-semibold">Registration No:</span> {id}
+              <span className="font-semibold">Username:</span> {user?.username}
             </p>
             <Tag color={is_active ? "green" : "red"}>
               {is_active ? "Active" : "Inactive"}
             </Tag>
+
+            {rfid && (
+              <div>
+                <BiRfid />
+                {rfid}
+              </div>
+            )}
+
+            {enrollment_fingerprints?.[0]?.hand &&
+              enrollment_fingerprints?.[0]?.finger && (
+                <div className="py-2 space-y-2">
+                  <div className=" flex items-center gap-3 ">
+                    <IoHandLeftOutline />{" "}
+                    <span className="text-blue-400">Hand : </span>{" "}
+                    {capitalize(enrollment_fingerprints?.[0]?.hand)}
+                  </div>
+                  <div className=" flex items-center gap-3">
+                    <IoFingerPrintOutline />
+                    <span className="text-green-400">Finger : </span>{" "}
+                    {capitalize(enrollment_fingerprints?.[0]?.finger)}
+                  </div>
+                </div>
+              )}
           </Card>
         </Col>
 

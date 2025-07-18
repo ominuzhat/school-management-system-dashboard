@@ -3,6 +3,9 @@ import { no_img } from "../../../../utilities/images";
 import TextView from "../../../../common/components/TextView";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import dayjs from "dayjs";
+import { IoFingerPrintOutline, IoHandLeftOutline } from "react-icons/io5";
+import { BiRfid } from "react-icons/bi";
+import { capitalize } from "lodash";
 
 const StudentInformation = ({ data }: { data: any }) => {
   const {
@@ -33,6 +36,8 @@ const StudentInformation = ({ data }: { data: any }) => {
     current_shift,
     current_roll,
     religion,
+    enrollment_fingerprints,
+    rfid,
   } = data || {};
 
   const information = [
@@ -193,6 +198,28 @@ const StudentInformation = ({ data }: { data: any }) => {
             <Tag color={is_active ? "green" : "red"}>
               {is_active ? "Active" : "Inactive"}
             </Tag>
+            {rfid && (
+              <div>
+                <BiRfid />
+                {rfid}
+              </div>
+            )}
+
+            {enrollment_fingerprints?.[0]?.hand &&
+              enrollment_fingerprints?.[0]?.finger && (
+                <div className="py-2 space-y-2">
+                  <div className=" flex items-center gap-3 ">
+                    <IoHandLeftOutline />{" "}
+                    <span className="text-blue-400">Hand : </span>{" "}
+                    {capitalize(enrollment_fingerprints?.[0]?.hand)}
+                  </div>
+                  <div className=" flex items-center gap-3">
+                    <IoFingerPrintOutline />
+                    <span className="text-green-400">Finger : </span>{" "}
+                    {capitalize(enrollment_fingerprints?.[0]?.finger)}
+                  </div>
+                </div>
+              )}
           </Card>
         </Col>
 

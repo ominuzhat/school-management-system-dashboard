@@ -81,7 +81,7 @@ import UpdateNewCollectFee from "../modules/Finance Management/Fees/Collect Fee/
 import ClassManagement from "../modules/general settings/class management/page/ClassManagement";
 import AttendanceTab from "../modules/general settings/attendance/Tab/AttandenceTab";
 import ExamTab from "../modules/general settings/Exam/Tab/ExamTab";
-import HolidayPage from "../modules/settings/holiday/pages/NoticePage";
+import HolidayPage from "../modules/settings/holiday/pages/HolidayPage";
 
 const router = createBrowserRouter([
   {

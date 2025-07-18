@@ -161,7 +161,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
         first_name: student.first_name || null,
         last_name: student.last_name || null,
         email: student.email || null,
-        phone_number: student.phone_number || null,
+        contact_phone_number: student.contact_phone_number || null,
         date_of_birth: student.date_of_birth || null,
         mother_name: student.mother_name || null,
         father_name: student.father_name || null,
