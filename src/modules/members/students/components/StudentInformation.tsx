@@ -12,7 +12,7 @@ const StudentInformation = ({ data }: { data: any }) => {
     first_name,
     last_name,
     is_active,
-    phone_number,
+    contact_phone_number,
     email,
     date_of_birth,
     enrollment_date,
@@ -86,7 +86,7 @@ const StudentInformation = ({ data }: { data: any }) => {
         },
         {
           fieldName: "Mobile No",
-          text: phone_number || "N/A",
+          text: contact_phone_number || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {

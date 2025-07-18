@@ -20,7 +20,24 @@ const dashboardEndpoint = api.injectEndpoints({
         },
       ],
     }),
+
+    getAttendanceReport: builder.query<
+      ApiResponse<InstitutionDashboardProps | any>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "/api/v1.0/base/attendance-reports/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.DASHBOARD,
+          id: TagTypes.DASHBOARD + "_ID",
+        },
+      ],
+    }),
   }),
 });
 
-export const { useGetDashboardDataQuery } = dashboardEndpoint;
+export const { useGetDashboardDataQuery, useGetAttendanceReportQuery } =
+  dashboardEndpoint;

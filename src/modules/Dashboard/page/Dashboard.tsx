@@ -1,14 +1,38 @@
-import { useRef, useEffect } from "react";
-import { Card, Row, Col } from "antd";
+import { useRef, useEffect, useState } from "react";
+import { Card, Row, Col, Select, DatePicker } from "antd";
 import ApexCharts from "apexcharts";
-import { useGetDashboardDataQuery } from "../api/dashoboardEndPoints";
+import {
+  useGetAttendanceReportQuery,
+  useGetDashboardDataQuery,
+} from "../api/dashoboardEndPoints";
 import OverallStatistic from "../components/OverallStatistic";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
+import OverallAttendanceStatistic from "../components/OverallAttendanceStatistic";
 
 // const { Title } = Typography;
 
+const { Option } = Select;
+
 const Dashboard = () => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
+  const [filterParams, setFilterParams] = useState({
+    filter: "monthly",
+    year: dayjs().year(),
+    month: dayjs().month() + 1,
+    type: "student",
+  });
+
+  const handleChange = (key: string, value: any) => {
+    setFilterParams((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const { data: attendanceData } = useGetAttendanceReportQuery(filterParams);
+
+  console.log(attendanceData);
+  const { chart_data: chartData } = attendanceData?.data || {};
+
+  console.log(chartData, "chartData");
 
   const attendanceChartRef = useRef<HTMLDivElement>(null);
   const performanceChartRef = useRef<HTMLDivElement>(null);
@@ -16,19 +40,32 @@ const Dashboard = () => {
 
   // Initialize Attendance Chart
   useEffect(() => {
-    if (!attendanceChartRef.current) return;
+    if (!attendanceChartRef.current || !chartData) return;
+
+    // Clean existing chart DOM if any
+    attendanceChartRef.current.innerHTML = "";
 
     const options = {
       series: [
         {
-          name: "Total Present",
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94, 50, 63, 90],
+          name: "Present",
+          data: chartData.datasets.present || [],
           color: "#4CAF50",
         },
         {
-          name: "Total Absent",
-          data: [35, 41, 36, 26, 45, 48, 52, 53, 41, 99, 67, 26],
+          name: "Absent",
+          data: chartData.datasets.absent || [],
           color: "#F44336",
+        },
+        {
+          name: "Late",
+          data: chartData.datasets.late || [],
+          color: "#FF9800",
+        },
+        {
+          name: "Half Day",
+          data: chartData.datasets.half_day || [],
+          color: "#2196F3",
         },
       ],
       chart: {
@@ -64,20 +101,7 @@ const Dashboard = () => {
         colors: ["transparent"],
       },
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
+        categories: chartData.labels.map((label: string) => `Day ${label}`),
         labels: {
           style: {
             colors: "#6B7280",
@@ -134,7 +158,7 @@ const Dashboard = () => {
     return () => {
       chart.destroy();
     };
-  }, []);
+  }, [chartData]);
 
   // Initialize Performance Chart
   useEffect(() => {
@@ -331,9 +355,14 @@ const Dashboard = () => {
     };
   }, []);
 
+
   return (
     <div className="p-4">
       <OverallStatistic dashboardInfo={dashboardData} />
+      <br />
+      <OverallAttendanceStatistic
+        dashboardInfo={attendanceData?.data?.summary}
+      />
       <br />
       {/* === Top Cards === */}
       {/* <Row gutter={[16, 16]} className="mb-6">
@@ -356,21 +385,82 @@ const Dashboard = () => {
           </Card>
         </Col>
       </Row> */}
-
       {/* === Main Charts === */}
       <Row gutter={[16, 16]} className="mb-6">
-        <Col xs={24} lg={12}>
-          <Card title="Monthly Attendance" bordered={false}>
-            <div ref={attendanceChartRef} />
+        <Col xs={24} lg={24}>
+          <Card
+            title={
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2">
+                <p className="text-base font-semibold">Monthly Attendance</p>
+                <div className="flex flex-wrap gap-2">
+                  <Select
+                    size="small"
+                    value={filterParams.type}
+                    onChange={(val) => handleChange("type", val)}
+                  >
+                    <Option value="student">Student</Option>
+                    <Option value="teacher">Teacher</Option>
+                    <Option value="employee">Employee</Option>
+                  </Select>
+
+                  <Select
+                    size="small"
+                    value={filterParams.filter}
+                    onChange={(val) => handleChange("filter", val)}
+                  >
+                    <Option value="daily">Daily</Option>
+                    <Option value="weekly">Weekly</Option>
+                    <Option value="monthly">Monthly</Option>
+                    <Option value="yearly">Yearly</Option>
+                  </Select>
+
+                  {(filterParams.filter === "monthly" ||
+                    filterParams.filter === "yearly") && (
+                    <DatePicker
+                      size="small"
+                      picker="year"
+                      value={dayjs(`${filterParams.year}`, "YYYY")}
+                      onChange={(date) => handleChange("year", date?.year())}
+                    />
+                  )}
+
+                  {filterParams.filter === "monthly" && (
+                    <DatePicker
+                      size="small"
+                      picker="month"
+                      value={dayjs(`${filterParams.month}`, "M")}
+                      onChange={(date) =>
+                        handleChange("month", date?.month() + 1)
+                      }
+                    />
+                  )}
+
+                  {filterParams.filter === "daily" ||
+                  filterParams.filter === "weekly" ? (
+                    <DatePicker
+                      size="small"
+                      value={dayjs()}
+                      onChange={(date) =>
+                        handleChange("date", date?.format("YYYY-MM-DD"))
+                      }
+                    />
+                  ) : null}
+                </div>
+              </div>
+            }
+          >
+            <div ref={attendanceChartRef}>
+              {" "}
+              {/* Chart will be rendered here */}
+            </div>
           </Card>
         </Col>
-        <Col xs={24} lg={12}>
+        {/* <Col xs={24} lg={12}>
           <Card title="Academic Performance" bordered={false}>
             <div ref={performanceChartRef} />
           </Card>
-        </Col>
+        </Col> */}
       </Row>
-
       {/* Fee Collection Trend & Quick Actions */}
       <Row gutter={[16, 16]} className="mb-6">
         <Col xs={24} md={16}>
@@ -565,7 +655,6 @@ const Dashboard = () => {
           </Card>
         </Col>
       </Row>
-
       {/* === New Sections === */}
       <Row gutter={[16, 16]}>
         <Col xs={24} md={12}>

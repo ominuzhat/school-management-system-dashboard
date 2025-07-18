@@ -100,7 +100,7 @@ const useStudentColumns = (): ColumnsType<any> => {
     {
       key: "4",
       title: "Phone",
-      dataIndex: "phone_number",
+      dataIndex: "contact_phone_number",
       align: "center",
       render: (phone_number) => (phone_number ? phone_number : "N/A"),
     },

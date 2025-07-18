@@ -127,12 +127,12 @@ const OverallStatistic = ({ dashboardInfo }: any) => {
                   </div>
                 </motion.div>
               </Flex>
-              <div className="px-6 pb-4">
+              {/* <div className="px-6 pb-4">
                 <div className={`h-px ${accentColor}`}></div>
                 <Typography.Text className="text-xs text-gray-500 mt-3 block">
                   <span className="font-semibold text-green-500">↑ 12%</span> from last month
                 </Typography.Text>
-              </div>
+              </div> */}
             </Card>
             </Link>
           </motion.div>

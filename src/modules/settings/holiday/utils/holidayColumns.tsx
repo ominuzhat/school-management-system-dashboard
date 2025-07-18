@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Button, Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
 import { showModal } from "../../../../app/features/modalSlice";
@@ -14,6 +14,8 @@ import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import { useDeleteHolidayMutation } from "../api/holidayEndPoints";
 import UpdateHoliday from "../components/UpdateHoliday";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
+import { FaEye } from "react-icons/fa6";
+import ViewHoliday from "../components/ViewHoliday";
 
 const useHolidayColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
@@ -131,6 +133,27 @@ const useHolidayColumns = (): ColumnsType<any> => {
               }
             />
           )}
+
+
+          <Button
+            size="small"
+            type="default"
+            onClick={() =>
+              dispatch(
+                showModal({
+                  title: "View Holiday / Events",
+                  content: <ViewHoliday record={record?.id} />,
+                })
+              )
+            }
+            style={{
+              color: "#3892E3",
+              border: "1px solid #3892E3",
+            }}
+          >
+            <FaEye /> View
+          </Button>
+
           {deletePermission && (
             <DeleteButton
               onConfirm={() => handleDelete(record.id)}

@@ -56,6 +56,16 @@ const UpdateHoliday = ({ record }: { record: number }) => {
     if (singleData?.data) {
       form.setFieldsValue({
         ...singleData.data,
+        session: singleData.data.session?.id,
+        specific_students: singleData.data.specific_students?.map(
+          (s: any) => s?.id
+        ),
+        specific_teachers: singleData.data.specific_teachers?.map(
+          (s: any) => s?.id
+        ),
+        specific_employees: singleData.data.specific_employees?.map(
+          (s: any) => s?.id
+        ),
         start_date: singleData.data.start_date
           ? dayjs(singleData.data.start_date)
           : null,
