@@ -36,8 +36,27 @@ const dashboardEndpoint = api.injectEndpoints({
         },
       ],
     }),
+
+    getFeeReport: builder.query<
+      ApiResponse<InstitutionDashboardProps | any>,
+      FilterTypes
+    >({
+      query: (params) => ({
+        url: "/api/v1.0/base/fee-reports/",
+        params,
+      }),
+      providesTags: [
+        {
+          type: TagTypes.DASHBOARD,
+          id: TagTypes.DASHBOARD + "_ID",
+        },
+      ],
+    }),
   }),
 });
 
-export const { useGetDashboardDataQuery, useGetAttendanceReportQuery } =
-  dashboardEndpoint;
+export const {
+  useGetDashboardDataQuery,
+  useGetAttendanceReportQuery,
+  useGetFeeReportQuery,
+} = dashboardEndpoint;
