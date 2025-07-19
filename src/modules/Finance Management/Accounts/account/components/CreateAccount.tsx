@@ -291,7 +291,12 @@ const CreateAccount = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item label="Balance" name="balance">
-                <Input addonBefore="৳" type="number" placeholder="3000.00" />
+                <Input
+                  disabled
+                  addonBefore="৳"
+                  type="number"
+                  placeholder="1000.00"
+                />
               </Form.Item>
             </Col>
           </Row>

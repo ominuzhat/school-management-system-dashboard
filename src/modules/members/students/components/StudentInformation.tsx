@@ -38,6 +38,7 @@ const StudentInformation = ({ data }: { data: any }) => {
     religion,
     enrollment_fingerprints,
     rfid,
+    group_type_display,
   } = data || {};
 
   const information = [
@@ -108,6 +109,11 @@ const StudentInformation = ({ data }: { data: any }) => {
         {
           fieldName: "Present Address",
           text: present_address || "N/A",
+          Icon: MdOutlineSubdirectoryArrowRight,
+        },
+        {
+          fieldName: "Group",
+          text: group_type_display || "N/A",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],

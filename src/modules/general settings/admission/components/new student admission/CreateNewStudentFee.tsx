@@ -53,7 +53,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
   const admission = useAppSelector((state) => state.student.admission);
   const student = useAppSelector((state) => state.student.student);
   const fee = useAppSelector((state) => state.student.fee);
-  const [create, { data: newStudentData, isSuccess }] =
+  const [create, { data: newStudentData }] =
     useCreateNewStudentAdmissionMutation();
   const customFees = AntForm.useWatch("customFees", form);
   const [createAdmissionFee, { data: admissionFee }] =
@@ -137,16 +137,6 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
 
     setupFees();
   }, [feeType, admissionFee?.data.fees, form, dispatch, admission.feeType]);
-
-  // Handle fee_type dropdown (for regular fee only)
-  // const handleFeeTypeChange = (value: string) => {
-  //   dispatch(
-  //     updateFeeField({
-  //       field: "fee_type",
-  //       value,
-  //     })
-  //   );
-  // };
 
   const onFinish = (values: any): void => {
     const formData = new FormData();
@@ -238,28 +228,6 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
     }
   }, [dispatch, navigate, triggerContinueAdmission]);
 
-  useEffect(() => {
-    // if (isSuccess && newStudentData?.admission?.id) {
-    //   Modal.confirm({
-    //     title: "Add Class",
-    //     content: "hello",
-    //     okText: "Confirm",
-    //     cancelText: "Cancel",
-    //     width: 800,
-    //     onOk() {
-    //       console.log("Modal confirmed");
-    //     },
-    //     onCancel() {
-    //       console.log("Modal cancelled");
-    //     },
-    //   });
-    //   console.log("Opening modal...");
-    //   dispatch(resetStudent());
-    //   setIsRegularFee(true);
-    //   // navigate(`/collect-fee?admission_id=${newStudentData?.admission?.id}`);
-    // }
-  }, [isSuccess, newStudentData?.admission?.id, dispatch, navigate]);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleSubmit = (): void => {
@@ -302,6 +270,14 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
     setShouldOpenPdf(true);
     setAdmissionId(id);
   };
+
+  useEffect(() => {
+    if (newStudentData) {
+      form.resetFields();
+      dispatch(resetStudent());
+      setIsRegularFee(true);
+    }
+  }, [newStudentData, dispatch, form]);
 
   return (
     <Card>
