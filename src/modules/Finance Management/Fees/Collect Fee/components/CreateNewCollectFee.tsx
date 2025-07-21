@@ -630,7 +630,17 @@ const CreateNewCollectFee = () => {
                                 },
                               ]}
                             >
-                              <Input prefix={<TbCoinTaka />} type="number" />
+                              <Input
+                                prefix={<TbCoinTaka />}
+                                type="number"
+                                disabled={
+                                  form.getFieldValue([
+                                    "particulars",
+                                    name,
+                                    "due_amount",
+                                  ]) <= 0
+                                }
+                              />
                             </AntForm.Item>
                           </td>
                           <td>
