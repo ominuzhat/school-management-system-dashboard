@@ -3,16 +3,21 @@ import {
   Card,
   Col,
   Descriptions,
+  Form,
   Image,
+  Input,
   Row,
   Space,
   Tag,
   Typography,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../../common/BreadCrumb/BreadCrumb";
 import "../styles/Profile.css";
-import { useGetProfileQuery } from "../api/profileEndpoint";
+import {
+  useChangePasswordMutation,
+  useGetProfileQuery,
+} from "../api/profileEndpoint";
 
 import Iconify from "../../../common/IconifyConfig/IconifyConfig";
 import { avatar } from "../../../utilities/images";
@@ -20,6 +25,8 @@ import UpdateTeacherProfile from "../components/UpdateTeacherProfile";
 import UpdateStudentProfile from "../components/UpdatedStudentsProfile";
 import UpdateEmployeeProfile from "../components/UpdatedEmpoyeeProfile";
 import { capitalize } from "../../../common/capitalize/Capitalize";
+import { PasswordTypes } from "../types/profileTypes";
+import { passwordValidator } from "../../../utilities/validator";
 
 const Profile: React.FC = () => {
   const { data: profileData, isFetching } = useGetProfileQuery();
@@ -119,6 +126,22 @@ const Profile: React.FC = () => {
     setEdit((prev) => ({ ...prev, profile: false }));
   };
 
+  const [create, { isSuccess }] = useChangePasswordMutation();
+
+  const onFinish = (values: any): void => {
+    console.log(values);
+    create({
+      current_password: values.old_password,
+      new_password: values.new_password,
+    });
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setEdit((prev) => ({ ...prev, password: false }));
+    }
+  }, [isSuccess]);
+
   return (
     <React.Fragment>
       <Typography.Text strong className="profile-title">
@@ -150,12 +173,14 @@ const Profile: React.FC = () => {
               </Tag>
 
               <Button
-                onClick={() => setEdit({ password: true })}
+                onClick={() =>
+                  setEdit((prev) => ({ ...prev, password: !prev.password }))
+                }
                 style={{ fontSize: "11px", textDecoration: "underline" }}
                 size="small"
                 type="link"
               >
-                Change Password
+                {edit.password ? "Cancel Password Change" : "Change Password"}
               </Button>
             </Space>
           </Card>
@@ -232,18 +257,18 @@ const Profile: React.FC = () => {
               />
             )}
 
-            {/* {edit.password && (
+            {edit.password && (
               <Form
-                form={form}
-                // onFinish={}
+                // form={form}
                 layout="vertical"
+                onFinish={onFinish}
               >
                 <Form.Item<PasswordTypes>
                   label="Current Password"
                   name="old_password"
                   rules={[{ validator: passwordValidator }]}
                 >
-                  <Input.Password size="large" placeholder="**********" />
+                  <Input.Password placeholder="**********" />
                 </Form.Item>
 
                 <Form.Item<PasswordTypes>
@@ -251,18 +276,31 @@ const Profile: React.FC = () => {
                   name="new_password"
                   rules={[{ validator: passwordValidator }]}
                 >
-                  <Input.Password size="large" placeholder="New Password" />
+                  <Input.Password placeholder="New Password" />
                 </Form.Item>
 
-                <Form.Item<PasswordTypes>
+                <Form.Item
                   label="Confirm New Password"
-                  name="new_password"
-                  rules={[{ validator: passwordValidator }]}
+                  name="confirm_password"
+                  dependencies={["new_password"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please confirm your new password",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("new_password") === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error("The two passwords do not match!")
+                        );
+                      },
+                    }),
+                  ]}
                 >
-                  <Input.Password
-                    size="large"
-                    placeholder="Confirm New Password"
-                  />
+                  <Input.Password placeholder="Confirm New Password" />
                 </Form.Item>
 
                 <Form.Item>
@@ -271,7 +309,7 @@ const Profile: React.FC = () => {
                   </Button>
                 </Form.Item>
               </Form>
-            )} */}
+            )}
           </Card>
         </Col>
       </Row>

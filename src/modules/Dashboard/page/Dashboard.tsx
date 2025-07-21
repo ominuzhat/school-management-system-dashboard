@@ -187,15 +187,6 @@ const Dashboard = () => {
             filterParams={feeFilterParams}
           />
         </Col>
-        {/* <Card
-            title="Fee Collection Trend"
-            bordered={false}
-            className="h-full"
-            headStyle={{ borderBottom: "1px solid #f0f0f0", padding: "0 16px" }}
-            bodyStyle={{ padding: "16px" }}
-          >
-            <div ref={feeCollectionChartRef} style={{ minHeight: "300px" }} />
-          </Card> */}
 
         <Col xs={24} md={8}>
           <Card

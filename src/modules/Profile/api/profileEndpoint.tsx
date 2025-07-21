@@ -21,7 +21,21 @@ const profileEndpoint = api.injectEndpoints({
         { type: TagTypes.PROFILE, id: TagTypes.PROFILE + "_ID" },
       ],
     }),
+    changePassword: builder.mutation<ApiResponse<any>, any>({
+      query: (data) => ({
+        url: "/auth/users/set_password/",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: [
+        { type: TagTypes.PROFILE, id: TagTypes.PROFILE + "_ID" },
+      ],
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useUpdateProfileMutation } = profileEndpoint;
+export const {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useChangePasswordMutation,
+} = profileEndpoint;

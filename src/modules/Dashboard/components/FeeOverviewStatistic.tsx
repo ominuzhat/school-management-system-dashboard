@@ -50,7 +50,10 @@ const FeeOverviewStatistic = ({
         type: "area",
         height: 350,
         toolbar: {
-          show: true,
+          show: false,
+        },
+        zoom: {
+          enabled: false,
         },
       },
       colors: ["#10B981", "#F59E0B", "#6366F1"],

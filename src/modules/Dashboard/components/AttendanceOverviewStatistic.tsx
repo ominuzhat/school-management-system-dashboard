@@ -150,7 +150,7 @@ const AttendanceOverviewStatistic = ({
     return () => {
       chart.destroy();
     };
-  }, [chartData]);
+  }, [chartData, filterParams.filter]);
 
   return (
     <div>
