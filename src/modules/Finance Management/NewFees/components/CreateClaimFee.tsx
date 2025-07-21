@@ -23,7 +23,9 @@ const { Option } = Select;
 const { Text } = Typography;
 
 const CreateClaimFee = () => {
-  const { data: sessionData } = useGetAdmissionSessionQuery({});
+  const { data: sessionData } = useGetAdmissionSessionQuery({
+    status: "open",
+  });
   const { data: classData } = useGetClassesQuery({});
   const { data: shiftData } = useGetShiftQuery({});
   const { data: sectionData } = useGetSectionQuery({});

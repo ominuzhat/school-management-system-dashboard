@@ -4,7 +4,6 @@ import { useCreateAccountMutation } from "../api/accountEndPoints";
 import { useEffect } from "react";
 import { MdAccountBalance } from "react-icons/md";
 import { CiMobile3 } from "react-icons/ci";
-import { BsCash } from "react-icons/bs";
 import { FaCreditCard } from "react-icons/fa6";
 
 const accountTypes = [
@@ -20,12 +19,12 @@ const accountTypes = [
     color: "#2196F3",
     icon: <CiMobile3 />,
   },
-  {
-    value: "cash",
-    label: "Cash",
-    color: "#7AE2CF",
-    icon: <BsCash />,
-  },
+  // {
+  //   value: "cash",
+  //   label: "Cash",
+  //   color: "#7AE2CF",
+  //   icon: <BsCash />,
+  // },
   {
     value: "surjopay",
     label: "Shurjopay",
@@ -99,7 +98,7 @@ const CreateAccount = () => {
                 key={account.value}
                 xs={24}
                 sm={12}
-                md={6}
+                md={8}
                 className="transition-all duration-300"
               >
                 <div

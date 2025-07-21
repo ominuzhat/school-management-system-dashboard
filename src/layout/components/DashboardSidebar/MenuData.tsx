@@ -361,7 +361,7 @@ const MenuData: React.FC = () => {
     <div className="dashboard-sidebar-style">
       <div>
         <SidebarTop />
-        <span className="features-title text-green-500">Main Menu</span>
+        <span className="features-title text-blue-500">Main Menu</span>
         <div>
           <Menu
             style={{

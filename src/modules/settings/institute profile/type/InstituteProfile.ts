@@ -20,6 +20,8 @@ export interface IInstituteProfile {
   prefix: string;
   latitude: number;
   longitude: number;
+  current_session:any
+  weekend_days:any
 }
 
 export interface IInstituteProfileWrapper {

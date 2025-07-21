@@ -2,9 +2,9 @@ import { useRef, useEffect, useState } from "react";
 import { Card, Row, Col } from "antd";
 import ApexCharts from "apexcharts";
 import {
-  useGetAttendanceReportQuery,
   useGetDashboardDataQuery,
   useGetFeeReportQuery,
+  useGetOverviewAttendanceReportQuery,
 } from "../api/dashoboardEndPoints";
 import OverallStatistic from "../components/OverallStatistic";
 import { Link } from "react-router-dom";
@@ -34,7 +34,8 @@ const Dashboard = () => {
     type: "student",
   });
 
-  const { data: attendanceData } = useGetAttendanceReportQuery(filterParams);
+  const { data: attendanceData } =
+    useGetOverviewAttendanceReportQuery(filterParams);
   const { data: feeData } = useGetFeeReportQuery(feeFilterParams);
 
   const { chart_data: chartData } = attendanceData?.data || {};

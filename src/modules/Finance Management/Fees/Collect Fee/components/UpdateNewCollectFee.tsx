@@ -128,13 +128,11 @@ const UpdateNewCollectFee = () => {
         admission: singleData?.data?.admission?.id,
         class: singleData?.data?.admission?.grade_level,
         account: singleData?.data?.account?.id,
-
         paid_amount: singleData?.data?.paid_amount,
         payment_method: singleData?.data?.payment_method,
         session: singleData?.data?.admission?.session?.name,
         due_amount: singleData?.data?.admission?.due_amount,
         month: singleData?.data?.month ? dayjs(singleData?.data?.month) : null,
-
         add_ons: formattedAddOns,
       });
 
@@ -246,7 +244,7 @@ const UpdateNewCollectFee = () => {
   return (
     <div className="p-6">
       <div className="text-center pb-5">
-        <Title level={3}>Collect Fees</Title>
+        <Title level={3}>Update Collect Fees</Title>
         <BackButton to="/finance" />
       </div>
 

@@ -21,6 +21,7 @@ import { useUpdateInstituteProfileMutation } from "../api/instituteProfileEndPoi
 import Upload from "antd/es/upload/Upload";
 import { PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { useGetAdmissionSessionQuery } from "../../../general settings/admission session/api/admissionSessionEndPoints";
 
 interface Props {
   record: IInstituteProfileWrapper;
@@ -32,6 +33,9 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [form] = AntForm.useForm();
+  const { data: sessionData } = useGetAdmissionSessionQuery({
+    status: "open",
+  });
   const [update, { isLoading }] = useUpdateInstituteProfileMutation();
 
   useEffect(() => {
@@ -56,6 +60,8 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
         ownership_type: record?.data?.ownership_type || "",
         latitude: record?.data?.latitude || "",
         longitude: record?.data?.longitude || "",
+        current_session: record?.data?.current_session?.id || "",
+        weekend_days: record?.data?.weekend_days || [],
         established_date: record?.data?.established_date
           ? dayjs(record?.data?.established_date)
           : null,
@@ -86,6 +92,8 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
           const formattedDate = new Date(value).toISOString().split("T")[0];
           formData.append(key, formattedDate);
         }
+      } else if (key === "weekend_days" && Array.isArray(value)) {
+        formData.append(key, JSON.stringify(value));
       } else {
         formData.append(key, value as string | Blob);
       }
@@ -216,6 +224,42 @@ const UpdateInstituteProfile: React.FC<Props> = ({ record }) => {
                               Research Institute
                             </Option>
                             <Option value="Other">Other</Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col lg={8}>
+                        <Form.Item<IInstituteProfile>
+                          label="Session"
+                          name="current_session"
+                        >
+                          <Select
+                            className="w-full"
+                            placeholder="Session"
+                            allowClear
+                          >
+                            {Array.isArray(sessionData?.data) &&
+                              sessionData?.data?.map((data: any) => (
+                                <Option key={data.id} value={data.id}>
+                                  {data.name}
+                                </Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col lg={8}>
+                        <Form.Item name="weekend_days" label="Weekend Days">
+                          <Select
+                            mode="multiple"
+                            placeholder="Select weekend days"
+                          >
+                            <Option value="sunday">Sunday</Option>
+                            <Option value="monday">Monday</Option>
+                            <Option value="tuesday">Tuesday</Option>
+                            <Option value="wednesday">Wednesday</Option>
+                            <Option value="thursday">Thursday</Option>
+                            <Option value="friday">Friday</Option>
+                            <Option value="saturday">Saturday</Option>
                           </Select>
                         </Form.Item>
                       </Col>

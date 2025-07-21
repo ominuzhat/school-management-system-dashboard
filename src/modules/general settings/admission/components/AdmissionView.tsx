@@ -28,6 +28,7 @@ import {
   MailOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
+  StarOutlined,
 } from "@ant-design/icons";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
 import { capitalize } from "../../../../common/capitalize/Capitalize";
@@ -77,6 +78,7 @@ const AdmissionView = () => {
     status,
     attendance_percent,
     total_present,
+    optional_subject,
     total_absent,
   } = singleAdmission;
 
@@ -93,7 +95,16 @@ const AdmissionView = () => {
       title: "Subject",
       dataIndex: "name",
       key: "name",
-      render: (text: string) => <Text strong>{text}</Text>,
+      render: (text: string, record: any) => (
+        <Space>
+          <Text strong>{text}</Text>
+          {optional_subject?.id === record.id && (
+            <Tag color="gold" icon={<StarOutlined />}>
+              Optional
+            </Tag>
+          )}
+        </Space>
+      ),
     },
     {
       title: "Group Type",
@@ -117,17 +128,20 @@ const AdmissionView = () => {
           default:
             color = "default";
         }
-
         return <Tag color={color}>{text}</Tag>;
       },
     },
     {
       title: "Status",
       key: "status",
-      render: () => <Badge status="success" text="Active" />,
+      render: (_: any, record: { id: any }) => (
+        <Badge
+          status={optional_subject?.id === record.id ? "processing" : "success"}
+          text={optional_subject?.id === record.id ? "Optional" : "Active"}
+        />
+      ),
     },
   ];
-
   const formattedFee = (amount: number | string | undefined | null) => {
     const numAmount = Number(amount) || 0;
     return new Intl.NumberFormat("en-BD", {
@@ -431,7 +445,20 @@ const AdmissionView = () => {
               </TabPane>
 
               <TabPane tab="Subjects" key="2">
-                <Card className="detail-card">
+                <Card
+                  className="detail-card"
+                  title={
+                    <Space>
+                      <BookOutlined />
+                      <Text strong>Subjects</Text>
+                      {optional_subject && (
+                        <Text type="secondary" style={{ fontSize: 14 }}>
+                          (Optional: {optional_subject.name})
+                        </Text>
+                      )}
+                    </Space>
+                  }
+                >
                   <Table
                     dataSource={subjects}
                     columns={subjectColumns}
@@ -440,6 +467,11 @@ const AdmissionView = () => {
                     bordered
                     size={screens.xs ? "small" : "middle"}
                     scroll={screens.xs ? { x: true } : undefined}
+                    rowClassName={(record) =>
+                      optional_subject?.id === record.id
+                        ? "optional-subject-row"
+                        : ""
+                    }
                   />
                 </Card>
               </TabPane>

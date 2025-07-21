@@ -21,8 +21,8 @@ const dashboardEndpoint = api.injectEndpoints({
       ],
     }),
 
-    getAttendanceReport: builder.query<
-      ApiResponse<InstitutionDashboardProps | any>,
+    getOverviewAttendanceReport: builder.query<
+      ApiResponse<any | any>,
       FilterTypes
     >({
       query: (params) => ({
@@ -57,6 +57,6 @@ const dashboardEndpoint = api.injectEndpoints({
 
 export const {
   useGetDashboardDataQuery,
-  useGetAttendanceReportQuery,
+  useGetOverviewAttendanceReportQuery,
   useGetFeeReportQuery,
 } = dashboardEndpoint;

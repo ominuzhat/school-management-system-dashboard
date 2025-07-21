@@ -33,6 +33,7 @@ interface StudentState {
     
   };
   admission: {
+    optional_subject: string;
     session: string;
     grade_level: string;
     group_type: any; 
@@ -77,6 +78,7 @@ const initialState: StudentState = {
     image: [],
   },
   admission: {
+    optional_subject: "",
     session: "",
     grade_level: "",
     roll: "",

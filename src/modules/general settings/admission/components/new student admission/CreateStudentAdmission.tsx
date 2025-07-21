@@ -49,7 +49,6 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
 
   const allValues = Form.useWatch([], form);
 
-
   useEffect(() => {
     const validate = async () => {
       try {
@@ -115,7 +114,6 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
     { skip: !gradeLevel }
   );
 
-  // Handle subject selection when grade level changes
   useEffect(() => {
     if (gradeLevel) {
       refetchSubjects();
@@ -126,7 +124,6 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
     }
   }, [gradeLevel, refetchSubjects]);
 
-  // Update selections when selectAll or subjects change
   useEffect(() => {
     if (subjectData?.data?.results) {
       if (selectAll) {
@@ -440,6 +437,41 @@ const CreateStudentAdmission: React.FC<CreateStudentInformationProps> = ({
                 </Select>
               </Form.Item>
             </Col>
+
+            {gradeLevel && subjectData?.data?.results && (
+              <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                <Form.Item<IAdmission>
+                  label="Optional Subject"
+                  name="optional_subject"
+                >
+                  <Select
+                    placeholder="Select Optional Subject"
+                    loading={isFetchingSubjects}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      String(option?.children ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    onChange={(value) =>
+                      dispatch(
+                        updateAdmissionField({
+                          field: "optional_subject",
+                          value,
+                        })
+                      )
+                    }
+                  >
+                    {Array.isArray(subjectData?.data?.results) &&
+                      subjectData?.data?.results.map((subject: any) => (
+                        <Option key={subject.id} value={subject.id}>
+                          {subject.name}
+                        </Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
           </Row>
           {/* Subjects Section */}
           {gradeLevel && subjectData?.data?.results && (

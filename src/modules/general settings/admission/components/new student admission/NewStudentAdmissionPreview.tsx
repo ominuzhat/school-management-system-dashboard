@@ -9,6 +9,7 @@ import {
   Space,
   Descriptions,
   Spin,
+  Tooltip,
 } from "antd";
 import { useAppSelector } from "../../../../../app/store";
 import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";
@@ -18,6 +19,8 @@ import { useGetSectionQuery } from "../../../Section/api/sectionEndPoints";
 import { useGetSubjectsQuery } from "../../../subjects/api/subjectsEndPoints";
 import { useMemo } from "react";
 import { capitalize } from "../../../../../common/capitalize/Capitalize";
+import { TbStarFilled } from "react-icons/tb";
+import { InfoCircleOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
@@ -33,8 +36,9 @@ const NewStudentAdmissionPreview = () => {
   const admission: any = useAppSelector((state) => state.student.admission);
   const student: any = useAppSelector((state) => state.student.student);
   const fee: any = useAppSelector((state) => state.student.fee);
+  const { optional_subject, subjects = [] } = admission;
 
-  // console.log(admission, "add");
+  console.log(admission, "add");
   // console.log(student, "student");
   // console.log(fee, "fee");
 
@@ -81,7 +85,21 @@ const NewStudentAdmissionPreview = () => {
   }, [subjectData]);
 
   const getSubjectName = (id: number) => {
-    return subjectMap[id] || id; // fallback to id if name not found
+    const isOptional = optional_subject === id;
+    const name = subjectMap[id] || id; // fallback to id if name not found
+
+    return (
+      <span style={{ display: "inline-flex", alignItems: "center" }}>
+        {name}
+        {isOptional && (
+          <span style={{ marginLeft: 4 }}>
+            <Tooltip title="Optional Subject">
+              <TbStarFilled style={{ color: "#faad14", fontSize: "14px" }} />
+            </Tooltip>
+          </span>
+        )}
+      </span>
+    );
   };
 
   if (!shiftData || !classData || !sectionData || !subjectData) {
@@ -271,12 +289,34 @@ const NewStudentAdmissionPreview = () => {
                   <>
                     <Divider orientation="left">Subjects</Divider>
                     <Space wrap>
-                      {admission.subjects.map((subjectId: any, index: any) => (
-                        <Tag key={index} color="blue">
-                          {getSubjectName(subjectId)}
-                        </Tag>
-                      ))}
+                      {subjects.map((subjectId: number, index: number) => {
+                        const isOptional = optional_subject === subjectId;
+                        return (
+                          <Tag
+                            key={index}
+                            color={isOptional ? "gold" : "blue"}
+                            icon={isOptional ? <StarOutlined /> : null}
+                            style={{
+                              border: isOptional
+                                ? "1px solid #faad14"
+                                : undefined,
+                              fontWeight: isOptional ? 600 : undefined,
+                            }}
+                          >
+                            {getSubjectName(subjectId)}
+                          </Tag>
+                        );
+                      })}
                     </Space>
+                    {optional_subject && (
+                      <div style={{ marginTop: 8 }}>
+                        <Text type="secondary">
+                          <InfoCircleOutlined /> Subject marked with{" "}
+                          <StarFilled style={{ color: "#faad14" }} /> is
+                          optional
+                        </Text>
+                      </div>
+                    )}
                   </>
                 )}
               </Card>

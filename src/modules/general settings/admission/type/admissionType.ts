@@ -29,6 +29,7 @@ export interface IAdmission {
   session: ISession;
   section: IGetSection;
   grade_level: IGrade_Level | null;
+  optional_subject: ISubjects | null;
 }
 
 export interface ISingleAdmission {

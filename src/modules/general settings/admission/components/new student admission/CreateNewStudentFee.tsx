@@ -179,6 +179,7 @@ const CreateNewStudentFee: React.FC<CreateStudentInformationProps> = ({
       ...(fee && {
         admission: {
           ...fee,
+          optional_subject: admission.optional_subject || null,
           fee_type: isRegularFee ? "class" : "custom",
           status: admission.status,
           subjects: admission.subjects || [],

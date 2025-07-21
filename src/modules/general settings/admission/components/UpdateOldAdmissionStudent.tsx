@@ -45,9 +45,6 @@ const UpdateOldAdmissionStudent = () => {
   const gradeLevel = AntForm.useWatch("grade_level", form);
   const feeType = AntForm.useWatch("fee_type", form);
   // const customFees = AntForm.useWatch("customFees", form);
-  // console.log(setForceUpdate);
-
-  console.log(selectedSubjects);
 
   const { admissionId } = useParams();
   const { data: singleAdmissionData } = useGetSingleAdmissionQuery(
@@ -69,8 +66,10 @@ const UpdateOldAdmissionStudent = () => {
   const { data: classData, isFetching: isFetchingClasses } = useGetClassesQuery(
     {}
   );
+
   const { data: sectionData, isFetching: isFetchingSections } =
     useGetSectionQuery({ grade_level: gradeLevel }, { skip: !gradeLevel });
+
   const {
     data: subjectData,
     isFetching: isFetchingSubjects,
@@ -132,7 +131,10 @@ const UpdateOldAdmissionStudent = () => {
 
       form.setFieldsValue({
         student: singleAdmission?.student?.id,
+        grade_level:
+          singleAdmission?.student?.current_grade_level?.id || undefined,
         group_type: singleAdmission?.group_type,
+        optional_subject: singleAdmission?.optional_subject?.id || undefined,
         roll: singleAdmission?.roll,
         session: singleAdmission?.session?.id,
         status: singleAdmission?.status,
@@ -216,8 +218,6 @@ const UpdateOldAdmissionStudent = () => {
       </div>
     );
   }
-
-  console.log(subjectData?.data?.results, "subjectData?.data?.results");
 
   return (
     <div className="p-4">
@@ -367,6 +367,33 @@ const UpdateOldAdmissionStudent = () => {
                 </Select>
               </Form.Item>
             </Col>
+
+            {gradeLevel && subjectData?.data?.results && (
+              <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                <Form.Item<IAdmission>
+                  label="Optional Subject"
+                  name="optional_subject"
+                >
+                  <Select
+                    placeholder="Select Optional Subject"
+                    loading={isFetchingSubjects}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      String(option?.children ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                  >
+                    {Array.isArray(subjectData?.data?.results) &&
+                      subjectData?.data?.results.map((subject: any) => (
+                        <Option key={subject.id} value={subject.id}>
+                          {subject.name}
+                        </Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
           </Row>
 
           {/* Subjects Section */}

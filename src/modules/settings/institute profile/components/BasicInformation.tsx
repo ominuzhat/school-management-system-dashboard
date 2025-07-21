@@ -2,14 +2,22 @@ import { Col, Row } from "antd";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import TextView from "../../../../common/components/TextView";
 import { IInstituteProfile } from "../type/InstituteProfile";
+import { capitalize } from "../../../../common/capitalize/Capitalize";
 
 const BasicInformation = ({
   data,
 }: {
   data: IInstituteProfile | undefined;
 }) => {
-  const { address, city, contact_email, phone_number, institution_type } =
-    data || {};
+  const {
+    address,
+    city,
+    contact_email,
+    phone_number,
+    institution_type,
+    current_session,
+    weekend_days,
+  } = data || {};
 
   const basicInfo = [
     {
@@ -42,6 +50,20 @@ const BasicInformation = ({
     {
       fieldName: "Institution Type",
       text: institution_type || "N/A",
+      Icon: MdOutlineSubdirectoryArrowRight,
+    },
+    {
+      fieldName: "Current Session",
+      text: current_session?.name || "N/A",
+      Icon: MdOutlineSubdirectoryArrowRight,
+    },
+    {
+      fieldName: "Weekend Days",
+      text: Array.isArray(weekend_days)
+        ? weekend_days.map((day: string) => capitalize(day)).join(", ")
+        : weekend_days
+        ? capitalize(weekend_days)
+        : "N/A",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
   ];

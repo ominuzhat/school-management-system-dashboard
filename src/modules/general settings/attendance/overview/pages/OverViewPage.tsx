@@ -1,151 +1,141 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Card, Table, Progress, DatePicker, Segmented, Typography } from "antd";
-import { UserOutlined, TeamOutlined, BookOutlined } from "@ant-design/icons";
+import {
+  Card,
+  Progress,
+  DatePicker,
+  Typography,
+  Grid,
+  Segmented,
+  Space,
+  Table,
+} from "antd";
 import { useState } from "react";
+import { useGetOverviewAttendanceReportQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
+import dayjs from "dayjs";
+import AttendanceOverviewStatistic from "../../../../Dashboard/components/AttendanceOverviewStatistic";
+import OverallAttendanceStatistic from "../../../../Dashboard/components/OverallAttendanceStatistic";
+import { capitalize } from "../../../../../common/capitalize/Capitalize";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
+const { useBreakpoint } = Grid;
 
 const OverViewPage = () => {
-  type UserType = "students" | "teachers" | "employees";
-  const [userType, setUserType] = useState<UserType>("students");
+  const screens = useBreakpoint();
+  const [filterParams, setFilterParams] = useState({
+    filter: "monthly",
+    year: dayjs().year(),
+    month: dayjs().month() + 1,
+    date: undefined,
+    start_date: undefined,
+    end_date: undefined,
+    type: "student",
+    details: "1",
+  });
 
-  const attendanceData: Record<
-    UserType,
-    {
-      total: number;
-      present: number;
-      absent: number;
-      late: number;
-      records: {
-        id: number;
-        name: string;
-        present: number;
-        absent: number;
-        late: number;
-        percentage: number;
-      }[];
-    }
-  > = {
-    students: {
-      total: 245,
-      present: 210,
-      absent: 35,
-      late: 12,
-      records: [
-        {
-          id: 1,
-          name: "John Doe",
-          present: 18,
-          absent: 2,
-          late: 1,
-          percentage: 90,
-        },
-        {
-          id: 2,
-          name: "Jane Smith",
-          present: 19,
-          absent: 1,
-          late: 0,
-          percentage: 95,
-        },
-      ],
-    },
-    teachers: {
-      total: 32,
-      present: 30,
-      absent: 2,
-      late: 0,
-      records: [
-        {
-          id: 1,
-          name: "Dr. Williams",
-          present: 20,
-          absent: 0,
-          late: 0,
-          percentage: 100,
-        },
-      ],
-    },
-    employees: {
-      total: 48,
-      present: 45,
-      absent: 3,
-      late: 5,
-      records: [
-        {
-          id: 1,
-          name: "Robert Johnson",
-          present: 19,
-          absent: 1,
-          late: 2,
-          percentage: 95,
-        },
-      ],
-    },
-  };
+  const { data: attendanceData, isLoading } =
+    useGetOverviewAttendanceReportQuery(filterParams);
 
-  const currentData = attendanceData[userType];
+  const { chart_data: chartData, details } = attendanceData?.data || {};
 
-  const columns = [
+  const columnsData: any = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      render: (text: string) => <Text strong>{capitalize(text)}</Text>,
+      fixed: screens.md ? false : screens.md === false ? "left" : undefined,
+      width: 300,
     },
     {
       title: "Present",
       dataIndex: "present",
       key: "present",
+      render: (val: number) => <span style={{ color: "#52c41a" }}>{val}</span>,
     },
     {
       title: "Absent",
       dataIndex: "absent",
       key: "absent",
+      render: (val: number) => <span style={{ color: "#f5222d" }}>{val}</span>,
     },
     {
       title: "Late",
       dataIndex: "late",
       key: "late",
+      render: (val: number) => <span style={{ color: "#faad14" }}>{val}</span>,
     },
     {
       title: "Attendance %",
-      dataIndex: "percentage",
-      key: "percentage",
-      render: (percent: any) => (
-        <Progress
-          percent={percent}
-          size="small"
-          status={percent < 80 ? "exception" : "normal"}
-        />
-      ),
+      dataIndex: "attendance_percentage",
+      key: "attendance_percentage",
+      render: (percent: number) => {
+        let status: "exception" | "active" | "normal" | "success" = "normal";
+        let strokeColor = "#52c41a";
+
+        if (percent < 40) {
+          status = "exception";
+          strokeColor = "#f5222d";
+        } else if (percent >= 40 && percent < 60) {
+          status = "active";
+          strokeColor = "#1890ff";
+        } else if (percent >= 60 && percent < 80) {
+          status = "normal";
+          strokeColor = "#13c2c2";
+        } else if (percent >= 80) {
+          status = "success";
+          strokeColor = "#52c41a";
+        }
+
+        return (
+          <Progress
+            percent={Number(percent.toFixed(2))}
+            status={status}
+            size="small"
+            strokeColor={strokeColor}
+            strokeWidth={5}
+            format={(p) => `${p}%`}
+            style={{ minWidth: 100 }}
+          />
+        );
+      },
     },
   ];
 
-  // Custom styles for segmented control
-  const segmentedStyle = {
-    background: "#ffffff",
-    padding: "4px",
-    borderRadius: "8px",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-  };
-
   const getActiveColor = () => {
-    switch (userType) {
-      case "students":
-        return "#3498db";
-      case "teachers":
-        return "#e74c3c";
-      case "employees":
-        return "#2ecc71";
+    switch (filterParams?.type) {
+      case "student":
+        return "#78B9B5";
+      case "teacher":
+        return "#C562AF";
+      case "employee":
+        return "#EA5B6F";
       default:
         return "#3498db";
     }
   };
 
+  const handleChange = (key: string, value: any) => {
+    setFilterParams((prev: any) => ({ ...prev, [key]: value }));
+  };
+
+  const typeOptions = [
+    { label: "Students", value: "student" },
+    { label: "Teachers", value: "teacher" },
+    { label: "Employees", value: "employee" },
+  ];
+
+  const filterOptions = [
+    { label: "Daily", value: "daily" },
+    { label: "Weekly", value: "weekly" },
+    { label: "Monthly", value: "monthly" },
+    { label: "Yearly", value: "yearly" },
+  ];
+
   return (
-    <div style={{ padding: "24px" }}>
+    <div style={{ padding: screens.xs ? "12px" : "24px" }}>
       {/* Custom styles for active segmented item */}
       <style>{`
         .custom-segmented .ant-segmented-item-selected {
@@ -157,198 +147,201 @@ const OverViewPage = () => {
         .custom-segmented .ant-segmented-item:hover:not(.ant-segmented-item-selected) {
           background-color: #f0f2f5 !important;
         }
+        .filter-card {
+          transition: all 0.3s ease;
+        }
+        .filter-card:hover {
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          transform: translateY(-2px);
+        }
       `}</style>
 
-      <div
+      {/* Header Section */}
+      <Card
+        className="filter-card"
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "24px",
-          padding: "16px 24px",
-          background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-          borderRadius: "12px",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          marginBottom: 24,
+          borderRadius: 12,
+          background: "linear-gradient(135deg, #f5f7fa 0%, #e6f7ff 100%)",
+          border: "none",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.09)",
         }}
+        bodyStyle={{ padding: screens.xs ? "16px" : "24px" }}
       >
-        <Title
-          level={2}
+        <div
           style={{
-            color: "#2c3e50",
-            margin: 0,
-            textShadow: "1px 1px 2px rgba(255,255,255,0.5)",
+            display: "flex",
+            flexDirection: screens.md ? "row" : "column",
+            justifyContent: "space-between",
+            alignItems: screens.md ? "center" : "flex-start",
+            gap: 16,
           }}
         >
-          Attendance Overview
-        </Title>
+          <Title
+            level={3}
+            style={{
+              color: "#2c3e50",
+              margin: 0,
+              fontSize: screens.xs ? "20px" : "24px",
+              whiteSpace: "nowrap",
+            }}
+          >
+            📊 Attendance Overview
+          </Title>
 
-        <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-          <Segmented
-            options={[
-              {
-                label: (
-                  <div style={{ padding: "0 8px" }}>
-                    <TeamOutlined
-                      style={{ color: "#3498db", marginRight: 8 }}
-                    />
-                    Students
-                  </div>
-                ),
-                value: "students",
-              },
-              {
-                label: (
-                  <div style={{ padding: "0 8px" }}>
-                    <UserOutlined
-                      style={{ color: "#e74c3c", marginRight: 8 }}
-                    />
-                    Teachers
-                  </div>
-                ),
-                value: "teachers",
-              },
-              {
-                label: (
-                  <div style={{ padding: "0 8px" }}>
-                    <BookOutlined
-                      style={{ color: "#2ecc71", marginRight: 8 }}
-                    />
-                    Employees
-                  </div>
-                ),
-                value: "employees",
-              },
-            ]}
-            value={userType}
-            onChange={setUserType}
-            style={segmentedStyle}
-            className="custom-segmented"
-          />
+          <Space
+            direction={screens.md ? "horizontal" : "vertical"}
+            size="middle"
+            style={{ width: screens.md ? "auto" : "100%" }}
+          >
+            <Segmented
+              className="custom-segmented"
+              options={typeOptions}
+              value={filterParams.type}
+              onChange={(val) => handleChange("type", val)}
+              size={screens.xs ? "small" : "middle"}
+            />
+
+            <Segmented
+              className="custom-segmented"
+              options={filterOptions}
+              value={filterParams.filter}
+              onChange={(val) => handleChange("filter", val)}
+              size={screens.xs ? "small" : "middle"}
+            />
+          </Space>
+        </div>
+
+        <div
+          style={{
+            marginTop: 16,
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
+            alignItems: "center",
+          }}
+        >
+          {(filterParams.filter === "monthly" ||
+            filterParams.filter === "yearly") && (
+            <DatePicker
+              picker="year"
+              value={
+                filterParams.year ? dayjs(`${filterParams.year}`, "YYYY") : null
+              }
+              onChange={(date) =>
+                handleChange("year", date ? date.year() : null)
+              }
+              style={{ width: screens.xs ? 120 : 140 }}
+              size={screens.xs ? "small" : "middle"}
+            />
+          )}
+
+          {filterParams.filter === "monthly" && (
+            <DatePicker
+              picker="month"
+              value={
+                filterParams.month ? dayjs(`${filterParams.month}`, "M") : null
+              }
+              onChange={(date) =>
+                handleChange("month", date ? date.month() + 1 : null)
+              }
+              style={{ width: screens.xs ? 120 : 140 }}
+              size={screens.xs ? "small" : "middle"}
+            />
+          )}
+
+          {(filterParams.filter === "daily" ||
+            filterParams.filter === "weekly") && (
+            <DatePicker
+              value={
+                filterParams.date
+                  ? dayjs(filterParams.date, "YYYY-MM-DD")
+                  : null
+              }
+              onChange={(date) =>
+                handleChange("date", date ? date.format("YYYY-MM-DD") : null)
+              }
+              style={{ width: screens.xs ? 120 : 140 }}
+              size={screens.xs ? "small" : "middle"}
+            />
+          )}
 
           <RangePicker
-            onChange={(dates) => console.log(dates)}
-            style={{
-              width: "250px",
-              border: "1px solid #dfe6e9",
-              borderRadius: "8px",
-              padding: "8px 12px",
-              background: "#fff",
+            onChange={(dates) => {
+              if (
+                dates &&
+                dates.length === 2 &&
+                dates[0] !== null &&
+                dates[1] !== null
+              ) {
+                handleChange("start_date", dates[0].format("YYYY-MM-DD"));
+                handleChange("end_date", dates[1].format("YYYY-MM-DD"));
+              } else {
+                handleChange("start_date", null);
+                handleChange("end_date", null);
+              }
             }}
+            style={{ width: screens.xs ? "100%" : 280 }}
+            size={screens.xs ? "small" : "middle"}
           />
         </div>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "16px",
-          marginBottom: "24px",
-        }}
-      >
-        {/* Total Card - Blue Theme */}
-        <Card
-          style={{
-            background: "#f0f9ff",
-            borderColor: "#bae0ff",
-          }}
-        >
-          <Text type="secondary">Total {userType}</Text>
-          <Title level={3} style={{ color: "#1677ff" }}>
-            {currentData.total}
-          </Title>
-        </Card>
-
-        {/* Present Card - Green Theme */}
-        <Card
-          style={{
-            background: "#f6ffed",
-            borderColor: "#b7eb8f",
-          }}
-        >
-          <Text type="secondary">Present</Text>
-          <Title level={3} style={{ color: "#52c41a" }}>
-            {currentData.present}
-          </Title>
-        </Card>
-
-        {/* Absent Card - Red Theme */}
-        <Card
-          style={{
-            background: "#fff2f0",
-            borderColor: "#ffccc7",
-          }}
-        >
-          <Text type="secondary">Absent</Text>
-          <Title level={3} style={{ color: "#f5222d" }}>
-            {currentData.absent}
-          </Title>
-        </Card>
-
-        {/* Late Card - Gold Theme */}
-        <Card
-          style={{
-            background: "#fffbe6",
-            borderColor: "#ffe58f",
-          }}
-        >
-          <Text type="secondary">Late Arrivals</Text>
-          <Title level={3} style={{ color: "#faad14" }}>
-            {currentData.late}
-          </Title>
-        </Card>
-      </div>
-
-      <Card
-        title={`${
-          userType.charAt(0).toUpperCase() + userType.slice(1)
-        } Attendance Details`}
-      >
-        <Table
-          columns={columns}
-          dataSource={currentData.records}
-          rowKey="id"
-          pagination={{ pageSize: 10 }}
-        />
       </Card>
 
-      <div
-        style={{
-          marginTop: "24px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "16px",
-        }}
-      >
-        <Card title="Attendance Trend">
-          <div
-            style={{
-              height: "300px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text type="secondary">
-              Attendance trend chart would appear here
-            </Text>
+      {/* Statistics Section */}
+      {isLoading ? (
+        <div style={{ textAlign: "center", padding: "40px 0" }}>
+          <LoadingOutlined style={{ fontSize: 48, color: getActiveColor() }} />
+          <Text style={{ display: "block", marginTop: 16 }}>
+            Loading attendance data...
+          </Text>
+        </div>
+      ) : (
+        <>
+          <OverallAttendanceStatistic
+            dashboardInfo={attendanceData?.data?.summary}
+            loading={isLoading}
+            type={filterParams.type}
+          />
+
+          <div style={{ margin: "24px 0" }}>
+            <AttendanceOverviewStatistic
+              chartData={chartData}
+              filterParams={filterParams}
+              setFilterParams={setFilterParams}
+              loading={isLoading}
+            />
           </div>
-        </Card>
-        <Card title="Attendance by Department/Class">
-          <div
+
+          {/* Details Table */}
+          <Card
+            title={
+              <span style={{ color: "#2c3e50" }}>
+                {`${capitalize(filterParams.type)} Attendance Details`}
+              </span>
+            }
             style={{
-              height: "300px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              borderRadius: 12,
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.09)",
             }}
+            bodyStyle={{ padding: screens.xs ? 8 : 16 }}
           >
-            <Text type="secondary">
-              Department/Class breakdown chart would appear here
-            </Text>
-          </div>
-        </Card>
-      </div>
+            <Table
+              columns={columnsData}
+              dataSource={details || []}
+              rowKey="id"
+              pagination={{
+                pageSize: 10,
+                showSizeChanger: false,
+                hideOnSinglePage: true,
+              }}
+              loading={isLoading}
+              scroll={{ x: screens.md ? undefined : 600 }}
+              size={screens.xs ? "small" : "middle"}
+              style={{ borderRadius: 8 }}
+            />
+          </Card>
+        </>
+      )}
     </div>
   );
 };

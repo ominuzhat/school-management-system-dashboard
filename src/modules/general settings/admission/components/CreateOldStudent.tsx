@@ -61,7 +61,6 @@ const CreateOldStudent = () => {
       exclude_grade_level: gradeLevel,
     });
 
-    
   const [createAdmissionFee, { data: admissionFee }] =
     useCreateAdmissionFeeMutation();
 
@@ -422,6 +421,33 @@ const CreateOldStudent = () => {
                 </Select>
               </Form.Item>
             </Col>
+
+            {gradeLevel && subjectData?.data?.results && (
+              <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+                <Form.Item<IAdmission>
+                  label="Optional Subject"
+                  name="optional_subject"
+                >
+                  <Select
+                    placeholder="Select Optional Subject"
+                    loading={isFetchingSubjects}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      String(option?.children ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                  >
+                    {Array.isArray(subjectData?.data?.results) &&
+                      subjectData?.data?.results.map((subject: any) => (
+                        <Option key={subject.id} value={subject.id}>
+                          {subject.name}
+                        </Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
           </Row>
 
           {/* Subjects Section */}
