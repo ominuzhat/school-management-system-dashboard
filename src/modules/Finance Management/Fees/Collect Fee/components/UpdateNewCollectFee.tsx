@@ -72,11 +72,16 @@ const UpdateNewCollectFee = () => {
         0
       );
 
-      const paid_amount = particulars.reduce((sum, item) => {
-        const paid = Number(item?.paid_amount || 0);
-        const due = Number(item?.due_amount || 0);
-        return sum + (paid > due ? due : paid);
-      }, 0);
+      const paid_amount = particulars.reduce(
+        (sum, item) => sum + Number(item?.paid_amount || 0),
+        0
+      );
+
+      // const paid_amount = particulars.reduce((sum, item) => {
+      //   const paid = Number(item?.paid_amount || 0);
+      //   const due = Number(item?.due_amount || 0);
+      //   return sum + (paid > due ? due : paid);
+      // }, 0);
 
       let net_amount = paid_amount || 0;
 

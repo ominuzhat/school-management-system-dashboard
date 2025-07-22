@@ -68,11 +68,16 @@ const CreateNewCollectFee = () => {
         0
       );
 
-      const paid_amount = particulars.reduce((sum, item) => {
-        const paid = Number(item?.paid_amount || 0);
-        const due = Number(item?.due_amount || 0);
-        return sum + (paid > due ? due : paid);
-      }, 0);
+      const paid_amount = particulars.reduce(
+        (sum, item) => sum + Number(item?.paid_amount || 0),
+        0
+      );
+
+      // const paid_amount = particulars.reduce((sum, item) => {
+      //   const paid = Number(item?.paid_amount || 0);
+      //   const due = Number(item?.due_amount || 0);
+      //   return sum + (paid > due ? due : paid);
+      // }, 0);
 
       let net_amount = paid_amount || 0;
 
@@ -146,8 +151,6 @@ const CreateNewCollectFee = () => {
     }
   );
 
-  console.log(getSingleAdmission, admission);
-
   useEffect(() => {
     if (getSingleAdmission?.data) {
       form.setFieldsValue({
@@ -168,6 +171,10 @@ const CreateNewCollectFee = () => {
       });
     }
   }, [form, getSingleAdmission?.data]);
+
+  const defaultCashAccountId =
+    Array.isArray(accountList?.data) &&
+    accountList?.data?.find((account: any) => account?.type === "cash")?.id;
 
   useEffect(() => {
     const particulars = newCollectFeeData?.data?.particulars || [];
@@ -197,11 +204,14 @@ const CreateNewCollectFee = () => {
       // Set empty array if both particulars and carried_forward_dues are empty
       form.setFieldsValue({ particulars: [] });
     }
+
+    form.setFieldsValue({ account: defaultCashAccountId });
   }, [
     newCollectFeeData?.data,
     newCollectFeeData?.data?.particulars,
     newCollectFeeData?.data?.carried_forward_dues,
     form,
+    defaultCashAccountId,
   ]);
 
   const currentMonthParticulars = particulars?.filter(
@@ -274,7 +284,6 @@ const CreateNewCollectFee = () => {
     <div className="p-6">
       <div className="text-center pb-5">
         <Title level={3}>Collect Fees</Title>
-
         <BackButton to="/finance" />
       </div>
 
@@ -398,15 +407,16 @@ const CreateNewCollectFee = () => {
                     accountList?.data?.map((account: any) => (
                       <Select.Option key={account?.id} value={account?.id}>
                         {account?.type === "cash"
-                          ? `cash (My Account)`
+                          ? `Cash (My Account)`
                           : account?.type === "bank"
-                          ? `bank - ${account?.account_name} - ${account?.bank_name} (${account?.balance})`
+                          ? `Bank - ${account?.account_name} - ${account?.bank_name} (${account?.balance})`
                           : `${account?.type} - ${account?.account_type} (${account?.balance})`}
                       </Select.Option>
                     ))}
                 </Select>
               </Form.Item>
             </Col>
+
             <Col xs={24} sm={12} md={8} lg={6}>
               <Form.Item label="Discount Type" name="discount_type">
                 <Select placeholder="Select Type" allowClear>

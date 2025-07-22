@@ -237,6 +237,9 @@ const AdmissionView = () => {
       title: "Due Month",
       dataIndex: "due_month",
       key: "due_month",
+      render: (date: string) => {
+        return date ? dayjs(date).format("DD MMM YYYY") : "-";
+      },
     },
   ];
 
@@ -648,13 +651,13 @@ const AdmissionView = () => {
             >
               <Descriptions bordered column={1} size="small">
                 <Descriptions.Item label="Payment Date">
-                  {payment.payment_date}
+                  {dayjs(payment.payment_date).format("DD MMM YYYY")}
                 </Descriptions.Item>
                 <Descriptions.Item label="Net Amount">
                   {formattedFee(payment.net_amount)}
                 </Descriptions.Item>
                 <Descriptions.Item label="Discount">
-                  {formattedFee(payment.discount_amount)}
+                  {formattedFee(payment.total_discount)}
                 </Descriptions.Item>
               </Descriptions>
               <Divider dashed />
