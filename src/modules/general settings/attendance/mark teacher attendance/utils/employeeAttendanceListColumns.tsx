@@ -15,7 +15,7 @@ const useEmployeeAttendanceListColumns = (): ColumnsType<any> => {
       title: "Date",
       dataIndex: "date",
       align: "center",
-      render: (date) => (date ? new Date(date).toLocaleDateString() : "N/A"),
+      render: (date) => (date ? new Date(date).toLocaleDateString() : "-"),
     },
 
     {
@@ -44,7 +44,7 @@ const useEmployeeAttendanceListColumns = (): ColumnsType<any> => {
       title: "Total Records",
       dataIndex: "total_record",
       align: "center",
-      render: (total_record) => (total_record ? total_record : "N/A"),
+      render: (total_record) => (total_record ? total_record : "-"),
     },
     {
       key: "10",

@@ -54,7 +54,7 @@ const useNoticeColumns = (): ColumnsType<any> => {
       dataIndex: "title",
       align: "center",
       sorter: (a, b) => (a.title || "").localeCompare(b.title || ""),
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     // {
     //   key: "2",
@@ -63,7 +63,7 @@ const useNoticeColumns = (): ColumnsType<any> => {
     //   align: "center",
     //   sorter: (a, b) =>
     //     (a.description || "").localeCompare(b.description || ""),
-    //   render: (description) => (description ? description : "N/A"),
+    //   render: (description) => (description ? description : "-"),
     // },
     {
       key: "3",
@@ -71,7 +71,7 @@ const useNoticeColumns = (): ColumnsType<any> => {
       dataIndex: "category",
       align: "center",
       sorter: (a, b) => (a.category || "").localeCompare(b.category || ""),
-      render: (category) => (category ? category : "N/A"),
+      render: (category) => (category ? category : "-"),
     },
     {
       key: "4",
@@ -80,7 +80,7 @@ const useNoticeColumns = (): ColumnsType<any> => {
       align: "center",
       sorter: (a, b) =>
         (a.target_audience || "").localeCompare(b.target_audience || ""),
-      render: (audience) => (audience ? audience : "N/A"),
+      render: (audience) => (audience ? audience : "-"),
     },
     {
       key: "5",
@@ -102,7 +102,7 @@ const useNoticeColumns = (): ColumnsType<any> => {
       align: "center",
       sorter: (a, b) =>
         dayjs(a.publish_date || 0).unix() - dayjs(b.publish_date || 0).unix(),
-      render: (date) => (date ? dayjs(date).format("YYYY-MM-DD") : "N/A"),
+      render: (date) => (date ? dayjs(date).format("YYYY-MM-DD") : "-"),
     },
     {
       key: "7",
@@ -111,7 +111,7 @@ const useNoticeColumns = (): ColumnsType<any> => {
       align: "center",
       sorter: (a, b) =>
         dayjs(a.expiry_date || 0).unix() - dayjs(b.expiry_date || 0).unix(),
-      render: (date) => (date ? dayjs(date).format("YYYY-MM-DD") : "N/A"),
+      render: (date) => (date ? dayjs(date).format("YYYY-MM-DD") : "-"),
     },
     {
       key: "8",

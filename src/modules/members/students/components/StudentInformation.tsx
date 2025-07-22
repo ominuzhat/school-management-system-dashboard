@@ -47,73 +47,73 @@ const StudentInformation = ({ data }: { data: any }) => {
       data: [
         {
           fieldName: "Current Grade Level",
-          text: current_grade_level?.name || "N/A",
+          text: current_grade_level?.name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Current Section",
-          text: current_section?.name || "N/A",
+          text: current_section?.name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Current Session",
-          text: current_session?.name || "N/A",
+          text: current_session?.name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Current Shift",
-          text: current_shift?.name || "N/A",
+          text: current_shift?.name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Current Roll",
-          text: current_roll || "N/A",
+          text: current_roll || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Gender",
-          text: gender_display || "N/A",
+          text: gender_display || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Date of Birth",
-          text: dayjs(date_of_birth).format("DD MMM YYYY") || "N/A",
+          text: dayjs(date_of_birth).format("DD MMM YYYY") || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Email",
-          text: email || "N/A",
+          text: email || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Mobile No",
-          text: contact_phone_number || "N/A",
+          text: contact_phone_number || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Date of Admission",
-          text: dayjs(enrollment_date).format("DD MMM YYYY") || "N/A",
+          text: dayjs(enrollment_date).format("DD MMM YYYY") || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
 
         {
           fieldName: "Religion",
-          text: religion || "N/A",
+          text: religion || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Permanent Address",
-          text: permanent_address || "N/A",
+          text: permanent_address || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Present Address",
-          text: present_address || "N/A",
+          text: present_address || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Group",
-          text: group_type_display || "N/A",
+          text: group_type_display || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
@@ -123,18 +123,18 @@ const StudentInformation = ({ data }: { data: any }) => {
       data: [
         {
           fieldName: "Father Name",
-          text: father_name || "N/A",
+          text: father_name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Father Mobile No",
-          text: father_number || "N/A",
+          text: father_number || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
 
         {
           fieldName: "Father Occupation",
-          text: father_profession || "N/A",
+          text: father_profession || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
@@ -144,18 +144,18 @@ const StudentInformation = ({ data }: { data: any }) => {
       data: [
         {
           fieldName: "Mother Name",
-          text: mother_name || "N/A",
+          text: mother_name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Mother Mobile No",
-          text: mother_phone_number || "N/A",
+          text: mother_phone_number || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
 
         {
           fieldName: "Mother Occupation",
-          text: mother_profession || "N/A",
+          text: mother_profession || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
@@ -165,18 +165,18 @@ const StudentInformation = ({ data }: { data: any }) => {
       data: [
         {
           fieldName: "Local Guardian Name",
-          text: local_guardian_name || "N/A",
+          text: local_guardian_name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Local Guardian Phone No",
-          text: local_guardian_phone_number || "N/A",
+          text: local_guardian_phone_number || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
 
         {
           fieldName: "Local Guardian Relation",
-          text: local_guardian_relation || "N/A",
+          text: local_guardian_relation || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],

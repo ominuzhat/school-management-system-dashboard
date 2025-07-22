@@ -42,14 +42,14 @@ const useCollectionColumns = (): ColumnsType<any> => {
       title: "Date",
       dataIndex: "date",
       align: "center",
-      render: (date) => (date ? date : "N/A"),
+      render: (date) => (date ? date : "-"),
     },
     {
       key: "4",
       title: "Collected By",
       dataIndex: "collected_by",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
 
     {
@@ -57,14 +57,14 @@ const useCollectionColumns = (): ColumnsType<any> => {
       title: "Total Collection",
       dataIndex: "total_collection",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
     {
       key: "3",
       title: "Total Transactions",
       dataIndex: "total_transactions",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
 
     {

@@ -78,7 +78,7 @@ const useShiftColumns = (
       dataIndex: "start_time",
       align: "center",
       render: (time) =>
-        time ? moment(time, "HH:mm:ss").format("h:mm A") : "N/A",
+        time ? moment(time, "HH:mm:ss").format("h:mm A") : "-",
     },
     {
       key: "3",
@@ -86,7 +86,7 @@ const useShiftColumns = (
       dataIndex: "end_time",
       align: "center",
       render: (time) =>
-        time ? moment(time, "HH:mm:ss").format("h:mm A") : "N/A",
+        time ? moment(time, "HH:mm:ss").format("h:mm A") : "-",
     },
     {
       title: "Actions",
@@ -308,7 +308,7 @@ export default useShiftColumns;
 //       title: "Shift Name",
 //       dataIndex: "name",
 //       align: "center",
-//       render: (title) => (title ? title : "N/A"),
+//       render: (title) => (title ? title : "-"),
 //     },
 
 //     {
@@ -317,7 +317,7 @@ export default useShiftColumns;
 //       dataIndex: "start_time",
 //       align: "center",
 //       render: (time) => {
-//         return time ? moment(time, "HH:mm:ss").format("h:mm A") : "N/A"; // Format in 12-hour format
+//         return time ? moment(time, "HH:mm:ss").format("h:mm A") : "-"; // Format in 12-hour format
 //       },
 //     },
 //     {
@@ -326,7 +326,7 @@ export default useShiftColumns;
 //       dataIndex: "end_time",
 //       align: "center",
 //       render: (time) => {
-//         return time ? moment(time, "HH:mm:ss").format("h:mm A") : "N/A"; // Format in 12-hour format
+//         return time ? moment(time, "HH:mm:ss").format("h:mm A") : "-"; // Format in 12-hour format
 //       },
 //     },
 //     {

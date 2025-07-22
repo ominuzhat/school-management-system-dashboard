@@ -51,21 +51,21 @@ const useRoutineColumns = (): ColumnsType<any> => {
       title: "Class Name",
       dataIndex: "grade_level",
       align: "center",
-      render: (title) => (title ? title?.name : "N/A"),
+      render: (title) => (title ? title?.name : "-"),
     },
     {
       key: "2",
       title: "Section Name",
       dataIndex: "section",
       align: "center",
-      render: (title) => (title ? title?.name : "N/A"),
+      render: (title) => (title ? title?.name : "-"),
     },
     {
       key: "3",
       title: "Session Name",
       dataIndex: "session",
       align: "center",
-      render: (title) => (title ? title?.name : "N/A"),
+      render: (title) => (title ? title?.name : "-"),
     },
 
     {

@@ -22,7 +22,7 @@ const ViewSingleEmployeeAttendance = () => {
       key: "name",
       render: (_: any, record: any) => {
         const person = record.employee || record.teacher;
-        return person ? `${person.first_name} ${person.last_name}` : "N/A";
+        return person ? `${person.first_name} ${person.last_name}` : "-";
       },
     },
     {
@@ -30,7 +30,7 @@ const ViewSingleEmployeeAttendance = () => {
       key: "email",
       render: (_: any, record: any) => {
         const person = record.employee || record.teacher;
-        return person?.email || "N/A";
+        return person?.email || "-";
       },
     },
     {
@@ -62,58 +62,58 @@ const ViewSingleEmployeeAttendance = () => {
           <Row gutter={[16, 16]}>
             <Col span={8}>
               <p>
-                <strong>Email:</strong> {person?.email || "N/A"}
+                <strong>Email:</strong> {person?.email || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Phone:</strong> {person?.phone_number || "N/A"}
+                <strong>Phone:</strong> {person?.phone_number || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Hire Date:</strong> {person?.hire_date || "N/A"}
+                <strong>Hire Date:</strong> {person?.hire_date || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Base Salary:</strong> {person?.base_salary || "N/A"}
+                <strong>Base Salary:</strong> {person?.base_salary || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Position:</strong> {person?.position || "N/A"}
+                <strong>Position:</strong> {person?.position || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Department:</strong> {person?.department?.name || "N/A"}
+                <strong>Department:</strong> {person?.department?.name || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Username:</strong> {user?.username || "N/A"}
+                <strong>Username:</strong> {user?.username || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Role:</strong> {user?.role?.name || "N/A"}
+                <strong>Role:</strong> {user?.role?.name || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
                 <strong>Institution:</strong>{" "}
-                {user?.role?.institution?.name || "N/A"}
+                {user?.role?.institution?.name || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Joined:</strong> {user?.date_joined || "N/A"}
+                <strong>Joined:</strong> {user?.date_joined || "-"}
               </p>
             </Col>
             <Col span={8}>
               <p>
-                <strong>Last Login:</strong> {user?.last_login || "N/A"}
+                <strong>Last Login:</strong> {user?.last_login || "-"}
               </p>
             </Col>
           </Row>

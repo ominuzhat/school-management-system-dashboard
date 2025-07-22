@@ -76,25 +76,25 @@ const ViewVendorPaymentEntry = ({ record }: any) => {
                     <CalendarOutlined />
                     {payment.payment_date
                       ? dayjs(payment.payment_date).format("DD MMMM YYYY")
-                      : "N/A"}
+                      : "-"}
                   </Space>
                 </Descriptions.Item>
                 <Descriptions.Item label="Invoice">
                   <Space>
                     <FileTextOutlined />
-                    {payment.invoice ? `INV-${payment.invoice}` : "N/A"}
+                    {payment.invoice ? `INV-${payment.invoice}` : "-"}
                   </Space>
                 </Descriptions.Item>
                 <Descriptions.Item label="Account">
                   <Space>
                     <BankOutlined />
-                    {payment.account ? `ACC-${payment.account}` : "N/A"}
+                    {payment.account ? `ACC-${payment.account}` : "-"}
                   </Space>
                 </Descriptions.Item>
                 <Descriptions.Item label="Reference">
                   <Space>
                     <CreditCardOutlined />
-                    {payment.reference || "N/A"}
+                    {payment.reference || "-"}
                   </Space>
                 </Descriptions.Item>
                 <Descriptions.Item label="Description">
@@ -112,23 +112,23 @@ const ViewVendorPaymentEntry = ({ record }: any) => {
           <Card title="Account Details">
             <Descriptions bordered column={1}>
               <Descriptions.Item label="Account Type">
-                {payment.account_type || "N/A"}
+                {payment.account_type || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="Account/Merchant Number">
-                {payment.account_or_merchant_number || "N/A"}
+                {payment.account_or_merchant_number || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="Account Name">
-                {payment.account_name || "N/A"}
+                {payment.account_name || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="Bank Name">
-                {payment.bank_name || "N/A"}
+                {payment.bank_name || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="Branch Name">
-                {payment.branch_name || "N/A"}
+                {payment.branch_name || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="Routing/API Key">
                 <Text ellipsis style={{ maxWidth: "300px" }}>
-                  {payment.routing_number_or_apikey || "N/A"}
+                  {payment.routing_number_or_apikey || "-"}
                 </Text>
               </Descriptions.Item>
               <Descriptions.Item label="Gateway URL">
@@ -141,7 +141,7 @@ const ViewVendorPaymentEntry = ({ record }: any) => {
                     {payment.gateway_url}
                   </a>
                 ) : (
-                  "N/A"
+                  "-"
                 )}
               </Descriptions.Item>
             </Descriptions>
@@ -153,12 +153,12 @@ const ViewVendorPaymentEntry = ({ record }: any) => {
             <Space direction="vertical" style={{ width: "100%" }}>
               <Text strong>
                 <UserOutlined style={{ marginRight: 8 }} />
-                {createdBy?.username || "N/A"}
+                {createdBy?.username || "-"}
               </Text>
               <Text>
                 <Space>
                   <InfoCircleOutlined />
-                  {createdBy?.role?.name || "N/A"}
+                  {createdBy?.role?.name || "-"}
                 </Space>
               </Text>
               <Text>
@@ -167,13 +167,13 @@ const ViewVendorPaymentEntry = ({ record }: any) => {
                   Created on{" "}
                   {payment.created_at
                     ? dayjs(payment.created_at).format("DD MMM YYYY, hh:mm A")
-                    : "N/A"}
+                    : "-"}
                 </Space>
               </Text>
               <Text>
                 <Space>
                   <BankOutlined />
-                  {createdBy?.role?.institution?.name || "N/A"}
+                  {createdBy?.role?.institution?.name || "-"}
                 </Space>
               </Text>
             </Space>
@@ -196,7 +196,7 @@ const ViewVendorPaymentEntry = ({ record }: any) => {
                   <Text strong>Date:</Text>{" "}
                   {payment.payment_date
                     ? dayjs(payment.payment_date).format("DD MMM YYYY")
-                    : "N/A"}
+                    : "-"}
                 </Space>
               </Text>
               <Text>

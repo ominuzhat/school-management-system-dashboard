@@ -54,7 +54,7 @@ const useFeesColumns = (): ColumnsType<any> => {
       title: "Fee Type",
       dataIndex: "fee_type",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      render: (title) => (title ? capitalize(title) : "-"),
     },
     {
       key: "2",
@@ -62,7 +62,7 @@ const useFeesColumns = (): ColumnsType<any> => {
       dataIndex: "grade_level",
       align: "center",
       render: (title) =>
-        title ? title.map((data: any) => data.name).join(", ") : "N/A",
+        title ? title.map((data: any) => data.name).join(", ") : "-",
     },
     // {
     //   key: "3",
@@ -70,7 +70,7 @@ const useFeesColumns = (): ColumnsType<any> => {
     //   dataIndex: "student",
     //   align: "center",
     //   render: (title) =>
-    //     title ? title.map((data: any) => data.user.username).join(", ") : "N/A",
+    //     title ? title.map((data: any) => data.user.username).join(", ") : "-",
     // },
     // {
     //   key: "4",
@@ -78,7 +78,7 @@ const useFeesColumns = (): ColumnsType<any> => {
     //   dataIndex: "subject",
     //   align: "center",
     //   render: (title) =>
-    //     title ? title.map((data: any) => data.name).join(", ") : "N/A",
+    //     title ? title.map((data: any) => data.name).join(", ") : "-",
     // },
 
     {

@@ -618,7 +618,7 @@ const CreateNewCollectFee = () => {
                                       name,
                                       "amount",
                                     ]);
-                                    if (value > total) {
+                                    if (value > total && !isAddOn) {
                                       return Promise.reject(
                                         new Error(
                                           "Paid amount can't exceed total amount"
@@ -634,6 +634,7 @@ const CreateNewCollectFee = () => {
                                 prefix={<TbCoinTaka />}
                                 type="number"
                                 disabled={
+                                  !isAddOn &&
                                   form.getFieldValue([
                                     "particulars",
                                     name,

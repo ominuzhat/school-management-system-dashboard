@@ -61,7 +61,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       dataIndex: "user",
       align: "center",
       sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
-      render: (user) => (user?.username ? user.username : "N/A"),
+      render: (user) => (user?.username ? user.username : "-"),
     },
     {
       key: "3",
@@ -69,7 +69,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       dataIndex: "current_grade_level",
       align: "center",
       render: (current_grade_level) =>
-        current_grade_level ? current_grade_level?.name : "N/A",
+        current_grade_level ? current_grade_level?.name : "-",
     },
     {
       key: "55",
@@ -78,7 +78,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       align: "center",
 
       render: (current_section) =>
-        current_section ? current_section?.name : "N/A",
+        current_section ? current_section?.name : "-",
     },
     {
       key: "44",
@@ -87,14 +87,14 @@ const useStudentColumns = (): ColumnsType<any> => {
       align: "center",
 
       render: (current_session) =>
-        current_session ? current_session?.name : "N/A",
+        current_session ? current_session?.name : "-",
     },
     {
       key: "66",
       title: "Shift",
       dataIndex: "current_shift",
       align: "center",
-      render: (current_shift) => (current_shift ? current_shift?.name : "N/A"),
+      render: (current_shift) => (current_shift ? current_shift?.name : "-"),
     },
 
     {
@@ -102,7 +102,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Phone",
       dataIndex: "contact_phone_number",
       align: "center",
-      render: (phone_number) => (phone_number ? phone_number : "N/A"),
+      render: (phone_number) => (phone_number ? phone_number : "-"),
     },
     {
       key: "6",

@@ -361,7 +361,7 @@ const CreateHoliday = () => {
                     {studentData?.data?.results?.map((student: any) => (
                       <Option key={student.id} value={student.id}>
                         {`${student.first_name} ${student.last_name} - (${
-                          student?.user?.username || "N/A"
+                          student?.user?.username || "-"
                         }) - ${student?.current_grade_level?.name} (${
                           student?.current_section?.name
                         })`}
@@ -407,7 +407,7 @@ const CreateHoliday = () => {
                     {teacherData?.data?.results?.map((teacher: any) => (
                       <Option key={teacher.id} value={teacher.id}>
                         {`${teacher.first_name} ${teacher.last_name} - (${
-                          teacher?.user?.username || "N/A"
+                          teacher?.user?.username || "-"
                         })`}
                       </Option>
                     ))}
@@ -451,7 +451,7 @@ const CreateHoliday = () => {
                     {employeeData?.data?.results?.map((employee: any) => (
                       <Option key={employee.id} value={employee.id}>
                         {`${employee.first_name} ${employee.last_name} - (${
-                          employee?.user?.username || "N/A"
+                          employee?.user?.username || "-"
                         })`}
                       </Option>
                     ))}

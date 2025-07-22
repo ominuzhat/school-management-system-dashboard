@@ -36,7 +36,7 @@ const TeacherSubjects = ({ data, isFetching, isLoading }: any) => {
       dataIndex: "className",
       align: "center",
       render: (className: string) => (
-        <span style={{ fontWeight: 600 }}>{className || "N/A"}</span>
+        <span style={{ fontWeight: 600 }}>{className || "-"}</span>
       ),
     },
     {

@@ -104,7 +104,7 @@ const usePayrollColumns = (): ColumnsType<any> => {
         } else if (record?.teacher) {
           return `${record?.teacher?.first_name} ${record?.teacher?.last_name}`;
         }
-        return "N/A";
+        return "-";
       },
       sorter: (a, b) => {
         const nameA = `${a?.employee?.first_name} ${a?.employee?.last_name}`;
@@ -122,7 +122,7 @@ const usePayrollColumns = (): ColumnsType<any> => {
           ? dayjs(record?.period_start).format("DD MMM YY") +
             " - " +
             dayjs(record?.period_end).format("DD MMM YY")
-          : "N/A",
+          : "-",
       sorter: (a, b) => a?.period_start.localeCompare(b?.period_start), // Sort by start date
     },
     {

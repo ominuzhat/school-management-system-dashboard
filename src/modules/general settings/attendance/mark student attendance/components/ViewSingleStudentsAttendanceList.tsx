@@ -32,7 +32,7 @@ const ViewSingleStudentsAttendanceList = () => {
             {first_name} {last_name}
           </Link>
         ) : (
-          "N/A"
+          "-"
         );
       },
     },
@@ -90,7 +90,7 @@ const ViewSingleStudentsAttendanceList = () => {
       key: subject.id,
       subject: subject.name,
       group_type_display: subject.group_type_display,
-      // group_type_display: subject.grade_level?.class_teacher?.first_name || "N/A",
+      // group_type_display: subject.grade_level?.class_teacher?.first_name || "-",
     }));
 
     return (

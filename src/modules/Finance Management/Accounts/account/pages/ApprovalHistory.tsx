@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Card, Avatar, Tag, DatePicker, Select, Pagination, Space, Button } from "antd";
+import {
+  Card,
+  Avatar,
+  Tag,
+  DatePicker,
+  Select,
+  Pagination,
+  Space,
+  Button,
+} from "antd";
 import { capitalize } from "../../../../../common/capitalize/Capitalize";
 import { formatDate, getAccountIcon, statusTag } from "./ApprovalPage";
 import { useGetTransferRequestQuery } from "../../Transaction/api/transactionEndPoints";
@@ -127,13 +136,18 @@ const ApprovalHistory = () => {
                     </Avatar>
                     <div>
                       <p className="font-semibold">
-                        <span className="font-normal mr-2">Destination Account:</span>{" "}
-                        {capitalize(transaction.destination_account?.account_type) ||
+                        <span className="font-normal mr-2">
+                          Destination Account:
+                        </span>{" "}
+                        {capitalize(
+                          transaction.destination_account?.account_type
+                        ) ||
                           capitalize(transaction.destination_account?.type) ||
-                          "N/A"}
+                          "-"}
                       </p>
                       <p className="text-sm text-gray-600">
-                        Balance: ৳{transaction.destination_account?.balance || "0"}
+                        Balance: ৳
+                        {transaction.destination_account?.balance || "0"}
                       </p>
                     </div>
                   </div>
@@ -141,7 +155,8 @@ const ApprovalHistory = () => {
 
                 <div className="p-3 bg-gray-50 rounded-lg">
                   <p className="text-sm">
-                    <span className="font-medium">Purpose:</span> {transaction.notes}
+                    <span className="font-medium">Purpose:</span>{" "}
+                    {transaction.notes}
                   </p>
                 </div>
               </div>
@@ -152,9 +167,7 @@ const ApprovalHistory = () => {
                   <p className="text-2xl font-bold text-blue-600">
                     ৳{transaction.amount}
                   </p>
-                  <Tag className="uppercase mt-2">
-                    {transaction.status}
-                  </Tag>
+                  <Tag className="uppercase mt-2">{transaction.status}</Tag>
                 </div>
               </div>
             </div>
@@ -170,7 +183,7 @@ const ApprovalHistory = () => {
           total={totalCount}
           onChange={handlePageChange}
           showSizeChanger
-          pageSizeOptions={['10', '20', '50']}
+          pageSizeOptions={["10", "20", "50"]}
         />
       </div>
     </Card>

@@ -51,7 +51,7 @@ const useScheduleColumns = (): ColumnsType<any> => {
       title: "Shift Name",
       dataIndex: "name",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
 
     {
@@ -60,7 +60,7 @@ const useScheduleColumns = (): ColumnsType<any> => {
       dataIndex: "start_time",
       align: "center",
       render: (time) => {
-        return time ? dayjs(time, "HH:mm:ss").format("h:mm A") : "N/A"; // Format in 12-hour format
+        return time ? dayjs(time, "HH:mm:ss").format("h:mm A") : "-"; // Format in 12-hour format
       },
     },
     {
@@ -69,7 +69,7 @@ const useScheduleColumns = (): ColumnsType<any> => {
       dataIndex: "end_time",
       align: "center",
       render: (time) => {
-        return time ? dayjs(time, "HH:mm:ss").format("h:mm A") : "N/A"; // Format in 12-hour format
+        return time ? dayjs(time, "HH:mm:ss").format("h:mm A") : "-"; // Format in 12-hour format
       },
     },
     {

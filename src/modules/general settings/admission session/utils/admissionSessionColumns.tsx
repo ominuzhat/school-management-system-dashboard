@@ -58,7 +58,7 @@ const useAdmissionSessionsColumns = (): ColumnsType<any> => {
       title: "Session Name",
       dataIndex: "name",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "1",
@@ -87,7 +87,7 @@ const useAdmissionSessionsColumns = (): ColumnsType<any> => {
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </Tag>
         ) : (
-          "N/A"
+          "-"
         );
       },
     },

@@ -45,7 +45,7 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Account Type",
       dataIndex: "account",
       align: "center",
-      render: (title) => (title ? capitalize(title?.account_type) : "N/A"),
+      render: (title) => (title ? capitalize(title?.account_type) : "-"),
     },
     {
       key: "2",
@@ -72,7 +72,7 @@ const useCashColumns = (): ColumnsType<any> => {
 
         return (
           <Tag color={color} className="uppercase">
-            {method ? method.toLowerCase() : "N/A"}
+            {method ? method.toLowerCase() : "-"}
           </Tag>
         );
       },
@@ -82,7 +82,7 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Entry Type",
       dataIndex: "entry_type",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      render: (title) => (title ? capitalize(title) : "-"),
     },
 
     {
@@ -96,7 +96,7 @@ const useCashColumns = (): ColumnsType<any> => {
 
         return (
           <Tag color={color}>
-            {amount !== null && amount !== undefined ? amount : "N/A"}
+            {amount !== null && amount !== undefined ? amount : "-"}
           </Tag>
         );
       },
@@ -107,14 +107,14 @@ const useCashColumns = (): ColumnsType<any> => {
       title: "Date",
       dataIndex: "date",
       align: "center",
-      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "-"),
     },
     {
       key: "6",
       title: "Description",
       dataIndex: "description",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
 
     {

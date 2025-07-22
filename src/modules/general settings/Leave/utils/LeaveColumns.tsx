@@ -53,28 +53,28 @@ const useLeaveColumns = (): ColumnsType<any> => {
       render: (title) =>
         title
           ? title?.student?.first_name + " " + title?.student?.last_name
-          : "N/A",
+          : "-",
     },
     {
       key: "3",
       title: "Session Name",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title?.session?.name : "N/A"),
+      render: (title) => (title ? title?.session?.name : "-"),
     },
     {
       key: "22",
       title: "Class",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title?.grade_level : "N/A"),
+      render: (title) => (title ? title?.grade_level : "-"),
     },
     {
       key: "2",
       title: "Section",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title?.section?.name : "N/A"),
+      render: (title) => (title ? title?.section?.name : "-"),
     },
 
     {
@@ -82,7 +82,7 @@ const useLeaveColumns = (): ColumnsType<any> => {
       title: "Leave Type",
       dataIndex: "leave_type",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "5",
@@ -93,7 +93,7 @@ const useLeaveColumns = (): ColumnsType<any> => {
         if (type === "F") return "Full Day";
         if (type === "H") return "Half Day";
         if (type === "M") return "Multiple Days";
-        return "N/A";
+        return "-";
       },
     },
 
@@ -109,7 +109,7 @@ const useLeaveColumns = (): ColumnsType<any> => {
               month: "long",
               year: "numeric",
             }).format(new Date(date))
-          : "N/A",
+          : "-",
     },
     {
       key: "7",
@@ -123,7 +123,7 @@ const useLeaveColumns = (): ColumnsType<any> => {
               month: "long",
               year: "numeric",
             }).format(new Date(date))
-          : "N/A",
+          : "-",
     },
 
     {
@@ -131,7 +131,7 @@ const useLeaveColumns = (): ColumnsType<any> => {
       title: "Reason",
       dataIndex: "reason",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "8",

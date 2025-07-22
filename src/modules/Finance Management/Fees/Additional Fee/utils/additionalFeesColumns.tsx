@@ -43,7 +43,7 @@ const useAdditionalFeesColumns = (): ColumnsType<any> => {
       title: "Name",
       dataIndex: "name",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
 
     {
@@ -51,7 +51,7 @@ const useAdditionalFeesColumns = (): ColumnsType<any> => {
       title: "Amount",
       dataIndex: "amount",
       align: "center",
-      render: (amount) => (amount ? amount : "N/A"),
+      render: (amount) => (amount ? amount : "-"),
     },
 
     {

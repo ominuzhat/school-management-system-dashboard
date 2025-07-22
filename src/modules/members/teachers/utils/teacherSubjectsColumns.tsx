@@ -32,7 +32,7 @@ const useTeacherSubjectsColumns = (): ColumnsType<ClassGroup> => {
       dataIndex: "className",
       align: "center",
       render: (className) => (
-        <span style={{ fontWeight: 600 }}>{className || "N/A"}</span>
+        <span style={{ fontWeight: 600 }}>{className || "-"}</span>
       ),
     },
     {
@@ -96,14 +96,14 @@ export default useTeacherSubjectsColumns;
 //       title: "Subjects Name",
 //       dataIndex: "name",
 //       align: "center",
-//       render: (name) => (name ? name : "N/A"),
+//       render: (name) => (name ? name : "-"),
 //     },
 //     {
 //       key: "2",
 //       title: "Class",
 //       dataIndex: "grade_level",
 //       align: "center",
-//       render: (grade_level) => (grade_level ? grade_level?.name : "N/A"),
+//       render: (grade_level) => (grade_level ? grade_level?.name : "-"),
 //     },
 //   ];
 // };

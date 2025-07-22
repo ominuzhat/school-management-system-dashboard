@@ -50,21 +50,21 @@ const useClassesColumns = (): ColumnsType<any> => {
       title: "Class Name",
       dataIndex: "name",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "3",
       title: "Class Teacher Name",
       dataIndex: "class_teacher",
       align: "center",
-      render: (title) => (title ? title?.first_name : "N/A"),
+      render: (title) => (title ? title?.first_name : "-"),
     },
     {
       key: "2",
       title: "Description",
       dataIndex: "description",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
 
     {

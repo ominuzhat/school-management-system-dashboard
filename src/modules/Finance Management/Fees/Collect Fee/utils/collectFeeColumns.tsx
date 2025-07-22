@@ -35,7 +35,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
 
       const newWindow = window.open("", "_blank");
 
-      if (newWindow) { 
+      if (newWindow) {
         newWindow.document.write(`
         <html>
           <head>
@@ -86,7 +86,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
             {admission.student?.first_name} {admission.student?.last_name}
           </Link>
         ) : (
-          "N/A"
+          "-"
         ),
     },
     {
@@ -94,14 +94,14 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "User Name",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title.student?.user?.username : "N/A"),
+      render: (title) => (title ? title.student?.user?.username : "-"),
     },
     {
       key: "111115",
       title: "Session",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title?.session?.name : "N/A"),
+      render: (title) => (title ? title?.session?.name : "-"),
     },
     {
       key: "2",
@@ -110,7 +110,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       align: "center",
       render: (admission) => {
         const phone = admission?.student?.phone_number;
-        return phone ? phone.replace(/^880/, "0") : "N/A";
+        return phone ? phone.replace(/^880/, "0") : "-";
       },
     },
     {
@@ -118,14 +118,14 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Class",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title.grade_level : "N/A"),
+      render: (title) => (title ? title.grade_level : "-"),
     },
     {
       key: "6",
       title: "Month",
       dataIndex: "month",
       align: "center",
-      render: (month) => (month ? dayjs(month).format("MMMM") : "N/A"),
+      render: (month) => (month ? dayjs(month).format("MMMM") : "-"),
     },
     {
       key: "8",
@@ -153,7 +153,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       title: "Payment Date",
       dataIndex: "payment_date",
       align: "center",
-      render: (month) => (month ? dayjs(month).format("DD MMM YYYY") : "N/A"),
+      render: (month) => (month ? dayjs(month).format("DD MMM YYYY") : "-"),
     },
     {
       key: "11",
@@ -175,7 +175,7 @@ const useCollectFeeColumns = (): ColumnsType<any> => {
       dataIndex: "status",
       align: "center",
       render: (status) => {
-        if (!status) return <Tag color="cyan">N/A</Tag>;
+        if (!status) return <Tag color="cyan">-</Tag>;
         const value = String(status).toLowerCase();
         if (value === "paid") {
           return <Tag color="green">Paid</Tag>;

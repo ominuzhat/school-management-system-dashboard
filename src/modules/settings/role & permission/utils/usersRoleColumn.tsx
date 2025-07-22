@@ -7,7 +7,7 @@ const usersRoleColumn = (): ColumnsType<any> => {
       title: "Name",
       dataIndex: "username",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
   ];
 };

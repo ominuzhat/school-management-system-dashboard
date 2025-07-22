@@ -331,8 +331,7 @@ const UpdateHoliday = ({ record }: { record: number }) => {
                 >
                   {studentData?.data?.results?.map((s: any) => (
                     <Option key={s.id} value={s.id}>
-                      {s.first_name} {s.last_name} - (
-                      {s.user?.username || "N/A"})
+                      {s.first_name} {s.last_name} - ({s.user?.username || "-"})
                     </Option>
                   ))}
                 </Select>
@@ -366,8 +365,7 @@ const UpdateHoliday = ({ record }: { record: number }) => {
                 >
                   {teacherData?.data?.results?.map((t: any) => (
                     <Option key={t.id} value={t.id}>
-                      {t.first_name} {t.last_name} - (
-                      {t.user?.username || "N/A"})
+                      {t.first_name} {t.last_name} - ({t.user?.username || "-"})
                     </Option>
                   ))}
                 </Select>
@@ -401,8 +399,7 @@ const UpdateHoliday = ({ record }: { record: number }) => {
                 >
                   {employeeData?.data?.results?.map((e: any) => (
                     <Option key={e.id} value={e.id}>
-                      {e.first_name} {e.last_name} - (
-                      {e.user?.username || "N/A"})
+                      {e.first_name} {e.last_name} - ({e.user?.username || "-"})
                     </Option>
                   ))}
                 </Select>

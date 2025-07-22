@@ -223,10 +223,10 @@ const InvoiceView = ({ record }: { record: string }) => {
                     {student?.father_number}
                   </Descriptions.Item>
                   <Descriptions.Item label="Email">
-                    {student?.father_email || "N/A"}
+                    {student?.father_email || "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Profession">
-                    {student?.father_profession || "N/A"}
+                    {student?.father_profession || "-"}
                   </Descriptions.Item>
                 </Descriptions>
               </Card>
@@ -241,10 +241,10 @@ const InvoiceView = ({ record }: { record: string }) => {
                     {student?.mother_phone_number}
                   </Descriptions.Item>
                   <Descriptions.Item label="Email">
-                    {student?.mother_email || "N/A"}
+                    {student?.mother_email || "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Profession">
-                    {student?.mother_profession || "N/A"}
+                    {student?.mother_profession || "-"}
                   </Descriptions.Item>
                 </Descriptions>
               </Card>
@@ -312,7 +312,7 @@ const InvoiceView = ({ record }: { record: string }) => {
                 {dayjs(invoice?.issue_date)?.format("MMM DD, YYYY")}
               </Descriptions.Item>
               <Descriptions.Item label="Notes">
-                {invoice?.notes || "N/A"}
+                {invoice?.notes || "-"}
               </Descriptions.Item>
             </Descriptions>
           </Col>

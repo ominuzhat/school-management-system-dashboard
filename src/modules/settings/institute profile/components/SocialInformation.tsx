@@ -13,22 +13,22 @@ const SocialInformation = ({
   const basicInfo = [
     {
       fieldName: "Website",
-      text: website_url || "N/A",
+      text: website_url || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Facebook URL",
-      text: facebook_url || "N/A",
+      text: facebook_url || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Twitter URL",
-      text: twitter_url || "N/A",
+      text: twitter_url || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "LinkedIn URL",
-      text: linkedin_url || "N/A",
+      text: linkedin_url || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
   ];

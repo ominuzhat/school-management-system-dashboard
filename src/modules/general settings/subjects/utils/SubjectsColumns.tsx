@@ -49,21 +49,21 @@ const useSubjectColumns = (): ColumnsType<any> => {
       title: "Subjects Name",
       dataIndex: "name",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "2",
       title: "Class",
       dataIndex: "grade_level",
       align: "center",
-      render: (title) => (title ? title?.name : "N/A"),
+      render: (title) => (title ? title?.name : "-"),
     },
     {
       key: "3",
       title: "Group Type",
       dataIndex: "group_type_display",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
 
     {
@@ -153,7 +153,7 @@ export default useSubjectColumns;
 //       title: "Subject Name",
 //       dataIndex: "name",
 //       align: "center",
-//       render: (name) => (name ? name : "N/A"),
+//       render: (name) => (name ? name : "-"),
 //     },
 //     {
 //       key: "3",
@@ -163,7 +163,7 @@ export default useSubjectColumns;
 //       render: (grade_level) =>
 //         grade_level?.class_teacher
 //           ? `${grade_level.class_teacher?.first_name} ${grade_level.class_teacher?.last_name}`
-//           : "N/A",
+//           : "-",
 //     },
 //     {
 //       title: "Actions",
@@ -205,7 +205,7 @@ export default useSubjectColumns;
 //       dataIndex: "name",
 //       align: "left",
 //       width: "400px",
-//       render: (name) => (name ? name : "N/A"),
+//       render: (name) => (name ? name : "-"),
 //     },
 //     {
 //       key: "2",

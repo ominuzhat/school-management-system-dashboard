@@ -108,7 +108,7 @@ const usePaymentColumns = (): ColumnsType<any> => {
         } else if (payroll?.teacher) {
           return `${payroll?.teacher?.first_name} ${payroll?.teacher?.last_name}`;
         }
-        return "N/A";
+        return "-";
       },
     },
 
@@ -122,7 +122,7 @@ const usePaymentColumns = (): ColumnsType<any> => {
           ? dayjs(record?.period_start).format("DD MMM YY") +
             " - " +
             dayjs(record?.period_end).format("DD MMM YY")
-          : "N/A",
+          : "-",
       sorter: (a, b) => a?.period_start.localeCompare(b?.period_start),
     },
     {
@@ -130,29 +130,28 @@ const usePaymentColumns = (): ColumnsType<any> => {
       title: "Payment Date",
       dataIndex: "payment_date",
       align: "center",
-      render: (payroll) =>
-        payroll ? dayjs(payroll).format("DD MMM YY") : "N/A",
+      render: (payroll) => (payroll ? dayjs(payroll).format("DD MMM YY") : "-"),
     },
     {
       key: "1",
       title: "Attendance Days",
       dataIndex: "payroll",
       align: "center",
-      render: (payroll) => (payroll ? payroll?.attendance_days : "N/A"),
+      render: (payroll) => (payroll ? payroll?.attendance_days : "-"),
     },
     {
       key: "1",
       title: "Net Salary",
       dataIndex: "payroll",
       align: "center",
-      render: (payroll) => (payroll ? payroll?.net_salary : "N/A"),
+      render: (payroll) => (payroll ? payroll?.net_salary : "-"),
     },
     {
       key: "1",
       title: "Paid Amount",
       dataIndex: "amount_paid",
       align: "center",
-      render: (amount) => (amount ? amount : "N/A"),
+      render: (amount) => (amount ? amount : "-"),
     },
 
     {

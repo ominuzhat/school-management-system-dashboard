@@ -66,7 +66,7 @@ const useTeacherColumns = (): ColumnsType<any> => {
       dataIndex: "user",
       align: "center",
       sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
-      render: (name) => (name ? name?.username : "N/A"),
+      render: (name) => (name ? name?.username : "-"),
     },
     {
       key: "33",
@@ -81,7 +81,7 @@ const useTeacherColumns = (): ColumnsType<any> => {
             )} - ${dayjs(schedule?.end_time, "HH:mm:ss").format("hh:mm A")}`}
           </>
         ) : (
-          "N/A"
+          "-"
         ),
     },
     {
@@ -89,7 +89,7 @@ const useTeacherColumns = (): ColumnsType<any> => {
       title: "Phone",
       dataIndex: "phone_number",
       align: "center",
-      render: (phone_number) => (phone_number ? phone_number : "N/A"),
+      render: (phone_number) => (phone_number ? phone_number : "-"),
     },
     {
       key: "5",
@@ -100,14 +100,14 @@ const useTeacherColumns = (): ColumnsType<any> => {
         new Date(a.hire_date || 0).getTime() -
         new Date(b.hire_date || 0).getTime(),
       render: (hire_date) =>
-        hire_date ? dayjs(hire_date).format("DD MMMM YYYY") : "N/A",
+        hire_date ? dayjs(hire_date).format("DD MMMM YYYY") : "-",
     },
     {
       key: "6",
       title: "Base Salary",
       dataIndex: "base_salary",
       align: "center",
-      render: (base_salary) => (base_salary ? base_salary : "N/A"),
+      render: (base_salary) => (base_salary ? base_salary : "-"),
     },
 
     {

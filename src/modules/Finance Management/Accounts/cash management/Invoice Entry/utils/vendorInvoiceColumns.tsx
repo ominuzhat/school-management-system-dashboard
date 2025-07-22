@@ -92,14 +92,14 @@ const useVendorInvoiceColumns = (): ColumnsType<any> => {
       title: "Vendor Name",
       dataIndex: "vendor",
       align: "center",
-      render: (val) => val?.name || "N/A",
+      render: (val) => val?.name || "-",
     },
     {
       key: "1",
       title: "Invoice Number",
       dataIndex: "invoice_number",
       align: "center",
-      render: (val) => val || "N/A",
+      render: (val) => val || "-",
     },
     {
       key: "2",
@@ -108,7 +108,7 @@ const useVendorInvoiceColumns = (): ColumnsType<any> => {
       align: "center",
       render: (amount) => (
         <Tag color="green">
-          {amount !== null && amount !== undefined ? amount : "N/A"}
+          {amount !== null && amount !== undefined ? amount : "-"}
         </Tag>
       ),
     },
@@ -119,7 +119,7 @@ const useVendorInvoiceColumns = (): ColumnsType<any> => {
       align: "center",
       render: (amount_due) => (
         <Tag color="red">
-          {amount_due !== null && amount_due !== undefined ? amount_due : "N/A"}
+          {amount_due !== null && amount_due !== undefined ? amount_due : "-"}
         </Tag>
       ),
     },
@@ -140,14 +140,14 @@ const useVendorInvoiceColumns = (): ColumnsType<any> => {
       title: "Date",
       dataIndex: "date",
       align: "center",
-      render: (val) => (val ? dayjs(val).format("DD MMM YYYY") : "N/A"),
+      render: (val) => (val ? dayjs(val).format("DD MMM YYYY") : "-"),
     },
     {
       key: "8",
       title: "Created By",
       dataIndex: "created_by",
       align: "center",
-      render: (user) => user?.username || "N/A",
+      render: (user) => user?.username || "-",
     },
 
     {

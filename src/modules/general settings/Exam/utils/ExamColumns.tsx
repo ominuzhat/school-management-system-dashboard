@@ -52,7 +52,7 @@ const useExamColumns = (): ColumnsType<any> => {
       title: "Exam Name",
       dataIndex: "name",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
 
     {
@@ -60,7 +60,7 @@ const useExamColumns = (): ColumnsType<any> => {
       title: "Term",
       dataIndex: "term",
       align: "center",
-      render: (title) => (title ? title?.name : "N/A"),
+      render: (title) => (title ? title?.name : "-"),
     },
 
     {
@@ -68,14 +68,14 @@ const useExamColumns = (): ColumnsType<any> => {
       title: "Start Date",
       dataIndex: "start_date",
       align: "center",
-      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "-"),
     },
     {
       key: "4",
       title: "End Date",
       dataIndex: "end_date",
       align: "center",
-      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "-"),
     },
     {
       title: "Actions",
@@ -100,4 +100,3 @@ const useExamColumns = (): ColumnsType<any> => {
 };
 
 export default useExamColumns;
-

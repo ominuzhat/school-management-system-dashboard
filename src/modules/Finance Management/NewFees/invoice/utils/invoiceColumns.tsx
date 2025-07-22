@@ -78,7 +78,7 @@ const useInvoiceColumns = (): ColumnsType<any> => {
       title: "Student ID",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title?.student?.user?.username : "N/A"),
+      render: (title) => (title ? title?.student?.user?.username : "-"),
     },
     {
       key: "1",
@@ -99,7 +99,7 @@ const useInvoiceColumns = (): ColumnsType<any> => {
       dataIndex: "issue_date",
       key: "issue_date",
       align: "center",
-      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "-"),
     },
 
     // {

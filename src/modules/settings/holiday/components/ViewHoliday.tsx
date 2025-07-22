@@ -64,11 +64,9 @@ const renderPersonList = (data: any[], type: string) => {
                   {person.first_name} {person.last_name}
                 </Text>
                 <div className="flex flex-wrap gap-2 mt-1">
-                  <Tag className="m-0">ID: {person.user?.username || "N/A"}</Tag>
-                  <Tag className="m-0">Email: {person.email || "N/A"}</Tag>
-                  <Tag className="m-0">
-                    Phone: {person.phone_number || "N/A"}
-                  </Tag>
+                  <Tag className="m-0">ID: {person.user?.username || "-"}</Tag>
+                  <Tag className="m-0">Email: {person.email || "-"}</Tag>
+                  <Tag className="m-0">Phone: {person.phone_number || "-"}</Tag>
                 </div>
               </div>
             </div>
@@ -125,7 +123,7 @@ const ViewHoliday = ({ record }: { record: string }) => {
             </Tag>
           </Descriptions.Item>
           <Descriptions.Item label={<Text strong>Session</Text>}>
-            {holiday.session?.name || "N/A"}
+            {holiday.session?.name || "-"}
           </Descriptions.Item>
           <Descriptions.Item label={<Text strong>Date Range</Text>}>
             <div className="flex items-center gap-2">

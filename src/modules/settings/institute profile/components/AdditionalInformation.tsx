@@ -24,48 +24,48 @@ const AdditionalInformation = ({
       fieldName: "Established Date",
       text: data?.established_date
         ? new Date(data.established_date).toLocaleDateString()
-        : "N/A",
+        : "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
 
     {
       fieldName: "Founder",
-      text: founder || "N/A",
+      text: founder || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Description",
-      text: description || "N/A",
+      text: description || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Campus Size",
-      text: `${campus_size} acres` || "N/A",
+      text: `${campus_size} acres` || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Number of Students",
-      text: `${num_students}` || "N/A",
+      text: `${num_students}` || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Accreditations",
-      text: accreditations || "N/A",
+      text: accreditations || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Ownership Type",
-      text: ownership_type || "N/A",
+      text: ownership_type || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Latitude",
-      text: `${latitude}` || "N/A",
+      text: `${latitude}` || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Longitude",
-      text: `${longitude}` || "N/A",
+      text: `${longitude}` || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
   ];

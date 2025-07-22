@@ -52,7 +52,7 @@ const useRulesColumns = (): ColumnsType<any> => {
       dataIndex: "title",
       align: "center",
       sorter: (a, b) => (a.title || "").localeCompare(b.title || ""),
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     // {
     //   key: "2",
@@ -61,7 +61,7 @@ const useRulesColumns = (): ColumnsType<any> => {
     //   align: "center",
     //   sorter: (a, b) =>
     //     (a.description || "").localeCompare(b.description || ""),
-    //   render: (description) => (description ? description : "N/A"),
+    //   render: (description) => (description ? description : "-"),
     // },
     {
       key: "3",
@@ -69,7 +69,7 @@ const useRulesColumns = (): ColumnsType<any> => {
       dataIndex: "category",
       align: "center",
       sorter: (a, b) => (a.category || "").localeCompare(b.category || ""),
-      render: (category) => (category ? category : "N/A"),
+      render: (category) => (category ? category : "-"),
     },
     {
       key: "4",
@@ -78,7 +78,7 @@ const useRulesColumns = (): ColumnsType<any> => {
       align: "center",
       sorter: (a, b) =>
         (a.target_audience || "").localeCompare(b.target_audience || ""),
-      render: (audience) => (audience ? audience : "N/A"),
+      render: (audience) => (audience ? audience : "-"),
     },
     {
       key: "5",

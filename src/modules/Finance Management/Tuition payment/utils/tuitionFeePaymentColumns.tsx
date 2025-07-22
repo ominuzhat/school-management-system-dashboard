@@ -38,7 +38,7 @@ const useTuitionFeePaymentColumns = (): ColumnsType<any> => {
         } else if (payroll?.teacher) {
           return `${payroll?.teacher?.first_name} ${payroll?.teacher?.last_name}`;
         }
-        return "N/A";
+        return "-";
       },
     },
     {
@@ -49,42 +49,42 @@ const useTuitionFeePaymentColumns = (): ColumnsType<any> => {
       render: (payroll) =>
         payroll
           ? payroll?.period_start + " ------- " + payroll?.period_end
-          : "N/A",
+          : "-",
     },
     {
       key: "1",
       title: "Payment Date",
       dataIndex: "payment_date",
       align: "center",
-      render: (payroll) => (payroll ? payroll : "N/A"),
+      render: (payroll) => (payroll ? payroll : "-"),
     },
     {
       key: "1",
       title: "Attendance Days",
       dataIndex: "payroll",
       align: "center",
-      render: (payroll) => (payroll ? payroll?.attendance_days : "N/A"),
+      render: (payroll) => (payroll ? payroll?.attendance_days : "-"),
     },
     {
       key: "1",
       title: "Net Salary",
       dataIndex: "payroll",
       align: "center",
-      render: (payroll) => (payroll ? payroll?.net_salary : "N/A"),
+      render: (payroll) => (payroll ? payroll?.net_salary : "-"),
     },
     {
       key: "1",
       title: "Paid Amount",
       dataIndex: "amount_paid",
       align: "center",
-      render: (amount) => (amount ? amount : "N/A"),
+      render: (amount) => (amount ? amount : "-"),
     },
     {
       key: "1",
       title: "Payment Method",
       dataIndex: "payment_method",
       align: "center",
-      render: (method) => (method ? <Tag color="green">{method}</Tag> : "N/A"),
+      render: (method) => (method ? <Tag color="green">{method}</Tag> : "-"),
     },
 
     {

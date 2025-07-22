@@ -53,56 +53,56 @@ const useAccountColumns = (): ColumnsType<any> => {
       title: "Type",
       dataIndex: "type",
       align: "center",
-      render: (type) => (type ? capitalize(type) : "N/A"),
+      render: (type) => (type ? capitalize(type) : "-"),
     },
     {
       key: "3",
       title: "Account Type",
       dataIndex: "account_type",
       align: "center",
-      render: (val) => (val ? capitalize(val) : "N/A"),
+      render: (val) => (val ? capitalize(val) : "-"),
     },
     {
       key: "4",
       title: "Account/Merchant Number",
       dataIndex: "account_or_merchant_number",
       align: "center",
-      render: (val) => val ?? "N/A",
+      render: (val) => val ?? "-",
     },
     {
       key: "5",
       title: "Account Name",
       dataIndex: "account_name",
       align: "center",
-      render: (val) => val ?? "N/A",
+      render: (val) => val ?? "-",
     },
     {
       key: "6",
       title: "Bank Name",
       dataIndex: "bank_name",
       align: "center",
-      render: (val) => val ?? "N/A",
+      render: (val) => val ?? "-",
     },
     {
       key: "7",
       title: "Branch Name",
       dataIndex: "branch_name",
       align: "center",
-      render: (val) => val ?? "N/A",
+      render: (val) => val ?? "-",
     },
     {
       key: "8",
       title: "Routing Number/API Key",
       dataIndex: "routing_number_or_apikey",
       align: "center",
-      render: (val) => val ?? "N/A",
+      render: (val) => val ?? "-",
     },
     {
       key: "9",
       title: "Gateway URL",
       dataIndex: "gateway_url",
       align: "center",
-      render: (val) => val ?? "N/A",
+      render: (val) => val ?? "-",
     },
     {
       key: "10",
@@ -114,7 +114,7 @@ const useAccountColumns = (): ColumnsType<any> => {
         const color = isPositive ? "green" : "red";
         return (
           <Tag color={color}>
-            {balance !== null && balance !== undefined ? balance : "N/A"}
+            {balance !== null && balance !== undefined ? balance : "-"}
           </Tag>
         );
       },

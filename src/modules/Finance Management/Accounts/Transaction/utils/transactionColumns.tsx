@@ -64,7 +64,7 @@ const useTransactionColumns = (): ColumnsType<any> => {
       dataIndex: "amount",
       align: "center",
       render: (text: any) => <div className="flex items-center">৳ {text}</div>,
-      // render: (title) => (title ? title : "N/A"),
+      // render: (title) => (title ? title : "-"),
     },
     {
       key: "3",
@@ -81,7 +81,7 @@ const useTransactionColumns = (): ColumnsType<any> => {
 
         return (
           <Tag color={color} className="uppercase">
-            {lowerType || "N/A"}
+            {lowerType || "-"}
           </Tag>
         );
       },
@@ -91,7 +91,7 @@ const useTransactionColumns = (): ColumnsType<any> => {
       title: "Transaction Date",
       dataIndex: "transaction_date",
       align: "center",
-      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "-"),
     },
 
     // {

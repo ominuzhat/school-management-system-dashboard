@@ -56,7 +56,7 @@ const useHolidayColumns = (): ColumnsType<any> => {
       title: "Title",
       dataIndex: "name",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      render: (title) => (title ? capitalize(title) : "-"),
     },
     // {
     //   key: "2",
@@ -65,7 +65,7 @@ const useHolidayColumns = (): ColumnsType<any> => {
     //   align: "center",
     //   sorter: (a, b) =>
     //     (a.description || "").localeCompare(b.description || ""),
-    //   render: (description) => (description ? description : "N/A"),
+    //   render: (description) => (description ? description : "-"),
     // },
     {
       key: "3",
@@ -73,7 +73,7 @@ const useHolidayColumns = (): ColumnsType<any> => {
       dataIndex: "event_for_display",
       align: "center",
       render: (event_for_display) =>
-        event_for_display ? event_for_display : "N/A",
+        event_for_display ? event_for_display : "-",
     },
     {
       key: "4",
@@ -82,7 +82,7 @@ const useHolidayColumns = (): ColumnsType<any> => {
       align: "center",
 
       render: (event_type_display) =>
-        event_type_display ? event_type_display : "N/A",
+        event_type_display ? event_type_display : "-",
     },
     // {
     //   key: "5",
@@ -104,7 +104,7 @@ const useHolidayColumns = (): ColumnsType<any> => {
       align: "center",
       sorter: (a, b) =>
         dayjs(a.start_date || 0).unix() - dayjs(b.start_date || 0).unix(),
-      render: (date) => (date ? dayjs(date).format("DD MMM YYYY") : "N/A"),
+      render: (date) => (date ? dayjs(date).format("DD MMM YYYY") : "-"),
     },
     {
       key: "7",
@@ -113,7 +113,7 @@ const useHolidayColumns = (): ColumnsType<any> => {
       align: "center",
       sorter: (a, b) =>
         dayjs(a.end_date || 0).unix() - dayjs(b.end_date || 0).unix(),
-      render: (date) => (date ? dayjs(date).format("DD MMM YYYY") : "N/A"),
+      render: (date) => (date ? dayjs(date).format("DD MMM YYYY") : "-"),
     },
     {
       key: "8",
@@ -133,7 +133,6 @@ const useHolidayColumns = (): ColumnsType<any> => {
               }
             />
           )}
-
 
           <Button
             size="small"

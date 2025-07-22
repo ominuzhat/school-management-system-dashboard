@@ -37,7 +37,7 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
       align: "center",
       fixed: "left",
       width: 100,
-      render: (username) => username || "N/A",
+      render: (username) => username || "-",
     },
     {
       title: "Name",
@@ -55,7 +55,7 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
       fixed: "left",
       width: 120,
       render: (mobile) => {
-        if (!mobile || mobile === "-") return "N/A";
+        if (!mobile || mobile === "-") return "-";
         return mobile.startsWith("880") ? mobile.substring(3) : mobile;
       },
     },
@@ -222,17 +222,17 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
                   <div className="flex flex-col items-center gap-0.5 w-full">
                     {check_in && (
                       <div className="text-xs text-blue-600 font-mono leading-none">
-                        Check In : {check_in}
+                        In : {check_in}
                       </div>
                     )}
                     {check_out && (
                       <div className="text-xs text-red-600 font-mono leading-none">
-                        Check Out: {check_out}
+                        Out: {check_out}
                       </div>
                     )}
                     {duration && (
                       <div className="text-xs text-green-600 font-mono leading-none">
-                        Duration: {duration}
+                        Time: {duration}
                       </div>
                     )}
                   </div>

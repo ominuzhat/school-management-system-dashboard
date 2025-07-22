@@ -75,7 +75,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       dataIndex: "user",
       align: "center",
       sorter: (a, b) => a.user?.username?.localeCompare(b.user?.username || ""),
-      render: (user) => (user ? user.username : "N/A"),
+      render: (user) => (user ? user.username : "-"),
     },
     {
       key: "33",
@@ -90,7 +90,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
             )} - ${dayjs(schedule?.end_time, "HH:mm:ss").format("hh:mm A")}`}
           </>
         ) : (
-          "N/A"
+          "-"
         ),
     },
     {
@@ -98,21 +98,21 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       title: "Phone",
       dataIndex: "phone_number",
       align: "center",
-      render: (phone_number) => (phone_number ? phone_number : "N/A"),
+      render: (phone_number) => (phone_number ? phone_number : "-"),
     },
     {
       key: "5",
       title: "Position",
       dataIndex: "position",
       align: "center",
-      render: (position) => (position ? position : "N/A"),
+      render: (position) => (position ? position : "-"),
     },
     {
       key: "66",
       title: "Base Salary",
       dataIndex: "base_salary",
       align: "center",
-      render: (Base_salary) => (Base_salary ? Base_salary : "N/A"),
+      render: (Base_salary) => (Base_salary ? Base_salary : "-"),
     },
     {
       key: "6",
@@ -123,7 +123,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       filters: departmentFilters.length > 0 ? departmentFilters : undefined,
       onFilter: (value, record) => record?.department?.name === value,
       // sorter: (a, b) => a?.department?.name?.localeCompare(b?.department?.name),
-      render: (department) => (department ? department : "N/A"),
+      render: (department) => (department ? department : "-"),
     },
     {
       key: "7",
@@ -133,7 +133,7 @@ const useEmployeeColumns = (): ColumnsType<any> => {
       sorter: (a, b) =>
         new Date(a.hire_date || 0).getTime() -
         new Date(b.hire_date || 0).getTime(),
-      render: (hire_date) => (hire_date ? hire_date : "N/A"),
+      render: (hire_date) => (hire_date ? hire_date : "-"),
     },
     {
       key: "8",

@@ -13,14 +13,14 @@ const useStudentsColumns = (): ColumnsType<any> => {
       title: "User ID",
       dataIndex: "user",
       align: "center",
-      render: (user) => (user ? user.username : "N/A"),
+      render: (user) => (user ? user.username : "-"),
     },
     // {
     //   key: "1",
     //   title: "Name",
     //   dataIndex: "user",
     //   align: "center",
-    //   render: (user) => (user ? user.username : "N/A"),
+    //   render: (user) => (user ? user.username : "-"),
     // },
   ];
 };

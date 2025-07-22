@@ -42,7 +42,7 @@ const useMigrationResult = (): ColumnsType<any> => {
       render: (title) =>
         title
           ? title?.student?.first_name + " " + title?.student?.last_name
-          : "N/A",
+          : "-",
     },
 
     {
@@ -50,42 +50,42 @@ const useMigrationResult = (): ColumnsType<any> => {
       title: "Class",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title?.grade_level : "N/A"),
+      render: (title) => (title ? title?.grade_level : "-"),
     },
     {
       key: "3",
       title: "Session",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title?.session?.name : "N/A"),
+      render: (title) => (title ? title?.session?.name : "-"),
     },
     {
       key: "4",
       title: "Exam Term",
       dataIndex: "exam_term",
       align: "center",
-      render: (title) => (title ? title?.name : "N/A"),
+      render: (title) => (title ? title?.name : "-"),
     },
     {
       key: "5",
       title: "Total Marks",
       dataIndex: "total_marks",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "6",
       title: "Total Marks Percentage",
       dataIndex: "total_marks_percentage",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "7",
       title: "Grade",
       dataIndex: "grade",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "7",
@@ -98,7 +98,7 @@ const useMigrationResult = (): ColumnsType<any> => {
         } else if (isPassed === false) {
           return <Tag color="red">Failed</Tag>;
         } else {
-          return "N/A";
+          return "-";
         }
       },
     },

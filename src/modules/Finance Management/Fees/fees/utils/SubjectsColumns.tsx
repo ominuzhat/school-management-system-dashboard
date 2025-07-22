@@ -7,21 +7,21 @@ const useSubjectsColumns = (): ColumnsType<any> => {
       title: "Subjects Name",
       dataIndex: "name",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
     {
       key: "2",
       title: "Marks",
       dataIndex: "marks",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
     {
       key: "2",
       title: "Class",
       dataIndex: "grade_level",
       align: "center",
-      render: (name) => (name ? name?.name : "N/A"),
+      render: (name) => (name ? name?.name : "-"),
     },
   ];
 };

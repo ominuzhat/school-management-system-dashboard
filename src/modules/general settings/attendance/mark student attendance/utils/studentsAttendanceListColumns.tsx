@@ -15,28 +15,28 @@ const useStudentsAttendanceListColumns = (): ColumnsType<any> => {
       title: "Date",
       dataIndex: "date",
       align: "center",
-      render: (date) => (date ? new Date(date).toLocaleDateString() : "N/A"),
+      render: (date) => (date ? new Date(date).toLocaleDateString() : "-"),
     },
     {
       key: "2",
       title: "Session Name",
       dataIndex: "session",
       align: "center",
-      render: (session) => (session ? session.name : "N/A"),
+      render: (session) => (session ? session.name : "-"),
     },
     {
       key: "3",
       title: "Class Name",
       dataIndex: "grade_level",
       align: "center",
-      render: (grade_level) => (grade_level ? grade_level.name : "N/A"),
+      render: (grade_level) => (grade_level ? grade_level.name : "-"),
     },
     {
       key: "4",
       title: "Class Description",
       dataIndex: "grade_level",
       align: "center",
-      render: (grade_level) => (grade_level ? grade_level.description : "N/A"),
+      render: (grade_level) => (grade_level ? grade_level.description : "-"),
     },
     {
       key: "5",
@@ -46,7 +46,7 @@ const useStudentsAttendanceListColumns = (): ColumnsType<any> => {
       render: (grade_level) =>
         grade_level?.class_teacher
           ? `${grade_level.class_teacher.first_name} ${grade_level.class_teacher.last_name}`
-          : "N/A",
+          : "-",
     },
     {
       key: "6",
@@ -74,7 +74,7 @@ const useStudentsAttendanceListColumns = (): ColumnsType<any> => {
       title: "Total Records",
       dataIndex: "total_record",
       align: "center",
-      render: (total_record) => (total_record ? total_record : "N/A"),
+      render: (total_record) => (total_record ? total_record : "-"),
     },
     {
       key: "10",

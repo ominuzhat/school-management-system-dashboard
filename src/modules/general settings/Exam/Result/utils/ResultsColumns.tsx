@@ -41,7 +41,7 @@ const useResultsColumns = (): ColumnsType<any> => {
       title: "Exam Name",
       dataIndex: "exam",
       align: "center",
-      render: (title) => (title ? title.name : "N/A"),
+      render: (title) => (title ? title.name : "-"),
     },
     {
       key: "2",
@@ -49,23 +49,21 @@ const useResultsColumns = (): ColumnsType<any> => {
       dataIndex: "admission",
       align: "center",
       render: (title) =>
-        title
-          ? title.student.first_name + " " + title.student.last_name
-          : "N/A",
+        title ? title.student.first_name + " " + title.student.last_name : "-",
     },
     {
       key: "3",
       title: "Class",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title.grade_level : "N/A"),
+      render: (title) => (title ? title.grade_level : "-"),
     },
     {
       key: "4",
       title: "Roll No.",
       dataIndex: "admission",
       align: "center",
-      render: (title) => (title ? title.roll : "N/A"),
+      render: (title) => (title ? title.roll : "-"),
     },
 
     {
@@ -73,7 +71,7 @@ const useResultsColumns = (): ColumnsType<any> => {
       title: "Grade",
       dataIndex: "grade",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
 
     {
@@ -81,14 +79,14 @@ const useResultsColumns = (): ColumnsType<any> => {
       title: "Contribution Marks",
       dataIndex: "contribution_marks",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "7",
       title: "Total Marks",
       dataIndex: "total_marks",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "8",

@@ -59,9 +59,7 @@ const useTransactionApprovalColumns = (): ColumnsType<any> => {
       render: (text: any) => (
         <div className="flex items-center">
           <ArrowDownOutlined className="text-green-500 mr-2" />
-          {text
-            ? `${capitalize(text?.account_type)} (${text?.balance})`
-            : "N/A"}
+          {text ? `${capitalize(text?.account_type)} (${text?.balance})` : "-"}
         </div>
       ),
     },
@@ -87,7 +85,7 @@ const useTransactionApprovalColumns = (): ColumnsType<any> => {
 
         return (
           <Tag color={color} className="uppercase">
-            {lowerType || "N/A"}
+            {lowerType || "-"}
           </Tag>
         );
       },
@@ -97,7 +95,7 @@ const useTransactionApprovalColumns = (): ColumnsType<any> => {
       title: "Transaction Date",
       dataIndex: "transaction_date",
       align: "center",
-      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "-"),
     },
     {
       key: "5",

@@ -46,17 +46,17 @@ const Profile: React.FC = () => {
         {
           key: "1",
           label: capitalize("first name"),
-          children: capitalize(teacher.first_name || "N/A"),
+          children: capitalize(teacher.first_name || "-"),
         },
         {
           key: "2",
           label: capitalize("last name"),
-          children: capitalize(teacher.last_name || "N/A"),
+          children: capitalize(teacher.last_name || "-"),
         },
         {
           key: "3",
           label: capitalize("phone number"),
-          children: capitalize(teacher.phone_number || "N/A"),
+          children: capitalize(teacher.phone_number || "-"),
         },
       ];
     } else if (student) {
@@ -64,17 +64,17 @@ const Profile: React.FC = () => {
         {
           key: "1",
           label: capitalize("student id"),
-          children: capitalize(student.student_id || "N/A"),
+          children: capitalize(student.student_id || "-"),
         },
         {
           key: "2",
           label: capitalize("grade"),
-          children: capitalize(student.grade || "N/A"),
+          children: capitalize(student.grade || "-"),
         },
         {
           key: "3",
           label: capitalize("email address"),
-          children: capitalize(student.email || "N/A"),
+          children: capitalize(student.email || "-"),
         },
       ];
     } else if (employee) {
@@ -82,17 +82,17 @@ const Profile: React.FC = () => {
         {
           key: "1",
           label: capitalize("employee id"),
-          children: capitalize(employee.employee_id || "N/A"),
+          children: capitalize(employee.employee_id || "-"),
         },
         {
           key: "2",
           label: capitalize("department"),
-          children: capitalize(employee.department || "N/A"),
+          children: capitalize(employee.department || "-"),
         },
         {
           key: "3",
           label: capitalize("email address"),
-          children: capitalize(employee.email || "N/A"),
+          children: capitalize(employee.email || "-"),
         },
       ];
     } else if (role?.name === "Admin") {
@@ -100,22 +100,22 @@ const Profile: React.FC = () => {
         {
           key: "1",
           label: capitalize("Institution Name"),
-          children: capitalize(role?.institution.name || "N/A"),
+          children: capitalize(role?.institution.name || "-"),
         },
         {
           key: "2",
           label: capitalize("code"),
-          children: capitalize(role?.institution.code || "N/A"),
+          children: capitalize(role?.institution.code || "-"),
         },
         {
           key: "3",
           label: capitalize("city"),
-          children: capitalize(role?.institution.city || "N/A"),
+          children: capitalize(role?.institution.city || "-"),
         },
         {
           key: "4",
           label: capitalize("contact email"),
-          children: capitalize(role?.institution.contact_email || "N/A"),
+          children: capitalize(role?.institution.contact_email || "-"),
         },
       ];
     }

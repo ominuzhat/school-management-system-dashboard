@@ -8,14 +8,14 @@ const useSingleFeesColumns = (): ColumnsType<any> => {
       title: "Name",
       dataIndex: "name",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
     {
       key: "2",
       title: "Amount",
       dataIndex: "amount",
       align: "center",
-      render: (amount) => (amount ? amount : "N/A"),
+      render: (amount) => (amount ? amount : "-"),
     },
     {
       key: "3",

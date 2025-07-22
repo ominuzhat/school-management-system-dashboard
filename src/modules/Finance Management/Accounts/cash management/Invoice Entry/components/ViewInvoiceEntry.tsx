@@ -152,7 +152,7 @@ const ViewInvoiceEntry = ({ record }: any) => {
                 }}
               >
                 <Title level={3}>
-                  Invoice # {invoice?.invoice_number || "N/A"}
+                  Invoice # {invoice?.invoice_number || "-"}
                 </Title>
                 <Space>
                   {getStatusTag(invoice?.status)}
@@ -166,7 +166,7 @@ const ViewInvoiceEntry = ({ record }: any) => {
                     <CalendarOutlined />
                     {invoice?.date
                       ? dayjs(invoice.date).format("DD MMMM YYYY")
-                      : "N/A"}
+                      : "-"}
                   </Space>
                 </Descriptions.Item>
                 <Descriptions.Item label="Due Date">
@@ -174,7 +174,7 @@ const ViewInvoiceEntry = ({ record }: any) => {
                     <CalendarOutlined />
                     {invoice?.due_date
                       ? dayjs(invoice.due_date).format("DD MMMM YYYY")
-                      : "N/A"}
+                      : "-"}
                   </Space>
                 </Descriptions.Item>
                 <Descriptions.Item label="Amount">
@@ -215,29 +215,29 @@ const ViewInvoiceEntry = ({ record }: any) => {
         <Col xs={24} lg={8}>
           <Card title="Vendor Details">
             <Space direction="vertical" style={{ width: "100%" }}>
-              <Title level={5}>{vendor?.name || "N/A"}</Title>
+              <Title level={5}>{vendor?.name || "-"}</Title>
               <Text>
                 <Space>
                   <PhoneOutlined />
-                  {vendor?.contact_number || "N/A"}
+                  {vendor?.contact_number || "-"}
                 </Space>
               </Text>
               <Text>
                 <Space>
                   <MailOutlined />
-                  {vendor?.email || "N/A"}
+                  {vendor?.email || "-"}
                 </Space>
               </Text>
               <Text>
                 <Space>
                   <HomeOutlined />
-                  {vendor?.address || "N/A"}
+                  {vendor?.address || "-"}
                 </Space>
               </Text>
               <Text>
                 <Space>
                   <InfoCircleOutlined />
-                  {vendor?.purpose || "N/A"}
+                  {vendor?.purpose || "-"}
                 </Space>
               </Text>
             </Space>
@@ -250,13 +250,13 @@ const ViewInvoiceEntry = ({ record }: any) => {
               <Text>
                 <Space>
                   <UserOutlined />
-                  {createdBy?.username || "N/A"}
+                  {createdBy?.username || "-"}
                 </Space>
               </Text>
               <Text>
                 <Space>
                   <InfoCircleOutlined />
-                  {createdBy?.role?.name || "N/A"}
+                  {createdBy?.role?.name || "-"}
                 </Space>
               </Text>
               <Text>
@@ -265,7 +265,7 @@ const ViewInvoiceEntry = ({ record }: any) => {
                   Created on{" "}
                   {invoice?.created_at
                     ? dayjs(invoice.created_at).format("DD MMM YYYY, hh:mm A")
-                    : "N/A"}
+                    : "-"}
                 </Space>
               </Text>
             </Space>

@@ -100,7 +100,7 @@ const RulesPage = () => {
             expandedRowRender: (record) => (
               <p className="m-0">
                 <span className="font-semibold">Description: </span>
-                {record.description || "N/A"}
+                {record.description || "-"}
               </p>
             ),
             rowExpandable: (record) => !!record.description,

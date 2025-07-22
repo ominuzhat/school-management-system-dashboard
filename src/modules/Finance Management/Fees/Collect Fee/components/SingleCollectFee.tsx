@@ -360,7 +360,7 @@ const SingleCollectFee = () => {
                   </Space>
                 }
               >
-                {student?.email || "N/A"}
+                {student?.email || "-"}
               </Descriptions.Item>
               <Descriptions.Item
                 label={
@@ -476,7 +476,7 @@ const SingleCollectFee = () => {
               key: "due_month",
               render: (text) => (
                 <Tag color="geekblue">
-                  {text ? dayjs(text).format("MMM YYYY") : "N/A"}
+                  {text ? dayjs(text).format("MMM YYYY") : "-"}
                 </Tag>
               ),
             },

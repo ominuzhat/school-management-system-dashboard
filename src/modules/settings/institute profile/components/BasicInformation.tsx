@@ -22,39 +22,39 @@ const BasicInformation = ({
   const basicInfo = [
     {
       fieldName: "Address",
-      text: address || "N/A",
+      text: address || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "City",
-      text: city || "N/A",
+      text: city || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Contact Email",
-      text: contact_email || "N/A",
+      text: contact_email || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Phone Number",
-      text: phone_number || "N/A",
+      text: phone_number || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Established Date",
       text: data?.established_date
         ? new Date(data.established_date).toLocaleDateString()
-        : "N/A",
+        : "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Institution Type",
-      text: institution_type || "N/A",
+      text: institution_type || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
       fieldName: "Current Session",
-      text: current_session?.name || "N/A",
+      text: current_session?.name || "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
     {
@@ -63,7 +63,7 @@ const BasicInformation = ({
         ? weekend_days.map((day: string) => capitalize(day)).join(", ")
         : weekend_days
         ? capitalize(weekend_days)
-        : "N/A",
+        : "-",
       Icon: MdOutlineSubdirectoryArrowRight,
     },
   ];

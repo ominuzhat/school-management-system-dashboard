@@ -309,7 +309,7 @@ const StudentsPage = () => {
                         <p className="flex items-center">
                           <FaGraduationCap className="mr-2" />
                           <span>
-                            Class: {student?.current_grade_level?.name || "N/A"}
+                            Class: {student?.current_grade_level?.name || "-"}
                           </span>
                         </p>
                       </div>

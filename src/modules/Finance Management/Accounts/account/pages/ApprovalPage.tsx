@@ -345,7 +345,7 @@ const ApprovalPage = () => {
                                 capitalize(
                                   transaction.destination_account?.type
                                 ) ||
-                                "N/A"}
+                                "-"}
                             </p>
                             <p className="text-sm text-gray-600">
                               Balance: ৳
@@ -465,7 +465,7 @@ const ApprovalPage = () => {
                   <div>
                     <p className="text-xs text-gray-500">Requested By</p>
                     <p>
-                      {capitalize(selectedTransaction?.requested_by) || "N/A"}
+                      {capitalize(selectedTransaction?.requested_by) || "-"}
                     </p>
                   </div>
                 </div>
@@ -486,7 +486,7 @@ const ApprovalPage = () => {
                         capitalize(
                           selectedTransaction.destination_account?.type
                         ) ||
-                        "N/A"}
+                        "-"}
                     </p>
                   </div>
                   <div>

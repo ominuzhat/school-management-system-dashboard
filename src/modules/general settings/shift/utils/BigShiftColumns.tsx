@@ -50,7 +50,7 @@ const useBigShiftColumns = (): ColumnsType<any> => {
       title: "Shift Name",
       dataIndex: "name",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
 
     {
@@ -59,7 +59,7 @@ const useBigShiftColumns = (): ColumnsType<any> => {
       dataIndex: "start_time",
       align: "center",
       render: (time) => {
-        return time ? moment(time, "HH:mm:ss").format("h:mm A") : "N/A"; // Format in 12-hour format
+        return time ? moment(time, "HH:mm:ss").format("h:mm A") : "-"; // Format in 12-hour format
       },
     },
     {
@@ -68,7 +68,7 @@ const useBigShiftColumns = (): ColumnsType<any> => {
       dataIndex: "end_time",
       align: "center",
       render: (time) => {
-        return time ? moment(time, "HH:mm:ss").format("h:mm A") : "N/A"; // Format in 12-hour format
+        return time ? moment(time, "HH:mm:ss").format("h:mm A") : "-"; // Format in 12-hour format
       },
     },
     {

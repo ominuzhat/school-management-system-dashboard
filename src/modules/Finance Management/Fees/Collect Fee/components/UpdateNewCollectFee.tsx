@@ -1,9 +1,9 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
+  useCreateNewCollectFeesMutation,
   useGetCollectSingleFeesQuery,
-  useUpdateCollectFeesMutation,
 } from "../api/collectFeeEndPoints";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {
   Col,
   DatePicker,
@@ -13,9 +13,9 @@ import {
   Form as AntForm,
   Card,
   Typography,
-  message,
   Tag,
   Button,
+  message,
 } from "antd";
 import { Form } from "../../../../../common/CommonAnt";
 import dayjs from "dayjs";
@@ -41,7 +41,8 @@ const UpdateNewCollectFee = () => {
   const [search, setSearch] = useState("");
   const { data: accountList } = useGetAccountQuery({});
   const navigate = useNavigate();
-  const [update, { isLoading, isSuccess }] = useUpdateCollectFeesMutation();
+  const [create, { isLoading, isSuccess }] = useCreateNewCollectFeesMutation();
+  // const [update, { isLoading, isSuccess }] = useUpdateCollectFeesMutation();
   const { data: admissionData, isFetching } = useGetAdmissionQuery({
     search: search,
     status: "approved",
@@ -187,7 +188,7 @@ const UpdateNewCollectFee = () => {
   const onFinish = (values: any): void => {
     const results = {
       ...values,
-      admission: values?.admission,
+      admission: singleData?.data?.id,
       add_ons: values?.add_ons,
       discount_type: values?.discount_type,
       discount_value: values?.discount_value,
@@ -213,7 +214,7 @@ const UpdateNewCollectFee = () => {
         })) || [],
     };
 
-    update({ id: singleData?.data?.id, data: results })
+    create(results)
       .unwrap()
       .then(() => {
         message.success("Fee collected successfully!");
@@ -222,6 +223,16 @@ const UpdateNewCollectFee = () => {
       .catch(() => {
         message.error("Failed to collect fee. Please try again.");
       });
+
+    // update({ id: singleData?.data?.id, data: results })
+    //   .unwrap()
+    //   .then(() => {
+    //     message.success("Fee collected successfully!");
+    //     navigate("/finance");
+    //   })
+    //   .catch(() => {
+    //     message.error("Failed to collect fee. Please try again.");
+    //   });
   };
 
   const handleAddAddOn = () => {
@@ -582,7 +593,7 @@ const UpdateNewCollectFee = () => {
                                       name,
                                       "amount",
                                     ]);
-                                    if (value > total) {
+                                    if (value > total && !isAddOn) {
                                       return Promise.reject(
                                         new Error(
                                           "Paid amount can't exceed total amount"
@@ -598,6 +609,7 @@ const UpdateNewCollectFee = () => {
                                 prefix={<TbCoinTaka />}
                                 type="number"
                                 disabled={
+                                  !isAddOn &&
                                   form.getFieldValue([
                                     "particulars",
                                     name,

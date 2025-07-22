@@ -198,7 +198,7 @@ const MarkExamPage = () => {
       render: (_: any, record: any) =>
         record?.first_name && record?.last_name
           ? `${record.first_name} ${record.last_name}`
-          : "N/A",
+          : "-",
     },
     {
       title: "Class",
@@ -206,7 +206,7 @@ const MarkExamPage = () => {
       key: "grade_level",
       align: "center",
       width: 150,
-      render: (title: any) => title?.name || "N/A",
+      render: (title: any) => title?.name || "-",
     },
   ];
 
@@ -267,7 +267,7 @@ const MarkExamPage = () => {
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <span>Expiration:</span>
-                  <span>{subject.exam_mark_exp_date || "N/A"}</span>
+                  <span>{subject.exam_mark_exp_date || "-"}</span>
                 </div>
                 <div
                   style={{
@@ -732,7 +732,7 @@ export default MarkExamPage;
 //       key: "gradeLevel",
 //       align: "center",
 //       width: 200,
-//       render: (title: any) => title || "N/A",
+//       render: (title: any) => title || "-",
 //     },
 //     {
 //       title: "Subject Name",

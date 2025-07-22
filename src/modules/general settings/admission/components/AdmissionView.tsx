@@ -383,7 +383,7 @@ const AdmissionView = () => {
                       </Tag>
                     </Descriptions.Item>
                     <Descriptions.Item label="Previous Registration">
-                      {previous_registration_number || "N/A"}
+                      {previous_registration_number || "-"}
                     </Descriptions.Item>
                     <Descriptions.Item label="Session">
                       <Text strong>{session?.name}</Text>
@@ -513,7 +513,7 @@ const AdmissionView = () => {
                     </Space>
                   }
                 >
-                  <Text>{student?.email || "N/A"}</Text>
+                  <Text>{student?.email || "-"}</Text>
                 </Descriptions.Item>
                 <Descriptions.Item
                   label={
@@ -522,7 +522,7 @@ const AdmissionView = () => {
                     </Space>
                   }
                 >
-                  <Text>{student?.contact_phone_number || "N/A"}</Text>
+                  <Text>{student?.contact_phone_number || "-"}</Text>
                 </Descriptions.Item>
                 <Descriptions.Item
                   label={
@@ -531,7 +531,7 @@ const AdmissionView = () => {
                     </Space>
                   }
                 >
-                  <Text>{student?.gender || "N/A"}</Text>
+                  <Text>{student?.gender || "-"}</Text>
                 </Descriptions.Item>
                 <Descriptions.Item
                   label={
@@ -540,7 +540,7 @@ const AdmissionView = () => {
                     </Space>
                   }
                 >
-                  <Text>{student?.date_of_birth || "N/A"}</Text>
+                  <Text>{student?.date_of_birth || "-"}</Text>
                 </Descriptions.Item>
               </Descriptions>
 
@@ -555,14 +555,14 @@ const AdmissionView = () => {
               </Title>
               <Descriptions column={1} size="small">
                 <Descriptions.Item label="Name">
-                  <Text>{student?.user?.role?.institution?.name || "N/A"}</Text>
+                  <Text>{student?.user?.role?.institution?.name || "-"}</Text>
                 </Descriptions.Item>
                 <Descriptions.Item label="City">
-                  <Text>{student?.user?.role?.institution?.city || "N/A"}</Text>
+                  <Text>{student?.user?.role?.institution?.city || "-"}</Text>
                 </Descriptions.Item>
                 <Descriptions.Item label="Contact Email">
                   <Text>
-                    {student?.user?.role?.institution?.contact_email || "N/A"}
+                    {student?.user?.role?.institution?.contact_email || "-"}
                   </Text>
                 </Descriptions.Item>
                 <Descriptions.Item label="Status">
@@ -587,26 +587,26 @@ const AdmissionView = () => {
                 <Panel header="Father's Details" key="1">
                   <Descriptions column={1} size="small">
                     <Descriptions.Item label="Name">
-                      <Text>{student?.father_name || "N/A"}</Text>
+                      <Text>{student?.father_name || "-"}</Text>
                     </Descriptions.Item>
                     <Descriptions.Item label="Phone">
-                      <Text>{student?.father_number || "N/A"}</Text>
+                      <Text>{student?.father_number || "-"}</Text>
                     </Descriptions.Item>
                     <Descriptions.Item label="Profession">
-                      <Text>{student?.father_profession || "N/A"}</Text>
+                      <Text>{student?.father_profession || "-"}</Text>
                     </Descriptions.Item>
                   </Descriptions>
                 </Panel>
                 <Panel header="Mother's Details" key="2">
                   <Descriptions column={1} size="small">
                     <Descriptions.Item label="Name">
-                      <Text>{student?.mother_name || "N/A"}</Text>
+                      <Text>{student?.mother_name || "-"}</Text>
                     </Descriptions.Item>
                     <Descriptions.Item label="Phone">
-                      <Text>{student?.mother_phone_number || "N/A"}</Text>
+                      <Text>{student?.mother_phone_number || "-"}</Text>
                     </Descriptions.Item>
                     <Descriptions.Item label="Profession">
-                      <Text>{student?.mother_profession || "N/A"}</Text>
+                      <Text>{student?.mother_profession || "-"}</Text>
                     </Descriptions.Item>
                   </Descriptions>
                 </Panel>

@@ -20,7 +20,11 @@ import { useGetSubjectsQuery } from "../../../subjects/api/subjectsEndPoints";
 import { useMemo } from "react";
 import { capitalize } from "../../../../../common/capitalize/Capitalize";
 import { TbStarFilled } from "react-icons/tb";
-import { InfoCircleOutlined, StarFilled, StarOutlined } from "@ant-design/icons";
+import {
+  InfoCircleOutlined,
+  StarFilled,
+  StarOutlined,
+} from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
@@ -149,21 +153,21 @@ const NewStudentAdmissionPreview = () => {
                     </Text>
                   </Descriptions.Item>
                   <Descriptions.Item label="Date of Birth">
-                    {student?.date_of_birth || "N/A"}
+                    {student?.date_of_birth || "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Gender">
-                    {student?.gender || "N/A"}
+                    {student?.gender || "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Religion">
-                    {student?.religion || "N/A"}
+                    {student?.religion || "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Contact Number">
                     {student?.contact_phone_number
                       ? `+880${student.contact_phone_number}`
-                      : "N/A"}
+                      : "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Email">
-                    {student?.email || "N/A"}
+                    {student?.email || "-"}
                   </Descriptions.Item>
                 </Descriptions>
               </Col>
@@ -172,10 +176,10 @@ const NewStudentAdmissionPreview = () => {
             <Divider orientation="left">Address</Divider>
             <Descriptions column={1}>
               <Descriptions.Item label="Present Address">
-                {student?.present_address || "N/A"}
+                {student?.present_address || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="Permanent Address">
-                {student?.permanent_address || "N/A"}
+                {student?.permanent_address || "-"}
               </Descriptions.Item>
             </Descriptions>
           </Card>
@@ -194,15 +198,15 @@ const NewStudentAdmissionPreview = () => {
                 <Card title="Father's Details" size="small" className="mb-4">
                   <Descriptions column={1}>
                     <Descriptions.Item label="Name">
-                      {student?.father_name || "N/A"}
+                      {student?.father_name || "-"}
                     </Descriptions.Item>
                     <Descriptions.Item label="Phone">
                       {student?.father_number
                         ? `+880${student.father_number}`
-                        : "N/A"}
+                        : "-"}
                     </Descriptions.Item>
                     <Descriptions.Item label="Profession">
-                      {student?.father_profession || "N/A"}
+                      {student?.father_profession || "-"}
                     </Descriptions.Item>
                   </Descriptions>
                 </Card>
@@ -212,15 +216,15 @@ const NewStudentAdmissionPreview = () => {
                 <Card title="Mother's Details" size="small">
                   <Descriptions column={1}>
                     <Descriptions.Item label="Name">
-                      {student?.mother_name || "N/A"}
+                      {student?.mother_name || "-"}
                     </Descriptions.Item>
                     <Descriptions.Item label="Phone">
                       {student?.mother_phone_number
                         ? `+880${student.mother_phone_number}`
-                        : "N/A"}
+                        : "-"}
                     </Descriptions.Item>
                     <Descriptions.Item label="Profession">
-                      {student?.mother_profession || "N/A"}
+                      {student?.mother_profession || "-"}
                     </Descriptions.Item>
                   </Descriptions>
                 </Card>
@@ -230,15 +234,15 @@ const NewStudentAdmissionPreview = () => {
             <Divider orientation="left">Guardian Information</Divider>
             <Descriptions column={1}>
               <Descriptions.Item label="Guardian Name">
-                {student?.local_guardian_name || "N/A"}
+                {student?.local_guardian_name || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="Relation">
-                {student?.local_guardian_relation || "N/A"}
+                {student?.local_guardian_relation || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="Contact Number">
                 {student?.local_guardian_phone_number
                   ? `+880${student.local_guardian_phone_number}`
-                  : "N/A"}
+                  : "-"}
               </Descriptions.Item>
             </Descriptions>
           </Card>
@@ -258,26 +262,26 @@ const NewStudentAdmissionPreview = () => {
                   <Descriptions.Item label="Session">
                     {admission?.session
                       ? getSessionName(admission?.session)
-                      : "N/A"}
+                      : "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Grade Level">
                     {admission?.grade_level
                       ? getClassName(admission.grade_level)
-                      : "N/A"}
+                      : "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Section">
                     {admission?.section
                       ? getSectionName(admission.section)
-                      : "N/A"}
+                      : "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Shift">
-                    {admission?.shift ? getShiftName(admission.shift) : "N/A"}
+                    {admission?.shift ? getShiftName(admission.shift) : "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Roll Number">
                     {admission?.roll || "Not assigned"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Group Type">
-                    {capitalize(admission?.group_type) || "N/A"}
+                    {capitalize(admission?.group_type) || "-"}
                   </Descriptions.Item>
                   <Descriptions.Item label="Status">
                     <Tag color={admission?.status ? "green" : "orange"}>
@@ -332,7 +336,7 @@ const NewStudentAdmissionPreview = () => {
                 <Descriptions column={1}>
                   <Descriptions.Item label="Fee Type">
                     <Tag color={fee?.fee_type === "class" ? "purple" : "cyan"}>
-                      {fee?.fee_type?.toUpperCase() || "N/A"}
+                      {fee?.fee_type?.toUpperCase() || "-"}
                     </Tag>
                   </Descriptions.Item>
                 </Descriptions>

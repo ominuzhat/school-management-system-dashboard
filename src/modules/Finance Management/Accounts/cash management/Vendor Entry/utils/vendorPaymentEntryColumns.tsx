@@ -89,7 +89,7 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
       title: "vendor Name",
       dataIndex: "vendor",
       align: "center",
-      render: (title) => (title ? capitalize(title?.name) : "N/A"),
+      render: (title) => (title ? capitalize(title?.name) : "-"),
     },
 
     {
@@ -97,7 +97,7 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
       title: "Type",
       dataIndex: "type",
       align: "center",
-      render: (title) => (title ? capitalize(title) : "N/A"),
+      render: (title) => (title ? capitalize(title) : "-"),
     },
 
     {
@@ -105,7 +105,7 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
       title: "Created By",
       dataIndex: "created_by",
       align: "center",
-      render: (title) => (title ? title?.username : "N/A"),
+      render: (title) => (title ? title?.username : "-"),
     },
     // {
     //   key: "2",
@@ -132,7 +132,7 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
 
     //     return (
     //       <Tag color={color} className="uppercase">
-    //         {method ? method.toLowerCase() : "N/A"}
+    //         {method ? method.toLowerCase() : "-"}
     //       </Tag>
     //     );
     //   },
@@ -142,7 +142,7 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
     //   title: "Entry Type",
     //   dataIndex: "entry_type",
     //   align: "center",
-    //   render: (title) => (title ? capitalize(title) : "N/A"),
+    //   render: (title) => (title ? capitalize(title) : "-"),
     // },
 
     {
@@ -156,7 +156,7 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
 
         return (
           <Tag color={color}>
-            {amount !== null && amount !== undefined ? amount : "N/A"}
+            {amount !== null && amount !== undefined ? amount : "-"}
           </Tag>
         );
       },
@@ -167,14 +167,14 @@ const useVendorPaymentEntryColumns = (): ColumnsType<any> => {
       title: "Payment Date",
       dataIndex: "payment_date",
       align: "center",
-      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "N/A"),
+      render: (title) => (title ? dayjs(title).format("DD MMM YYYY") : "-"),
     },
     // {
     //   key: "6",
     //   title: "Description",
     //   dataIndex: "description",
     //   align: "center",
-    //   render: (title) => (title ? title : "N/A"),
+    //   render: (title) => (title ? title : "-"),
     // },
 
     {

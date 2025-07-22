@@ -49,21 +49,21 @@ const useExamHallColumns = (): ColumnsType<any> => {
       title: "Exam Hall Name",
       dataIndex: "name",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "2",
       title: "Capacity",
       dataIndex: "capacity",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
     {
       key: "3",
       title: "Description",
       dataIndex: "description",
       align: "center",
-      render: (title) => (title ? title : "N/A"),
+      render: (title) => (title ? title : "-"),
     },
 
     {

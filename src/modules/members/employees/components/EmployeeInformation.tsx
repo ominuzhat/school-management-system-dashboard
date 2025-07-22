@@ -39,47 +39,47 @@ const EmployeeInformation = ({ data }: any) => {
       data: [
         {
           fieldName: "Gender",
-          text: gender_display || "N/A",
+          text: gender_display || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Email",
-          text: email || "N/A",
+          text: email || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Mobile No",
-          text: phone_number || "N/A",
+          text: phone_number || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Employee Birth /NID",
-          text: national_id || "N/A",
+          text: national_id || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Hire Date",
-          text: hire_date || "N/A",
+          text: hire_date || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Base Salary",
-          text: base_salary ? `${base_salary}` : "N/A",
+          text: base_salary ? `${base_salary}` : "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Position",
-          text: position || "N/A",
+          text: position || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Department",
-          text: department?.name || "N/A",
+          text: department?.name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Username",
-          text: user?.username || "N/A",
+          text: user?.username || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],
@@ -89,37 +89,37 @@ const EmployeeInformation = ({ data }: any) => {
       data: [
         {
           fieldName: "Education Qualification",
-          text: education || "N/A",
+          text: education || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Experience",
-          text: experience || "N/A",
+          text: experience || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Father / Husband Name",
-          text: father_or_husband_name || "N/A",
+          text: father_or_husband_name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Religion",
-          text: religion || "N/A",
+          text: religion || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Blood Group",
-          text: blood_group || "N/A",
+          text: blood_group || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Home Address",
-          text: home_address || "N/A",
+          text: home_address || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
         {
           fieldName: "Schedule",
-          text: schedule?.name || "N/A",
+          text: schedule?.name || "-",
           Icon: MdOutlineSubdirectoryArrowRight,
         },
       ],

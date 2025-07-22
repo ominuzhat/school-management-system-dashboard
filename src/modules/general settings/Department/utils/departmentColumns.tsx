@@ -51,7 +51,7 @@ const useDepartmentColumns = (): ColumnsType<any> => {
       title: "Department Name",
       dataIndex: "name",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
 
     {

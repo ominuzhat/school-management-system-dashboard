@@ -47,14 +47,14 @@ const RolePermissionColumn = (): ColumnsType<any> => {
       title: "ID",
       align: "center",
       dataIndex: "id",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
     {
       key: "1",
       title: "Role Name",
       dataIndex: "name",
       align: "center",
-      render: (name) => (name ? name : "N/A"),
+      render: (name) => (name ? name : "-"),
     },
 
     {
