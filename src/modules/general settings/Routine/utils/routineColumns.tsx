@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Button, Space } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
@@ -10,8 +10,13 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
-import { useDeleteRoutineMutation } from "../api/routineEndPoints";
+import {
+  useDeleteRoutineMutation,
+  useLazyGetSingleRoutinePdfQuery,
+} from "../api/routineEndPoints";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
+import { FaFilePdf } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 
 const useRoutineColumns = (): ColumnsType<any> => {
   const navigate = useNavigate();
@@ -24,6 +29,7 @@ const useRoutineColumns = (): ColumnsType<any> => {
     actionNames.change
   );
   const [deleteItem] = useDeleteRoutineMutation();
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   const deletePermission = GetPermission(
     dashboardData?.data?.permissions,
@@ -37,6 +43,27 @@ const useRoutineColumns = (): ColumnsType<any> => {
     } catch (error) {
       console.error("Failed to delete item:", error);
     }
+  };
+
+  const [getRoutinePdf, { data: singleRoutinePdf }] =
+    useLazyGetSingleRoutinePdfQuery();
+
+  useEffect(() => {
+    if (singleRoutinePdf) {
+      const url = URL.createObjectURL(singleRoutinePdf);
+      setPdfUrl(url);
+
+      // Open PDF in a new tab
+      window.open(url, "_blank");
+    }
+
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [pdfUrl, singleRoutinePdf]);
+
+  const handleForm = (id: number) => {
+    getRoutinePdf(id);
   };
 
   return [
@@ -80,6 +107,20 @@ const useRoutineColumns = (): ColumnsType<any> => {
           )}
 
           <ViewButton to={`/routine/view/${record?.id}`} />
+
+          <Button
+            title="Routine Pdf"
+            size="small"
+            type="default"
+            style={{
+              color: "#c20a0a",
+              // background: "#3892E3",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleForm(record.id)}
+          >
+            <FaFilePdf />
+          </Button>
 
           {deletePermission && (
             <DeleteButton
