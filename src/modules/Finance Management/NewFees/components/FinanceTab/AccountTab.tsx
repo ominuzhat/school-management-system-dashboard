@@ -14,6 +14,7 @@ import { PiHandDeposit } from "react-icons/pi";
 import ApprovalPage from "../../../Accounts/account/pages/ApprovalPage";
 import { SiTicktick } from "react-icons/si";
 import CollectionPage from "../../../Accounts/account/pages/CollectionPage";
+import CashPage from "../../../Accounts/account/pages/CashPage";
 
 const AccountTab = () => {
   const tabs = [
@@ -61,7 +62,7 @@ const AccountTab = () => {
         <div>
           {activeTab === "account" && <AccountPage />}
           {activeTab === "bank" && <BankPage />}
-          {activeTab === "cash" && <BankPage />}
+          {activeTab === "cash" && <CashPage />}
           {activeTab === "surjopay" && <ShurjoPayPage />}
           {activeTab === "mfs" && <MfsPage />}
           {activeTab === "collection" && <CollectionPage />}

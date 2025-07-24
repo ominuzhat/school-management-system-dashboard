@@ -26,10 +26,10 @@ const CashPage = () => {
     actionNames.view
   );
 
-  const { data: transactionList } = useGetTransactionQuery({
+  const { data: transactionList } = useGetTransactionQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
-    type: "cash",
+    account__type: "cash",
   });
 
   const dataSource =

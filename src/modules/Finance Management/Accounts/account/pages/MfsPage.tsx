@@ -34,7 +34,7 @@ const MfsPage = () => {
   const { data: transactionList } = useGetTransactionQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
-    type: "mfs",
+    account__type: "mfs",
   });
 
   const dataSource =

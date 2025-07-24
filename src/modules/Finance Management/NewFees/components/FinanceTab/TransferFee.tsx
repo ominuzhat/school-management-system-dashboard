@@ -76,6 +76,7 @@ export const AccountTransfer = () => {
     page_size: page_size,
     page: Number(page) || undefined,
     year_month: dayjs(currentMonth).format("YYYY-MM"),
+    // account__type: "cash",
   });
 
   const dataSource =

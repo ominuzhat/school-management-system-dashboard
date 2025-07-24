@@ -34,7 +34,7 @@ const BankPage = () => {
   const { data: transactionList } = useGetTransactionQuery<any>({
     page_size: page_size,
     page: Number(page) || undefined,
-    type: "bank",
+    account__type: "bank",
   });
 
   const dataSource =
