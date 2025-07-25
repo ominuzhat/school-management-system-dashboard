@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Button, Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
 import dayjs from "dayjs";
@@ -10,14 +10,20 @@ import {
   actionNames,
   moduleNames,
 } from "../../../../utilities/permissionConstant";
-import { useDeleteExamMutation } from "../api/examEndPoints";
+import {
+  useDeleteExamMutation,
+  useLazyGetExamRoutinePdfQuery,
+  useLazyGetGradeRoutinePdfQuery,
+} from "../api/examEndPoints";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
+import { FaFilePdf } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 
 const useExamColumns = (): ColumnsType<any> => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
   const navigate = useNavigate();
-
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const updatePermission = GetPermission(
     dashboardData?.data?.permissions,
     moduleNames.exam,
@@ -38,6 +44,48 @@ const useExamColumns = (): ColumnsType<any> => {
     } catch (error) {
       console.error("Failed to delete item:", error);
     }
+  };
+
+  const [getGradeExamPdf, { data: singleGradeExamPdf }] =
+    useLazyGetGradeRoutinePdfQuery();
+
+  const [getExamRoutinePdf, { data: singleExamRoutinePdf }] =
+    useLazyGetExamRoutinePdfQuery();
+
+  useEffect(() => {
+    if (singleExamRoutinePdf) {
+      const url = URL.createObjectURL(singleExamRoutinePdf);
+      setPdfUrl(url);
+
+      // Open PDF in a new tab
+      window.open(url, "_blank");
+    }
+
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [singleExamRoutinePdf]);
+
+  useEffect(() => {
+    if (singleGradeExamPdf) {
+      const url = URL.createObjectURL(singleGradeExamPdf);
+      setPdfUrl(url);
+
+      // Open PDF in a new tab
+      window.open(url, "_blank");
+    }
+
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [singleGradeExamPdf]);
+
+  const handleForm = (id: any) => {
+    getExamRoutinePdf(id);
+  };
+
+  const handleClassForm = (id: any) => {
+    getGradeExamPdf(id);
   };
 
   return [
@@ -87,6 +135,34 @@ const useExamColumns = (): ColumnsType<any> => {
           )}
 
           <ViewButton to={`view/${record?.id}`} />
+
+          <Button
+            title="Class Routine Pdf"
+            size="small"
+            type="default"
+            style={{
+              color: "#c20a0a",
+              // background: "#3892E3",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleClassForm(record.id)}
+          >
+            <FaFilePdf /> 
+          </Button>
+
+          <Button
+            title="Exam Routine Pdf"
+            size="small"
+            type="default"
+            style={{
+              color: "green",
+              // background: "#3892E3",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleForm(record.id)}
+          >
+            <FaFilePdf /> 
+          </Button>
 
           {deletePermission && (
             <DeleteButton

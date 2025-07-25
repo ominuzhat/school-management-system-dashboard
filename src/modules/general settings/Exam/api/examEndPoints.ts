@@ -57,6 +57,48 @@ const examEndpoint = api.injectEndpoints({
       ],
     }),
 
+        getSingleExamWithGradeLevelPdf: builder.query<Blob, any>({
+      query: ({id,grade_level}) => ({
+        url: `/api/v1.0/exams/${id}/download-grade-routine/${grade_level}/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+      }),
+      providesTags: [
+   {
+          type: TagTypes.EXAM,
+          id: TagTypes.EXAM + "_ID",
+        },
+      ],
+    }),
+
+        getGradeRoutinePdf: builder.query<Blob, {id: number}>({
+      query: (id) => ({
+        url: `/api/v1.0/exams/${id}/download-grade-routine/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+      }),
+      providesTags: [
+   {
+          type: TagTypes.EXAM,
+          id: TagTypes.EXAM + "_ID",
+        },
+      ],
+    }),
+
+        getExamRoutinePdf: builder.query<Blob, {id: number}>({
+      query: (id) => ({
+        url: `/api/v1.0/exams/${id}/download-exam-routine/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+      }),
+      providesTags: [
+   {
+          type: TagTypes.EXAM,
+          id: TagTypes.EXAM + "_ID",
+        },
+      ],
+    }),
+
     deleteExam: builder.mutation<ApiResponse<any>, { id: any }>({
       query: ({ id }) => ({
         url: `/api/v1.0/exams/${id}/`,
@@ -98,4 +140,7 @@ export const {
   useUpdateExamMutation,
   useGetSingleExamQuery,
   useDeleteExamMutation,
+  useLazyGetSingleExamWithGradeLevelPdfQuery,
+  useLazyGetExamRoutinePdfQuery,
+  useLazyGetGradeRoutinePdfQuery
 } = examEndpoint;

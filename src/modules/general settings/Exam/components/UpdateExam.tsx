@@ -37,69 +37,32 @@ import { skipToken } from "@reduxjs/toolkit/query";
 
 const { Option } = Select;
 // ✅ Reuse this helper inside UpdateExam too!
-const parseNestedGradeLevels = (values: string[], allClasses: any[]) => {
-  const result: Record<string, any> = {};
+const parseNestedGradeLevels = (values: string[]) => {
+  const result: Record<
+    number,
+    { id: number; shifts: { id: number; sections: number[] }[] }
+  > = {};
 
   values.forEach((val) => {
-    if (typeof val === "number") {
-      // Pure class ID
-      const classId = val;
-      const cls = allClasses.find((c) => c.id === classId);
-      if (cls) {
-        result[classId] = { id: classId, shifts: [] };
-        if (cls.shifts?.length) {
-          cls.shifts.forEach((shift: any) => {
-            const sections =
-              shift.sections?.map((s: any) => s.section.id) || [];
-            result[classId].shifts.push({ id: shift.id, sections });
-          });
-        }
-      }
-    } else if (typeof val === "string") {
-      const parts = val.split("-");
+    const parts = val.split("-");
 
-      if (parts[0] === "shift") {
-        const shiftId = parseInt(parts[1], 10);
-        const cls = allClasses.find((c) =>
-          c.shifts?.some((s: any) => s.id === shiftId)
-        );
-        if (cls) {
-          if (!result[cls.id]) {
-            result[cls.id] = { id: cls.id, shifts: [] };
-          }
-          const shiftObj = cls.shifts.find((s: any) => s.id === shiftId);
-          if (shiftObj) {
-            result[cls.id].shifts.push({
-              id: shiftId,
-              sections: shiftObj.sections?.map((s: any) => s.section.id) || [],
-            });
-          }
-        }
-      } else if (parts[0] === "section") {
-        const sectionId = parseInt(parts[1], 10);
-        const cls = allClasses.find((c) =>
-          c.shifts?.some((s: any) =>
-            s.sections?.some((sec: any) => sec.section.id === sectionId)
-          )
-        );
-        if (cls) {
-          const shiftObj = cls.shifts.find((s: any) =>
-            s.sections?.some((sec: any) => sec.section.id === sectionId)
-          );
-          if (!result[cls.id]) {
-            result[cls.id] = { id: cls.id, shifts: [] };
-          }
-          let shift = result[cls.id].shifts.find(
-            (s: any) => s.id === shiftObj.id
-          );
-          if (!shift) {
-            shift = { id: shiftObj.id, sections: [] };
-            result[cls.id].shifts.push(shift);
-          }
-          if (!shift.sections.includes(sectionId)) {
-            shift.sections.push(sectionId);
-          }
-        }
+    if (parts[0] === "class") {
+      const classId = parseInt(parts[1], 10);
+      const shiftId = parseInt(parts[3], 10);
+      const sectionId = parseInt(parts[5], 10);
+
+      if (!result[classId]) {
+        result[classId] = { id: classId, shifts: [] };
+      }
+
+      let shift = result[classId].shifts.find((s) => s.id === shiftId);
+      if (!shift) {
+        shift = { id: shiftId, sections: [] };
+        result[classId].shifts.push(shift);
+      }
+
+      if (!shift.sections.includes(sectionId)) {
+        shift.sections.push(sectionId);
       }
     }
   });
@@ -111,14 +74,16 @@ const UpdateExam = () => {
   const { examId } = useParams();
   const dispatch = useDispatch();
   const [form] = AntForm.useForm();
+  const [dynamicSelectedClasses, setDynamicSelectedClasses] = useState<any[]>(
+    []
+  );
 
   const { data: singleData, isLoading } = useGetSingleExamQuery<any>(
     examId ? { examId: Number(examId) } : skipToken
   );
 
   const { data: sessionData } = useGetAdmissionSessionQuery({ status: "open" });
-  const { data: classData } =
-    useGetClassesBigListQuery<any>({});
+  const { data: classData } = useGetClassesBigListQuery<any>({});
   const { data: termData } = useGetTermQuery({});
 
   const [update, { isLoading: isUpdating }] = useUpdateExamMutation();
@@ -126,19 +91,23 @@ const UpdateExam = () => {
   const examData = singleData?.data as any;
 
   const [timetablesData, setTimeTablesData] = useState<Record<string, any>>({});
-  const [, setSelectedClass] = useState([]);
   const gradeLevel = AntForm.useWatch("grade_level_structure", form);
 
+  console.log(timetablesData);
+
   // 👇 Prepare TreeSelect data from grade_level_structure
-  const gradeLevelTreeData = classData?.data?.map((classItem: any) => ({
-    title: classItem.name,
-    value: classItem.id, // e.g., 1
-    children: (classItem?.shifts || []).map((shift: any) => ({
+  const gradeLevelTreeData = classData?.data?.map((cls: any) => ({
+    title: cls.name,
+    value: `class-${cls.id}`,
+    key: `class-${cls.id}`,
+    children: cls.shifts?.map((shift: any) => ({
       title: shift.name,
-      value: `shift-${shift.id}`, // e.g., 'shift-1'
-      children: (shift?.sections || []).map((section: any) => ({
-        title: section?.section?.name,
-        value: `section-${section.section.id}`, // e.g., 'section-1'
+      value: `class-${cls.id}-shift-${shift.id}`,
+      key: `class-${cls.id}-shift-${shift.id}`,
+      children: shift.sections?.map((sec: any) => ({
+        title: `Section ${sec.section.name}`,
+        value: `class-${cls.id}-shift-${shift.id}-section-${sec.section.id}`,
+        key: `class-${cls.id}-shift-${shift.id}-section-${sec.section.id}`,
       })),
     })),
   }));
@@ -152,18 +121,19 @@ const UpdateExam = () => {
             ? classItem.shifts.flatMap((shift: any) =>
                 shift.sections?.length
                   ? shift.sections.map(
-                      (section: any) => `section-${section.id}`
+                      (section: any) =>
+                        `class-${classItem.id}-shift-${shift.id}-section-${section.id}`
                     )
-                  : [`shift-${shift.id}`]
+                  : [`class-${classItem.id}-shift-${shift.id}`]
               )
-            : [classItem.id]
+            : [`class-${classItem.id}`]
       );
 
       const organizedTimetables: Record<string, any> = {};
 
       // Build timetables grouped by grade_level ID
       examData.grade_level_structure?.forEach((classItem: any) => {
-        const gradeLevelId = classItem.id;
+        const gradeLevelId = classItem?.id;
 
         // Filter timetables for this grade level
         const classTimetables =
@@ -193,7 +163,6 @@ const UpdateExam = () => {
           timetables: classTimetables,
         };
       });
-
       // For debugging:
 
       form.setFieldsValue({
@@ -207,20 +176,91 @@ const UpdateExam = () => {
 
       setTimeTablesData(organizedTimetables);
     }
-  }, [examData, form]);
+  }, [examData, form, setTimeTablesData]);
+
+  useEffect(() => {
+    if (Array.isArray(gradeLevel) && Array.isArray(classData?.data)) {
+      const selectedClassIds = Array.from(
+        new Set(
+          gradeLevel
+            .map((val: string) => {
+              const match = val.match(/^class-(\d+)/);
+              return match ? parseInt(match[1], 10) : null;
+            })
+            .filter(Boolean)
+        )
+      );
+
+      const selectedClasses = classData.data.filter((cls: any) =>
+        selectedClassIds.includes(cls.id)
+      );
+
+      setDynamicSelectedClasses(selectedClasses);
+    }
+  }, [gradeLevel, classData]);
+
+  // useEffect(() => {
+  //   if (Array.isArray(gradeLevel) && Array.isArray(classData?.data)) {
+  //     const classIds = gradeLevel
+  //       .filter((val: string | number) => typeof val === "number")
+  //       .map(Number);
+  //     const filteredClasses = classData.data.filter((classItem: any) =>
+  //       classIds.includes(classItem.id)
+  //     );
+  //     setSelectedClass(filteredClasses);
+  //   }
+  // }, [gradeLevel, classData]);
+
+  const handleTimetableChange = (classId: string, data: any) => {
+    setTimeTablesData((prev) => ({
+      ...prev,
+      [classId]: data,
+    }));
+  };
+
+  const items: TabsProps["items"] = dynamicSelectedClasses.map(
+    (classItem: any) => ({
+      key: classItem.id.toString(),
+      label: capitalize(classItem.name),
+      children: (
+        <UpdateTimeTableForm
+          selectedTab={classItem.id.toString()}
+          formData={timetablesData[classItem.id] || { timetables: [] }}
+          setFormData={(data) =>
+            handleTimetableChange(classItem.id.toString(), data)
+          }
+        />
+      ),
+    })
+  );
+
+  // const items: TabsProps["items"] = examData?.grade_level_structure?.map(
+  //   (classItem: any) => ({
+  //     key: classItem.id.toString(),
+  //     label: capitalize(classItem.name),
+  //     children: (
+  //       <UpdateTimeTableForm
+  //         selectedTab={classItem.id.toString()}
+  //         formData={timetablesData[classItem.id] || { timetables: [] }}
+  //         setFormData={(data) =>
+  //           handleTimetableChange(classItem.id.toString(), data)git 
+  //         }
+  //       />
+  //     ),
+  //   })
+  // );
 
   const onFinish = async (values: any) => {
     try {
-      const allClasses = classData?.data || [];
-
       const nestedGradeLevels = parseNestedGradeLevels(
-        values.grade_level_structure,
-        allClasses
+        values.grade_level_structure
       );
 
       const allTimetables = Object.values(timetablesData).flatMap(
         (classData) => classData.timetables || []
       );
+
+      console.log(nestedGradeLevels, "nestedGradeLevels");
 
       const results = {
         name: values.name,
@@ -261,41 +301,6 @@ const UpdateExam = () => {
     }
   };
 
-  useEffect(() => {
-    if (Array.isArray(gradeLevel) && Array.isArray(classData?.data)) {
-      const classIds = gradeLevel
-        .filter((val: string | number) => typeof val === "number")
-        .map(Number);
-      const filteredClasses = classData.data.filter((classItem: any) =>
-        classIds.includes(classItem.id)
-      );
-      setSelectedClass(filteredClasses);
-    }
-  }, [gradeLevel, classData]);
-
-  const handleTimetableChange = (classId: string, data: any) => {
-    setTimeTablesData((prev) => ({
-      ...prev,
-      [classId]: data,
-    }));
-  };
-
-  const items: TabsProps["items"] = examData?.grade_level_structure?.map(
-    (classItem: any) => ({
-      key: classItem.id.toString(),
-      label: capitalize(classItem.name),
-      children: (
-        <UpdateTimeTableForm
-          selectedTab={classItem.id.toString()}
-          formData={timetablesData[classItem.id] || { timetables: [] }}
-          setFormData={(data) =>
-            handleTimetableChange(classItem.id.toString(), data)
-          }
-        />
-      ),
-    })
-  );
-
   return (
     <div>
       <div className="my-6">
@@ -333,7 +338,7 @@ const UpdateExam = () => {
                   treeData={gradeLevelTreeData}
                   multiple
                   treeCheckable
-                  treeCheckStrictly
+                  // treeCheckStrictly
                   showCheckedStrategy={TreeSelect.SHOW_PARENT}
                   value={form.getFieldValue("grade_level_structure")}
                   placeholder="Select Class/Shift/Section"

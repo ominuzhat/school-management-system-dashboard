@@ -60,7 +60,7 @@ const useRoutineColumns = (): ColumnsType<any> => {
     return () => {
       if (pdfUrl) URL.revokeObjectURL(pdfUrl);
     };
-  }, [pdfUrl, singleRoutinePdf]);
+  }, [singleRoutinePdf]);
 
   const handleForm = (id: number) => {
     getRoutinePdf(id);

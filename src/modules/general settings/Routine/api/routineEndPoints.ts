@@ -56,7 +56,7 @@ const routineEndPoint = api.injectEndpoints({
       ],
     }),
 
-        getSingleRoutinePdf: builder.query<Blob, number>({
+      getSingleRoutinePdf: builder.query<Blob, number>({
       query: (id) => ({
         url: `/api/v1.0/admissions/routines/${id}/download-routine/`,
         responseHandler: async (response) => response.blob(),

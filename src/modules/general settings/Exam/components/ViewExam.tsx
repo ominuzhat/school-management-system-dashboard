@@ -1,5 +1,9 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useParams } from "react-router-dom";
-import { useGetSingleExamQuery } from "../api/examEndPoints";
+import {
+  useGetSingleExamQuery,
+  useLazyGetSingleExamWithGradeLevelPdfQuery,
+} from "../api/examEndPoints";
 import {
   Card,
   Typography,
@@ -12,6 +16,7 @@ import {
   Avatar,
   Badge,
   Collapse,
+  Button,
 } from "antd";
 import { skipToken } from "@reduxjs/toolkit/query";
 import {
@@ -25,6 +30,8 @@ import {
   SolutionOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { FaFilePdf } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
@@ -32,9 +39,35 @@ const { Panel } = Collapse;
 
 const ViewExam = () => {
   const { examId } = useParams();
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
+  const [getSingleExamPdf, { data: singleExamPdf }] =
+    useLazyGetSingleExamWithGradeLevelPdfQuery();
   const { data: singleData, isLoading } = useGetSingleExamQuery<any>(
     examId ? { examId: Number(examId) } : skipToken
   );
+
+  useEffect(() => {
+    if (singleExamPdf) {
+      const url = URL.createObjectURL(singleExamPdf);
+      setPdfUrl(url);
+      window.open(url, "_blank");
+    }
+  }, [singleExamPdf]);
+
+  useEffect(() => {
+    return () => {
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl);
+      }
+    };
+  }, [pdfUrl]);
+
+  const handleForm = (id: number) => {
+    if (examId) {
+      getSingleExamPdf({ id: Number(examId), grade_level: id });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -322,10 +355,25 @@ const ViewExam = () => {
         {gradeLevelTimetables?.map((grade: any) => (
           <TabPane
             tab={
-              <span>
-                <SolutionOutlined />
-                Class {grade.name}
-              </span>
+              <div className="flex items-center justify-between gap-5">
+                <span>
+                  <SolutionOutlined />
+                  Class {grade.name}
+                </span>
+                <Button
+                  title={`Download Routine for Class ${grade.name}`}
+                  size="small"
+                  type="default"
+                  style={{
+                    color: "#c20a0a",
+                    // background: "#3892E3",
+                    border: "1px solid gray",
+                  }}
+                  onClick={() => handleForm(grade.id)}
+                >
+                  <FaFilePdf />
+                </Button>
+              </div>
             }
             key={`grade-${grade.id}`}
           >
