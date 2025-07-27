@@ -54,6 +54,7 @@ export const TagTypes = {
   INVOICE: "Invoice",
   VENDOR: "Vendor",
   HOLIDAY: "Holiday",
+  TICKET: "Ticket",
   VENDOR_ENTRY: "Vendor_Entry",
   INVOICE_ENTRY: "Invoice_Entry",
   ATTENDANCE_REPORT: "attendance_Report",

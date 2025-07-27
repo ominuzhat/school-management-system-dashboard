@@ -79,6 +79,11 @@ const MenuData: React.FC = () => {
       label: <Link to="/sms">SMS Configuration</Link>,
       icon: <FaCommentSms />,
     },
+    hasPermissionForModule(permissions, "smsconfig") && {
+      key: "/ticket",
+      label: <Link to="/ticket">Ticket</Link>,
+      icon: <FaCommentSms />,
+    },
   ].filter(Boolean);
 
   const members = [

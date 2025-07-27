@@ -82,6 +82,8 @@ import ClassManagement from "../modules/general settings/class management/page/C
 import AttendanceTab from "../modules/general settings/attendance/Tab/AttandenceTab";
 import ExamTab from "../modules/general settings/Exam/Tab/ExamTab";
 import HolidayPage from "../modules/settings/holiday/pages/HolidayPage";
+import TicketPage from "../modules/settings/ticket/pages/TicketPage";
+import TicketView from "../modules/settings/ticket/components/TicketView";
 
 const router = createBrowserRouter([
   {
@@ -640,6 +642,25 @@ const router = createBrowserRouter([
             <SmsPage />
           </WithPermission>
         ),
+      },
+      // Ticket
+      {
+        path: "/ticket",
+        element: (
+          <WithPermission requiredPermission="smsconfig">
+            <Accounts />
+          </WithPermission>
+        ),
+        children: [
+          {
+            path: "",
+            element: <TicketPage />,
+          },
+          {
+            path: "view/:ticketID",
+            element: <TicketView />,
+          },
+        ],
       },
 
       // Role & permissions
