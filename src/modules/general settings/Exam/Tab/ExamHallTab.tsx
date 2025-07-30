@@ -3,12 +3,19 @@ import ExamHallPage from "../Exam-hall/page/ExamHall";
 import ExamReceiptsPage from "../Exam-receipt/page/ExamReceiptsPage";
 import { SiGoogleclassroom } from "react-icons/si";
 import { IoReceiptOutline } from "react-icons/io5";
+import AdmitPage from "../Admit/pages/AdmitPages";
+
 const ExamHallTab = () => {
   const tabs = [
     { key: "hall", label: "Exam Hall", icon: <SiGoogleclassroom /> },
     {
       key: "assign_hall",
       label: "Assign Exam Hall",
+      icon: <IoReceiptOutline />,
+    },
+    {
+      key: "admit_card",
+      label: "Admit Card",
       icon: <IoReceiptOutline />,
     },
   ];
@@ -20,7 +27,7 @@ const ExamHallTab = () => {
       <div>
         <div className="my-10">
           <div className="bg-white/80 backdrop-blur-md border border-[#A2C3FF] rounded-2xl shadow-xl ">
-            <div className="grid grid-cols-2 lg:grid-cols-2">
+            <div className="grid grid-cols-2 lg:grid-cols-3">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -43,6 +50,7 @@ const ExamHallTab = () => {
         <div>
           {activeTab === "hall" && <ExamHallPage />}
           {activeTab === "assign_hall" && <ExamReceiptsPage />}
+          {activeTab === "admit_card" && <AdmitPage />}
         </div>
       </div>
     </div>

@@ -45,6 +45,40 @@ const resultMigrationEndpoint = api.injectEndpoints({
       }
     ),
 
+       getSingleMigrationResultForm: builder.query<Blob, any>({
+      query: ({ id}) => ({
+        url: `/api/v1.0/exams/migration-results/${id}/generate-pdf/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+       
+      }),
+
+      providesTags: [
+          {
+            type: TagTypes.RESULT_MIGRATION,
+            id: TagTypes.RESULT_MIGRATION + "_ID",
+          },
+      ],
+    }),
+
+
+        getMigrationResultForm: builder.query<Blob, any>({
+      query: ({ params }) => ({
+        url: `/api/v1.0/exams/migration-results/generate-pdf/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+        params
+      }),
+
+      providesTags: [
+          {
+            type: TagTypes.RESULT_MIGRATION,
+            id: TagTypes.RESULT_MIGRATION + "_ID",
+          },
+      ],
+    }),
+
+
     getSingleResultMigration: builder.query<
       ApiResponse<PaginatedResponse<any>>,
       number
@@ -67,4 +101,6 @@ export const {
   useCreateResultMigrationMutation,
   useGetMigrationResultListQuery,
   useGetSingleResultMigrationQuery,
+  useLazyGetMigrationResultFormQuery, 
+  useLazyGetSingleMigrationResultFormQuery
 } = resultMigrationEndpoint;

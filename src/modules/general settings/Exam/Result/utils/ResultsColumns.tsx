@@ -1,7 +1,10 @@
-import { Space, Tag } from "antd";
+import { Button, Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
-import { useDeleteResultMutation } from "../api/resultsEndPoints";
+import {
+  useDeleteResultMutation,
+  useLazyGetSinglePublishResultFormQuery,
+} from "../api/resultsEndPoints";
 import { GetPermission } from "../../../../../utilities/permission";
 import {
   actionNames,
@@ -9,6 +12,8 @@ import {
 } from "../../../../../utilities/permissionConstant";
 import { useGetDashboardDataQuery } from "../../../../Dashboard/api/dashoboardEndPoints";
 import DeleteButton from "../../../../../common/CommonAnt/Button/DeleteButton";
+import { FaFilePdf } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 
 const useResultsColumns = (): ColumnsType<any> => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -20,6 +25,47 @@ const useResultsColumns = (): ColumnsType<any> => {
     moduleNames.studentresult,
     actionNames.delete
   );
+
+  const [pdfTitle, setPdfTitle] = useState<string>("Publish Result PDF");
+
+  const [getPublishResultForm, { data: publishResultForm }] =
+    useLazyGetSinglePublishResultFormQuery<any>();
+
+  useEffect(() => {
+    if (publishResultForm) {
+      const url = URL.createObjectURL(publishResultForm);
+
+      const newWindow = window.open("", "_blank");
+
+      if (newWindow) {
+        newWindow.document.write(`
+        <html>
+          <head>
+            <title>${pdfTitle}</title>
+          </head>
+          <body style="margin:0">
+            <iframe 
+              src="${url}" 
+              frameborder="0" 
+              style="width:100%;height:100vh;"
+            ></iframe>
+          </body>
+        </html>
+      `);
+        newWindow.document.close();
+      }
+
+      // ✅ Cleanup only this URL
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }
+  }, [publishResultForm, pdfTitle]); // ✅ Removed pdfUrl!
+
+  const handleForm = (id: number) => {
+    setPdfTitle(`${id} `);
+    getPublishResultForm({ id: id });
+  };
 
   const handleDelete = async (id: any) => {
     try {
@@ -101,7 +147,19 @@ const useResultsColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <ViewButton to={`view/${record?.id}`} />
+          <ViewButton to={`/exam-result/view/${record?.id}`} />
+          <Button
+            title="Publish Result"
+            size="small"
+            type="default"
+            style={{
+              color: "#c20a0a",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleForm(record.id)}
+          >
+            <FaFilePdf />
+          </Button>
           {deletePermission && (
             <DeleteButton
               onConfirm={() => handleDelete(record.id)}

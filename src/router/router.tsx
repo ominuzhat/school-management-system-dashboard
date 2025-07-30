@@ -371,7 +371,7 @@ const router = createBrowserRouter([
             element: <ResultsPage />,
           },
           {
-            path: "/exam-result/view/:resultId",
+            path: "view/:resultId",
             element: <ResultView />,
           },
         ],

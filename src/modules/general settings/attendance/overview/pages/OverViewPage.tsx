@@ -25,7 +25,7 @@ const { useBreakpoint } = Grid;
 const OverViewPage = () => {
   const screens = useBreakpoint();
   const [filterParams, setFilterParams] = useState({
-    filter: "monthly",
+    filter: "daily",
     year: dayjs().year(),
     month: dayjs().month() + 1,
     date: undefined,

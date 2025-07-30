@@ -82,6 +82,7 @@ const usePayrollColumns = (): ColumnsType<any> => {
   }, [singleFeeForm, pdfTitle]); // ✅ Removed pdfUrl!
 
   const handleForm = (id: number) => {
+
     setPdfTitle(`${id} `);
     getCollectFeeForm(id);
   };

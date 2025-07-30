@@ -1,6 +1,9 @@
-import { Space, Tag } from "antd";
+import { Button, Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import ViewButton from "../../../../../common/CommonAnt/Button/ViewButton";
+import { FaFilePdf } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { useLazyGetSingleMigrationResultFormQuery } from "../api/resultMigrationEndPoints";
 
 const useMigrationResult = (): ColumnsType<any> => {
   //   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -26,6 +29,47 @@ const useMigrationResult = (): ColumnsType<any> => {
   //       console.error("Failed to delete item:", error);
   //     }
   //   };
+
+  const [pdfTitle, setPdfTitle] = useState<string>("Result Migration PDF");
+
+  const [getMigrationResultForm, { data: migrationFeeForm }] =
+    useLazyGetSingleMigrationResultFormQuery<any>();
+
+  useEffect(() => {
+    if (migrationFeeForm) {
+      const url = URL.createObjectURL(migrationFeeForm);
+
+      const newWindow = window.open("", "_blank");
+
+      if (newWindow) {
+        newWindow.document.write(`
+        <html>
+          <head>
+            <title>${pdfTitle}</title>
+          </head>
+          <body style="margin:0">
+            <iframe 
+              src="${url}" 
+              frameborder="0" 
+              style="width:100%;height:100vh;"
+            ></iframe>
+          </body>
+        </html>
+      `);
+        newWindow.document.close();
+      }
+
+      // ✅ Cleanup only this URL
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }
+  }, [migrationFeeForm, pdfTitle]); // ✅ Removed pdfUrl!
+
+  const handleForm = (id: number) => {
+    setPdfTitle(`${id} `);
+    getMigrationResultForm({ id: id });
+  };
 
   return [
     {
@@ -125,6 +169,18 @@ const useMigrationResult = (): ColumnsType<any> => {
           )} */}
 
           <ViewButton to={`/result-migration/view/${record?.id}`} />
+          <Button
+            title="Result Migration"
+            size="small"
+            type="default"
+            style={{
+              color: "#c20a0a",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleForm(record.id)}
+          >
+            <FaFilePdf />
+          </Button>
 
           {/* {deletePermission && (
             <DeleteButton

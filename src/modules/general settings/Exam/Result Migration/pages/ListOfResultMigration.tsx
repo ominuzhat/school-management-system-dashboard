@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { Card, Col, Row, Select } from "antd";
+import { Button, Card, Col, Row, Select } from "antd";
 import BreadCrumb from "../../../../../common/BreadCrumb/BreadCrumb";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table } from "../../../../../common/CommonAnt";
-import { useGetMigrationResultListQuery } from "../api/resultMigrationEndPoints";
+import {
+  useGetMigrationResultListQuery,
+  useLazyGetMigrationResultFormQuery,
+} from "../api/resultMigrationEndPoints";
 import useMigrationResult from "../utils/MigrationResultColumns";
 import { debounce } from "lodash";
 import { useGetAdmissionQuery } from "../../../admission/api/admissionEndPoints";
@@ -13,6 +16,7 @@ import { useGetTermQuery } from "../../api/termEndPoints";
 import { useGetGradeMarkQuery } from "../../Grade/api/gradeMarkEndPoints";
 import { SearchComponent } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";
+import { FaFilePdf } from "react-icons/fa6";
 
 const ListOfResultMigration = () => {
   const [search, setSearch] = useState("");
@@ -28,6 +32,8 @@ const ListOfResultMigration = () => {
     search: "",
     admission__session: "",
   });
+  const [getMigrationResultForm, { data: migrationFeeForm }] =
+    useLazyGetMigrationResultFormQuery<any>();
 
   const {
     data: migrationResultList,
@@ -43,6 +49,37 @@ const ListOfResultMigration = () => {
   });
 
   console.log(search);
+
+  useEffect(() => {
+    if (migrationFeeForm) {
+      const url = URL.createObjectURL(migrationFeeForm);
+      const newWindow = window.open("", "_blank");
+
+      if (newWindow) {
+        newWindow.document.write(`
+            <html>
+              <head><title>Migration Result</title></head>
+              <body style="margin:0">
+                <iframe src="${url}" frameborder="0" style="width:100%;height:100vh;"></iframe>
+              </body>
+            </html>
+          `);
+        newWindow.document.close();
+      }
+
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [migrationFeeForm]);
+
+  const handleForm = () => {
+    getMigrationResultForm({
+      params: {
+        term: filters.exam_term,
+        grade_level: filters.grade,
+        session: filters.admission__session,
+      },
+    });
+  };
 
   return (
     <div>
@@ -154,6 +191,18 @@ const ListOfResultMigration = () => {
               }
               placeholder="Search"
             />
+          </Col>
+
+          <Col xs={24} md={6} lg={4}>
+            <Button
+              icon={<FaFilePdf />}
+              onClick={handleForm}
+              block
+              className="bg-red-50 text-red-600 hover:bg-red-100"
+              disabled={!filters.exam_term}
+            >
+              Generate PDF
+            </Button>
           </Col>
         </Row>
       </Card>

@@ -1,12 +1,14 @@
 import { useParams } from "react-router-dom";
-import { useGetSingleResultsQuery } from "../api/resultsEndPoints";
 import { Card, Row, Col, Typography, Divider, Table, Spin, Badge } from "antd";
+import { useGetSinglePublishResultsQuery } from "../api/resultsEndPoints";
 
 const { Title, Text } = Typography;
 
 const ResultView = () => {
   const { resultId } = useParams();
-  const { data: singleData } = useGetSingleResultsQuery<any>(Number(resultId));
+  const { data: singleData } = useGetSinglePublishResultsQuery<any>(
+    Number(resultId)
+  );
 
   const result = singleData?.data;
 
@@ -85,7 +87,7 @@ const ResultView = () => {
             </Col>
             <Col xs={24} sm={12} md={8}>
               <Text strong>Grade Level:</Text>{" "}
-              <Text>{result.admission.grade_level}</Text>
+              <Text>{result?.admission?.grade_level_structure}</Text>
             </Col>
             <Col xs={24} sm={12} md={8}>
               <Text strong>Contact:</Text>{" "}

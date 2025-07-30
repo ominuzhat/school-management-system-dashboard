@@ -1,10 +1,7 @@
 import { Card, Col, Row } from "antd";
 import BreadCrumb from "../../../../common/BreadCrumb/BreadCrumb";
-
 import StudentInformation from "./StudentInformation";
 import StudentsAttendance from "./StudentsAttendance";
-import StudentClassTestReport from "../../../Dashboard/components/StudentClassTestReport";
-import StudentPerformance from "./StudentPerformance";
 import { useGetSingleStudentQuery } from "../api/studentEndPoints";
 import { useParams } from "react-router-dom";
 import StudentFeeReport from "./StudentFeeReport";
@@ -25,7 +22,7 @@ const StudentView = () => {
             <StudentInformation data={data?.data} />
             <Row>
               <Col span={24} className="my-2">
-                <StudentClassTestReport />
+                {/* <StudentClassTestReport /> */}
               </Col>
             </Row>
           </Col>
@@ -35,7 +32,7 @@ const StudentView = () => {
             <StudentsAttendance data={data?.data} />
             <StudentFeeReport data={data?.data} />
             {/* <StudentDueWithCalendar /> */}
-            <StudentPerformance />
+            {/* <StudentPerformance /> */}
           </Col>
         </Row>
       </Card>

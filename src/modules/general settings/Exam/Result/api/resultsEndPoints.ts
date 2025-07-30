@@ -72,7 +72,41 @@ const resultsEndpoint = api.injectEndpoints({
       ],
     }),
 
-    getSingleResults: builder.query<
+    getPublishResultForm: builder.query<Blob, any>({
+      query: ({ params }) => ({
+        url: `/api/v1.0/exams/results/generate-pdf/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+        params
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.ROUTINE,
+          id: TagTypes.ROUTINE + "_ID",
+        },
+      ],
+    }),
+
+
+       getSinglePublishResultForm: builder.query<Blob, any>({
+      query: ({ id}) => ({
+        url: `/api/v1.0/exams/results/${id}/generate-pdf/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+       
+      }),
+
+      providesTags: [
+        {
+          type: TagTypes.ROUTINE,
+          id: TagTypes.ROUTINE + "_ID",
+        },
+      ],
+    }),
+
+
+    getSinglePublishResults: builder.query<
       ApiResponse<PaginatedResponse<IResults>>,
       number
     >({
@@ -94,6 +128,8 @@ export const {
   useGetExamResultByTermQuery,
   useGetResultsQuery,
   useCreateResultsMutation,
-  useGetSingleResultsQuery,
+  useGetSinglePublishResultsQuery,
   useDeleteResultMutation,
+  useLazyGetPublishResultFormQuery,
+  useLazyGetSinglePublishResultFormQuery
 } = resultsEndpoint;
