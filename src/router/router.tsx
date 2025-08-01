@@ -84,6 +84,7 @@ import ExamTab from "../modules/general settings/Exam/Tab/ExamTab";
 import HolidayPage from "../modules/settings/holiday/pages/HolidayPage";
 import TicketPage from "../modules/settings/ticket/pages/TicketPage";
 import TicketView from "../modules/settings/ticket/components/TicketView";
+import Message from "../modules/settings/ticket/components/Message";
 
 const router = createBrowserRouter([
   {
@@ -640,6 +641,14 @@ const router = createBrowserRouter([
         element: (
           <WithPermission requiredPermission="smsconfig">
             <SmsPage />
+          </WithPermission>
+        ),
+      },
+      {
+        path: "/message",
+        element: (
+          <WithPermission requiredPermission="smsconfig">
+            <Message />
           </WithPermission>
         ),
       },

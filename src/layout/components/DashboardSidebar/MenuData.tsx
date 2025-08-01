@@ -13,6 +13,7 @@ import {
   IoAccessibilityOutline,
   IoCalendarOutline,
   IoPeopleOutline,
+  IoTicketOutline,
 } from "react-icons/io5";
 import { FaCommentSms, FaRegAddressCard } from "react-icons/fa6";
 import { TbCoinTaka } from "react-icons/tb";
@@ -82,8 +83,13 @@ const MenuData: React.FC = () => {
     hasPermissionForModule(permissions, "smsconfig") && {
       key: "/ticket",
       label: <Link to="/ticket">Ticket</Link>,
-      icon: <FaCommentSms />,
+      icon: <IoTicketOutline />,
     },
+    // hasPermissionForModule(permissions, "smsconfig") && {
+    //   key: "/message",
+    //   label: <Link to="/message">Message</Link>,
+    //   icon: <FaCommentSms />,
+    // },
   ].filter(Boolean);
 
   const members = [

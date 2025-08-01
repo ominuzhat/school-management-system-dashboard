@@ -195,18 +195,18 @@ const TimeTableForm = ({
                         </Form.Item>
                       </Col>
 
-                      {/* Contribution Marks */}
+                      {/* Contribution Marks (%) */}
                       <Col xs={24} sm={12} md={8} lg={6}>
                         <Form.Item
                           {...restField}
-                          label="Contribution Marks"
+                          label="Contribution Marks (%)"
                           name={[name, "contribution_marks"]}
                         >
                           <InputNumber
                             min={0}
                             max={100}
                             className="w-full"
-                            placeholder="Contribution Marks"
+                            placeholder="Contribution Marks (%)"
                           />
                         </Form.Item>
                       </Col>

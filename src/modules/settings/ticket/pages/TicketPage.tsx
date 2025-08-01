@@ -33,7 +33,7 @@ const TicketPage = () => {
   const { page_size, page } = useAppSelector(FilterState);
 
   const {
-    data: teacherData,
+    data: ticketData,
     isLoading,
     refetch,
     isFetching,
@@ -127,8 +127,8 @@ const TicketPage = () => {
             rowKey={"id"}
             loading={isLoading || isFetching}
             refetch={refetch}
-            total={teacherData?.data?.results?.length}
-            dataSource={teacherData?.data?.results}
+            total={ticketData?.data?.results?.length}
+            dataSource={ticketData?.data?.results}
             columns={columns}
           />
         </Card>

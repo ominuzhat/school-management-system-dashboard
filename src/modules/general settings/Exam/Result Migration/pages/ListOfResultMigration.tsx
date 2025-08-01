@@ -17,9 +17,12 @@ import { useGetGradeMarkQuery } from "../../Grade/api/gradeMarkEndPoints";
 import { SearchComponent } from "../../../../../common/CommonAnt/CommonSearch/CommonSearch";
 import { useGetAdmissionSessionQuery } from "../../../admission session/api/admissionSessionEndPoints";
 import { FaFilePdf } from "react-icons/fa6";
+import { useAppSelector } from "../../../../../app/store";
+import { FilterState } from "../../../../../app/features/filterSlice";
 
 const ListOfResultMigration = () => {
-  const [search, setSearch] = useState("");
+  const [, setSearch] = useState("");
+  const { page_size, page } = useAppSelector(FilterState);
   const { data: termData }: any = useGetTermQuery({});
   const { data: sessionData }: any = useGetAdmissionSessionQuery({});
   const { data: gradeMarkData }: any = useGetGradeMarkQuery({});
@@ -40,6 +43,8 @@ const ListOfResultMigration = () => {
     isLoading,
     isFetching,
   } = useGetMigrationResultListQuery({
+    page_size: page_size,
+    page: Number(page) || undefined,
     admission: filters.admission,
     is_passed: filters.is_passed,
     exam_term: filters.exam_term,
@@ -47,8 +52,6 @@ const ListOfResultMigration = () => {
     admission__session: filters.admission__session,
     search: filters.search,
   });
-
-  console.log(search);
 
   useEffect(() => {
     if (migrationFeeForm) {

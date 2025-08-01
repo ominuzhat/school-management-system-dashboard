@@ -134,7 +134,7 @@ const ResultView = () => {
               <Text strong>Total Marks:</Text> <Text>{result.total_marks}</Text>
             </Col>
             <Col xs={24} sm={12} md={8}>
-              <Text strong>Contribution Marks:</Text>{" "}
+              <Text strong>Contribution Marks (%):</Text>{" "}
               <Text>{result.contribution_marks}</Text>
             </Col>
             <Col xs={24} sm={12} md={8}>
