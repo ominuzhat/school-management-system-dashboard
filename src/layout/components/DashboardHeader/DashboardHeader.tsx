@@ -1,8 +1,10 @@
 import {
+  Badge,
   Button,
   Flex,
   Image,
   Layout,
+  List,
   Popover,
   Space,
   Tooltip,
@@ -82,7 +84,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
           />
         </Flex> */}
         <Flex align="center" justify="center" gap={20}>
-          {/* <Badge count={17}>
+          <Badge count={17}>
             <Popover
               content={
                 <List
@@ -99,7 +101,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
                 icon={<Iconify name="ant-design:bell-outlined" />}
               />
             </Popover>
-          </Badge> */}
+          </Badge>
 
           <Tooltip
             title={themes === "light" ? "Dark Mode" : "Light Mode"}
