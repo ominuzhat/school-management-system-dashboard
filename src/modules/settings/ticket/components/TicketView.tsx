@@ -200,8 +200,8 @@ const TicketView = () => {
                     />
                     <div className="flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <Text strong>{comment.author.username}</Text>
-                        <Tag color="blue">{comment.author.role.name}</Tag>
+                        <Text strong>{comment.author?.username}</Text>
+                        <Tag color="blue">{comment.author.role?.name}</Tag>
                         <Text type="secondary" className="text-xs">
                           {dayjs(comment.created_at).format(
                             "MMM D, YYYY h:mm A"
@@ -427,7 +427,7 @@ const TicketView = () => {
             <Card title="Institution" bordered={false}>
               <Space direction="vertical" className="w-full">
                 <div className="flex items-center gap-2">
-                  <Text strong>{institution.name}</Text>
+                  <Text strong>{institution?.name}</Text>
                   <Tag color={institution.is_active ? "green" : "red"}>
                     {institution.is_active ? "Active" : "Inactive"}
                   </Tag>

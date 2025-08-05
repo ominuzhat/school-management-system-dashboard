@@ -1,10 +1,8 @@
 import {
-  Badge,
   Button,
   Flex,
   Image,
   Layout,
-  List,
   Popover,
   Space,
   Tooltip,
@@ -21,6 +19,7 @@ import { RootState } from "../../../app/store";
 import { toggleThemes } from "../../../app/features/themeSlice";
 import { avatar } from "../../../utilities/images";
 import { useGetProfileQuery } from "../../../modules/Profile/api/profileEndpoint";
+import Notification from "./Notification";
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -84,25 +83,7 @@ const DashboardHeader: React.FC<Props> = ({ setOpen }) => {
           />
         </Flex> */}
         <Flex align="center" justify="center" gap={20}>
-          <Badge count={17}>
-            <Popover
-              content={
-                <List
-                  itemLayout="vertical"
-                  renderItem={() => <List.Item></List.Item>}
-                />
-              }
-              trigger="click"
-              placement="bottomRight"
-            >
-              <Button
-                type="default"
-                shape="circle"
-                icon={<Iconify name="ant-design:bell-outlined" />}
-              />
-            </Popover>
-          </Badge>
-
+       <Notification/>
           <Tooltip
             title={themes === "light" ? "Dark Mode" : "Light Mode"}
             placement="bottomRight"

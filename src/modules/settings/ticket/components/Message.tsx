@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-as-const */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useRef, useEffect } from "react";
 import {
   Avatar,
@@ -33,6 +31,7 @@ import { FilterState } from "../../../../app/features/filterSlice";
 import AttachmentViewer from "../../../../common/components/AttachmentViewer";
 import dayjs from "dayjs";
 import { useGetProfileQuery } from "../../../Profile/api/profileEndpoint";
+import { webSocketBaseUrl } from "../../../../utilities/baseQuery";
 
 const Message = () => {
   // State management
@@ -41,10 +40,10 @@ const Message = () => {
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [onlineStatus, setOnlineStatus] = useState(true);
+  const [unreadCounts, setUnreadCounts] = useState<Record<number, number>>({});
+  const [socket, setSocket] = useState<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { data: profile } = useGetProfileQuery();
-  console.log("first", profile?.data?.id);
-  console.log("messages", messages);
 
   // Redux state
   const { page_size, page } = useAppSelector(FilterState);
@@ -56,8 +55,6 @@ const Message = () => {
       skip: !selectedTicketId,
     }
   );
-
-  console.log("ticketDetails?.data", ticketDetails?.data?.id);
 
   const {
     data: ticketData,
@@ -71,27 +68,97 @@ const Message = () => {
     page: Number(page) || undefined,
   });
 
-  // Derived data
-  const contacts: any[] =
-    ticketData?.data?.results?.map((ticket: any) => ({
-      id: ticket.id,
-      name: ticket.title,
-      avatar: ticket.title.charAt(0).toUpperCase(),
-      lastMessage: ticket.description || "No description",
-      time: dayjs(ticket.created_at).format("DD MM YYYY"),
-      unread: ticket.comments?.length || 0,
-      status: ticket.status,
-      priority: ticket.priority,
-    })) || [];
+  // WebSocket connection management
+  useEffect(() => {
+    console.log(ticketDetails?.data?.title,'ticketDetails');
+    if (!ticketDetails?.data?.title) return;
+    const wsUrl = `${webSocketBaseUrl}/ws/tickets/${ticketDetails?.data?.title}/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU0OTE5NjY1LCJpYXQiOjE3NTQzMTQ4NjUsImp0aSI6IjkwZTQ3MjhkZjc4OTQ5YmU5MWE3NzNhYmFiOTJkYzAzIiwidXNlcl9pZCI6MTI2LCJ1c2VybmFtZSI6IkhvbHliaXJkIn0.lW8-hFOyb9jyPLWMGU52RSaL73BZSPVITrwC_nSSst8`;
+    const ws = new WebSocket(wsUrl);
 
-  // Effects
+    ws.onopen = () => {
+      console.log('WebSocket connected');
+      setSocket(ws);
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      
+      if (data.type === 'chat.message') {
+        handleNewMessage(data.message);
+      } else if (data.type === 'unread_update') {
+        setUnreadCounts(data.unread_counts);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket disconnected');
+      setSocket(null);
+      // Attempt to reconnect after 5 seconds
+      setTimeout(() => {
+        setSocket(new WebSocket(wsUrl));
+      }, 5000);
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    return () => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
+  }, [selectedTicketId, profile?.data?.id, ticketDetails?.data?.title]);
+
+  // Handle incoming messages
+  const handleNewMessage = (messageData: any) => {
+    setMessages(prev => [...prev, {
+      id: messageData.id,
+      text: messageData.content,
+      sender: messageData.author.id === profile?.data?.id ? "me" : "them",
+      time: formatTime(messageData.created_at),
+      author: messageData.author,
+      attachments: messageData.attachments,
+    }]);
+  };
+
+  // Mark messages as read when they become visible
+  useEffect(() => {
+    if (!selectedTicketId || !profile?.data?.id || !socket) return;
+
+    const unreadIds = messages
+      .filter(m => m.sender === "them" && !m.isRead)
+      .map(m => m.id);
+
+    if (unreadIds.length > 0) {
+      socket.send(JSON.stringify({
+        mark_read: unreadIds
+      }));
+      
+      // Update local state to mark as read
+      setMessages(prev => prev.map(m => 
+        unreadIds.includes(m.id) ? {...m, isRead: true} : m
+      ));
+    }
+  }, [messages, selectedTicketId, profile?.data?.id, socket]);
+
+  // Effects for initial data loading
   useEffect(() => {
     if (ticketDetails?.data?.id) {
       const ticket = ticketDetails.data;
       const ticketMessages = formatTicketMessages(ticket);
       setMessages(ticketMessages);
+      
+      // Initialize unread counts
+      const counts: Record<number, number> = {};
+      ticket.comments?.forEach((comment: any) => {
+        if (!comment.read_by?.includes(profile?.data?.id) && comment.author.id !== profile?.data?.id) {
+          counts[comment.author.id] = (counts[comment.author.id] || 0) + 1;
+        }
+      });
+      setUnreadCounts(counts);
     }
-  }, [ticketDetails]);
+  }, [ticketDetails, profile?.data?.id]);
 
   useEffect(() => {
     scrollToBottom();
@@ -99,10 +166,7 @@ const Message = () => {
 
   // Helper functions
   const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    return dayjs(dateString).format("h:mm A");
   };
 
   const formatTicketMessages = (ticket: any): any[] => {
@@ -113,14 +177,16 @@ const Message = () => {
         sender: "them",
         time: formatTime(ticket.created_at),
         author: ticket.created_by,
+        isRead: true,
       },
       ...(ticket.comments?.map((comment: any) => ({
         id: comment.id,
         text: comment.content,
-        sender: comment.author.id === 405 ? ("me" as "me") : ("them" as "them"),
+        sender: comment.author.id === profile?.data?.id ? "me" : "them",
         time: formatTime(comment.created_at),
         author: comment.author,
         attachments: comment.attachments,
+        isRead: comment.read_by?.includes(profile?.data?.id) || comment.author.id === profile?.data?.id,
       })) || []),
     ];
   };
@@ -136,40 +202,31 @@ const Message = () => {
       return;
     }
 
-    const newMsg: any = {
-      id: messages.length + 1,
-      text: newMessage,
-      sender: "me",
-      time: formatTime(new Date().toISOString()),
-    };
-
-    setMessages([...messages, newMsg]);
-    setNewMessage("");
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({
+        msg: newMessage
+      }));
+      setNewMessage("");
+    } else {
+      message.error("Connection error. Please try again.");
+    }
   };
 
   const getAvatarColor = (status: string) => {
     switch (status) {
-      case "open":
-        return "bg-blue-500";
-      case "closed":
-        return "bg-gray-500";
-      case "pending":
-        return "bg-yellow-500";
-      default:
-        return "bg-orange-500";
+      case "open": return "bg-blue-500";
+      case "closed": return "bg-gray-500";
+      case "pending": return "bg-yellow-500";
+      default: return "bg-orange-500";
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "high":
-        return "red";
-      case "medium":
-        return "orange";
-      case "low":
-        return "green";
-      default:
-        return "blue";
+      case "high": return "red";
+      case "medium": return "orange";
+      case "low": return "green";
+      default: return "blue";
     }
   };
 
@@ -177,33 +234,25 @@ const Message = () => {
     setSelectedTicketId(ticketId);
   };
 
+  // Calculate total unread for a ticket
+  const calculateTicketUnread = (ticket: any) => {
+    if (!profile?.data?.id) return 0;
+    return ticket.comments?.filter((c: any) => 
+      !c.read_by?.includes(profile.data.id) && c.author.id !== profile.data.id
+    ).length || 0;
+  };
+
   // Component rendering
   const renderContactsList = () => {
-    if (error)
-      return (
-        <div className="p-4 text-center text-red-500">
-          Error loading tickets
-        </div>
-      );
-    if (isLoading || isFetching)
-      return (
-        <div className="flex justify-center items-center h-full">
-          <Spin size="large" />
-        </div>
-      );
-    if (contacts.length === 0)
-      return (
-        <Empty
-          description="No tickets found"
-          className="flex flex-col justify-center h-full"
-        />
-      );
+    if (error) return <div className="p-4 text-center text-red-500">Error loading tickets</div>;
+    if (isLoading || isFetching) return <div className="flex justify-center items-center h-full"><Spin size="large" /></div>;
+    if (!ticketData?.data?.results?.length) return <Empty description="No tickets found" className="flex flex-col justify-center h-full" />;
 
     return (
       <List
         itemLayout="horizontal"
-        dataSource={contacts}
-        renderItem={(item) => (
+        dataSource={ticketData.data.results}
+        renderItem={(item: any) => (
           <List.Item
             className={`p-3 hover:bg-gray-50 cursor-pointer border-0 border-b border-gray-100 ${
               selectedTicketId === item.id ? "bg-blue-50" : ""
@@ -211,10 +260,12 @@ const Message = () => {
             onClick={() => handleTicketSelect(item.id)}
             actions={[
               <div className="flex flex-col items-end">
-                <span className="text-xs text-gray-500">{item.time}</span>
-                {item.unread > 0 && (
+                <span className="text-xs text-gray-500">
+                  {dayjs(item.created_at).format("MMM D")}
+                </span>
+                {calculateTicketUnread(item) > 0 && (
                   <Badge
-                    count={item.unread}
+                    count={calculateTicketUnread(item)}
                     style={{ backgroundColor: getPriorityColor(item.priority) }}
                   />
                 )}
@@ -223,15 +274,15 @@ const Message = () => {
           >
             <List.Item.Meta
               avatar={
-                <Badge dot={item.unread > 0} offset={[-5, 35]}>
+                <Badge dot={calculateTicketUnread(item) > 0} offset={[-5, 35]}>
                   <Avatar size="large" className={getAvatarColor(item.status)}>
-                    {item.avatar}
+                    {item.title.charAt(0).toUpperCase()}
                   </Avatar>
                 </Badge>
               }
               title={
                 <div className="flex items-center">
-                  <span className="font-medium">{item.name}</span>
+                  <span className="font-medium">{item.title}</span>
                   <Badge
                     color={getPriorityColor(item.priority)}
                     className="ml-2"
@@ -240,7 +291,7 @@ const Message = () => {
               }
               description={
                 <span className="text-gray-500 truncate">
-                  {item.lastMessage}
+                  {item.description || "No description"}
                 </span>
               }
             />
@@ -254,13 +305,7 @@ const Message = () => {
     if (!ticketDetails?.data) {
       return (
         <div className="flex-1 flex flex-col items-center justify-center bg-gray-50">
-          <Empty
-            description={
-              <span className="text-gray-500">
-                Select a ticket to view conversation
-              </span>
-            }
-          />
+          <Empty description={<span className="text-gray-500">Select a ticket to view conversation</span>} />
         </div>
       );
     }
@@ -330,40 +375,38 @@ const Message = () => {
 
         {/* Messages area */}
         <div className="flex-1 p-4 overflow-y-auto bg-gray-100">
-          {messages?.map((message) =>
-             (
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`flex mb-4 ${
+                msg.sender === "me" ? "justify-end" : "justify-start"
+              }`}
+            >
               <div
-                key={message.id}
-                className={`flex mb-4 ${
-                  message.sender === "me" ? "justify-end" : "justify-start"
-                }`}
+                className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-lg ${
+                  msg.sender === "me"
+                    ? "bg-green-100 rounded-tr-none"
+                    : "bg-white rounded-tl-none"
+                } ${!msg.isRead ? "border-l-2 border-blue-500" : ""}`}
               >
-                <div
-                  className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-lg ${
-                    message.sender === "me"
-                      ? "bg-green-100 rounded-tr-none"
-                      : "bg-white rounded-tl-none"
-                  }`}
-                >
-                  {message?.author && (
-                    <div className="text-xs font-semibold text-gray-600 mb-1">
-                      {message?.author?.username} ({message?.author?.role?.name})
-                    </div>
-                  )}
-                  <div className="text-gray-800">{message.text}</div>
-                  {message.attachments?.map((attachment: any) => (
-                    <AttachmentViewer
-                      key={attachment.id}
-                      attachment={attachment}
-                    />
-                  ))}
-                  <div className="text-right text-xs text-gray-500 mt-1">
-                    {message.time}
+                {msg.author && (
+                  <div className="text-xs font-semibold text-gray-600 mb-1">
+                    {msg.author.username} ({msg.author.role?.name})
+                    {!msg.isRead && msg.sender === "them" && (
+                      <span className="ml-2 text-blue-500 text-xs">(unread)</span>
+                    )}
                   </div>
+                )}
+                <div className="text-gray-800">{msg.text}</div>
+                {msg.attachments?.map((attachment: any) => (
+                  <AttachmentViewer key={attachment.id} attachment={attachment} />
+                ))}
+                <div className="text-right text-xs text-gray-500 mt-1">
+                  {msg.time}
                 </div>
               </div>
-            )
-          )}
+            </div>
+          ))}
           <div ref={messagesEndRef} />
         </div>
 
@@ -392,6 +435,7 @@ const Message = () => {
             icon={<SendOutlined />}
             onClick={handleSendMessage}
             className="bg-green-500 border-green-500"
+            disabled={!socket || socket.readyState !== WebSocket.OPEN}
           />
         </div>
       </>
@@ -402,15 +446,13 @@ const Message = () => {
     <div className="flex h-screen bg-gray-100">
       {/* Left sidebar - Contacts */}
       <div className="w-1/3 flex flex-col border-r border-gray-200 bg-white">
-        {/* Header */}
         <div className="flex justify-between items-center p-3 bg-gray-50">
           <Avatar size="large" className="bg-green-500">
-            ME
+            {profile?.data?.username.charAt(0).toUpperCase()}
           </Avatar>
           <Button type="text" icon={<MoreOutlined />} />
         </div>
 
-        {/* Search */}
         <div className="p-2 bg-gray-50">
           <Input
             placeholder="Search tickets"
@@ -421,12 +463,18 @@ const Message = () => {
           />
         </div>
 
-        {/* Contacts list */}
         <div className="flex-1 overflow-y-auto">{renderContactsList()}</div>
       </div>
 
       {/* Right side - Chat area */}
-      <div className="flex-1 flex flex-col">{renderMessageArea()}</div>
+      <div className="flex-1 flex flex-col">
+        {renderMessageArea()}
+        {!socket || socket.readyState !== WebSocket.OPEN ? (
+          <div className="absolute bottom-20 right-4 bg-red-500 text-white px-3 py-1 rounded-md text-xs">
+            Connection lost - reconnecting...
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };

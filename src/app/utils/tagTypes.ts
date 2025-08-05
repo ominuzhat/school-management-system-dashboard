@@ -9,6 +9,7 @@ export const TagTypes = {
   SERVICE: "Service",
 
   // school
+  NOTIFICATION: "Notification",
   INSTITUTE_PROFILE: "Institution_Profile",
   ROLE_PERMISSION: "Role_Permission",
   TEACHER: "Teacher",
