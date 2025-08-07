@@ -29,17 +29,14 @@ const Notification = () => {
   const setupWebSocket = () => {
     const token_raw = localStorage.getItem("access");
     const token_object = JSON.parse(token_raw || "{}");
-    console.log(token_object.access,'token_object.access');
     ws.current = new WebSocket(`${webSocketBaseUrl}/ws/admin/notifications/?token=${token_object.access}`);
 
     ws.current.onopen = () => {
-      console.log("WebSocket connection established");
+      console.log("notification WebSocket connection established");
     };
 
     ws.current.onmessage = (event: any) => {
       const data = JSON.parse(event.data);
-      console.log("WebSocket message received:", data);
-
       if (data.type === "initial_notifications") {
         updateNotifications(data.data);
       } else if (data.type === "new_notification") {
@@ -95,7 +92,7 @@ const Notification = () => {
             onClick={async (e) => {
               e.stopPropagation();
               try {
-                await create({}).unwrap(); // optional: unwrap() to handle success/fail explicitly
+                await create({}).unwrap();
                 console.log("All notifications marked as read.");
               } catch (error) {
                 console.error("Failed to mark all as read:", error);
