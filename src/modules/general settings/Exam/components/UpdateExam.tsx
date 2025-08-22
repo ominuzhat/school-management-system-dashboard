@@ -243,7 +243,7 @@ const UpdateExam = () => {
   //         selectedTab={classItem.id.toString()}
   //         formData={timetablesData[classItem.id] || { timetables: [] }}
   //         setFormData={(data) =>
-  //           handleTimetableChange(classItem.id.toString(), data)git 
+  //           handleTimetableChange(classItem.id.toString(), data)git
   //         }
   //       />
   //     ),

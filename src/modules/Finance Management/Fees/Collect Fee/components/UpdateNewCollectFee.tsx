@@ -115,6 +115,7 @@ const UpdateNewCollectFee = () => {
   // Merge single admission to admissionData to ensure the selected ID is present
   const admissionOptions = [...(admissionData?.data?.results || [])];
 
+
   // If singleData admission is not in the list, add it
   if (
     singleData?.data?.admission &&
@@ -191,9 +192,10 @@ const UpdateNewCollectFee = () => {
   );
 
   const onFinish = (values: any): void => {
+
     const results = {
       ...values,
-      admission: singleData?.data?.id,
+      admission: values?.admission,
       add_ons: values?.add_ons,
       discount_type: values?.discount_type,
       discount_value: values?.discount_value,

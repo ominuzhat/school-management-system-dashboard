@@ -81,7 +81,7 @@ const UpdatedAdmissionFeeForm = () => {
                         })}
                       >
                         <DatePicker
-                          format="YYYY-MM-DD"
+                          picker="month"
                           disabled={!isActive}
                           style={{ width: "100%" }}
                         />

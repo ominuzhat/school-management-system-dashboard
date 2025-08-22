@@ -45,7 +45,6 @@ const Message = () => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { data: profile } = useGetProfileQuery();
   console.log("first", profile?.data?.id);
-  console.log("messages", messages);
 
   // Redux state
   const { page_size, page } = useAppSelector(FilterState);
