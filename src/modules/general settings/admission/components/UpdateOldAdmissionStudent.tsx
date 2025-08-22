@@ -14,17 +14,14 @@ import {
 } from "antd";
 import { Form } from "../../../../common/CommonAnt";
 import { IAdmission } from "../type/admissionType";
-import { useGetStudentsQuery } from "../../../members/students/api/studentEndPoints";
 import { useGetClassesQuery } from "../../classes/api/classesEndPoints";
 import { useEffect, useState } from "react";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 import { useGetAdmissionSessionQuery } from "../../admission session/api/admissionSessionEndPoints";
-import { debounce } from "lodash";
 import { useGetSectionQuery } from "../../Section/api/sectionEndPoints";
 import { useGetShiftQuery } from "../../shift/api/shiftEndPoints";
 // import CustomFeeForm from "./CustomFeeForm";
 import dayjs from "dayjs";
-import { LoadingOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import {
   useGetSingleAdmissionQuery,
@@ -39,7 +36,6 @@ const { Option } = Select;
 const UpdateOldAdmissionStudent = () => {
   const [form] = AntForm.useForm();
   const [forceUpdate, _setForceUpdate] = useState(0);
-  const [search, setSearch] = useState("");
   const [selectAll, setSelectAll] = useState(true);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const gradeLevel = AntForm.useWatch("grade_level", form);
@@ -52,12 +48,8 @@ const UpdateOldAdmissionStudent = () => {
   );
   const singleAdmission: any = singleAdmissionData?.data;
 
-  // API calls
-  const { data: studentData, isFetching: isFetchingStudents } =
-    useGetStudentsQuery({
-      search: search,
-      is_active: true,
-    });
+  console.log(singleAdmission?.student);
+
   const { data: sessionData, isFetching: isFetchingSessions } =
     useGetAdmissionSessionQuery({});
   const { data: shiftData, isFetching: isFetchingShifts } = useGetShiftQuery(
@@ -156,8 +148,6 @@ const UpdateOldAdmissionStudent = () => {
     }
   }, [singleAdmission, form, subjectData]);
 
-  console.log(singleAdmission);
-
   const handleSubjectsChange = (selectedValues: string[]) => {
     setSelectedSubjects(selectedValues);
     form.setFieldsValue({ subjects: selectedValues });
@@ -175,7 +165,7 @@ const UpdateOldAdmissionStudent = () => {
     if (subjectData?.data?.results) {
       if (shouldSelectAll) {
         const allSubjectIds = subjectData.data.results.map(
-          (subject: any) => subject.id
+          (subject: any) => subject?.id
         );
         setSelectedSubjects(allSubjectIds);
         form.setFieldsValue({ subjects: allSubjectIds });
@@ -188,14 +178,21 @@ const UpdateOldAdmissionStudent = () => {
 
   const onFinish = (values: any): void => {
     const isCustom = values?.fee_type === "custom";
+    // const isClass = values?.fee_type === "class";
+
     const sourceFees = isCustom
       ? values.customFees.map((fee: any) => ({
           ...fee,
           effective_from: fee?.effective_from
-            ? dayjs(fee.effective_from).format("YYYY-MM-01")
+            ? dayjs(fee?.effective_from).format("YYYY-MM-01")
             : dayjs().format("YYYY-MM-01"),
         }))
-      : values.fees || [];
+      : values.fees.map((fee: any) => ({
+          ...fee,
+          effective_from: fee?.effective_from
+            ? dayjs(fee?.effective_from).format("YYYY-MM-01")
+            : dayjs().format("YYYY-MM-01"),
+        })) || [];
 
     const formattedValues = {
       ...values,
@@ -205,8 +202,6 @@ const UpdateOldAdmissionStudent = () => {
 
     // Remove customFees from payload (clean up)
     delete formattedValues.customFees;
-
-    console.log(formattedValues, "formattedValues");
 
     updateAdmission({ id: singleAdmission?.id, data: formattedValues });
   };
@@ -236,28 +231,17 @@ const UpdateOldAdmissionStudent = () => {
             {/* Student Selection */}
             <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
               <Form.Item<IAdmission> label="Student" name="student">
-                <Select
-                  showSearch
-                  placeholder="Search student by name"
-                  optionFilterProp="children"
-                  filterOption={false}
-                  onSearch={debounce(setSearch, 500)}
-                  loading={isFetchingStudents}
-                  notFoundContent={
-                    isFetchingStudents ? (
-                      <LoadingOutlined />
-                    ) : (
-                      "No students found"
-                    )
-                  }
-                >
-                  {studentData?.data?.results?.map((student: any) => (
-                    <Option key={student?.id} value={student?.id}>
-                      {`${student.first_name} ${student.last_name}  - (${
-                        student?.current_grade_level?.name || "-"
-                      })`}
-                    </Option>
-                  ))}
+                <Select placeholder="Search student by name" disabled>
+                  <Option
+                    key={singleAdmission?.student?.id}
+                    value={singleAdmission?.student?.id}
+                  >
+                    {`${singleAdmission?.student.first_name} ${
+                      singleAdmission?.student.last_name
+                    }  - (${
+                      singleAdmission?.student?.current_grade_level?.name || "-"
+                    })`}
+                  </Option>
                 </Select>
               </Form.Item>
             </Col>

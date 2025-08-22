@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useRef, useEffect } from "react";
@@ -40,7 +41,7 @@ const Message = () => {
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
-  const [onlineStatus, setOnlineStatus] = useState(true);
+  const [onlineStatus, _setOnlineStatus] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { data: profile } = useGetProfileQuery();
   console.log("first", profile?.data?.id);
@@ -330,40 +331,38 @@ const Message = () => {
 
         {/* Messages area */}
         <div className="flex-1 p-4 overflow-y-auto bg-gray-100">
-          {messages?.map((message) =>
-             (
+          {messages?.map((message) => (
+            <div
+              key={message.id}
+              className={`flex mb-4 ${
+                message.sender === "me" ? "justify-end" : "justify-start"
+              }`}
+            >
               <div
-                key={message.id}
-                className={`flex mb-4 ${
-                  message.sender === "me" ? "justify-end" : "justify-start"
+                className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-lg ${
+                  message.sender === "me"
+                    ? "bg-green-100 rounded-tr-none"
+                    : "bg-white rounded-tl-none"
                 }`}
               >
-                <div
-                  className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-lg ${
-                    message.sender === "me"
-                      ? "bg-green-100 rounded-tr-none"
-                      : "bg-white rounded-tl-none"
-                  }`}
-                >
-                  {message?.author && (
-                    <div className="text-xs font-semibold text-gray-600 mb-1">
-                      {message?.author?.username} ({message?.author?.role?.name})
-                    </div>
-                  )}
-                  <div className="text-gray-800">{message.text}</div>
-                  {message.attachments?.map((attachment: any) => (
-                    <AttachmentViewer
-                      key={attachment.id}
-                      attachment={attachment}
-                    />
-                  ))}
-                  <div className="text-right text-xs text-gray-500 mt-1">
-                    {message.time}
+                {message?.author && (
+                  <div className="text-xs font-semibold text-gray-600 mb-1">
+                    {message?.author?.username} ({message?.author?.role?.name})
                   </div>
+                )}
+                <div className="text-gray-800">{message.text}</div>
+                {message.attachments?.map((attachment: any) => (
+                  <AttachmentViewer
+                    key={attachment.id}
+                    attachment={attachment}
+                  />
+                ))}
+                <div className="text-right text-xs text-gray-500 mt-1">
+                  {message.time}
                 </div>
               </div>
-            )
-          )}
+            </div>
+          ))}
           <div ref={messagesEndRef} />
         </div>
 
