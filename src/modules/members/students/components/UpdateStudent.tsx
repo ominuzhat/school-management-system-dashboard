@@ -273,6 +273,7 @@ const UpdateStudent = () => {
                           className="form-select"
                           showSearch
                           optionFilterProp="children"
+                          disabled
                         >
                           {Array.isArray(classData?.data) &&
                             classData?.data?.map((data: any) => (
@@ -295,6 +296,7 @@ const UpdateStudent = () => {
                           size="large"
                           placeholder="Select Session"
                           className="form-select"
+                          disabled
                         >
                           {Array.isArray(sessionData?.data) &&
                             sessionData?.data?.map((data: any) => (
@@ -314,6 +316,7 @@ const UpdateStudent = () => {
                         name="current_section"
                       >
                         <Select
+                          disabled
                           size="large"
                           placeholder="Select Section"
                           className="form-select"
@@ -336,6 +339,7 @@ const UpdateStudent = () => {
                         name="current_shift"
                       >
                         <Select
+                          disabled
                           size="large"
                           placeholder="Select Shift"
                           className="form-select"
@@ -356,6 +360,7 @@ const UpdateStudent = () => {
                         name="current_roll"
                       >
                         <Input
+                          disabled
                           placeholder="Roll number"
                           size="large"
                           className="form-input"

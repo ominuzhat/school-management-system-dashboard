@@ -48,21 +48,48 @@ const parseNestedGradeLevels = (values: string[]) => {
 
     if (parts[0] === "class") {
       const classId = parseInt(parts[1], 10);
-      const shiftId = parseInt(parts[3], 10);
-      const sectionId = parseInt(parts[5], 10);
 
+      // Initialize class if it doesn't exist
       if (!result[classId]) {
         result[classId] = { id: classId, shifts: [] };
       }
 
-      let shift = result[classId].shifts.find((s) => s.id === shiftId);
-      if (!shift) {
-        shift = { id: shiftId, sections: [] };
-        result[classId].shifts.push(shift);
+      // Handle case with only class (no shift/section)
+      if (parts.length === 2) {
+        // Just add the class with empty shifts
+        return;
       }
 
-      if (!shift.sections.includes(sectionId)) {
-        shift.sections.push(sectionId);
+      // Handle case with class and shift (no section)
+      if (parts.length === 4 && parts[2] === "shift") {
+        const shiftId = parseInt(parts[3], 10);
+
+        let shift = result[classId].shifts.find((s) => s.id === shiftId);
+        if (!shift) {
+          shift = { id: shiftId, sections: [] };
+          result[classId].shifts.push(shift);
+        }
+        return;
+      }
+
+      // Handle case with class, shift, and section
+      if (
+        parts.length === 6 &&
+        parts[2] === "shift" &&
+        parts[4] === "section"
+      ) {
+        const shiftId = parseInt(parts[3], 10);
+        const sectionId = parseInt(parts[5], 10);
+
+        let shift = result[classId].shifts.find((s) => s.id === shiftId);
+        if (!shift) {
+          shift = { id: shiftId, sections: [] };
+          result[classId].shifts.push(shift);
+        }
+
+        if (!shift.sections.includes(sectionId)) {
+          shift.sections.push(sectionId);
+        }
       }
     }
   });
@@ -199,17 +226,7 @@ const UpdateExam = () => {
     }
   }, [gradeLevel, classData]);
 
-  // useEffect(() => {
-  //   if (Array.isArray(gradeLevel) && Array.isArray(classData?.data)) {
-  //     const classIds = gradeLevel
-  //       .filter((val: string | number) => typeof val === "number")
-  //       .map(Number);
-  //     const filteredClasses = classData.data.filter((classItem: any) =>
-  //       classIds.includes(classItem.id)
-  //     );
-  //     setSelectedClass(filteredClasses);
-  //   }
-  // }, [gradeLevel, classData]);
+
 
   const handleTimetableChange = (classId: string, data: any) => {
     setTimeTablesData((prev) => ({
@@ -234,21 +251,7 @@ const UpdateExam = () => {
     })
   );
 
-  // const items: TabsProps["items"] = examData?.grade_level_structure?.map(
-  //   (classItem: any) => ({
-  //     key: classItem.id.toString(),
-  //     label: capitalize(classItem.name),
-  //     children: (
-  //       <UpdateTimeTableForm
-  //         selectedTab={classItem.id.toString()}
-  //         formData={timetablesData[classItem.id] || { timetables: [] }}
-  //         setFormData={(data) =>
-  //           handleTimetableChange(classItem.id.toString(), data)git
-  //         }
-  //       />
-  //     ),
-  //   })
-  // );
+
 
   const onFinish = async (values: any) => {
     try {

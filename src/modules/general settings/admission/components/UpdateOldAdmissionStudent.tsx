@@ -123,8 +123,7 @@ const UpdateOldAdmissionStudent = () => {
 
       form.setFieldsValue({
         student: singleAdmission?.student?.id,
-        grade_level:
-          singleAdmission?.student?.current_grade_level?.id || undefined,
+        grade_level: singleAdmission?.grade_level_object?.id || undefined,
         group_type: singleAdmission?.group_type,
         optional_subject: singleAdmission?.optional_subject?.id || undefined,
         roll: singleAdmission?.roll,
@@ -252,6 +251,7 @@ const UpdateOldAdmissionStudent = () => {
                 <Select
                   loading={isFetchingSessions}
                   placeholder="Select admission session"
+                  disabled
                 >
                   {Array.isArray(sessionData?.data) &&
                     sessionData?.data?.map((session: any) => (
@@ -286,6 +286,7 @@ const UpdateOldAdmissionStudent = () => {
                     setSelectedSubjects([]);
                     form.setFieldsValue({ subjects: [], section: undefined });
                   }}
+                  disabled
                 >
                   {Array.isArray(classData?.data) &&
                     classData?.data?.map((classItem: any) => (
@@ -461,9 +462,7 @@ const UpdateOldAdmissionStudent = () => {
 
           {/* Fee Configuration Section */}
           <Divider />
-          <Title level={4} className="mb-4">
-            Fee Configuration
-          </Title>
+          <Title level={4}>Fee Configuration</Title>
           <Row gutter={[16, 16]} align="middle">
             <Col span={24}>
               <Form.Item label="Fee Structure Type" name="fee_type">
@@ -476,6 +475,9 @@ const UpdateOldAdmissionStudent = () => {
           </Row>
         </Card>
 
+        <div className="py-4 text-center border my-1 text-red-400 font-semibold">
+          <p>**কোনো ফি পরিবর্তন করা হলে তা পরের মাস থেকে কার্যকর হবে। যেমন, বর্তমানে যদি Activity Fee ২০০ টাকা থাকে এবং সেটি পরিবর্তন করে ৪০০ টাকা করা হয়, তাহলে পরের মাস থেকে ৪০০ টাকা হিসাব করা হবে।**</p>
+        </div>
         {feeType === "custom" ? (
           <Card>
             <Badge.Ribbon text="Custom Fee" color="blue" placement="start">

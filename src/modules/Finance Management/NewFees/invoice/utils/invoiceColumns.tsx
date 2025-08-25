@@ -7,8 +7,6 @@ import { useGetInvoicePdfQuery } from "../api/invoiceEndPoints";
 import { showModal } from "../../../../../app/features/modalSlice";
 import InvoiceView from "../components/InvoiceView";
 import { useDispatch } from "react-redux";
-import UpdateInvoice from "../components/UpdateInvoice";
-import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 
@@ -153,7 +151,7 @@ const useInvoiceColumns = (): ColumnsType<any> => {
       align: "center",
       render: (record) => (
         <Space>
-          <EditButton
+          {/* <EditButton
             onClick={() =>
               dispatch(
                 showModal({
@@ -162,7 +160,7 @@ const useInvoiceColumns = (): ColumnsType<any> => {
                 })
               )
             }
-          />
+          /> */}
 
           <Button
             size="small"

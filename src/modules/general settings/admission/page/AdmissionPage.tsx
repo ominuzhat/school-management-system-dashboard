@@ -19,6 +19,7 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import NoPermissionData from "../../../../utilities/NoPermissionData";
+import { useGetClassesBigListQuery } from "../../classes/api/classesEndPoints";
 const { Option } = Select;
 
 const AdmissionPage = () => {
@@ -32,6 +33,7 @@ const AdmissionPage = () => {
     is_active: "",
     session: "",
     student: "",
+    grade_level: "",
   });
 
   const { page_size, page } = useAppSelector(FilterState);
@@ -47,9 +49,12 @@ const AdmissionPage = () => {
     is_active: filters.is_active,
     session: filters.session,
     student: filters.student,
+    grade_level: filters.grade_level,
     page_size: page_size,
     page: Number(page) || undefined,
   });
+
+  const {data : getClassData} = useGetClassesBigListQuery({})
   const { data: getSession } = useGetAdmissionSessionQuery({});
   const { data: getStudent } = useGetStudentsQuery({
     search: search,
@@ -100,7 +105,7 @@ const AdmissionPage = () => {
           )}
           <Col lg={14} xs={24}>
             <Row justify="space-between" gutter={[16, 0]}>
-              <Col lg={6} xs={12}>
+              <Col lg={5} xs={12}>
                 <SearchComponent
                   onSearch={(value) =>
                     setFilters((prev) => ({ ...prev, search: value }))
@@ -108,7 +113,7 @@ const AdmissionPage = () => {
                   placeholder="Search Admission"
                 />
               </Col>
-              <Col lg={6} xs={12}>
+              <Col lg={5} xs={12}>
                 <Select
                   className="w-full"
                   placeholder="Select Student"
@@ -134,7 +139,25 @@ const AdmissionPage = () => {
                   ))}
                 </Select>
               </Col>
-              <Col lg={6} xs={12}>
+              <Col lg={5} xs={12}>
+                <Select
+                  className="w-full"
+                  placeholder="Select Class"
+                  allowClear
+                  showSearch
+                  onChange={(value) =>
+                    setFilters((prev) => ({ ...prev, grade_level: value }))
+                  }
+                >
+                  {Array.isArray(getClassData?.data) &&
+                    getClassData?.data?.map((data: any) => (
+                      <Option key={data.id} value={data.id}>
+                        {data?.name}
+                      </Option>
+                    ))}
+                </Select>
+              </Col>
+              <Col lg={5} xs={12}>
                 <Select
                   className="w-full"
                   placeholder="Select Session"
@@ -152,7 +175,7 @@ const AdmissionPage = () => {
                     ))}
                 </Select>
               </Col>
-              <Col lg={6} xs={12}>
+              <Col lg={4} xs={12}>
                 <Select
                   placeholder="Select Active"
                   className="w-full"
