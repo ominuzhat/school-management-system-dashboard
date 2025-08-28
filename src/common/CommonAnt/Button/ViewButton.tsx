@@ -22,7 +22,6 @@ const ViewButton: React.FC<Props> = ({ to, ...rest }) => {
         }}
       >
         <FaEye />
-        View
       </AntButton>
     </Link>
   );

@@ -48,7 +48,6 @@ const UpdateOldAdmissionStudent = () => {
   );
   const singleAdmission: any = singleAdmissionData?.data;
 
-  console.log(singleAdmission?.student);
 
   const { data: sessionData, isFetching: isFetchingSessions } =
     useGetAdmissionSessionQuery({});

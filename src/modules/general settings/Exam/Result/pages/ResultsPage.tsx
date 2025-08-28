@@ -64,17 +64,19 @@ const ResultsPage = () => {
     isFetching,
     refetch,
   } = useGetResultsQuery({
-    grade_level: filters.grade_level,
+    admission__grade_level: filters.grade_level,
     exam: filters.exam,
     exam__session: filters.exam__session,
     admission: filters.admission,
     search: filters.search,
     is_passed: filters.is_passed,
+    admission__shift: filters.shift,
+    admission__section: filters.section,
     page_size: page_size,
     page: Number(page) || undefined,
   });
 
-  const dataLength = resultList?.data?.results?.length ?? 0;
+  const dataLength = resultList?.data?.count ?? 0;
   const dataSource = resultList?.data?.results ?? [];
 
   const viewPermission = GetPermission(

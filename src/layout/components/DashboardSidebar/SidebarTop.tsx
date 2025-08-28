@@ -25,8 +25,8 @@ const SidebarTop: React.FC = () => {
         <Image
           src={dashboardData?.data?.institution?.logo || mainLogo}
           preview={false}
-          width={40}
-          height={40}
+          width={50}
+          height={50}
           className="mx-auto object-fit-contain"
         />
       </div>

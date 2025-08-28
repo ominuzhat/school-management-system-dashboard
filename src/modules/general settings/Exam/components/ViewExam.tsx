@@ -333,6 +333,12 @@ const ViewExam = () => {
                   {exam?.comment || "No comments added"}
                 </Text>
               </div>
+              <div>
+                <Text strong className="text-gray-700 block">
+                  Created Date:
+                </Text>
+                <Text>{dayjs(exam?.created_at).format("DD MMM YYYY")}</Text>
+              </div>
             </div>
           </Col>
           <Col xs={24} sm={24} md={8}>

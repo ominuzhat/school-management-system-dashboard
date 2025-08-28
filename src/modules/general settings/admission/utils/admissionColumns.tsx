@@ -18,7 +18,6 @@ import {
   moduleNames,
 } from "../../../../utilities/permissionConstant";
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
-import dayjs from "dayjs";
 import { useAppDispatch } from "../../../../app/store";
 import { showModal } from "../../../../app/features/modalSlice";
 import FingerAdmission from "../components/FingerAdmission";
@@ -93,7 +92,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     },
     {
       key: "22",
-      title: "User Name",
+      title: "User",
       dataIndex: "student",
       align: "center",
       sorter: (a, b) =>
@@ -113,22 +112,14 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     //     ),
     //   render: (registration_number) => registration_number || "-",
     // },
-    {
-      key: "3",
-      title: "Admission Date",
-      dataIndex: "admission_date",
-      align: "center",
-      sorter: (a, b) =>
-        new Date(a.admission_date || 0).getTime() -
-        new Date(b.admission_date || 0).getTime(),
-      render: (title) => (title ? dayjs(title).format("DD MMMM YYYY") : "-"),
-    },
+  
 
     {
       key: "4",
       title: "Session",
       dataIndex: "session",
       align: "center",
+      width:100,
       sorter: (a, b) =>
         (a.session?.name || "").localeCompare(b.session?.name || ""),
       render: (session) => (session?.name ? capitalize(session.name) : "-"),
@@ -149,7 +140,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     },
     {
       key: "6",
-      title: "Fee Type",
+      title: "FeeType",
       dataIndex: "fee_type",
       align: "center",
       sorter: (a, b) => (a.fee_type || "").localeCompare(b.fee_type || ""),
@@ -157,14 +148,14 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     },
     {
       key: "7",
-      title: "One Time Fee",
+      title: "OneTime",
       dataIndex: "one_time_fee",
       align: "center",
       render: (title) => (title ? title : 0),
     },
     {
       key: "8",
-      title: "Monthly Fee",
+      title: "Monthly",
       dataIndex: "monthly_fee",
       align: "center",
       render: (title) => (title ? title : 0),
@@ -180,7 +171,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     },
     {
       key: "99",
-      title: "Paid Amount",
+      title: "Paid",
       dataIndex: "total_paid_amount",
       align: "center",
       render: (title) => (title ? title : 0),
@@ -188,6 +179,7 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     {
       title: "Actions",
       align: "center",
+      width:220,
       render: (record) => (
         <Space>
           {updatePermission && (

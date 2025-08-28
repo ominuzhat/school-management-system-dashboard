@@ -183,11 +183,12 @@ const MarkExamPage = () => {
       render: (_: any, __: any, index: number) => index + 1,
     },
     {
-      title: "Registration",
-      dataIndex: "registration_number",
-      key: "registration_number",
+      title: "Username",
+      dataIndex: "user",
+      key: "user",
       align: "center",
       width: 150,
+      render: (title: any) => title?.username || "-",
     },
     {
       key: "first_name",
