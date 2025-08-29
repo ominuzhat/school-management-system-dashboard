@@ -74,6 +74,17 @@ const useAdmissionColumns = (): ColumnsType<any> => {
   //   items?.length
   //     ? items.map((item: any) => `${item.month}: ${item.amount}`).join("\n")
   //     : "No data";
+
+  const statusColors: Record<string, string> = {
+    pending: "orange",
+    approved: "green",
+    rejected: "red",
+    passed: "blue",
+    withdrawn: "purple",
+    failed: "red",
+    on_hold: "gold",
+    awaiting_result: "geekblue",
+  };
   return [
     {
       key: "0",
@@ -112,14 +123,13 @@ const useAdmissionColumns = (): ColumnsType<any> => {
     //     ),
     //   render: (registration_number) => registration_number || "-",
     // },
-  
 
     {
       key: "4",
       title: "Session",
       dataIndex: "session",
       align: "center",
-      width:100,
+      width: 100,
       sorter: (a, b) =>
         (a.session?.name || "").localeCompare(b.session?.name || ""),
       render: (session) => (session?.name ? capitalize(session.name) : "-"),
@@ -177,9 +187,25 @@ const useAdmissionColumns = (): ColumnsType<any> => {
       render: (title) => (title ? title : 0),
     },
     {
+      key: "999",
+      title: "Status",
+      dataIndex: "status",
+      align: "center",
+      render: (status: string) => {
+        const color = statusColors[status] || "default";
+        return (
+          <p
+            style={{ backgroundColor: color, color: "white" }}
+          >
+            {capitalize(status)}
+          </p>
+        );
+      },
+    },
+    {
       title: "Actions",
       align: "center",
-      width:220,
+      width: 220,
       render: (record) => (
         <Space>
           {updatePermission && (

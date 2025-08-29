@@ -12,6 +12,16 @@ import {
 import DeleteButton from "../../../../common/CommonAnt/Button/DeleteButton";
 import { useDeleteStudentMutation } from "../api/studentEndPoints";
 import EditButton from "../../../../common/CommonAnt/Button/EditButton";
+import { capitalize } from "../../../../common/capitalize/Capitalize";
+
+const statusColors: Record<string, string> = {
+  Pending: "orange",
+  Approved: "green",
+  Rejected: "red",
+  Passed: "blue",
+  Withdrawn: "purple",
+  Failed: "red",
+};
 
 const useStudentColumns = (): ColumnsType<any> => {
   // const dispatch = useDispatch();
@@ -76,7 +86,7 @@ const useStudentColumns = (): ColumnsType<any> => {
       title: "Section",
       dataIndex: "current_section",
       align: "center",
-
+      width: 80,
       render: (current_section) =>
         current_section ? current_section?.name : "-",
     },
@@ -116,7 +126,21 @@ const useStudentColumns = (): ColumnsType<any> => {
           <Tag color="red">Inactive</Tag>
         ),
     },
-
+    {
+      key: "999",
+      title: "Admission Status",
+      dataIndex: "current_admission_status",
+      align: "center",
+      width: 120,
+      render: (status: string) => {
+        const color = statusColors[status] || "default";
+        return (
+          <p style={{ backgroundColor: color, color: "white" }}>
+            {capitalize(status)}
+          </p>
+        );
+      },
+    },
     {
       title: "Actions",
       align: "center",

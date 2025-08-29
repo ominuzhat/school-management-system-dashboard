@@ -61,26 +61,6 @@ const Table = <T extends object>({
           dispatch(addFilter({ name: "PAGE", value: page }));
         },
       }}
-      // pagination={{
-      //   total,
-      //   showSizeChanger: true,
-      //   showTotal: (total) => (
-      //     <Typography.Text strong>
-      //       Showing {page_size} of {total} entries
-      //     </Typography.Text>
-      //   ),
-      //   current: page || total,
-      //   pageSize: page_size,
-      //   onChange: (page: number, pageSize: number) => {
-      //     dispatch(addFilter({ name: "PAGE_SIZE", value: pageSize }));
-      //     dispatch(
-      //       addFilter({
-      //         name: "PAGE",
-      //         value: page || 1,
-      //       })
-      //     );
-      //   },
-      // }}
       footer={() => <Typography.Text>Total Data: {total || 0}</Typography.Text>}
     />
   );

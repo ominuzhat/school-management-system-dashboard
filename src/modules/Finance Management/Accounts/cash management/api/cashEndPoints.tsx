@@ -85,6 +85,20 @@ const cashEndPoints = api.injectEndpoints({
       ],
     }),
 
+    getSingleCashForm: builder.query<Blob, number>({
+      query: (admissionId) => ({
+        url: `/api/v1.0/accounts/financial-entries/${admissionId}/generate-pdf/`,
+        responseHandler: async (response) => response.blob(),
+        cache: "no-cache",
+      }),
+      providesTags: [
+        {
+          type: TagTypes.CASH,
+          id: TagTypes.CASH + "_ID",
+        },
+      ],
+    }),
+
     updateCash: builder.mutation<
       ApiResponse<IGetCash>,
       { id: number | undefined; data: any }
@@ -113,4 +127,5 @@ export const {
   useUpdateCashMutation,
   useGetSingleCashQuery,
   useLazyGetIncomeExpenseFormQuery,
+  useLazyGetSingleCashFormQuery,
 } = cashEndPoints;

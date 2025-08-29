@@ -2,7 +2,7 @@ import type { ColumnsType } from "antd/es/table";
 
 import { capitalize } from "../../../../../common/capitalize/Capitalize";
 import dayjs from "dayjs";
-import { Space, Tag } from "antd";
+import { Button, Space, Tag } from "antd";
 import EditButton from "../../../../../common/CommonAnt/Button/EditButton";
 import UpdateCash from "../components/UpdateCash";
 import { useDispatch } from "react-redux";
@@ -13,9 +13,14 @@ import {
   moduleNames,
 } from "../../../../../utilities/permissionConstant";
 import { showModal } from "../../../../../app/features/modalSlice";
+import { FaFilePdf } from "react-icons/fa6";
+import { useLazyGetSingleCashFormQuery } from "../api/cashEndPoints";
+import { useEffect, useState } from "react";
 
 const useCashColumns = (): ColumnsType<any> => {
   const dispatch = useDispatch();
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
   const { data: dashboardData } = useGetDashboardDataQuery({});
 
   const updatePermission = GetPermission(
@@ -23,6 +28,27 @@ const useCashColumns = (): ColumnsType<any> => {
     moduleNames.financialentry,
     actionNames.change
   );
+
+  const [getCashForm, { data: singleCashForm }] =
+    useLazyGetSingleCashFormQuery();
+
+  useEffect(() => {
+    if (singleCashForm) {
+      const url = URL.createObjectURL(singleCashForm);
+      setPdfUrl(url);
+
+      // Open PDF in a new tab
+      window.open(url, "_blank");
+    }
+
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [singleCashForm]);
+
+  const handleForm = (id: number) => {
+    getCashForm(id);
+  };
 
   // const handleDelete = async (id: any) => {
   //   try {
@@ -134,7 +160,19 @@ const useCashColumns = (): ColumnsType<any> => {
               }
             />
           )}
-
+          <Button
+            title="Admission Form"
+            size="small"
+            type="default"
+            style={{
+              color: "#c20a0a",
+              // background: "#3892E3",
+              border: "1px solid gray",
+            }}
+            onClick={() => handleForm(record.id)}
+          >
+            <FaFilePdf />
+          </Button>
           {/* <ViewButton to={`student-view/1`} /> */}
           {/* <DeleteButton
           onClick={() => handleDelete(record.id)}>
