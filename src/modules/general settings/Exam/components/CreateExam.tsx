@@ -116,6 +116,8 @@ const CreateExam = () => {
   const [selectedClass, setSelectedClass] = useState<any[]>([]);
   const [formData, setFormData] = useState<Record<string, any>>({});
 
+  const examDate = AntForm.useWatch("exam_date", form);
+
   const treeData = buildTreeData(
     Array.isArray(classData?.data) ? classData.data : []
   );
@@ -166,9 +168,9 @@ const CreateExam = () => {
             ? dayjs(timetable.exam_mark_exp_date).format("YYYY-MM-DD")
             : undefined,
 
-          mcq_marks: timetable.mcq_marks,
-          written_marks: timetable.written_marks,
-          contribution_marks: timetable.contribution_marks,
+          mcq_marks: timetable.mcq_marks || 0,
+          written_marks: timetable.written_marks || 0,
+          contribution_marks: timetable.contribution_marks || 0,
         }))
       ),
     };
@@ -181,6 +183,7 @@ const CreateExam = () => {
     label: capitalize(cls.name),
     children: (
       <TimeTableForm
+        examDate={examDate}
         selectedTab={cls.id.toString()}
         formData={formData[cls.id.toString()] || {}}
         setFormData={(data: any) =>

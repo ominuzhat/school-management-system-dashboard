@@ -64,7 +64,7 @@ const useAttendanceReportColumns = (data: any[] = []): ColumnsType<any> => {
       key: "summary",
       align: "center",
       fixed: "left",
-      width: 200,
+      width: 150,
       render: (_, record) => {
         if (!record.attendances) return "-";
 

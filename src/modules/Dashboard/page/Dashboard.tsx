@@ -21,14 +21,14 @@ const Dashboard = () => {
   const { data: dashboardData } = useGetDashboardDataQuery({});
 
   const [feeFilterParams, setFeeFilterParams] = useState({
-    filter: "monthly",
+    filter: "daily",
     year: dayjs().year(),
     month: dayjs().month() + 1,
     grade_level_id: undefined,
   });
 
   const [filterParams, setFilterParams] = useState({
-    filter: "monthly",
+    filter: "daily",
     year: dayjs().year(),
     month: dayjs().month() + 1,
     type: "student",

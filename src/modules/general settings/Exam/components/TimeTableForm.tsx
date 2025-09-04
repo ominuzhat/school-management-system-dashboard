@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -12,19 +12,27 @@ import {
 } from "antd";
 import { useGetSubjectsQuery } from "../../subjects/api/subjectsEndPoints";
 import { useGetProfileQuery } from "../../../Profile/api/profileEndpoint";
+import { debounce } from "lodash";
+import dayjs from "dayjs";
 
 const TimeTableForm = ({
+  examDate,
   selectedTab,
   formData,
   setFormData,
 }: {
   selectedTab: string;
+  examDate: any;
   formData: any;
   setFormData: (data: any) => void;
 }) => {
-  const { data: subjectData } = useGetSubjectsQuery({
+  const [search, setSearch] = useState("");
+
+  const { data: subjectData, isFetching } = useGetSubjectsQuery({
     grade_level: selectedTab,
+    search: search,
   });
+
 
   const [form] = Form.useForm();
 
@@ -75,19 +83,31 @@ const TimeTableForm = ({
                     <Row gutter={[16, 16]} align="middle">
                       {/* Exam Date */}
                       <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item
-                          {...restField}
-                          label="Exam Date"
-                          name={[name, "exam_date"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please select Exam Date!",
-                            },
-                          ]}
-                        >
-                          <DatePicker format="YYYY-MM-DD" className="w-full" />
-                        </Form.Item>
+                       <Form.Item
+                        {...restField}
+                        label="Exam Date"
+                        name={[name, "exam_date"]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please select Exam Date!",
+                          },
+                        ]}
+                      >
+                        <DatePicker
+                          format="YYYY-MM-DD"
+                          className="w-full"
+                          disabledDate={(current) => {
+                            if (!examDate || examDate.length !== 2)
+                              return false;
+                            const [start, end] = examDate;
+                            return (
+                              current < dayjs(start).startOf("day") ||
+                              current > dayjs(end).endOf("day")
+                            );
+                          }}
+                        />
+                      </Form.Item>
                       </Col>
 
                       {/* Select Subject */}
@@ -106,6 +126,16 @@ const TimeTableForm = ({
                           <Select
                             placeholder="Select Subject"
                             className="w-full"
+                            allowClear
+                            showSearch
+                            onSearch={debounce(setSearch, 500)}
+                            filterOption={false}
+                            loading={isFetching}
+                            notFoundContent={
+                              subjectData?.data?.results?.length === 0
+                                ? "No Student found"
+                                : null
+                            }
                           >
                             {subjectData?.data?.results?.length ? (
                               subjectData.data.results
