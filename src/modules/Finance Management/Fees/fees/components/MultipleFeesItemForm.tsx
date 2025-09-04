@@ -39,7 +39,7 @@ const MultipleFeesItemForm = () => {
                       },
                       {
                         type: "number",
-                        min: 1,
+                        min: 0,
                         message: "Amount must be greater than zero!",
                         transform: (value) => Number(value),
                       },
