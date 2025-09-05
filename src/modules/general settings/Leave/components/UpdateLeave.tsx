@@ -23,7 +23,7 @@ const UpdateLeave = ({ record }: { record: any }) => {
   const { data: singleData } = useGetSingleLeaveQuery(record);
   const [update, { isLoading, isSuccess }] = useUpdateLeaveMutation();
   const { data: admissionData } = useGetAdmissionQuery({});
-  const leaveDuration = AntForm.useWatch("leave_duration", form);
+  const leaveDuration = AntForm.useWatch("duration", form);
 
   useEffect(() => {
     if (singleData?.data) {
@@ -87,7 +87,7 @@ const UpdateLeave = ({ record }: { record: any }) => {
             </Form.Item>
           </Col>
           <Col lg={12}>
-            <Form.Item label="Leave Duration" name="leave_duration">
+            <Form.Item label="Leave Duration" name="duration">
               <Radio.Group>
                 <Radio value="H">Half Day</Radio>
                 <Radio value="F">Full Day</Radio>
