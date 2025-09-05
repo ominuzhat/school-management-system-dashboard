@@ -40,20 +40,22 @@ const OverViewPage = () => {
 
   const { chart_data: chartData, details } = attendanceData?.data || {};
 
+  // --- Table Columns ---
   const columnsData: any = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
       render: (text: string) => <Text strong>{capitalize(text)}</Text>,
-      fixed: screens.md ? false : screens.md === false ? "left" : undefined,
-      width: 300,
+      fixed: screens.md ? false : "left",
+      width: 250,
     },
     {
       title: "Present",
       dataIndex: "present",
       key: "present",
       render: (val: number) => <span style={{ color: "#52c41a" }}>{val}</span>,
+      responsive: ["xs", "sm", "md", "lg", "xl", "xxl"],
     },
     {
       title: "Absent",
@@ -78,13 +80,13 @@ const OverViewPage = () => {
         if (percent < 40) {
           status = "exception";
           strokeColor = "#f5222d";
-        } else if (percent >= 40 && percent < 60) {
+        } else if (percent < 60) {
           status = "active";
           strokeColor = "#1890ff";
-        } else if (percent >= 60 && percent < 80) {
+        } else if (percent < 80) {
           status = "normal";
           strokeColor = "#13c2c2";
-        } else if (percent >= 80) {
+        } else {
           status = "success";
           strokeColor = "#52c41a";
         }
@@ -93,17 +95,18 @@ const OverViewPage = () => {
           <Progress
             percent={Number(percent.toFixed(2))}
             status={status}
-            size="small"
+            size={screens.xs ? "small" : "default"}
             strokeColor={strokeColor}
             strokeWidth={5}
             format={(p) => `${p}%`}
-            style={{ minWidth: 100 }}
+            style={{ minWidth: 80 }}
           />
         );
       },
     },
   ];
 
+  // --- Active color per type ---
   const getActiveColor = () => {
     switch (filterParams?.type) {
       case "student":
@@ -135,24 +138,16 @@ const OverViewPage = () => {
   ];
 
   return (
-    <div style={{ padding: screens.xs ? "12px" : "24px" }}>
-      {/* Custom styles for active segmented item */}
+    <div className="w-full" style={{ padding: screens.xs ? "12px" : "24px" }}>
+      {/* Custom Styles */}
       <style>{`
         .custom-segmented .ant-segmented-item-selected {
           background-color: ${getActiveColor()} !important;
           color: white !important;
           border-radius: 6px !important;
-          transition: all 0.3s ease;
         }
         .custom-segmented .ant-segmented-item:hover:not(.ant-segmented-item-selected) {
           background-color: #f0f2f5 !important;
-        }
-        .filter-card {
-          transition: all 0.3s ease;
-        }
-        .filter-card:hover {
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          transform: translateY(-2px);
         }
       `}</style>
 
@@ -169,21 +164,17 @@ const OverViewPage = () => {
         bodyStyle={{ padding: screens.xs ? "16px" : "24px" }}
       >
         <div
-          style={{
-            display: "flex",
-            flexDirection: screens.md ? "row" : "column",
-            justifyContent: "space-between",
-            alignItems: screens.md ? "center" : "flex-start",
-            gap: 16,
-          }}
+          className="
+            flex flex-col md:flex-row md:items-center md:justify-between gap-4
+          "
         >
           <Title
             level={3}
+            className="!m-0"
             style={{
               color: "#2c3e50",
-              margin: 0,
               fontSize: screens.xs ? "20px" : "24px",
-              whiteSpace: "nowrap",
+              textAlign: screens.xs ? "center" : "left",
             }}
           >
             📊 Attendance Overview
@@ -192,7 +183,7 @@ const OverViewPage = () => {
           <Space
             direction={screens.md ? "horizontal" : "vertical"}
             size="middle"
-            style={{ width: screens.md ? "auto" : "100%" }}
+            className="w-full md:w-auto flex-wrap justify-center"
           >
             <Segmented
               className="custom-segmented"
@@ -200,26 +191,25 @@ const OverViewPage = () => {
               value={filterParams.type}
               onChange={(val) => handleChange("type", val)}
               size={screens.xs ? "small" : "middle"}
+              block={screens.xs}
             />
-
             <Segmented
               className="custom-segmented"
               options={filterOptions}
               value={filterParams.filter}
               onChange={(val) => handleChange("filter", val)}
               size={screens.xs ? "small" : "middle"}
+              block={screens.xs}
             />
           </Space>
         </div>
 
+        {/* Filter Pickers */}
         <div
-          style={{
-            marginTop: 16,
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 12,
-            alignItems: "center",
-          }}
+          className="
+            mt-4 flex flex-wrap gap-3 items-center 
+            justify-start md:justify-end
+          "
         >
           {(filterParams.filter === "monthly" ||
             filterParams.filter === "yearly") && (
@@ -231,7 +221,7 @@ const OverViewPage = () => {
               onChange={(date) =>
                 handleChange("year", date ? date.year() : null)
               }
-              style={{ width: screens.xs ? 120 : 140 }}
+              style={{ width: screens.xs ? "100%" : 140 }}
               size={screens.xs ? "small" : "middle"}
             />
           )}
@@ -245,7 +235,7 @@ const OverViewPage = () => {
               onChange={(date) =>
                 handleChange("month", date ? date.month() + 1 : null)
               }
-              style={{ width: screens.xs ? 120 : 140 }}
+              style={{ width: screens.xs ? "100%" : 140 }}
               size={screens.xs ? "small" : "middle"}
             />
           )}
@@ -261,19 +251,14 @@ const OverViewPage = () => {
               onChange={(date) =>
                 handleChange("date", date ? date.format("YYYY-MM-DD") : null)
               }
-              style={{ width: screens.xs ? 120 : 140 }}
+              style={{ width: screens.xs ? "100%" : 140 }}
               size={screens.xs ? "small" : "middle"}
             />
           )}
 
           <RangePicker
             onChange={(dates) => {
-              if (
-                dates &&
-                dates.length === 2 &&
-                dates[0] !== null &&
-                dates[1] !== null
-              ) {
+              if (dates && dates[0] && dates[1]) {
                 handleChange("start_date", dates[0].format("YYYY-MM-DD"));
                 handleChange("end_date", dates[1].format("YYYY-MM-DD"));
               } else {
@@ -287,9 +272,9 @@ const OverViewPage = () => {
         </div>
       </Card>
 
-      {/* Statistics Section */}
+      {/* Statistics */}
       {isLoading ? (
-        <div style={{ textAlign: "center", padding: "40px 0" }}>
+        <div className="text-center py-10">
           <LoadingOutlined style={{ fontSize: 48, color: getActiveColor() }} />
           <Text style={{ display: "block", marginTop: 16 }}>
             Loading attendance data...
@@ -303,7 +288,7 @@ const OverViewPage = () => {
             type={filterParams.type}
           />
 
-          <div style={{ margin: "24px 0" }}>
+          <div className="my-6">
             <AttendanceOverviewStatistic
               chartData={chartData}
               filterParams={filterParams}
@@ -312,7 +297,7 @@ const OverViewPage = () => {
             />
           </div>
 
-          {/* Details Table */}
+          {/* Table */}
           <Card
             title={
               <span style={{ color: "#2c3e50" }}>
@@ -335,7 +320,7 @@ const OverViewPage = () => {
                 hideOnSinglePage: true,
               }}
               loading={isLoading}
-              scroll={{ x: screens.md ? undefined : 600 }}
+              scroll={{ x: 600 }}
               size={screens.xs ? "small" : "middle"}
               style={{ borderRadius: 8 }}
             />

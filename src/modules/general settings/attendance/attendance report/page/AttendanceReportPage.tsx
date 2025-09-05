@@ -29,7 +29,7 @@ const AttendanceReportPage = () => {
   const [search, setSearch] = useState("");
 
   // Filters
-  const [monthOnly, setMonthOnly] = useState<number | undefined>();
+  const [monthOnly, setMonthOnly] = useState<string | undefined>();
 
   const { page_size, page } = useAppSelector(FilterState);
   const { data: dashboardData } = useGetDashboardDataQuery({});
@@ -90,7 +90,7 @@ const AttendanceReportPage = () => {
 
   // Handlers
   const handleMonthOnly = (date: dayjs.Dayjs | null) => {
-    setMonthOnly(date ? date.month() + 1 : undefined);
+    setMonthOnly(date ? date.format("YYYY-M") : undefined);
   };
 
   return (
