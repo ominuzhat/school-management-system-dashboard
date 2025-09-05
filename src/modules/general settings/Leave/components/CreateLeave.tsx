@@ -23,7 +23,7 @@ const CreateLeave = () => {
   const { data: admissionData, isFetching } = useGetAdmissionQuery({
     search: search,
   });
-  const leaveDuration = AntForm.useWatch("leave_duration", form);
+  const leaveDuration = AntForm.useWatch("duration", form);
 
   const onFinish = (values: any): void => {
     const formattedValues = {
@@ -100,7 +100,7 @@ const CreateLeave = () => {
           <Col lg={12}>
             <Form.Item
               label="Leave Duration"
-              name="leave_duration"
+              name="duration"
               rules={[
                 { required: true, message: "Leave Duration is required!" },
               ]}

@@ -33,7 +33,7 @@ const UpdateLeave = ({ record }: { record: any }) => {
         admission: leaveData.admission?.id,
         leave_type: leaveData.leave_type,
         is_approved: leaveData.is_approved,
-        leave_duration: leaveData.duration,
+        duration: leaveData.duration,
         start_date: leaveData.start_date ? dayjs(leaveData.start_date) : null,
         end_date: leaveData.end_date ? dayjs(leaveData.end_date) : null,
         reason: leaveData.reason || "",
