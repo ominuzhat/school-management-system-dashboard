@@ -10,7 +10,7 @@ import { useLazyGetSingleAdmitFormQuery } from "../api/admitEndPoints";
 import { capitalize } from "lodash";
 
 const useAdmitColumns = (): ColumnsType<any> => {
-  const [pdfTitle, setPdfTitle] = useState<string>("Invoice PDF");
+  const [pdfTitle, setPdfTitle] = useState<string>("Admit Card PDF");
 
   const [getSingleAdmitForm, { data: singleAdmitForm }] =
     useLazyGetSingleAdmitFormQuery();
@@ -47,7 +47,6 @@ const useAdmitColumns = (): ColumnsType<any> => {
   }, [singleAdmitForm, pdfTitle]); // ✅ Removed pdfUrl!
 
   const handleForm = (id: number) => {
-    console.log(id);
     setPdfTitle(`${id} `);
     getSingleAdmitForm(id);
   };

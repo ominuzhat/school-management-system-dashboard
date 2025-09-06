@@ -38,7 +38,7 @@ const admitEndPoints = api.injectEndpoints({
 
     getSingleAdmitForm: builder.query<Blob, number>({
       query: (id) => ({
-        url: `//api/v1.0/exams/receipts/${id}/generate-admit-cards/`,
+        url: `/api/v1.0/exams/receipts/${id}/generate-admit-cards/`,
         responseHandler: async (response) => response.blob(),
         cache: "no-cache",
       }),
